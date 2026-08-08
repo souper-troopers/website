@@ -2,6 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
+import workshopPhoto from "../assets/images/workshop-craft.jpg";
+
+const hubServices = [
+	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts." },
+	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling." },
+	{ title: "Housing assistance", body: "Shelter placements and family reunification." },
+	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments." },
+	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting." },
+	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project — income and skills development for Troopers." },
+];
 ---
 
 <Layout title="About" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
@@ -52,13 +62,35 @@ import dignityPhoto from "../assets/images/dignity-moment.jpg";
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Where we work</span>
-			<h2>The Humanity Hub</h2>
-			<p>
-				Our base at 66 Newmarket Street, Woodstock, Cape Town — home to the CAST programme, the
-				Souper Squad workshop, and the wider community we support.
-			</p>
+		<div class="grid grid-2" style="align-items:center;">
+			<div class="figure">
+				<Image src={workshopPhoto} alt="A Souper Squad skills workshop, making African Worry Dolls together" widths={[400, 800]} sizes="(min-width: 700px) 500px, 100vw" />
+			</div>
+			<div>
+				<span class="badge">Where we work</span>
+				<h2>The Humanity Hub</h2>
+				<p>
+					Our service centre at 66 Newmarket Street, Woodstock, Cape Town — a holistic range of
+					services tailored to each person's journey, addressing both immediate needs and
+					long-term transformation.
+				</p>
+			</div>
+		</div>
+		<div class="grid grid-3">
+			{hubServices.map((item) => (
+				<div class="card">
+					<h3>{item.title}</h3>
+					<p>{item.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card" style="text-align:center;">
+			<span class="badge">Registered &amp; compliant</span>
+			<p style="margin: 0.75rem 0 0; font-weight: 600;">NPO 188-609 &nbsp;|&nbsp; PBO 930063119 &nbsp;|&nbsp; B-BBEE Level 1</p>
+			<p style="color: rgba(36,35,43,0.7);">Section 18A tax certificates are available for qualifying donations.</p>
 		</div>
 	</section>
 </Layout>

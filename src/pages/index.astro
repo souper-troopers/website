@@ -112,3 +112,30 @@ import CountUp from "../components/CountUp.svelte";
 		</div>
 	</section>
 </Layout>
+
+<script>
+	const heroImg = document.querySelector<HTMLElement>(".hero-bg");
+	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+	if (heroImg && !prefersReducedMotion) {
+		const maxShift = 70;
+		let ticking = false;
+
+		function updateParallax() {
+			const shift = Math.min(window.scrollY * 0.3, maxShift);
+			heroImg!.style.transform = `translateY(${shift}px)`;
+			ticking = false;
+		}
+
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (!ticking) {
+					requestAnimationFrame(updateParallax);
+					ticking = true;
+				}
+			},
+			{ passive: true },
+		);
+	}
+</script>

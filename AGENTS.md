@@ -17,6 +17,11 @@ Reasoning: if these accounts are created under the user's personal logins, the c
 - [x] **GitHub**: create a GitHub *Organization* (not a personal repo) — done, `souper-troopers/website`.
 - [ ] **Vercel/Netlify**: create the hosting project under a Team, not the user's personal account.
 - [ ] **Sanity**: create the project under a Sanity Organization, not the user's personal account.
+- [ ] **Payment processor (Stripe/Snipcart)**: needed for real shop checkout — blocked on confirmed product pricing, stock, and fulfillment process (still-open Notion questions), not just the account itself.
+
+## Content still needed
+- **Shop pricing & fulfillment**: no confirmed prices, stock/inventory approach, or who fulfils orders (volunteer/staff/automatic) — see the open "What products do we sell" / "How are orders fulfilled" questions in the Website Discovery Notion doc. The Shop page currently uses an email-based order-request form (`src/components/OrderForm.svelte`) instead of real checkout because of this.
+- **Video for the homepage hero**: current hero uses a real photo (`dignity-moment.jpg`), not video. Two source videos exist in `../souper-troopers-media/Content/Videos/` but neither is hero-ready: `Capital International Group - CSI Partner.mov` is 933MB / 7 min (a narrated piece, better suited to a "watch our story" section than a silent autoplay background), and `Anthony - Cast Model.mp4` is 92MB / 75s but portrait-oriented. Both also exceed GitHub's 100MB file-size limit, so raw files can't be committed to this repo regardless. Needs either: short (5-15s), silent, heavily-compressed (~2-3MB) b-roll shot specifically for a hero background, or the existing long-form videos uploaded to YouTube/Vimeo (unlisted) and compressed, then embedded as a click-to-play "watch our story" section (not autoplay).
 
 ## Source of truth for requirements
 Website scope/requirements come from the "🌐 Souper Troopers — Website Discovery" Notion database, not from files in this repo. Access via the Notion MCP connection (see `.mcp.json`). Check it for current answered/open questions before assuming scope is settled.

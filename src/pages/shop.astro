@@ -2,13 +2,27 @@
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import shopPhoto from "../assets/images/shop-products.jpg";
+import OrderForm from "../components/OrderForm.svelte";
 ---
 
-<Layout title="Shop" description="Troopers Coffee and African Worry Dolls — purpose-driven products that fund the CAST programme.">
+<Layout title="Shop" description="Troopers Coffee and African Worry Dolls — purpose-driven products from Shmiley, Souper Troopers' income-generating enterprise.">
 	<section class="page-hero">
 		<div class="wrap">
 			<h1>Shop with purpose</h1>
 			<p>Every product is made by people the CAST programme has supported. Every purchase funds the next journey.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card">
+			<span class="badge">Who makes this possible</span>
+			<h2>Products by Shmiley</h2>
+			<p>
+				Shmiley (Pty) Ltd is Souper Troopers' own social enterprise — a private company owned by
+				the non-profit, built to generate income and reduce our reliance on donor funding. Every
+				sale directly funds skills development and job creation for the people we support, and
+				profits are reinvested straight back into CAST.
+			</p>
 		</div>
 	</section>
 
@@ -29,7 +43,6 @@ import shopPhoto from "../assets/images/shop-products.jpg";
 					are roasted locally by a small black-owned business.
 				</p>
 				<p>Available for corporate and home use. Corporate buyers earn B-BBEE points, and every bag funds skills development and employment.</p>
-				<p><em>Online ordering coming soon — email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> to order now.</em></p>
 			</div>
 			<div class="card">
 				<span class="badge">Since 2022</span>
@@ -43,8 +56,16 @@ import shopPhoto from "../assets/images/shop-products.jpg";
 					Legend has it: whisper your worries to the doll before bed, and it carries them away
 					while you sleep. Every purchase supports sustainable employment and skills training.
 				</p>
-				<p><em>Online ordering coming soon — email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> to order now.</em></p>
 			</div>
 		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Request an order</span>
+			<h2>Online checkout is coming — for now, order directly</h2>
+			<p>Tell us what you'd like and we'll confirm pricing and delivery by email.</p>
+		</div>
+		<OrderForm client:visible />
 	</section>
 </Layout>

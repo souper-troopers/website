@@ -2,11 +2,14 @@
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
+import heroPhoto from "../assets/images/dignity-moment.jpg";
 ---
 
 <Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town.">
-	<section class="hero">
-		<div class="wrap">
+	<section class="hero hero-photo">
+		<Image src={heroPhoto} alt="" role="presentation" class="hero-bg" widths={[800, 1600, 2400]} sizes="100vw" />
+		<div class="hero-scrim"></div>
+		<div class="wrap hero-content">
 			<h1>We are all human. We all have a story. Together, we are the change.</h1>
 			<p>
 				Souper Troopers helps people move from crisis to dignity — through the CAST programme,

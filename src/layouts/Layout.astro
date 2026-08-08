@@ -36,6 +36,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Pre-launch preview only — remove this once the site goes live on the real domain. -->
+		<meta name="robots" content="noindex, nofollow" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/favicon-512.png" sizes="512x512" />

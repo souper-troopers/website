@@ -14,10 +14,14 @@
 
 ## Account setup checklist
 Reasoning: if these accounts are created under the user's personal logins, the charity doesn't actually own its own site — a volunteer does, on their behalf. Creating them as org/team resources from the start avoids a painful migration later and gives Souper Troopers itself ultimate control.
-- [x] **GitHub**: create a GitHub *Organization* (not a personal repo) — done, `souper-troopers/website`.
-- [ ] **Vercel/Netlify**: create the hosting project under a Team, not the user's personal account.
+- [x] **GitHub**: create a GitHub *Organization* (not a personal repo) — done, `souper-troopers/website`. Repo is public (made public 2026-08-08 — nothing sensitive in it, and Netlify's free tier can't deploy private org-owned repos or add team members without a paid plan, so public was the pragmatic choice).
+- [x] **Netlify**: deploying under a Team ("Souper Troopers"), not the user's personal account. Chose Netlify over Vercel because Vercel's free tier doesn't support Teams at all (Pro-only, ~$20/mo). Deployed to a temporary `*.netlify.app` URL — **not yet pointed at the real domain** (soupertroopers.org still serves the current live site until this redesign is approved).
 - [ ] **Sanity**: create the project under a Sanity Organization, not the user's personal account.
 - [ ] **Payment processor (Stripe/Snipcart)**: needed for real shop checkout — blocked on confirmed product pricing, stock, and fulfillment process (still-open Notion questions), not just the account itself.
+
+## Before real launch (pointing soupertroopers.org at this site)
+- [ ] Remove the `<meta name="robots" content="noindex, nofollow">` tag in `src/layouts/Layout.astro` — added 2026-08-08 so search engines don't index the pre-launch preview URL under the wrong domain.
+- [ ] Point the real domain at Netlify and update DNS.
 
 ## Content still needed
 - **Shop pricing & fulfillment**: no confirmed prices, stock/inventory approach, or who fulfils orders (volunteer/staff/automatic) — see the open "What products do we sell" / "How are orders fulfilled" questions in the Website Discovery Notion doc. The Shop page currently uses an email-based order-request form (`src/components/OrderForm.svelte`) instead of real checkout because of this.

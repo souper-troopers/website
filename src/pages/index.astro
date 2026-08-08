@@ -4,6 +4,10 @@ import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import CountUp from "../components/CountUp.svelte";
+import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
+
+const impactStats = await getImpactStats("home");
+const stories = await getFeaturedSuccessStories();
 ---
 
 <Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town." heroOverlay>
@@ -55,10 +59,16 @@ import CountUp from "../components/CountUp.svelte";
 				<p>Real outcomes from the CAST programme — the numbers behind every story.</p>
 			</div>
 			<div class="impact-stats">
-				<div class="impact-stat"><CountUp client:visible end={1700} suffix="+" /><span>lives supported since 2014</span></div>
-				<div class="impact-stat"><CountUp client:visible end={77} suffix="%" /><span>employment success in the latest CAST intake</span></div>
-				<div class="impact-stat"><strong>ID docs</strong><span>secured for people with no path to services</span></div>
-				<div class="impact-stat"><strong>Skills</strong><span>training and job-readiness for every participant</span></div>
+				{impactStats.map((stat) => (
+					<div class="impact-stat">
+						{stat.value != null ? (
+							<CountUp client:visible end={stat.value} suffix={stat.suffix ?? ""} />
+						) : (
+							<strong>{stat.displayValue}</strong>
+						)}
+						<span>{stat.label}</span>
+					</div>
+				))}
 			</div>
 		</div>
 	</section>
@@ -87,17 +97,19 @@ import CountUp from "../components/CountUp.svelte";
 			<span class="badge badge-on-dark">Success stories</span>
 			<h2>People, not statistics</h2>
 			<div class="stories-grid">
-				<blockquote class="story-quote">
-					<p>"I'm not just an inspiration to others, but an inspiration to myself."</p>
-					<cite>— Odette Sue Oliver, Souper Squad</cite>
-				</blockquote>
-				<div class="story-block">
-					<h3>Peaceful</h3>
-					<p>
-						Gained experience through the Troopers Coffee social enterprise, went on to train as a
-						paralegal, and now works at Law 4 All — the ripple effect of purpose-driven work.
-					</p>
-				</div>
+				{stories.map((story) => (
+					story.quote ? (
+						<blockquote class="story-quote">
+							<p>"{story.quote}"</p>
+							<cite>— {story.name}</cite>
+						</blockquote>
+					) : (
+						<div class="story-block">
+							<h3>{story.name}</h3>
+							<p>{story.body}</p>
+						</div>
+					)
+				))}
 			</div>
 		</div>
 	</section>

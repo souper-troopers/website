@@ -3,34 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
+import { getTeamMembers, getPartners } from "../lib/sanity";
 
-const team = [
-	{ name: "Kerry Hoffman", role: "Founder and Executive Director" },
-	{ name: "Moeshfieqah Bosch", role: "Manager, The Humanity Hub" },
-	{ name: "Tasneem Hoosain-Fielies", role: "Social Auxiliary Worker" },
-	{ name: "Jake Gluckman", role: "Counsellor" },
-	{ name: "Odette Oliver", role: "African Worry Doll Supervisor" },
-	{ name: "Gideon Venter", role: "Admin & Fieldwork Assistant" },
-	{ name: "Caryn Gootkin", role: "Fundraising & Finance" },
-];
-
-const partners = [
-	{ name: "BFG Financial Services", blurb: "Pro bono accountants keeping our records in order." },
-	{ name: "Boldr", blurb: "A smart TV, gas stove, and pantry support for our workshops." },
-	{ name: "Capital International Group", blurb: "Monthly donor with strategic input and hands-on staff involvement." },
-	{ name: "CNC Products", blurb: "Kerry's family business — connects us to hotel and restaurant clients." },
-	{ name: "Dis-Chem Foundation", blurb: "Monthly credit for Troopers' toiletries and snacks." },
-	{ name: "Dito", blurb: "Training academy, fundraising, and Christmas parties for the Souper Squad." },
-	{ name: "Khulisa Social Solutions", blurb: "Government-funded partnership employing 25 Troopers." },
-	{ name: "Ladles of Love", blurb: "Shared resources and skills at the Humanity Hub." },
-	{ name: "Mensch", blurb: "Fundraising events and skills workshops through their changemaker network." },
-	{ name: "Mini Meltdown", blurb: "Connections and hands-on support wherever it's needed." },
-	{ name: "Ozow", blurb: "Funded a loadshedding solution for the Humanity Hub." },
-	{ name: "Swindon Property", blurb: "Sponsors our rent, and their team regularly connects with ours." },
-	{ name: "Salushi Express", blurb: "Long-time volunteers, raffle prizes, and our coffee on their menu." },
-	{ name: "Web Times", blurb: "Website support and development." },
-	{ name: "Werksmans", blurb: "Pro bono legal advice and representation." },
-];
+const team = await getTeamMembers();
+const partners = await getPartners();
 ---
 
 <Layout title="About" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">

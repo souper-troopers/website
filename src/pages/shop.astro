@@ -3,6 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import shopPhoto from "../assets/images/shop-products.jpg";
 import OrderForm from "../components/OrderForm.svelte";
+import { PortableText } from "astro-portabletext";
+import { getProducts } from "../lib/sanity";
+
+const products = await getProducts();
 ---
 
 <Layout title="Shop" description="Troopers Coffee and African Worry Dolls — purpose-driven products from Shmiley, Souper Troopers' income-generating enterprise.">
@@ -34,41 +38,17 @@ import OrderForm from "../components/OrderForm.svelte";
 
 	<section class="section wrap">
 		<div class="grid grid-3">
-			<div class="card">
-				<span class="badge">Est. 2019</span>
-				<h2>Troopers Coffee — Dignity Blend</h2>
-				<p>
-					Started by Michael Sachar, a Souper Troopers volunteer from the coffee industry, who
-					believed great coffee could do more than wake people up — it could change lives. 100%
-					Arabica, velvety with hints of maple syrup and a hazelnut aftertaste. Beans are roasted
-					locally by a small black-owned business.
-				</p>
-				<p><strong>R130 – R435</strong> · Beans, ground (espresso/moka or filter/plunger), or capsules · 250g, 1kg, or a box of 14 capsules.</p>
-				<p>Available for corporate and home use. Corporate buyers earn B-BBEE points, and every bag funds skills development and employment.</p>
-			</div>
-			<div class="card">
-				<span class="badge">Since 2022</span>
-				<h2>African Worry Dolls&trade;</h2>
-				<p>
-					Handcrafted by the Souper Squad — formerly homeless individuals in the CAST programme —
-					from upcycled shweshwe offcuts, stockings, beads, and stuffing. Each doll is one of a
-					kind.
-				</p>
-				<p><strong>R225 – R300</strong> · female/male, brooch/magnet/Madiba, keyring/literary/elf, or angel (inc. VAT).</p>
-				<p>
-					Legend has it: whisper your worries to the doll before bed, and it carries them away
-					while you sleep. Every purchase supports sustainable employment and skills training.
-				</p>
-			</div>
-			<div class="card">
-				<span class="badge">Gift tags</span>
-				<h2>African Worry Doll Gift Tags</h2>
-				<p>
-					A smaller-scale way to give — the same handcrafted worry dolls, made into gift tags for
-					presents, cards, or stocking fillers.
-				</p>
-				<p><strong>R65 – R85</strong> · multiple designs.</p>
-			</div>
+			{products.map((product) => (
+				<div class="card">
+					{product.badge && <span class="badge">{product.badge}</span>}
+					<h2>{product.name}</h2>
+					<PortableText value={product.description} />
+					<p>
+						<strong>{product.priceRange}</strong>
+						{product.variantDetails && <> · {product.variantDetails}</>}
+					</p>
+				</div>
+			))}
 		</div>
 	</section>
 
@@ -91,6 +71,6 @@ import OrderForm from "../components/OrderForm.svelte";
 			<h2>Online checkout is coming — for now, order directly</h2>
 			<p>Tell us what you'd like and we'll confirm final pricing and collection details by email.</p>
 		</div>
-		<OrderForm client:visible />
+		<OrderForm client:visible productNames={products.map((p) => p.name)} />
 	</section>
 </Layout>

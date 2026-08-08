@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CountUp from "../components/CountUp.svelte";
+import { getImpactStats } from "../lib/sanity";
+
+const impactStats = await getImpactStats("donate");
 ---
 
 <Layout title="Donate" description="Support the CAST programme — donation options for Souper Troopers.">
@@ -14,9 +17,16 @@ import CountUp from "../components/CountUp.svelte";
 	<section class="impact-band">
 		<div class="wrap">
 			<div class="impact-stats">
-				<div class="impact-stat"><CountUp client:visible end={1700} suffix="+" /><span>lives supported since 2014</span></div>
-				<div class="impact-stat"><CountUp client:visible end={77} suffix="%" /><span>employment success in the latest CAST intake</span></div>
-				<div class="impact-stat"><strong>Section 18A</strong><span>certificates available for donations</span></div>
+				{impactStats.map((stat) => (
+					<div class="impact-stat">
+						{stat.value != null ? (
+							<CountUp client:visible end={stat.value} suffix={stat.suffix ?? ""} />
+						) : (
+							<strong>{stat.displayValue}</strong>
+						)}
+						<span>{stat.label}</span>
+					</div>
+				))}
 			</div>
 		</div>
 	</section>

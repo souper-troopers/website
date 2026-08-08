@@ -1,5 +1,7 @@
 <script>
-	let product = $state("Troopers Coffee — Dignity Blend");
+	let { productNames = [] } = $props();
+
+	let product = $state(productNames[0] ?? "");
 	let quantity = $state(1);
 	let name = $state("");
 	let email = $state("");
@@ -25,9 +27,9 @@
 	<label>
 		Product
 		<select bind:value={product}>
-			<option>Troopers Coffee — Dignity Blend</option>
-			<option>African Worry Dolls™</option>
-			<option>African Worry Doll Gift Tags</option>
+			{#each productNames as name}
+				<option>{name}</option>
+			{/each}
 		</select>
 	</label>
 

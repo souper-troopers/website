@@ -27,6 +27,7 @@
 		<select bind:value={product}>
 			<option>Troopers Coffee — Dignity Blend</option>
 			<option>African Worry Dolls™</option>
+			<option>African Worry Doll Gift Tags</option>
 		</select>
 	</label>
 

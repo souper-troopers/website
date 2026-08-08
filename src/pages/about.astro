@@ -12,6 +12,34 @@ const hubServices = [
 	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting." },
 	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project — income and skills development for Troopers." },
 ];
+
+const team = [
+	{ name: "Kerry Hoffman", role: "Founder and Executive Director" },
+	{ name: "Moeshfieqah Bosch", role: "Manager, The Humanity Hub" },
+	{ name: "Tasneem Hoosain-Fielies", role: "Social Auxiliary Worker" },
+	{ name: "Jake Gluckman", role: "Counsellor" },
+	{ name: "Odette Oliver", role: "African Worry Doll Supervisor" },
+	{ name: "Gideon Venter", role: "Admin & Fieldwork Assistant" },
+	{ name: "Caryn Gootkin", role: "Fundraising & Finance" },
+];
+
+const partners = [
+	{ name: "BFG Financial Services", blurb: "Pro bono accountants keeping our records in order." },
+	{ name: "Boldr", blurb: "A smart TV, gas stove, and pantry support for our workshops." },
+	{ name: "Capital International Group", blurb: "Monthly donor with strategic input and hands-on staff involvement." },
+	{ name: "CNC Products", blurb: "Kerry's family business — connects us to hotel and restaurant clients." },
+	{ name: "Dis-Chem Foundation", blurb: "Monthly credit for Troopers' toiletries and snacks." },
+	{ name: "Dito", blurb: "Training academy, fundraising, and Christmas parties for the Souper Squad." },
+	{ name: "Khulisa Social Solutions", blurb: "Government-funded partnership employing 25 Troopers." },
+	{ name: "Ladles of Love", blurb: "Shared resources and skills at the Humanity Hub." },
+	{ name: "Mensch", blurb: "Fundraising events and skills workshops through their changemaker network." },
+	{ name: "Mini Meltdown", blurb: "Connections and hands-on support wherever it's needed." },
+	{ name: "Ozow", blurb: "Funded a loadshedding solution for the Humanity Hub." },
+	{ name: "Swindon Property", blurb: "Sponsors our rent, and their team regularly connects with ours." },
+	{ name: "Salushi Express", blurb: "Long-time volunteers, raffle prizes, and our coffee on their menu." },
+	{ name: "Web Times", blurb: "Website support and development." },
+	{ name: "Werksmans", blurb: "Pro bono legal advice and representation." },
+];
 ---
 
 <Layout title="About" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
@@ -19,6 +47,21 @@ const hubServices = [
 		<div class="wrap">
 			<h1>About Souper Troopers</h1>
 			<p>Est. 2014, Woodstock, Cape Town. A social enterprise built on dignity, love, and respect.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">How we began</span>
+			<h2>It started with soup and sandwiches</h2>
+			<p>
+				In June 2014, Kerry Hoffman spent a day sharing soup and sandwiches with people living on
+				the street. That relaxed social gathering — and the regular monthly events that followed
+				for the next five years — helped us understand the complexity of homelessness and the
+				inadequacies of existing interventions. Those early years cemented Souper Troopers in the
+				social capital of the streets, and taught us that every person has their own story and
+				needs individualised support to move forward.
+			</p>
 		</div>
 	</section>
 
@@ -81,6 +124,37 @@ const hubServices = [
 				<div class="card">
 					<h3>{item.title}</h3>
 					<p>{item.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Meet the team</span>
+			<h2>The people behind the Humanity Hub</h2>
+		</div>
+		<div class="grid grid-4">
+			{team.map((person) => (
+				<div class="card">
+					<h3>{person.name}</h3>
+					<p>{person.role}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Partners &amp; supporters</span>
+			<h2>We don't do this alone</h2>
+			<p>These businesses and organisations choose to partner with and support Souper Troopers.</p>
+		</div>
+		<div class="grid grid-4">
+			{partners.map((partner) => (
+				<div class="card">
+					<h3>{partner.name}</h3>
+					<p>{partner.blurb}</p>
 				</div>
 			))}
 		</div>

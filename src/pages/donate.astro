@@ -33,18 +33,38 @@ import Layout from "../layouts/Layout.astro";
 	</section>
 
 	<section class="section wrap">
-		<div class="card">
-			<h2>Ways to give</h2>
-			<p>
-				Souper Troopers is finalising a full list of donation methods, including a new monthly-giving
-				platform. In the meantime, email the team directly to donate:
-			</p>
-			<a class="btn btn-primary" href="mailto:manager@soupertroopers.org">Email manager@soupertroopers.org</a>
-			<p style="margin-top:1.5rem; font-size:0.9rem; color: rgba(36,35,43,0.6);">
-				<!-- TODO: replace with the confirmed donation methods (EFT/bank details, once-off vs monthly links, and the new monthly platform) once Kerry confirms — see the "Are there existing donation platforms that need to remain?" question in the Website Discovery doc. -->
-				Once-off and monthly donation options, plus direct deposit details, will be added here once confirmed.
-			</p>
+		<div class="section-intro">
+			<span class="badge">Ways to give</span>
+			<h2>Choose the method that works for you</h2>
 		</div>
+		<div class="grid grid-2">
+			<div class="card">
+				<h3>Direct EFT</h3>
+				<p>
+					Our preferred method. Once you've made the transfer, email your proof of payment to
+					<a href="mailto:info@soupertroopers.org">info@soupertroopers.org</a> so we can issue your
+					Section 18A certificate.
+				</p>
+			</div>
+			<div class="card">
+				<h3>SnapScan</h3>
+				<p>Scan or tap to pay instantly from your phone.</p>
+				<a class="btn btn-primary" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">Donate via SnapScan &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>PayPal</h3>
+				<p>Card or PayPal balance, once-off.</p>
+				<a class="btn btn-primary" href="https://www.paypal.com/donate/?hosted_button_id=ZLTV4BYWFALX2" target="_blank" rel="noopener">Donate via PayPal &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Monthly giving</h3>
+				<p>Set up a recurring monthly donation to sustain the CAST programme.</p>
+				<a class="btn btn-primary" href="https://st.paysoftimpact.co.za/public/api/Template/Index/?id=26" target="_blank" rel="noopener">Give monthly &rarr;</a>
+			</div>
+		</div>
+		<p style="margin-top:2rem; font-size:0.9rem; color: rgba(36,35,43,0.6);">
+			Questions about giving? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.
+		</p>
 	</section>
 
 	<section class="section wrap">

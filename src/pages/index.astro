@@ -6,7 +6,7 @@ import heroPhoto from "../assets/images/mandela-mural.png";
 import CountUp from "../components/CountUp.svelte";
 ---
 
-<Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town.">
+<Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town." heroOverlay>
 	<section class="hero hero-photo">
 		<Image src={heroPhoto} alt="" role="presentation" class="hero-bg" widths={[800, 1600, 2400]} sizes="100vw" />
 		<div class="hero-scrim"></div>
@@ -115,27 +115,36 @@ import CountUp from "../components/CountUp.svelte";
 
 <script>
 	const heroImg = document.querySelector<HTMLElement>(".hero-bg");
+	const header = document.querySelector<HTMLElement>(".site-header-overlay");
+	const hero = document.querySelector<HTMLElement>(".hero-photo");
 	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const maxShift = 70;
+	let ticking = false;
 
-	if (heroImg && !prefersReducedMotion) {
-		const maxShift = 70;
-		let ticking = false;
-
-		function updateParallax() {
+	function update() {
+		if (heroImg && !prefersReducedMotion) {
 			const shift = Math.min(window.scrollY * 0.3, maxShift);
-			heroImg!.style.transform = `translateY(${shift}px)`;
-			ticking = false;
+			heroImg.style.transform = `translateY(${shift}px)`;
 		}
-
-		window.addEventListener(
-			"scroll",
-			() => {
-				if (!ticking) {
-					requestAnimationFrame(updateParallax);
-					ticking = true;
-				}
-			},
-			{ passive: true },
-		);
+		// Once the hero has scrolled out from under the header, switch the header from a
+		// transparent overlay to a normal opaque one — otherwise it transparently overlaps
+		// whatever section happens to be scrolled underneath it.
+		if (header && hero) {
+			const heroBottom = hero.getBoundingClientRect().bottom;
+			header.classList.toggle("is-solid", heroBottom <= header.offsetHeight);
+		}
+		ticking = false;
 	}
+
+	update();
+	window.addEventListener(
+		"scroll",
+		() => {
+			if (!ticking) {
+				requestAnimationFrame(update);
+				ticking = true;
+			}
+		},
+		{ passive: true },
+	);
 </script>

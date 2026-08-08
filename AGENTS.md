@@ -18,7 +18,7 @@ Reasoning: if these accounts are created under the user's personal logins, the c
 - [x] **Netlify**: deploying under a Team ("Souper Troopers"), not the user's personal account. Chose Netlify over Vercel because Vercel's free tier doesn't support Teams at all (Pro-only, ~$20/mo). Deployed to a temporary `*.netlify.app` URL — **not yet pointed at the real domain** (soupertroopers.org still serves the current live site until this redesign is approved).
 - [ ] **Sanity**: deferred — creating a Sanity Organization requires payment details upfront, so we're starting under the user's personal account instead to avoid blocking schema/content work. Sanity supports transferring a project to an Organization later; **revisit this before real launch.**
 - [ ] **Payment processor (Stripe/Snipcart)**: needed for real shop checkout — blocked on confirmed product pricing, stock, and fulfillment process (still-open Notion questions), not just the account itself.
-- [ ] **Deploy the Sanity Studio** (`npx sanity deploy` from `studio/`) so Kerry/Shan can actually edit content — right now it only runs locally (`sanity dev`), so only the user can access it.
+- [x] **Deploy the Sanity Studio**: done 2026-08-08, live at https://souper-troopers.sanity.studio/. Gated behind Sanity's own login — Kerry/Shan will need to be added as project members (Sanity project settings → Members) before they can actually access it.
 
 ## Before real launch (pointing soupertroopers.org at this site)
 - [ ] Remove the `<meta name="robots" content="noindex, nofollow">` tag in `src/layouts/Layout.astro` — added 2026-08-08 so search engines don't index the pre-launch preview URL under the wrong domain.

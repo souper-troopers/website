@@ -47,7 +47,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 		<header class:list={["site-header", { "site-header-overlay": heroOverlay }]}>
 			<div class="wrap header-inner">
 				<a href="/" class="brand">
-					<Image src={logoReversed} alt="Souper Troopers" width={44} height={44} />
+					<Image src={logoReversed} alt="Souper Troopers" width={44} height={44} densities={[1, 2, 3]} />
 					<span>Souper Troopers</span>
 				</a>
 				<nav aria-label="Primary">

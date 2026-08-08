@@ -1,6 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../assets/images/logo.png";
+import "@fontsource/quicksand/400.css";
+import "@fontsource/quicksand/500.css";
+import "@fontsource/quicksand/600.css";
+import "@fontsource/quicksand/700.css";
 
 interface Props {
 	title: string;
@@ -72,14 +76,18 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 		<style is:global>
 			:root {
+				/* Official brand palette (souper-troopers-logo-document-06-11-2018.pdf) */
 				--st-teal: #1babbe;
 				--st-teal-dark: #148294;
+				--st-teal-secondary: #24badd;
 				--st-ink: #24232b;
-				--st-purple: #6c4a9e;
+				--st-yellow: #dbbc3b;
+				--st-green: #4bbc63;
+				--st-red: #dd4b59;
 				--st-bg: #faf9f6;
 				--st-white: #ffffff;
 				--radius: 18px;
-				font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+				font-family: "Quicksand", "Segoe UI", system-ui, sans-serif;
 			}
 
 			* {
@@ -136,7 +144,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 				display: flex;
 				align-items: center;
 				gap: 0.6rem;
-				font-weight: 800;
+				font-weight: 700;
 				font-size: 1.1rem;
 				color: var(--st-ink);
 				text-decoration: none;
@@ -190,7 +198,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 			}
 
 			.btn-secondary {
-				background: var(--st-purple);
+				background: var(--st-green);
 				color: var(--st-white);
 			}
 
@@ -297,7 +305,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 			}
 
 			.hero {
-				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-purple) 100%);
+				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-red) 100%);
 				color: var(--st-white);
 				padding: 4rem 0;
 			}
@@ -479,8 +487,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-teal-dark) 100%);
 			}
 
-			.path-purple {
-				background: var(--st-purple);
+			.path-green {
+				background: var(--st-green);
 			}
 
 			.path-ink {
@@ -524,7 +532,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 			.impact-stat strong {
 				display: block;
 				font-size: clamp(2.5rem, 5vw, 3.5rem);
-				font-weight: 800;
+				font-weight: 700;
 				color: var(--st-teal);
 				line-height: 1;
 				margin-bottom: 0.6rem;
@@ -537,7 +545,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 			/* Success stories — gradient band, editorial quote */
 			.stories-band {
-				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-purple) 100%);
+				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-red) 100%);
 				color: var(--st-white);
 				padding: 4.5rem 0;
 			}

@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
+import CountUp from "../components/CountUp.svelte";
 ---
 
 <Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town.">
@@ -27,36 +28,38 @@ import heroPhoto from "../assets/images/mandela-mural.png";
 			<span class="badge">Choose your path</span>
 			<h2>However you want to help, there's a clear next step</h2>
 		</div>
-		<div class="grid grid-3">
-			<div class="card">
+		<div class="path-grid">
+			<a href="/donate" class="path-tile path-tile-primary path-teal">
 				<h3>Donate</h3>
 				<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
-				<a href="/donate">Donate now &rarr;</a>
-			</div>
-			<div class="card">
+				<span class="path-cta">Donate now &rarr;</span>
+			</a>
+			<a href="/get-involved" class="path-tile path-purple">
 				<h3>Volunteer</h3>
 				<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
-				<a href="/get-involved">Get involved &rarr;</a>
-			</div>
-			<div class="card">
+				<span class="path-cta">Get involved &rarr;</span>
+			</a>
+			<a href="/get-involved" class="path-tile path-ink">
 				<h3>Partner with us</h3>
 				<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
-				<a href="/get-involved">Partner with us &rarr;</a>
-			</div>
+				<span class="path-cta">Partner with us &rarr;</span>
+			</a>
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Impact</span>
-			<h2>Impact you can't miss</h2>
-			<p>Real outcomes from the CAST programme — the numbers behind every story.</p>
-		</div>
-		<div class="grid grid-4">
-			<div class="stat"><strong>1,700+</strong><span>lives supported since 2014</span></div>
-			<div class="stat"><strong>77%</strong><span>employment success in the latest CAST intake</span></div>
-			<div class="stat"><strong>ID docs</strong><span>secured for people with no path to services</span></div>
-			<div class="stat"><strong>Skills</strong><span>training and job-readiness for every participant</span></div>
+	<section class="impact-band">
+		<div class="wrap">
+			<div class="section-intro">
+				<span class="badge badge-on-dark">Impact</span>
+				<h2>Impact you can't miss</h2>
+				<p>Real outcomes from the CAST programme — the numbers behind every story.</p>
+			</div>
+			<div class="impact-stats">
+				<div class="impact-stat"><CountUp client:visible end={1700} suffix="+" /><span>lives supported since 2014</span></div>
+				<div class="impact-stat"><CountUp client:visible end={77} suffix="%" /><span>employment success in the latest CAST intake</span></div>
+				<div class="impact-stat"><strong>ID docs</strong><span>secured for people with no path to services</span></div>
+				<div class="impact-stat"><strong>Skills</strong><span>training and job-readiness for every participant</span></div>
+			</div>
 		</div>
 	</section>
 
@@ -79,25 +82,22 @@ import heroPhoto from "../assets/images/mandela-mural.png";
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Success stories</span>
+	<section class="stories-band">
+		<div class="wrap">
+			<span class="badge badge-on-dark">Success stories</span>
 			<h2>People, not statistics</h2>
-		</div>
-		<div class="grid grid-2">
-			<div class="card">
-				<p class="quote">
-					"I'm not just an inspiration to others, but an inspiration to myself."
-					<cite>— Odette Sue Oliver</cite>
-				</p>
-				<p>Odette is part of the Souper Squad, handcrafting African Worry Dolls&trade; as part of her journey.</p>
-			</div>
-			<div class="card">
-				<h3>Peaceful</h3>
-				<p>
-					Gained experience through the Troopers Coffee social enterprise, went on to train as a
-					paralegal, and now works at Law 4 All — the ripple effect of purpose-driven work.
-				</p>
+			<div class="stories-grid">
+				<blockquote class="story-quote">
+					<p>"I'm not just an inspiration to others, but an inspiration to myself."</p>
+					<cite>— Odette Sue Oliver, Souper Squad</cite>
+				</blockquote>
+				<div class="story-block">
+					<h3>Peaceful</h3>
+					<p>
+						Gained experience through the Troopers Coffee social enterprise, went on to train as a
+						paralegal, and now works at Law 4 All — the ripple effect of purpose-driven work.
+					</p>
+				</div>
 			</div>
 		</div>
 	</section>

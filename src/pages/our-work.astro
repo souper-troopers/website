@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import CountUp from "../components/CountUp.svelte";
 
 const castSteps = [
 	{
@@ -48,16 +49,18 @@ const castSteps = [
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Impact</span>
-			<h2>Outcomes from the latest CAST intake</h2>
-		</div>
-		<div class="grid grid-4">
-			<div class="stat"><strong>1,700+</strong><span>lives supported since 2014</span></div>
-			<div class="stat"><strong>77%</strong><span>employment success rate</span></div>
-			<div class="stat"><strong>ID docs</strong><span>secured for participants</span></div>
-			<div class="stat"><strong>Workshops</strong><span>skills training &amp; counselling sessions</span></div>
+	<section class="impact-band">
+		<div class="wrap">
+			<div class="section-intro">
+				<span class="badge badge-on-dark">Impact</span>
+				<h2>Outcomes from the latest CAST intake</h2>
+			</div>
+			<div class="impact-stats">
+				<div class="impact-stat"><CountUp client:visible end={1700} suffix="+" /><span>lives supported since 2014</span></div>
+				<div class="impact-stat"><CountUp client:visible end={77} suffix="%" /><span>employment success rate</span></div>
+				<div class="impact-stat"><strong>ID docs</strong><span>secured for participants</span></div>
+				<div class="impact-stat"><strong>Workshops</strong><span>skills training &amp; counselling sessions</span></div>
+			</div>
 		</div>
 	</section>
 

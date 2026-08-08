@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import CountUp from "../components/CountUp.svelte";
 ---
 
 <Layout title="Donate" description="Support the CAST programme — donation options for Souper Troopers.">
@@ -10,11 +11,13 @@ import Layout from "../layouts/Layout.astro";
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="grid grid-3">
-			<div class="stat"><strong>1,700+</strong><span>lives supported since 2014</span></div>
-			<div class="stat"><strong>77%</strong><span>employment success in the latest CAST intake</span></div>
-			<div class="stat"><strong>Section 18A</strong><span>certificates available for donations</span></div>
+	<section class="impact-band">
+		<div class="wrap">
+			<div class="impact-stats">
+				<div class="impact-stat"><CountUp client:visible end={1700} suffix="+" /><span>lives supported since 2014</span></div>
+				<div class="impact-stat"><CountUp client:visible end={77} suffix="%" /><span>employment success in the latest CAST intake</span></div>
+				<div class="impact-stat"><strong>Section 18A</strong><span>certificates available for donations</span></div>
+			</div>
 		</div>
 	</section>
 

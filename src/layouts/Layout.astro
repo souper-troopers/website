@@ -300,6 +300,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 			.card {
 				background: var(--st-white);
+				color: var(--st-ink);
 				border-radius: var(--radius);
 				padding: 1.75rem;
 				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
@@ -311,6 +312,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 			.stat {
 				background: var(--st-white);
+				color: var(--st-ink);
 				border: 1px solid rgba(0, 0, 0, 0.06);
 				border-radius: var(--radius);
 				padding: 1.5rem;
@@ -531,18 +533,21 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 			}
 
 			/* Impact — full-bleed band */
-			.impact-band {
+			.impact-band,
+			.dark-band {
 				background: var(--st-ink);
 				color: var(--st-white);
 				padding: 4.5rem 0;
 			}
 
-			.impact-band h2 {
+			.impact-band h2,
+			.dark-band h2 {
 				font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 				margin: 0.6rem 0 0.75rem;
 			}
 
-			.impact-band .section-intro p {
+			.impact-band .section-intro p,
+			.dark-band .section-intro p {
 				color: rgba(255, 255, 255, 0.75);
 			}
 

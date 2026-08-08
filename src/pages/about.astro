@@ -144,19 +144,21 @@ const partners = [
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Partners &amp; supporters</span>
-			<h2>We don't do this alone</h2>
-			<p>These businesses and organisations choose to partner with and support Souper Troopers.</p>
-		</div>
-		<div class="grid grid-4">
-			{partners.map((partner) => (
-				<div class="card">
-					<h3>{partner.name}</h3>
-					<p>{partner.blurb}</p>
-				</div>
-			))}
+	<section class="dark-band">
+		<div class="wrap">
+			<div class="section-intro">
+				<span class="badge badge-on-dark">Partners &amp; supporters</span>
+				<h2>We don't do this alone</h2>
+				<p>These businesses and organisations choose to partner with and support Souper Troopers.</p>
+			</div>
+			<div class="grid grid-4">
+				{partners.map((partner) => (
+					<div class="card">
+						<h3>{partner.name}</h3>
+						<p>{partner.blurb}</p>
+					</div>
+				))}
+			</div>
 		</div>
 	</section>
 

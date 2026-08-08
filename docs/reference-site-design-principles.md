@@ -1,10 +1,26 @@
 # Reference Site Design Principles for Souper Troopers
 
 ## Sites reviewed
-- Social Bite — strong mission-driven storytelling, clear visitor paths, vibrant impact messaging
-- Orange Sky — simple service-first messaging, clear navigation for people in need and supporters
-- U-Turn Homeless Ministries — journey-based structure, credible partner/trust signals, strong donation focus
-- OzHarvest and Homeless Hub were noted as favorites but blocked from automated scraping; their influence is still included in the thematic summary.
+- [Social Bite](https://www.social-bite.co.uk/) (UK) — strong mission-driven storytelling, clear visitor paths, vibrant impact messaging. Reviewed 2026-08-08.
+- [Orange Sky](https://orangesky.org.au/) (Australia) — simple service-first messaging, clear navigation for people in need and supporters.
+- [U-Turn Homeless Ministries](https://homeless.org.za/) (Cape Town, SA) — journey-based structure, credible partner/trust signals, strong donation focus. Closest direct comp to Souper Troopers: same city, same population served.
+- [OzHarvest](https://www.ozharvest.org/) (Australia) — reviewed 2026-08-08, previously blocked from automated scraping. See notes below.
+- [Homeless Hub](https://homelesshub.ca/) (Canada) — reviewed 2026-08-08. **Flag: this turned out to be a homelessness *research library* (academic reports, blog posts, a newsletter for researchers) run by York University's Canadian Observatory on Homelessness — not a donate/volunteer/service charity site.** No donate button, no impact stats, no visitor-path CTAs, nothing transferable to Souper Troopers' goals. Kerry likely meant a different "Homeless Hub" — worth a quick confirm with her rather than treating this one as real inspiration.
+
+## New patterns from the 2026-08-08 review
+
+### From OzHarvest
+- Four-pillar "What We Do" model (Feed / Educate / Advocate / Innovate), each a short label + "Learn more" — validates the CAST-steps card pattern already used on the Our Work page.
+- A "What's Happening" news/campaign card grid on the homepage — directly answers the "missing urgency" frustration from the discovery doc (current campaigns like Mandela Month, Winter Drive currently have nowhere to live on our site).
+- Three big stat callouts with a founding story right above them ("Founded in 2004 after noticing..."). Matches our stat-tile section, but pairs it with an origin story we don't have yet.
+- A corporate partner logo strip (Woolworths, BP, Asahi, etc.) — a trust signal aimed squarely at the corporate/B-BBEE audience, which we don't have anywhere yet.
+- Comprehensive footer sitemap plus a charity-registration badge (ACNC) for legitimacy.
+
+### From Social Bite
+- Origin story leads with the social enterprise, not the charity: "It all started with a coffee shop... now it's a movement" — a very close structural parallel to Troopers Coffee, worth leaning into on our About/Our Work pages.
+- Three large stat circles on a bold color block (255,000+ meals, 1,000+ people housed, 120+ into employment) — same idea as our stat tiles, but bigger and more visually confident.
+- A "ways to fundraise" grid (run your own event, fundraise at work, fundraise at school) under Get Involved — a concrete idea we're currently missing.
+- Closing tagline "Let's end homelessness. Together." plus a charity-registration badge (OSCR) in the footer, mirroring the trust-signal pattern from OzHarvest.
 
 ## Shared design principles
 

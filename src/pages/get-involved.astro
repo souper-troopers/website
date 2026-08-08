@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const goodsCategories = [
+	"Non-perishable food",
+	"Toiletries",
+	"Clothing (all seasons)",
+	"Linen & bedding",
+	"Household goods",
+	"Materials for African Worry Dolls",
+	"Cleaning products",
+	"Electronics",
+];
+---
+
+<Layout title="Get Involved" description="Ways to support Souper Troopers — for individuals and businesses.">
+	<section class="page-hero">
+		<div class="wrap">
+			<h1>Get Involved</h1>
+			<p>There's a way to help whatever you have to give — time, goods, money, or a partnership.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Individuals</span>
+			<h2>Ways to help, person to person</h2>
+		</div>
+		<div class="grid grid-4">
+			<div class="card"><h3>Donate money</h3><p>Fund CAST directly.</p><a href="/donate">Donate &rarr;</a></div>
+			<div class="card"><h3>Donate goods</h3><p>Food, clothing, and more — see the full list below.</p></div>
+			<div class="card"><h3>Volunteer</h3><p>Give your time and skills.</p><a href="mailto:manager@soupertroopers.org">Get in touch &rarr;</a></div>
+			<div class="card"><h3>Buy products</h3><p>Coffee and worry dolls that fund jobs.</p><a href="/shop">Shop &rarr;</a></div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Goods donation list</span>
+			<h2>What you can donate</h2>
+			<p>Every item helps — drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods.</p>
+		</div>
+		<div class="grid grid-4">
+			{goodsCategories.map((item) => (
+				<div class="stat"><span>{item}</span></div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Businesses</span>
+			<h2>Corporate partnership</h2>
+		</div>
+		<div class="grid grid-4">
+			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes.</p></div>
+			<div class="card"><h3>B-BBEE points</h3><p>Buy Troopers Coffee or donate — both count.</p></div>
+			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
+			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
+		</div>
+		<p style="margin-top:2rem;">Interested in partnering? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.</p>
+	</section>
+</Layout>

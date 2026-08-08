@@ -1,0 +1,64 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import dignityPhoto from "../assets/images/dignity-moment.jpg";
+---
+
+<Layout title="About" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
+	<section class="page-hero">
+		<div class="wrap">
+			<h1>About Souper Troopers</h1>
+			<p>Est. 2014, Woodstock, Cape Town. A social enterprise built on dignity, love, and respect.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="grid grid-2" style="align-items:center;">
+			<div>
+				<span class="badge">Our mission</span>
+				<h2>Every person deserves dignity</h2>
+				<p>
+					Every person deserves dignity, and with the right support, anyone can rebuild their
+					future. That belief drives everything we do — from a first conversation on the street
+					to a first pay cheque.
+				</p>
+			</div>
+			<div class="figure">
+				<Image src={dignityPhoto} alt="A member of the Souper Troopers community smiling" widths={[400, 800]} sizes="(min-width: 700px) 500px, 100vw" />
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">How we work</span>
+			<h2>Dignity. Love. Respect.</h2>
+			<p>Every beneficiary is seen as human first — before being homeless.</p>
+		</div>
+		<div class="grid grid-3">
+			<div class="card">
+				<h3>Not a handout</h3>
+				<p>A hand up. Support is tailored to the person, not a one-size-fits-all programme.</p>
+			</div>
+			<div class="card">
+				<h3>People-first</h3>
+				<p>Success stories and real outcomes lead — not organisational statistics.</p>
+			</div>
+			<div class="card">
+				<h3>Sustainable</h3>
+				<p>Social enterprises like Troopers Coffee and African Worry Dolls&trade; create real jobs, not just donations.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Where we work</span>
+			<h2>The Humanity Hub</h2>
+			<p>
+				Our base at 66 Newmarket Street, Woodstock, Cape Town — home to the CAST programme, the
+				Souper Squad workshop, and the wider community we support.
+			</p>
+		</div>
+	</section>
+</Layout>

@@ -1,0 +1,111 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import supportPhoto from "../assets/images/support-conversation.jpg";
+---
+
+<Layout title="Home" description="Souper Troopers helps people move from crisis to dignity through food, work and community in Cape Town.">
+	<section class="hero">
+		<div class="wrap">
+			<h1>We are all human. We all have a story. Together, we are the change.</h1>
+			<p>
+				Souper Troopers helps people move from crisis to dignity — through the CAST programme,
+				the Humanity Hub, and a community that meets people halfway.
+			</p>
+			<div class="actions">
+				<a class="btn btn-primary" href="/donate">Donate now</a>
+				<a class="btn btn-secondary" href="/shop">Shop with purpose</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Choose your path</span>
+			<h2>However you want to help, there's a clear next step</h2>
+		</div>
+		<div class="grid grid-3">
+			<div class="card">
+				<h3>Donate</h3>
+				<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
+				<a href="/donate">Donate now &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Volunteer</h3>
+				<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
+				<a href="/get-involved">Get involved &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Partner with us</h3>
+				<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
+				<a href="/get-involved">Partner with us &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Impact</span>
+			<h2>Impact you can't miss</h2>
+			<p>Real outcomes from the CAST programme — the numbers behind every story.</p>
+		</div>
+		<div class="grid grid-4">
+			<div class="stat"><strong>1,700+</strong><span>lives supported since 2014</span></div>
+			<div class="stat"><strong>77%</strong><span>employment success in the latest CAST intake</span></div>
+			<div class="stat"><strong>ID docs</strong><span>secured for people with no path to services</span></div>
+			<div class="stat"><strong>Skills</strong><span>training and job-readiness for every participant</span></div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="grid grid-2" style="align-items: center;">
+			<div class="figure">
+				<Image src={supportPhoto} alt="A Souper Troopers social worker in conversation with a CAST participant" widths={[400, 800]} sizes="(min-width: 700px) 500px, 100vw" />
+			</div>
+			<div>
+				<span class="badge">The CAST journey</span>
+				<h2>Connect. Assess. Support. Transform.</h2>
+				<p>
+					Every journey starts with a person requesting help and a social worker who shows up —
+					rooted in dignity, love, and respect. From there: an honest assessment of what's needed,
+					tailored support (documents, training, referrals, job-readiness), and a path toward
+					independence.
+				</p>
+				<a href="/our-work">See the full CAST journey &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Success stories</span>
+			<h2>People, not statistics</h2>
+		</div>
+		<div class="grid grid-2">
+			<div class="card">
+				<p class="quote">
+					"I'm not just an inspiration to others, but an inspiration to myself."
+					<cite>— Odette Sue Oliver</cite>
+				</p>
+				<p>Odette is part of the Souper Squad, handcrafting African Worry Dolls&trade; as part of her journey.</p>
+			</div>
+			<div class="card">
+				<h3>Peaceful</h3>
+				<p>
+					Gained experience through the Troopers Coffee social enterprise, went on to train as a
+					paralegal, and now works at Law 4 All — the ripple effect of purpose-driven work.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card" style="background: var(--st-ink); color: white; text-align: center; padding: 3rem;">
+			<h2 style="margin-top:0;">Ready to be part of the story?</h2>
+			<div class="actions" style="justify-content:center; display:flex; gap:1rem; flex-wrap:wrap;">
+				<a class="btn btn-primary" href="/donate">Donate now</a>
+				<a class="btn btn-outline" style="border-color:white; color:white;" href="/get-involved">Get involved</a>
+			</div>
+		</div>
+	</section>
+</Layout>

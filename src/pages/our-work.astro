@@ -1,0 +1,94 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const castSteps = [
+	{
+		letter: "C",
+		title: "Connect",
+		body: "A beneficiary requests assistance, and an appointment is scheduled with a social worker. This first appointment marks the start of accountability.",
+	},
+	{
+		letter: "A",
+		title: "Assess",
+		body: "The social worker and individual assess the situation together, identify basic needs, and map out the individual journey — through conversation rooted in dignity, love, and respect.",
+	},
+	{
+		letter: "S",
+		title: "Support",
+		body: "Tailored, holistic support: rehabilitation programmes, reunification services, ID document assistance, skills upliftment, job-readiness (CV writing, interview prep), and referrals to shelters and clinics.",
+	},
+	{
+		letter: "T",
+		title: "Transform",
+		body: "With support in place, the person moves toward independence and becomes a success story. Every journey is unique — CAST is the consistent, shared framework.",
+	},
+];
+---
+
+<Layout title="Our Work" description="The CAST programme: Connect, Assess, Support, Transform — how Souper Troopers helps people rebuild.">
+	<section class="page-hero">
+		<div class="wrap">
+			<h1>Our Work</h1>
+			<p>CAST is our framework for helping someone move from crisis to independence — one step at a time.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">The CAST journey</span>
+			<h2>They show up for themselves. We meet them halfway.</h2>
+		</div>
+		<div class="grid grid-2">
+			{castSteps.map((step) => (
+				<div class="card">
+					<h3><span style="color: var(--st-teal-dark);">{step.letter}</span> — {step.title}</h3>
+					<p>{step.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Impact</span>
+			<h2>Outcomes from the latest CAST intake</h2>
+		</div>
+		<div class="grid grid-4">
+			<div class="stat"><strong>1,700+</strong><span>lives supported since 2014</span></div>
+			<div class="stat"><strong>77%</strong><span>employment success rate</span></div>
+			<div class="stat"><strong>ID docs</strong><span>secured for participants</span></div>
+			<div class="stat"><strong>Workshops</strong><span>skills training &amp; counselling sessions</span></div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Success stories</span>
+			<h2>Real people, real outcomes</h2>
+		</div>
+		<div class="grid grid-2">
+			<div class="card">
+				<p class="quote">
+					"I'm not just an inspiration to others, but an inspiration to myself."
+					<cite>— Odette Sue Oliver</cite>
+				</p>
+				<p>Odette is part of the Souper Squad, handcrafting African Worry Dolls&trade; as part of her journey.</p>
+			</div>
+			<div class="card">
+				<h3>Peaceful</h3>
+				<p>
+					Gained experience through the Troopers Coffee social enterprise, went on to train as a
+					paralegal, and now works at Law 4 All.
+				</p>
+			</div>
+			<div class="card">
+				<h3>Umar</h3>
+				<p>Became a personal trainer — full story coming soon.</p>
+			</div>
+			<div class="card">
+				<h3>Sidney</h3>
+				<p>Rebuilding his life through CAST — full story coming soon.</p>
+			</div>
+		</div>
+	</section>
+</Layout>

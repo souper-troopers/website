@@ -3,7 +3,7 @@
 ## Stack (decided 2026-08-08 — do not change without asking the user first)
 - **Framework:** Astro
 - **Interactivity:** Svelte 5, using **runes** syntax (`$state`, `$derived`, etc.) — not Svelte 4 stores or `export let` reactive statements. If unsure which syntax an example uses, default to runes.
-- **Content:** Sanity (headless CMS). Schema lives in this repo's code; content lives in Sanity's hosted dataset, fetched at build/query time.
+- **Content:** Sanity (headless CMS), project `wqa0no5g` / dataset `production`. Schema lives in `studio/schemaTypes/` in this repo; content lives in Sanity's hosted dataset, fetched at build time via `src/lib/sanity.ts`. Live since 2026-08-08 — six types (`successStory`, `teamMember`, `partner`, `product`, `impactStat`, `siteSettings`), all wired into the site's pages. Structural/rarely-changing copy (CAST steps, Humanity Hub services list, hero headline) intentionally stays hardcoded in `.astro` files, not in Sanity.
 - **Hosting:** Vercel or Netlify (static/JAMstack deploy, auto HTTPS/CDN, no server to maintain).
 - **Shop/checkout:** Stripe Checkout or Snipcart bolted onto static pages — not a full e-commerce backend.
 - **Donations:** link out to the org's existing/new donation platform rather than building custom payment infra.
@@ -18,6 +18,7 @@ Reasoning: if these accounts are created under the user's personal logins, the c
 - [x] **Netlify**: deploying under a Team ("Souper Troopers"), not the user's personal account. Chose Netlify over Vercel because Vercel's free tier doesn't support Teams at all (Pro-only, ~$20/mo). Deployed to a temporary `*.netlify.app` URL — **not yet pointed at the real domain** (soupertroopers.org still serves the current live site until this redesign is approved).
 - [ ] **Sanity**: deferred — creating a Sanity Organization requires payment details upfront, so we're starting under the user's personal account instead to avoid blocking schema/content work. Sanity supports transferring a project to an Organization later; **revisit this before real launch.**
 - [ ] **Payment processor (Stripe/Snipcart)**: needed for real shop checkout — blocked on confirmed product pricing, stock, and fulfillment process (still-open Notion questions), not just the account itself.
+- [ ] **Deploy the Sanity Studio** (`npx sanity deploy` from `studio/`) so Kerry/Shan can actually edit content — right now it only runs locally (`sanity dev`), so only the user can access it.
 
 ## Before real launch (pointing soupertroopers.org at this site)
 - [ ] Remove the `<meta name="robots" content="noindex, nofollow">` tag in `src/layouts/Layout.astro` — added 2026-08-08 so search engines don't index the pre-launch preview URL under the wrong domain.

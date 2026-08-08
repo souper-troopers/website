@@ -24,6 +24,15 @@ const castSteps = [
 		body: "With support in place, the person moves toward independence and becomes a success story. Every journey is unique — CAST is the consistent, shared framework.",
 	},
 ];
+
+const hubServices = [
+	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts." },
+	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling." },
+	{ title: "Housing assistance", body: "Shelter placements and family reunification." },
+	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments." },
+	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting." },
+	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project — income and skills development for Troopers." },
+];
 ---
 
 <Layout title="Our Work" description="The CAST programme: Connect, Assess, Support, Transform — how Souper Troopers helps people rebuild.">
@@ -44,6 +53,21 @@ const castSteps = [
 				<div class="card">
 					<h3><span style="color: var(--st-teal-dark);">{step.letter}</span> — {step.title}</h3>
 					<p>{step.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">What support looks like</span>
+			<h2>The Humanity Hub, in practice</h2>
+		</div>
+		<div class="grid grid-3">
+			{hubServices.map((item) => (
+				<div class="card">
+					<h3>{item.title}</h3>
+					<p>{item.body}</p>
 				</div>
 			))}
 		</div>

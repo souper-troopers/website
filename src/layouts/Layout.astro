@@ -65,18 +65,12 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 		<footer class="site-footer">
 			<div class="wrap footer-inner">
-				<div>
-					<strong>Souper Troopers</strong>
-					<p>66 Newmarket Street, Woodstock, Cape Town</p>
-					<p><a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a></p>
-					<p style="font-size: 0.85rem; opacity: 0.7;">Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.</p>
-				</div>
-				<div>
-					<p class="tagline">We are all human. We all have a story. Together, we are the change.</p>
-				</div>
+				<strong>Souper Troopers</strong>
+				<span>66 Newmarket Street, Woodstock, Cape Town</span>
+				<a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>
 			</div>
 			<p class="fine-print wrap">
-				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO 188-609 &nbsp;|&nbsp; PBO 930063119 &nbsp;|&nbsp; B-BBEE Level 1
+				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO 188-609 &nbsp;|&nbsp; PBO 930063119 &nbsp;|&nbsp; B-BBEE Level 1 &nbsp;|&nbsp; Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.
 			</p>
 		</footer>
 
@@ -237,32 +231,27 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 			}
 
 			.site-footer {
-				margin-top: 4rem;
+				margin-top: 3rem;
 				background: var(--st-ink);
 				color: rgba(255, 255, 255, 0.85);
-				padding: 3rem 0 1.5rem;
+				padding: 1.75rem 0 1.25rem;
 			}
 
 			.footer-inner {
-				display: grid;
-				gap: 2rem;
-				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+				display: flex;
+				align-items: baseline;
+				flex-wrap: wrap;
+				gap: 0.5rem 1rem;
 			}
 
 			.site-footer a {
 				color: var(--st-teal);
 			}
 
-			.site-footer .tagline {
-				font-size: 1.1rem;
-				font-style: italic;
-				max-width: 32ch;
-			}
-
 			.fine-print {
-				margin-top: 2rem;
-				font-size: 0.85rem;
-				opacity: 0.6;
+				margin-top: 0.75rem;
+				font-size: 0.8rem;
+				opacity: 0.55;
 			}
 
 			/* Shared page building blocks */
@@ -391,6 +380,19 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 				flex-wrap: wrap;
 			}
 
+			.hero-secondary-link {
+				display: inline-block;
+				margin-top: 1.25rem;
+				color: rgba(255, 255, 255, 0.8);
+				font-weight: 600;
+				font-size: 0.9rem;
+				text-decoration: underline;
+			}
+
+			.hero-secondary-link:hover {
+				color: var(--st-white);
+			}
+
 			.hero .btn-primary {
 				background: var(--st-white);
 				color: var(--st-ink);
@@ -437,7 +439,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 			.figure img {
 				width: 100%;
-				height: auto;
+				max-height: 460px;
+				object-fit: cover;
 				border-radius: var(--radius);
 				display: block;
 			}

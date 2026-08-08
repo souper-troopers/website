@@ -17,6 +17,8 @@ const navLinks = [
 	{ href: "/get-involved", label: "Get Involved" },
 	{ href: "/contact", label: "Contact" },
 ];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
 <!doctype html>
@@ -37,7 +39,7 @@ const navLinks = [
 				</a>
 				<nav aria-label="Primary">
 					{navLinks.map((link) => (
-						<a href={link.href}>{link.label}</a>
+						<a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
 					))}
 				</nav>
 				<a class="btn btn-primary donate-cta" href="/donate">Donate</a>
@@ -153,10 +155,17 @@ const navLinks = [
 				text-decoration: none;
 				font-weight: 600;
 				font-size: 0.95rem;
+				padding-bottom: 4px;
+				border-bottom: 2px solid transparent;
 			}
 
 			nav[aria-label="Primary"] a:hover {
 				color: var(--st-teal-dark);
+			}
+
+			nav[aria-label="Primary"] a[aria-current="page"] {
+				color: var(--st-teal-dark);
+				border-bottom-color: var(--st-teal);
 			}
 
 			.btn {

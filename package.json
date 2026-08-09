@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "concurrently -n astro,sanity -c blue,magenta \"astro dev\" \"npm --prefix studio run dev\"",
+    "dev:functions": "netlify dev --command \"tail -f /dev/null\" --target-port 4321 --no-open",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -22,6 +23,7 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "concurrently": "^10.0.4"
+    "concurrently": "^10.0.4",
+    "netlify-cli": "^27.1.1"
   }
 }

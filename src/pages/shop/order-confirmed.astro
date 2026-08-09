@@ -1,0 +1,28 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Order confirmed" description="Thank you for your order.">
+	<section class="page-hero">
+		<div class="wrap">
+			<h1>Thank you</h1>
+			<p>Your payment went through. We'll be in touch about collection or courier arrangements.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card">
+			<p>
+				Collection is in person from 66 Newmarket Street, Woodstock, Cape Town, or you can arrange
+				your own courier — email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>
+				with your order details if you haven't already.
+			</p>
+			<a class="btn btn-primary" href="/shop">Back to shop</a>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	// Clear the cart once we land here after a successful payment.
+	localStorage.removeItem("souper-troopers-cart");
+</script>

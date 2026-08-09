@@ -35,12 +35,28 @@ export interface Partner {
 	logoOnDark?: boolean;
 }
 
-export interface Product {
+export interface AttributeVariant {
+	_key: string;
+	label: string;
+	price: number;
+}
+
+export interface ProductCategory {
 	name: string;
-	badge?: string;
-	description: unknown[];
-	priceRange: string;
-	variantDetails?: string;
+	slug: string;
+	blurb: string;
+	photo?: SanityImageSource;
+	displayMode: "items" | "attributes";
+	description?: any[];
+	attributeVariants?: AttributeVariant[];
+}
+
+export interface ShopItem {
+	_id: string;
+	name: string;
+	price: number;
+	photo?: SanityImageSource;
+	description?: string;
 }
 
 export interface ImpactStat {
@@ -75,8 +91,46 @@ export async function getPartners(): Promise<Partner[]> {
 	return sanityClient.fetch(`*[_type == "partner"] | order(order asc)`);
 }
 
-export async function getProducts(): Promise<Product[]> {
-	return sanityClient.fetch(`*[_type == "product"] | order(order asc)`);
+export async function getProductCategories(): Promise<ProductCategory[]> {
+	return sanityClient.fetch(
+		`*[_type == "productCategory"] | order(order asc) {
+			name,
+			"slug": slug.current,
+			blurb,
+			photo,
+			displayMode,
+			description,
+			attributeVariants,
+		}`
+	);
+}
+
+export async function getProductCategory(slug: string): Promise<ProductCategory | null> {
+	return sanityClient.fetch(
+		`*[_type == "productCategory" && slug.current == $slug][0] {
+			name,
+			"slug": slug.current,
+			blurb,
+			photo,
+			displayMode,
+			description,
+			attributeVariants,
+		}`,
+		{ slug }
+	);
+}
+
+export async function getShopItems(categorySlug: string): Promise<ShopItem[]> {
+	return sanityClient.fetch(
+		`*[_type == "shopItem" && category->slug.current == $categorySlug] | order(order asc) {
+			_id,
+			name,
+			price,
+			photo,
+			description,
+		}`,
+		{ categorySlug }
+	);
 }
 
 export async function getImpactStats(page: "home" | "our-work" | "donate"): Promise<ImpactStat[]> {

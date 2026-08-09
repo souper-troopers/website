@@ -1,8 +1,17 @@
 import successStory from './successStory'
 import teamMember from './teamMember'
 import partner from './partner'
-import product from './product'
+import productCategory from './productCategory'
+import shopItem from './shopItem'
 import impactStat from './impactStat'
 import siteSettings from './siteSettings'
 
-export const schemaTypes = [successStory, teamMember, partner, product, impactStat, siteSettings]
+export const schemaTypes = [
+  successStory,
+  teamMember,
+  partner,
+  productCategory,
+  shopItem,
+  impactStat,
+  siteSettings,
+]

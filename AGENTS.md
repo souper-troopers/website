@@ -92,6 +92,16 @@ astro dev --background
 
 Manage that background server with `astro dev stop`, `astro dev status`, and `astro dev logs`. For the Studio specifically, `sanity dev --port 3333` from `studio/` (backgrounded via `nohup ... &`, then `pkill -f "sanity dev"` to stop) — it doesn't have its own background-mode flag.
 
+**Testing Netlify Functions locally (added 2026-08-09, for the PayFast checkout work)**: plain `astro dev` on :4321 has no idea `netlify/functions/` exists — anything under `/.netlify/functions/*` 404s there. Use `netlify dev` instead, which proxies the whole site (on :8888) *and* serves the local functions together:
+
+```
+npm run dev:functions
+```
+
+**Gotcha**: `netlify dev`'s normal framework auto-detection is not usable in this project — running it plain hits an interactive "Multiple possible dev commands found" prompt (Astro vs. Svelte both resolve to `npm run dev`), which hangs forever in a non-interactive/agent session. Passing `--command "npx astro dev"` directly doesn't work either — Astro's dev server daemonizes itself immediately (prints "Dev server running" and returns control), which `netlify dev` misreads as the framework process crashing, so it shuts itself down right after starting. The fix: start `astro dev --background` yourself first (as above), confirm it's up with `astro dev status`, *then* start `netlify dev` with a no-op long-running placeholder command (`tail -f /dev/null`) — `netlify dev` just needs to see port 4321 already answering and proxy to it; what its own supervised "command" does doesn't matter as long as it doesn't exit.
+
+Reads `.env` automatically for local secrets (`PAYFAST_MERCHANT_ID` etc. — see below). `URL` is auto-injected by `netlify dev` to match its own local address, so PayFast's `return_url`/`notify_url` correctly point at `localhost:8888` during local testing without any extra config.
+
 ## Documentation
 Full documentation: https://docs.astro.build
 

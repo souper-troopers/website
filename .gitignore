@@ -26,3 +26,9 @@ pnpm-debug.log*
 .claude/settings.local.json
 .vscode/
 .playwright-mcp/
+
+# Local Netlify folder
+.netlify
+
+# Local Deno Edge Functions tooling state (from `netlify dev`) — not used by the deployed site
+deno.lock

@@ -3,6 +3,7 @@ import { Image, getImage } from "astro:assets";
 import logoReversed from "../assets/images/logo-reversed.png";
 import dignityMoment from "../assets/images/dignity-moment.jpg";
 import { getSiteSettings } from "../lib/sanity";
+import CartWidget from "../components/CartWidget.svelte";
 import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/500.css";
 import "@fontsource/quicksand/600.css";
@@ -126,6 +127,7 @@ const structuredData = {
 						<a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
 					))}
 				</nav>
+				<CartWidget client:load />
 				<a class="btn btn-primary donate-cta" href="/donate">Donate</a>
 			</div>
 		</header>
@@ -412,6 +414,44 @@ const structuredData = {
 
 			.card h3 {
 				margin-top: 0;
+			}
+
+			.category-tile {
+				text-decoration: none;
+				color: inherit;
+				display: flex;
+				flex-direction: column;
+				transition: transform 0.15s ease;
+			}
+
+			.category-tile:hover {
+				transform: translateY(-3px);
+			}
+
+			.category-tile-img {
+				width: 100%;
+				aspect-ratio: 4 / 3;
+				object-fit: cover;
+				border-radius: calc(var(--radius) - 6px);
+				margin-bottom: 1rem;
+			}
+
+			.category-tile h2 {
+				font-size: 1.2rem;
+				margin: 0 0 0.4rem;
+			}
+
+			.category-tile p {
+				color: rgba(36, 35, 43, 0.65);
+				font-size: 0.92rem;
+				margin: 0 0 0.75rem;
+			}
+
+			.category-tile-cta {
+				margin-top: auto;
+				font-weight: 700;
+				color: var(--st-teal-dark);
+				font-size: 0.9rem;
 			}
 
 			.payment-icon {

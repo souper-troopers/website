@@ -1,12 +1,10 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { Image } from "astro:assets";
-import shopPhoto from "../assets/images/shop-products.jpg";
-import OrderForm from "../components/OrderForm.svelte";
-import { PortableText } from "astro-portabletext";
-import { getProducts } from "../lib/sanity";
+import shopPhoto from "../../assets/images/shop-products.jpg";
+import { getProductCategories, urlFor } from "../../lib/sanity";
 
-const products = await getProducts();
+const categories = await getProductCategories();
 ---
 
 <Layout title="Shop" description="Troopers Coffee and African Worry Dolls — purpose-driven products from Shmiley, Souper Troopers' income-generating enterprise.">
@@ -38,16 +36,22 @@ const products = await getProducts();
 
 	<section class="section wrap">
 		<div class="grid grid-3">
-			{products.map((product) => (
-				<div class="card">
-					{product.badge && <span class="badge">{product.badge}</span>}
-					<h2>{product.name}</h2>
-					<PortableText value={product.description} />
-					<p>
-						<strong>{product.priceRange}</strong>
-						{product.variantDetails && <> · {product.variantDetails}</>}
-					</p>
-				</div>
+			{categories.map((category) => (
+				<a class="card category-tile" href={`/shop/${category.slug}`}>
+					{category.photo && (
+						<img
+							src={urlFor(category.photo).width(500).height(375).fit("crop").url()}
+							alt={category.name}
+							width="500"
+							height="375"
+							loading="lazy"
+							class="category-tile-img"
+						/>
+					)}
+					<h2>{category.name}</h2>
+					<p>{category.blurb}</p>
+					<span class="category-tile-cta">Shop {category.name} &rarr;</span>
+				</a>
 			))}
 		</div>
 	</section>
@@ -64,28 +68,4 @@ const products = await getProducts();
 			</p>
 		</div>
 	</section>
-
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Request an order</span>
-			<h2>Online checkout is coming — for now, order directly</h2>
-			<p>Tell us what you'd like and we'll confirm final pricing and collection details by email.</p>
-		</div>
-		<OrderForm client:visible productNames={products.map((p) => p.name)} />
-	</section>
-
-	<!--
-		Static duplicate of the order-request form, hidden from view. Netlify detects
-		form names by scanning the built HTML at deploy time, and the real form lives
-		inside a hydrated Svelte island — this plain copy guarantees Netlify registers
-		it regardless of how the island renders.
-	-->
-	<form name="order-request" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-		<input type="text" name="product" />
-		<input type="number" name="quantity" />
-		<input type="text" name="name" />
-		<input type="email" name="email" />
-		<textarea name="notes"></textarea>
-		<input type="text" name="bot-field" />
-	</form>
 </Layout>

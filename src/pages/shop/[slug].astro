@@ -1,0 +1,75 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { PortableText } from "astro-portabletext";
+import { getProductCategories, getShopItems, urlFor } from "../../lib/sanity";
+import AttributeProduct from "../../components/AttributeProduct.svelte";
+import ItemCard from "../../components/ItemCard.svelte";
+
+export async function getStaticPaths() {
+	const categories = await getProductCategories();
+	return categories.map((category) => ({
+		params: { slug: category.slug },
+		props: { category },
+	}));
+}
+
+const { category } = Astro.props;
+const items = category.displayMode === "items" ? await getShopItems(category.slug) : [];
+---
+
+<Layout title={category.name} description={category.blurb}>
+	<section class="page-hero">
+		<div class="wrap">
+			<a class="back-link" href="/shop">&larr; All products</a>
+			<h1>{category.name}</h1>
+			<p>{category.blurb}</p>
+		</div>
+	</section>
+
+	{category.description && (
+		<section class="section wrap">
+			<PortableText value={category.description} />
+		</section>
+	)}
+
+	<section class="section wrap">
+		{category.displayMode === "attributes" ? (
+			<AttributeProduct
+				client:load
+				categorySlug={category.slug}
+				categoryName={category.name}
+				photoUrl={category.photo ? urlFor(category.photo).width(700).height(700).fit("crop").url() : undefined}
+				variants={category.attributeVariants ?? []}
+			/>
+		) : (
+			<div class="grid grid-3">
+				{items.map((item) => (
+					<ItemCard
+						client:load
+						id={item._id}
+						categoryName={category.name}
+						name={item.name}
+						price={item.price}
+						description={item.description}
+						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").url() : undefined}
+					/>
+				))}
+			</div>
+		)}
+	</section>
+</Layout>
+
+<style>
+	.back-link {
+		display: inline-block;
+		margin-bottom: 1rem;
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 0.9rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.back-link:hover {
+		color: var(--st-teal);
+	}
+</style>

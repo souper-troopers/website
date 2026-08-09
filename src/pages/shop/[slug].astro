@@ -28,7 +28,9 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 
 	{category.description && (
 		<section class="section wrap">
-			<PortableText value={category.description} />
+			<div class="prose">
+				<PortableText value={category.description} />
+			</div>
 		</section>
 	)}
 
@@ -60,6 +62,10 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 </Layout>
 
 <style>
+	.prose :global(* + *) {
+		margin-top: 1rem;
+	}
+
 	.back-link {
 		display: inline-block;
 		margin-bottom: 1rem;

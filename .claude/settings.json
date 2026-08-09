@@ -106,7 +106,16 @@
       "Bash(curl -s -D - -o /dev/null -X POST https://sandbox.payfast.co.za/eng/process --data-urlencode merchant_id=10052763 --data-urlencode merchant_key=5wkoy1vkc1x2j --data-urlencode return_url=https://souper-troopers.netlify.app/shop/order-confirmed?ref=12a98a23-cc0c-413c-8ba3-bc841abaffb8 --data-urlencode cancel_url=https://souper-troopers.netlify.app/shop/order-cancelled --data-urlencode notify_url=https://souper-troopers.netlify.app/.netlify/functions/payfast-itn --data-urlencode m_payment_id=12a98a23-cc0c-413c-8ba3-bc841abaffb8 --data-urlencode amount=65.00 --data-urlencode 'item_name=Gift Tag — Hans Moolman \\(pack of 3\\)' --data-urlencode signature=1f5c5565decb3b2d36826b69a5a1d6df)",
       "Bash(git merge *)",
       "Bash(curl -s -X POST https://souper-troopers.netlify.app/.netlify/functions/create-payfast-payment -H 'Content-Type: application/json' -d '{\"items\":[{\"ref\":{\"kind\":\"item\",\"id\":\"isvxExfKGAZ4WMrYLwbHKW\"},\"qty\":1}]}')",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "mcp__playwright__browser_resize",
+      "Bash(echo \"started $!\")",
+      "Bash(pkill -f \"astro preview\")",
+      "Bash(break)",
+      "mcp__playwright__browser_snapshot",
+      "Bash(jobs -l)",
+      "Bash(curl -s 'https://wqa0no5g.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_id%3D%3D%22siteSettings%22%5D%5B0%5D')",
+      "Bash(npx playwright *)",
+      "Bash(node shot.mjs)"
     ]
   }
 }

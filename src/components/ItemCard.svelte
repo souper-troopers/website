@@ -49,18 +49,15 @@
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
 		border-radius: calc(var(--radius, 18px) - 6px);
-		margin-bottom: 0.5rem;
 	}
 
 	.item-card h3 {
-		margin: 0;
 		font-size: 1.05rem;
 	}
 
 	.item-card-desc {
 		font-size: 0.85rem;
 		color: rgba(36, 35, 43, 0.65);
-		margin: 0;
 	}
 
 	.item-card-price {

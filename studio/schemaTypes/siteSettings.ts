@@ -10,6 +10,5 @@ export default defineType({
     defineField({name: 'npoNumber', title: 'NPO number', type: 'string'}),
     defineField({name: 'pboNumber', title: 'PBO number', type: 'string'}),
     defineField({name: 'bbbeeLevel', title: 'B-BBEE level', type: 'string'}),
-    defineField({name: 'tagline', title: 'Tagline', type: 'string'}),
   ],
 })

@@ -159,6 +159,7 @@
 		z-index: 201;
 		display: flex;
 		flex-direction: column;
+		gap: 1rem;
 		padding: 1.5rem;
 		box-shadow: -12px 0 30px rgba(0, 0, 0, 0.15);
 		overflow-y: auto;
@@ -168,11 +169,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 1rem;
 	}
 
 	.cart-drawer-header h2 {
-		margin: 0;
 		font-size: 1.15rem;
 	}
 
@@ -196,12 +195,10 @@
 
 	.cart-empty-icon {
 		color: rgba(36, 35, 43, 0.18);
-		margin-bottom: 0.4rem;
 	}
 
 	.cart-empty-text {
 		color: rgba(36, 35, 43, 0.6);
-		margin: 0;
 	}
 
 	.cart-empty-link {
@@ -216,7 +213,7 @@
 
 	.cart-lines {
 		list-style: none;
-		margin: 0 0 1.25rem;
+		margin: 0;
 		padding: 0;
 		display: grid;
 		gap: 1rem;
@@ -278,7 +275,6 @@
 		align-items: baseline;
 		font-size: 1.05rem;
 		font-weight: 700;
-		margin-bottom: 1rem;
 	}
 
 	.checkout-btn {
@@ -306,6 +302,5 @@
 	.cart-note {
 		font-size: 0.78rem;
 		color: rgba(36, 35, 43, 0.55);
-		margin-top: 0.75rem;
 	}
 </style>

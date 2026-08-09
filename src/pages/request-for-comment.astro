@@ -69,7 +69,7 @@ const yourCall = [
 			))}
 		</div>
 
-		<div class="section-intro fk-your-call-intro">
+		<div class="section-intro">
 			<span class="badge">Your call, no rush</span>
 			<h2>Whenever you're ready</h2>
 			<p>Not open questions so much as things waiting on a go-ahead from you.</p>
@@ -123,7 +123,6 @@ const yourCall = [
 		color: #2f7a44;
 		padding: 0.22rem 0.6rem;
 		border-radius: 999px;
-		margin-bottom: 0.6rem;
 	}
 
 	.fk-status-test {
@@ -143,15 +142,19 @@ const yourCall = [
 		align-items: start;
 	}
 
+	.fk-ask > div {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
 	.fk-ask h3 {
 		font-size: 1.05rem;
-		margin: 0 0 0.3rem;
 	}
 
 	.fk-ask p {
 		font-size: 0.94rem;
 		color: rgba(36, 35, 43, 0.65);
-		margin: 0;
 		max-width: 62ch;
 	}
 
@@ -168,10 +171,6 @@ const yourCall = [
 		font-size: 0.9rem;
 		flex-shrink: 0;
 		margin-top: 0.15rem;
-	}
-
-	.fk-your-call-intro {
-		margin-top: 2.5rem;
 	}
 
 	.fk-ask-dot {
@@ -210,6 +209,5 @@ const yourCall = [
 	.fk-table-note {
 		font-size: 0.85rem;
 		color: rgba(36, 35, 43, 0.42);
-		margin-top: 0.9rem;
 	}
 </style>

@@ -15,7 +15,7 @@ const stories = await getFeaturedSuccessStories();
 		<Image src={heroPhoto} alt="" role="presentation" class="hero-bg" widths={[800, 1600, 2400]} sizes="100vw" />
 		<div class="hero-scrim"></div>
 		<div class="wrap hero-content">
-			<h1>We are all human. We all have a story. Together, we are the change.</h1>
+			<h1>We are all <span class="hero-highlight">human</span>. We all have a story. Together, we are the change.</h1>
 			<p>
 				Souper Troopers helps people move from crisis to dignity — through the CAST programme,
 				the Humanity Hub, and a community that meets people halfway.
@@ -113,20 +113,26 @@ const stories = await getFeaturedSuccessStories();
 	const header = document.querySelector<HTMLElement>(".site-header-overlay");
 	const hero = document.querySelector<HTMLElement>(".hero-photo");
 	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-	const maxShift = 70;
+	const parallaxRate = 0.3;
 	let ticking = false;
 
 	function update() {
+		const heroHeight = hero?.offsetHeight ?? 0;
+
 		if (heroImg && !prefersReducedMotion) {
-			const shift = Math.min(window.scrollY * 0.3, maxShift);
+			// No cap: the CSS overhang on .hero-bg (35%) is sized to comfortably cover a full
+			// heroHeight * parallaxRate shift, so the image keeps drifting for as long as any
+			// part of the hero is still in view instead of freezing partway through.
+			const shift = window.scrollY * parallaxRate;
 			heroImg.style.transform = `translateY(${shift}px)`;
 		}
-		// Once the hero has scrolled out from under the header, switch the header from a
-		// transparent overlay to a normal opaque one — otherwise it transparently overlaps
-		// whatever section happens to be scrolled underneath it.
+		// Fade the header from transparent to solid ink continuously as the hero scrolls by,
+		// reaching fully solid right as the hero's bottom edge reaches the header — instead of
+		// snapping at that threshold, which read as a sudden jump rather than a scroll effect.
 		if (header && hero) {
-			const heroBottom = hero.getBoundingClientRect().bottom;
-			header.classList.toggle("is-solid", heroBottom <= header.offsetHeight);
+			const threshold = Math.max(heroHeight - header.offsetHeight, 1);
+			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
+			header.style.setProperty("--header-fade", String(progress));
 		}
 		ticking = false;
 	}

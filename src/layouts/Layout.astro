@@ -74,7 +74,7 @@ const structuredData = {
 	name: "Souper Troopers",
 	url: Astro.site?.href,
 	logo: new URL(logoReversed.src, Astro.site).href,
-	description: settings.tagline,
+	description: "We are all human. We all have a story. Together, we are the change.",
 	email: settings.email,
 	address: settings.address,
 	taxID: settings.npoNumber,
@@ -183,16 +183,35 @@ const structuredData = {
 				box-sizing: border-box;
 			}
 
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6,
+			p {
+				margin: 0;
+			}
+
 			html,
 			body {
 				margin: 0;
 				padding: 0;
+				height: 100%;
 			}
 
 			body {
 				background: var(--st-bg);
 				color: var(--st-ink);
 				line-height: 1.5;
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+
+			main {
+				flex: 1 0 auto;
+				position: relative;
 			}
 
 			h1,
@@ -209,7 +228,6 @@ const structuredData = {
 			.wrap {
 				max-width: 1100px;
 				margin: 0 auto;
-				padding: 0 1.5rem;
 			}
 
 			.site-header {
@@ -219,22 +237,17 @@ const structuredData = {
 				z-index: 100;
 			}
 
+			/*
+			 * Starts transparent so the hero photo shows through behind it. A small script (see
+			 * index.astro) sets --header-fade continuously as the user scrolls through the hero,
+			 * fading the header to solid ink rather than snapping — no CSS transition here, since
+			 * a transition would lag behind the scroll-driven updates instead of tracking them.
+			 */
 			.site-header-overlay {
 				position: fixed;
 				left: 0;
 				right: 0;
-				background: transparent;
-				transition: background-color 0.2s ease;
-			}
-
-			/*
-			 * Starts transparent so the hero photo shows through behind it. A small script
-			 * (see index.astro) adds this class once the user scrolls past the hero, so the
-			 * header stops overlapping page content transparently and instead behaves like a
-			 * normal opaque sticky header for the rest of the page.
-			 */
-			.site-header-overlay.is-solid {
-				background: var(--st-ink);
+				background: rgba(36, 35, 43, var(--header-fade, 0));
 			}
 
 			.header-inner {
@@ -453,6 +466,9 @@ const structuredData = {
 
 			/* Shared page building blocks */
 			.section {
+				display: flex;
+				flex-direction: column;
+				gap: 2rem;
 				padding: 3.5rem 0;
 			}
 
@@ -469,7 +485,6 @@ const structuredData = {
 			.grid {
 				display: grid;
 				gap: 1.5rem;
-				margin-top: 2rem;
 			}
 
 			.grid-2 {
@@ -485,6 +500,10 @@ const structuredData = {
 			}
 
 			.card {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 0.75rem;
 				background: var(--st-white);
 				color: var(--st-ink);
 				border-radius: var(--radius);
@@ -492,8 +511,8 @@ const structuredData = {
 				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 			}
 
-			.card h3 {
-				margin-top: 0;
+			.card[hidden] {
+				display: none;
 			}
 
 			.cast-letter {
@@ -507,7 +526,6 @@ const structuredData = {
 				color: var(--st-white);
 				font-weight: 700;
 				font-size: 1.3rem;
-				margin-bottom: 0.85rem;
 			}
 
 			.category-tile {
@@ -515,6 +533,7 @@ const structuredData = {
 				color: inherit;
 				display: flex;
 				flex-direction: column;
+				gap: 0;
 				transition: transform 0.15s ease;
 			}
 
@@ -532,13 +551,13 @@ const structuredData = {
 
 			.category-tile h2 {
 				font-size: 1.2rem;
-				margin: 0 0 0.4rem;
+				margin-bottom: 0.4rem;
 			}
 
 			.category-tile p {
 				color: rgba(36, 35, 43, 0.65);
 				font-size: 0.92rem;
-				margin: 0 0 0.75rem;
+				margin-bottom: 0.75rem;
 			}
 
 			.category-tile-cta {
@@ -552,7 +571,6 @@ const structuredData = {
 				display: block;
 				width: 28px;
 				height: 28px;
-				margin-bottom: 0.75rem;
 				fill: var(--st-teal-dark);
 			}
 
@@ -561,7 +579,6 @@ const structuredData = {
 			}
 
 			.redirect-note {
-				margin-top: 0.6rem;
 				font-size: 0.8rem;
 				color: rgba(36, 35, 43, 0.55);
 			}
@@ -570,7 +587,6 @@ const structuredData = {
 				display: grid;
 				gap: 1rem;
 				max-width: 480px;
-				margin-top: 2rem;
 			}
 
 			.contact-form label {
@@ -619,7 +635,6 @@ const structuredData = {
 				justify-content: center;
 				width: 100px;
 				height: 100px;
-				margin-bottom: 0.75rem;
 				border-radius: calc(var(--radius) / 2);
 			}
 
@@ -641,7 +656,7 @@ const structuredData = {
 				height: 120px;
 				object-fit: cover;
 				border-radius: 50%;
-				margin: 0 auto 0.75rem;
+				margin: 0 auto;
 			}
 
 			.goods-tile {
@@ -720,10 +735,10 @@ const structuredData = {
 
 			.hero-bg {
 				position: absolute;
-				top: -12%;
+				top: -35%;
 				left: 0;
 				width: 100%;
-				height: 124%;
+				height: 145%;
 				object-fit: cover;
 				object-position: center 30%;
 				z-index: 0;
@@ -750,13 +765,17 @@ const structuredData = {
 			.hero h1 {
 				font-size: clamp(2.2rem, 5vw, 3.4rem);
 				max-width: 20ch;
-				margin: 0 0 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.hero-highlight {
+				color: var(--st-yellow);
 			}
 
 			.hero p {
 				max-width: 55ch;
 				font-size: 1.1rem;
-				margin: 0 0 2rem;
+				margin-bottom: 2rem;
 				opacity: 0.95;
 			}
 
@@ -797,7 +816,7 @@ const structuredData = {
 			}
 
 			.page-hero h1 {
-				margin: 0 0 0.5rem;
+				margin-bottom: 0.5rem;
 				font-size: clamp(2rem, 4vw, 2.8rem);
 			}
 
@@ -811,7 +830,6 @@ const structuredData = {
 				padding-left: 1.25rem;
 				font-style: italic;
 				font-size: 1.15rem;
-				margin: 1.5rem 0;
 			}
 
 			.quote cite {
@@ -854,7 +872,6 @@ const structuredData = {
 				grid-template-columns: 1.3fr 1fr;
 				grid-auto-rows: 1fr;
 				gap: 1.25rem;
-				margin-top: 2rem;
 				min-height: 460px;
 			}
 
@@ -875,12 +892,12 @@ const structuredData = {
 
 			.path-tile h3 {
 				font-size: 1.6rem;
-				margin: 0 0 0.6rem;
+				margin-bottom: 0.6rem;
 			}
 
 			.path-tile p {
 				opacity: 0.92;
-				margin: 0 0 1.25rem;
+				margin-bottom: 1.25rem;
 				max-width: 38ch;
 			}
 
@@ -940,11 +957,28 @@ const structuredData = {
 				color: rgba(255, 255, 255, 0.75);
 			}
 
+			.impact-band .wrap {
+				display: flex;
+				flex-direction: column;
+				gap: 3rem;
+			}
+
+			.dark-band .wrap {
+				display: flex;
+				flex-direction: column;
+				gap: 2rem;
+			}
+
 			.impact-stats {
 				display: grid;
 				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 				gap: 2.5rem;
-				margin-top: 3rem;
+			}
+
+			.impact-stat {
+				display: flex;
+				flex-direction: column;
+				gap: 0.6rem;
 			}
 
 			.impact-stat strong {
@@ -953,7 +987,6 @@ const structuredData = {
 				font-weight: 700;
 				color: var(--st-teal);
 				line-height: 1;
-				margin-bottom: 0.6rem;
 			}
 
 			.impact-stat span {
@@ -970,7 +1003,7 @@ const structuredData = {
 
 			.stories-band h2 {
 				font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-				margin: 0.6rem 0 0;
+				margin-top: 0.6rem;
 			}
 
 			.stories-band .badge-on-dark {
@@ -999,7 +1032,6 @@ const structuredData = {
 			}
 
 			.story-text {
-				margin: 0;
 				font-size: 1.15rem;
 				font-style: italic;
 				font-weight: 600;
@@ -1008,7 +1040,6 @@ const structuredData = {
 			}
 
 			.story-name {
-				margin: 0;
 				font-weight: 700;
 				font-size: 1rem;
 				letter-spacing: 0.02em;

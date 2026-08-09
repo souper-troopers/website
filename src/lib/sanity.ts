@@ -72,7 +72,6 @@ export interface SiteSettings {
 	npoNumber: string;
 	pboNumber: string;
 	bbbeeLevel: string;
-	tagline: string;
 }
 
 export async function getSuccessStories(): Promise<SuccessStory[]> {

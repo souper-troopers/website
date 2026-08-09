@@ -10,24 +10,26 @@ function phpUrlEncode(value: string): string {
 		.replace(/[!'()*~]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
 }
 
-// Recomputes the signature the same way create-payfast-payment.mts does, but over
-// whatever fields PayFast actually sent back (order as received, signature excluded).
-// Returns the diagnostic details too, so a mismatch can be debugged from the logs
-// rather than re-guessed blind.
+// PayFast signs the ITN over the exact raw body they sent, byte for byte - including
+// empty fields (custom_str1=, name_first=, etc.) which they always include. Re-parsing
+// the body and reconstructing it (as create-payfast-payment.mts does for the *outgoing*
+// request, where we choose what to include) silently drops those empty fields and breaks
+// the signature. The fix: strip only the "signature=..." pair from the raw body itself,
+// don't touch anything else, and hash that directly. Confirmed against a real ITN payload
+// before this fix shipped.
 function verifySignature(
-	fields: Record<string, string>,
+	rawBody: string,
+	receivedSignature: string | undefined,
 	passphrase: string
-): { ok: boolean; query: string; expected: string; received: string | undefined } {
-	const received = fields.signature;
-
-	const pairs = Object.entries(fields)
-		.filter(([key, value]) => key !== "signature" && value !== "" && value !== undefined)
-		.map(([key, value]) => `${key}=${phpUrlEncode(value)}`);
-	let query = pairs.join("&");
+): { ok: boolean; query: string; expected: string } {
+	let query = rawBody
+		.split("&")
+		.filter((pair) => !pair.startsWith("signature="))
+		.join("&");
 	if (passphrase) query += `&passphrase=${phpUrlEncode(passphrase)}`;
 
 	const expected = createHash("md5").update(query).digest("hex");
-	return { ok: !!received && expected === received, query, expected, received };
+	return { ok: !!receivedSignature && expected === receivedSignature, query, expected };
 }
 
 // PayFast's own recommended step: post the raw notification back to them so they can
@@ -61,7 +63,7 @@ export default async (request: Request) => {
 	const fields: Record<string, string> = {};
 	for (const [key, value] of params) fields[key] = value;
 
-	const verification = verifySignature(fields, passphrase);
+	const verification = verifySignature(rawBody, fields.signature, passphrase);
 	const payfastConfirmed = verification.ok && (await confirmWithPayfast(rawBody, mode));
 
 	if (!verification.ok || !payfastConfirmed) {
@@ -70,10 +72,9 @@ export default async (request: Request) => {
 			payfastConfirmed,
 			paymentId: fields.m_payment_id,
 			rawBody,
-			fieldsReceived: fields,
 			queryWeComputed: verification.query,
 			signatureWeComputed: verification.expected,
-			signaturePayfastSent: verification.received,
+			signaturePayfastSent: fields.signature,
 			passphraseConfigured: passphrase.length > 0,
 		});
 		return new Response("Invalid notification", { status: 400 });

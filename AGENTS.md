@@ -11,6 +11,7 @@
 ## Working agreement
 - The user must be consulted before any tech/stack choice or change — do not swap frameworks, CMS, or hosting providers unilaterally.
 - Content backups: a scheduled `sanity dataset export` (e.g. via a free GitHub Actions cron) should be set up once Sanity is live — this doubles as the migration path if ever needed.
+- **Git workflow (added 2026-08-09, cost-driven):** do day-to-day commits on the `dev` branch, not `main`. Netlify auto-deploys `main` on every push (a production deploy, 15 Netlify credits each on the Free plan — 300/month total) and pushing every small commit straight to `main` burns through that fast. Push to `dev` freely (no production-deploy cost), then merge `dev` → `main` only when actually ready to ship a batch of changes to the live preview.
 
 ## Publish → rebuild pipeline
 This is a static site (`output: "static"`) — pages are pre-rendered once at build time, so a Sanity edit alone doesn't change the live site. A Sanity webhook ("Netlify rebuild", id `IQSKUBSymrG2dmll`) POSTs to a Netlify build hook whenever a document changes in `production`, which triggers a fresh `astro build` and redeploy. Verified working 2026-08-09.

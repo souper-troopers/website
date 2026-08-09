@@ -52,10 +52,11 @@ const hubServices = [
 			<span class="badge">The CAST journey</span>
 			<h2>They show up for themselves. We meet them halfway.</h2>
 		</div>
-		<div class="grid grid-2">
+		<div class="grid grid-4">
 			{castSteps.map((step) => (
 				<div class="card">
-					<h3><span style="color: var(--st-teal-dark);">{step.letter}</span> — {step.title}</h3>
+					<span class="cast-letter">{step.letter}</span>
+					<h3>{step.title}</h3>
 					<p>{step.body}</p>
 				</div>
 			))}

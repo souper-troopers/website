@@ -62,7 +62,10 @@
       "Bash(git stash *)",
       "Bash(git checkout *)",
       "Bash(git pull *)",
-      "Bash(gh run *)"
+      "Bash(gh run *)",
+      "Bash(curl -s -X POST https://souper-troopers.netlify.app/ -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode form-name=contact --data-urlencode name=TEST --data-urlencode email=test@example.com --data-urlencode message=test --data-urlencode bot-field=)",
+      "Bash(curl -s -D - -o /dev/null -X POST https://souper-troopers.netlify.app/ -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode form-name=contact --data-urlencode name=TEST --data-urlencode email=test@example.com --data-urlencode message=test --data-urlencode bot-field=)",
+      "Bash(curl -s -D - -o /dev/null -X POST https://souper-troopers.netlify.app/ -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode form-name=contact --data-urlencode 'name=TEST - automated verification \\(safe to delete\\)' --data-urlencode email=test@example.com --data-urlencode 'message=Automated retest after enabling Form detection in Netlify dashboard.' --data-urlencode bot-field=)"
     ]
   }
 }

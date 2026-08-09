@@ -6,8 +6,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "concurrently -n astro,sanity -c blue,magenta \"astro dev\" \"npm --prefix studio run dev\"",
-    "dev:functions": "netlify dev --command \"tail -f /dev/null\" --target-port 4321 --no-open",
+    "dev": "concurrently -n astro,sanity,functions -c blue,magenta,green \"astro dev\" \"npm --prefix studio run dev\" \"netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open\"",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

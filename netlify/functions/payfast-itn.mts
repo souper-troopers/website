@@ -1,7 +1,13 @@
 import { createHash } from "node:crypto";
 
 function phpUrlEncode(value: string): string {
-	return encodeURIComponent(value).replace(/%20/g, "+");
+	// encodeURIComponent leaves !'()* unencoded, but PHP's urlencode() - which is what
+	// PayFast's own systems use to sign requests - encodes them too. Without this, any
+	// field containing e.g. a parenthesis (like "Gift Tag - Hans Moolman (pack of 3)")
+	// produces a signature that won't match PayFast's.
+	return encodeURIComponent(value)
+		.replace(/%20/g, "+")
+		.replace(/[!'()*~]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
 }
 
 // Recomputes the signature the same way create-payfast-payment.mts does, but over

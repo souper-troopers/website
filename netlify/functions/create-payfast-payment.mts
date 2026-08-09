@@ -53,7 +53,13 @@ async function resolveLine(line: IncomingLine): Promise<ResolvedLine | null> {
 // PayFast's signature: concatenate fields in insertion order (not alphabetical),
 // PHP-style urlencode (spaces as "+"), append the passphrase if one is set, then MD5.
 function phpUrlEncode(value: string): string {
-	return encodeURIComponent(value).replace(/%20/g, "+");
+	// encodeURIComponent leaves !'()* unencoded, but PHP's urlencode() - which is what
+	// PayFast's own systems use to sign requests - encodes them too. Without this, any
+	// field containing e.g. a parenthesis (like "Gift Tag - Hans Moolman (pack of 3)")
+	// produces a signature that won't match what PayFast expects.
+	return encodeURIComponent(value)
+		.replace(/%20/g, "+")
+		.replace(/[!'()*~]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
 }
 
 function buildSignature(fields: Record<string, string>, passphrase: string): string {

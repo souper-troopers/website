@@ -101,7 +101,9 @@
       "Bash(npx netlify-cli *)",
       "Bash(pkill -f \"netlify-cli dev\")",
       "Bash(pkill -f \"netlify dev\")",
-      "Bash(curl -s -X POST http://localhost:8888/.netlify/functions/create-payfast-payment -H 'Content-Type: application/json' -d '{\"items\":[{\"ref\":{\"kind\":\"attribute\",\"categorySlug\":\"coffee\",\"variantKey\":\"beans-250\"},\"qty\":1}]}')"
+      "Bash(curl -s -X POST http://localhost:8888/.netlify/functions/create-payfast-payment -H 'Content-Type: application/json' -d '{\"items\":[{\"ref\":{\"kind\":\"attribute\",\"categorySlug\":\"coffee\",\"variantKey\":\"beans-250\"},\"qty\":1}]}')",
+      "Bash(curl -s -X POST https://souper-troopers.netlify.app/.netlify/functions/create-payfast-payment -H 'Content-Type: application/json' -d '{\"items\":[{\"ref\":{\"kind\":\"attribute\",\"categorySlug\":\"coffee\",\"variantKey\":\"beans-250\"},\"qty\":1}]}')",
+      "Bash(curl -s -D - -o /dev/null -X POST https://sandbox.payfast.co.za/eng/process --data-urlencode merchant_id=10052763 --data-urlencode merchant_key=5wkoy1vkc1x2j --data-urlencode return_url=https://souper-troopers.netlify.app/shop/order-confirmed?ref=12a98a23-cc0c-413c-8ba3-bc841abaffb8 --data-urlencode cancel_url=https://souper-troopers.netlify.app/shop/order-cancelled --data-urlencode notify_url=https://souper-troopers.netlify.app/.netlify/functions/payfast-itn --data-urlencode m_payment_id=12a98a23-cc0c-413c-8ba3-bc841abaffb8 --data-urlencode amount=65.00 --data-urlencode 'item_name=Gift Tag — Hans Moolman \\(pack of 3\\)' --data-urlencode signature=1f5c5565decb3b2d36826b69a5a1d6df)"
     ]
   }
 }

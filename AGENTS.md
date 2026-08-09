@@ -16,6 +16,8 @@
 ## Publish → rebuild pipeline
 This is a static site (`output: "static"`) — pages are pre-rendered once at build time, so a Sanity edit alone doesn't change the live site. A Sanity webhook ("Netlify rebuild", id `IQSKUBSymrG2dmll`) POSTs to a Netlify build hook whenever a document changes in `production`, which triggers a fresh `astro build` and redeploy. Verified working 2026-08-09.
 
+**⚠️ Currently disabled (`isDisabledByUser: true`) as of 2026-08-09**, while the user is still actively experimenting with content in the Studio — every edit was triggering a 15-credit Netlify production deploy, same cost concern as the git-push/dev-branch change above. Re-enable by PATCHing `{"isDisabledByUser": false}` to `https://api.sanity.io/v2025-08-04/hooks/projects/wqa0no5g/IQSKUBSymrG2dmll` once ready for content publishes to auto-deploy again. Until then, content edits in Sanity will NOT show up on the live site without a manual deploy (Netlify dashboard "Trigger deploy", or hitting the build hook URL directly).
+
 **Gotcha if this ever needs recreating:** Sanity's webhook API (`POST /v2025-08-04/hooks/projects/{projectId}`) accepts a hook with `rule: null` without complaint, but a null rule silently matches nothing — the hook exists and looks fine in `sanity hooks list`, but never fires, with zero entries in `sanity hooks logs`. It needs an explicit rule set via `PATCH`: `{"rule": {"on": ["create", "update", "delete"], "filter": "true"}}`. Confirmed via the webhook's `attempts` endpoint (`GET /v2025-08-04/hooks/projects/{projectId}/{hookId}/attempts`) — that's the reliable way to check whether a webhook has actually ever fired, rather than trusting that "exists" means "works."
 
 ## Account setup checklist

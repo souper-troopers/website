@@ -62,7 +62,15 @@
 		</div>
 
 		{#if cart.items.length === 0}
-			<p class="cart-empty">Your cart is empty.</p>
+			<div class="cart-empty">
+				<svg viewBox="0 0 24 24" width="64" height="64" aria-hidden="true" class="cart-empty-icon">
+					<path d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2m4 3l1.6 9.6a2 2 0 0 0 2 1.4h8.8a2 2 0 0 0 2-1.7L21 9H6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					<circle cx="9.5" cy="20" r="1.2" fill="currentColor" />
+					<circle cx="17.5" cy="20" r="1.2" fill="currentColor" />
+				</svg>
+				<p class="cart-empty-text">Your cart is empty.</p>
+				<a href="/shop" class="cart-empty-link">Browse the shop &rarr;</a>
+			</div>
 		{:else}
 			<ul class="cart-lines">
 				{#each cart.items as item (item.key)}
@@ -178,7 +186,32 @@
 	}
 
 	.cart-empty {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding: 3rem 1rem 2.5rem;
+		gap: 0.6rem;
+	}
+
+	.cart-empty-icon {
+		color: rgba(36, 35, 43, 0.18);
+		margin-bottom: 0.4rem;
+	}
+
+	.cart-empty-text {
 		color: rgba(36, 35, 43, 0.6);
+		margin: 0;
+	}
+
+	.cart-empty-link {
+		color: var(--st-teal-dark, #148294);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.cart-empty-link:hover {
+		text-decoration: underline;
 	}
 
 	.cart-lines {

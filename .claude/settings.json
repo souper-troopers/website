@@ -120,7 +120,9 @@
       "Read(//Users/Apple/**)",
       "Bash(grep -i \"\\\\.png$\\\\|playwright-mcp\")",
       "mcp__playwright__browser_fill_form",
-      "mcp__playwright__browser_click"
+      "mcp__playwright__browser_click",
+      "WebFetch(domain:www.pexels.com)",
+      "Bash(python3 extract3.py)"
     ]
   }
 }

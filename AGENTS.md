@@ -47,13 +47,15 @@ Website scope/requirements come from the "🌐 Souper Troopers — Website Disco
 - Media assets (photos, videos, logos, brand PDFs, product one-pagers) live in a sibling directory, `../souper-troopers-media/`, not in this repo.
 
 ## Development
-When starting the dev server, use background mode:
+`npm run dev` (repo root) starts **both** the Astro site (localhost:4321) and the Sanity Studio (localhost:3333) together via `concurrently`, labeled/color-coded in one output stream — Ctrl+C stops both. There's no separate Astro-only script; running the site without the Studio (or vice versa) hasn't come up as a real need.
+
+When starting it in the background (e.g. so an agent session isn't blocked on it), run the underlying Astro command directly in background mode:
 
 ```
 astro dev --background
 ```
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+Manage that background server with `astro dev stop`, `astro dev status`, and `astro dev logs`. For the Studio specifically, `sanity dev --port 3333` from `studio/` (backgrounded via `nohup ... &`, then `pkill -f "sanity dev"` to stop) — it doesn't have its own background-mode flag.
 
 ## Documentation
 Full documentation: https://docs.astro.build

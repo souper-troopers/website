@@ -98,17 +98,10 @@ const stories = await getFeaturedSuccessStories();
 			<h2>People, not statistics</h2>
 			<div class="stories-grid">
 				{stories.map((story) => (
-					story.quote ? (
-						<blockquote class="story-quote">
-							<p>"{story.quote}"</p>
-							<cite>— {story.name}</cite>
-						</blockquote>
-					) : (
-						<div class="story-block">
-							<h3>{story.name}</h3>
-							<p>{story.body}</p>
-						</div>
-					)
+					<div class="story-card">
+						<p class="story-text">{story.quote ? `"${story.quote}"` : story.body}</p>
+						<p class="story-name">{story.name}</p>
+					</div>
 				))}
 			</div>
 		</div>

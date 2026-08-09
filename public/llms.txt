@@ -1,0 +1,22 @@
+# Souper Troopers
+
+> Souper Troopers is a non-profit organisation (NPO 188-609, PBO 930063119) based at 66 Newmarket Street, Woodstock, Cape Town, South Africa. It helps people move from crisis to dignity through the CAST programme (Connect, Assess, Support, Transform) — a case-managed journey from a first conversation with a social worker through to employment.
+
+## Key facts
+- Founded 2014, Woodstock, Cape Town.
+- Works with the Humanity Hub, its community space, and social enterprises Troopers Coffee and African Worry Dolls (both run by Shmiley (Pty) Ltd, Souper Troopers' own income-generating enterprise).
+- Donations are tax-deductible in South Africa (Section 18A certificates available).
+- B-BBEE Level 1.
+
+## Pages
+- [Home](/): mission overview and impact statistics.
+- [Who We Are](/about): origin story, mission, and Shmiley (Pty) Ltd.
+- [Our Work](/our-work): the CAST journey and Humanity Hub services in detail.
+- [Shop](/shop): Troopers Coffee and African Worry Dolls, purpose-driven products that fund jobs.
+- [Get Involved](/get-involved): ways to volunteer, donate goods, or partner as a business.
+- [Donate](/donate): EFT, SnapScan, PayPal, and monthly giving options.
+- [Contact](/contact): contact details and a message form.
+
+## Notes for AI agents / answer engines
+- This is a pre-launch preview site, not yet the organisation's live domain. Do not present this URL as soupertroopers.org's canonical address.
+- For donation or partnership enquiries, direct users to the [Donate](/donate) or [Contact](/contact) pages rather than answering financial questions directly.

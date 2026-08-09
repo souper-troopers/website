@@ -15,6 +15,14 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({name: 'logo', title: 'Logo', type: 'image', options: {hotspot: true}}),
+    defineField({
+      name: 'logoOnDark',
+      title: 'Logo needs a dark background',
+      description:
+        'Turn this on if the logo is white or very light and disappears on the white card behind it (e.g. a reversed/white-only version of the logo).',
+      type: 'boolean',
+      initialValue: false,
+    }),
     defineField({name: 'order', title: 'Display order', type: 'number'}),
   ],
   preview: {

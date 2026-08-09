@@ -3,16 +3,16 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
-import { getTeamMembers, getPartners } from "../lib/sanity";
+import { getTeamMembers, getPartners, urlFor } from "../lib/sanity";
 
 const team = await getTeamMembers();
 const partners = await getPartners();
 ---
 
-<Layout title="About" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
+<Layout title="Who We Are" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
 	<section class="page-hero">
 		<div class="wrap">
-			<h1>About Souper Troopers</h1>
+			<h1>Who We Are</h1>
 			<p>Est. 2014, Woodstock, Cape Town. A social enterprise built on dignity, love, and respect.</p>
 		</div>
 	</section>
@@ -96,7 +96,17 @@ const partners = await getPartners();
 		</div>
 		<div class="grid grid-4">
 			{team.map((person) => (
-				<div class="card">
+				<div class="card" style="text-align:center;">
+					{person.photo && (
+						<img
+							class="team-photo"
+							src={urlFor(person.photo).width(300).height(300).fit("crop").url()}
+							alt={person.name}
+							width="120"
+							height="120"
+							loading="lazy"
+						/>
+					)}
 					<h3>{person.name}</h3>
 					<p>{person.role}</p>
 				</div>
@@ -114,6 +124,18 @@ const partners = await getPartners();
 			<div class="grid grid-4">
 				{partners.map((partner) => (
 					<div class="card">
+						{partner.logo && (
+							<div class:list={["partner-logo-frame", partner.logoOnDark && "on-dark"]}>
+								<img
+									class="partner-logo"
+									src={urlFor(partner.logo).width(300).url()}
+									alt={partner.name}
+									width="100"
+									height="100"
+									loading="lazy"
+								/>
+							</div>
+						)}
 						<h3>{partner.name}</h3>
 						<p>{partner.blurb}</p>
 					</div>

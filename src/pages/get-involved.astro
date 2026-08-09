@@ -1,15 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import foodPhoto from "../assets/images/goods/food.jpg";
+import toiletriesPhoto from "../assets/images/goods/toiletries.jpg";
+import clothingPhoto from "../assets/images/goods/clothing.jpg";
+import linenPhoto from "../assets/images/goods/linen.jpg";
+import householdPhoto from "../assets/images/goods/household.jpg";
+import craftPhoto from "../assets/images/goods/craft.jpg";
+import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
+import electronicsPhoto from "../assets/images/goods/electronics.jpg";
 
 const goodsCategories = [
-	"Non-perishable food",
-	"Toiletries",
-	"Clothing (all seasons)",
-	"Linen & bedding",
-	"Household goods",
-	"Materials for African Worry Dolls",
-	"Cleaning products",
-	"Electronics",
+	{ label: "Non-perishable food", photo: foodPhoto },
+	{ label: "Toiletries", photo: toiletriesPhoto },
+	{ label: "Clothing (all seasons)", photo: clothingPhoto },
+	{ label: "Linen & bedding", photo: linenPhoto },
+	{ label: "Household goods", photo: householdPhoto },
+	{ label: "Materials for African Worry Dolls", photo: craftPhoto },
+	{ label: "Cleaning products", photo: cleaningPhoto },
+	{ label: "Electronics", photo: electronicsPhoto },
 ];
 ---
 
@@ -38,11 +47,15 @@ const goodsCategories = [
 		<div class="section-intro">
 			<span class="badge">Goods donation list</span>
 			<h2>What you can donate</h2>
-			<p>Every item helps — drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods.</p>
+			<p>Every item helps — drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> to arrange.</p>
 		</div>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
-				<div class="stat"><span>{item}</span></div>
+				<a class="goods-tile" href={`mailto:manager@soupertroopers.org?subject=${encodeURIComponent(`Donation drop-off: ${item.label}`)}`}>
+					<Image src={item.photo} alt="" role="presentation" class="goods-tile-img" widths={[300, 500]} sizes="(min-width: 700px) 260px, 45vw" />
+					<div class="goods-tile-scrim"></div>
+					<span>{item.label}</span>
+				</a>
 			))}
 		</div>
 	</section>

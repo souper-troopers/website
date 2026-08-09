@@ -25,4 +25,74 @@ import Layout from "../layouts/Layout.astro";
 			</div>
 		</div>
 	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Send a message</span>
+			<h2>Or just tell us what's up</h2>
+			<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
+		</div>
+
+		<div id="contact-form-success" class="card" hidden>
+			<h3>Message sent</h3>
+			<p>Thanks for reaching out — we'll get back to you soon.</p>
+		</div>
+
+		<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+			<input type="hidden" name="form-name" value="contact" />
+			<label class="honeypot-field" aria-hidden="true">
+				Leave this field blank
+				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+			</label>
+
+			<label>
+				Your name
+				<input type="text" name="name" required />
+			</label>
+
+			<label>
+				Your email
+				<input type="email" name="email" required />
+			</label>
+
+			<label>
+				Message
+				<textarea name="message" rows="4" required></textarea>
+			</label>
+
+			<button class="btn btn-primary" type="submit">Send message</button>
+			<p id="contact-form-error" class="form-note form-error" hidden>
+				Something went wrong sending that — you can email
+				<a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> directly instead.
+			</p>
+		</form>
+	</section>
 </Layout>
+
+<script>
+	const form = document.querySelector<HTMLFormElement>("#contact-form");
+	const successEl = document.querySelector<HTMLElement>("#contact-form-success");
+	const errorEl = document.querySelector<HTMLElement>("#contact-form-error");
+
+	form?.addEventListener("submit", async (event) => {
+		event.preventDefault();
+		if (errorEl) errorEl.hidden = true;
+
+		const submitButton = form.querySelector<HTMLButtonElement>("button[type='submit']");
+		if (submitButton) submitButton.disabled = true;
+
+		try {
+			const response = await fetch("/", {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
+			});
+			if (!response.ok) throw new Error("Form submission failed");
+			form.hidden = true;
+			if (successEl) successEl.hidden = false;
+		} catch {
+			if (errorEl) errorEl.hidden = false;
+			if (submitButton) submitButton.disabled = false;
+		}
+	});
+</script>

@@ -1,0 +1,46 @@
+name: Sanity dataset backup
+
+# Weekly export of the production Sanity dataset, pushed to the private
+# souper-troopers/website-backups repo. Kept out of this (public) repo
+# deliberately — the export likely contains personal data (beneficiary
+# names/stories, team contact details, unpublished drafts).
+#
+# Needs two repo secrets (Settings > Secrets and variables > Actions, on
+# this repo):
+#   SANITY_API_TOKEN   — a Sanity API token with Viewer (read-only) access,
+#                         from manage.sanity.io > project wqa0no5g > API > Tokens.
+#   BACKUP_REPO_TOKEN  — a GitHub personal access token (repo scope) for an
+#                         account with write access to website-backups.
+#
+# Note: scheduled (cron) triggers only fire from the default branch, so this
+# won't actually run on schedule until it's merged to main — see AGENTS.md.
+# workflow_dispatch works from any branch in the meantime, for testing.
+
+on:
+  schedule:
+    - cron: "0 3 * * 0" # Sundays 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Export Sanity dataset
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+        run: npx --yes sanity@latest dataset export production sanity-backup.tar.gz --project wqa0no5g
+
+      - name: Push backup to private backups repo
+        env:
+          GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/souper-troopers/website-backups.git" backups-repo
+          mkdir -p backups-repo/sanity
+          mv sanity-backup.tar.gz "backups-repo/sanity/production-${DATE}.tar.gz"
+          cd backups-repo
+          git config user.name "sanity-backup-bot"
+          git config user.email "actions@github.com"
+          git add "sanity/production-${DATE}.tar.gz"
+          git commit -m "Sanity dataset backup: production-${DATE}"
+          git push

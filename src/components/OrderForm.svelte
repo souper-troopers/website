@@ -6,10 +6,13 @@
 	let name = $state("");
 	let email = $state("");
 	let notes = $state("");
+	let botField = $state("");
 
 	let canSend = $derived(name.trim().length > 0 && email.trim().length > 0);
 
-	let mailtoHref = $derived.by(() => {
+	let status = $state("idle"); // idle | sending | sent | error
+
+	let mailtoFallbackHref = $derived.by(() => {
 		const subject = encodeURIComponent(`Order request: ${product}`);
 		const lines = [
 			`Product: ${product}`,
@@ -21,45 +24,88 @@
 		const body = encodeURIComponent(lines.join("\n"));
 		return `mailto:manager@soupertroopers.org?subject=${subject}&body=${body}`;
 	});
+
+	async function handleSubmit(event) {
+		event.preventDefault();
+		if (!canSend || status === "sending") return;
+		status = "sending";
+		try {
+			const response = await fetch("/", {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams({
+					"form-name": "order-request",
+					"bot-field": botField,
+					product,
+					quantity: String(quantity),
+					name,
+					email,
+					notes,
+				}).toString(),
+			});
+			status = response.ok ? "sent" : "error";
+		} catch {
+			status = "error";
+		}
+	}
 </script>
 
-<form class="order-form">
-	<label>
-		Product
-		<select bind:value={product}>
-			{#each productNames as name}
-				<option>{name}</option>
-			{/each}
-		</select>
-	</label>
+{#if status === "sent"}
+	<div class="card">
+		<h3>Order request sent</h3>
+		<p>Thanks — we'll confirm final pricing and collection details by email.</p>
+	</div>
+{:else}
+	<form class="order-form" name="order-request" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit={handleSubmit}>
+		<input type="hidden" name="form-name" value="order-request" />
+		<label class="honeypot-field" aria-hidden="true">
+			Leave this field blank
+			<input type="text" name="bot-field" tabindex="-1" autocomplete="off" bind:value={botField} />
+		</label>
 
-	<label>
-		Quantity
-		<input type="number" min="1" bind:value={quantity} />
-	</label>
+		<label>
+			Product
+			<select name="product" bind:value={product}>
+				{#each productNames as name}
+					<option>{name}</option>
+				{/each}
+			</select>
+		</label>
 
-	<label>
-		Your name
-		<input type="text" bind:value={name} required />
-	</label>
+		<label>
+			Quantity
+			<input type="number" name="quantity" min="1" bind:value={quantity} />
+		</label>
 
-	<label>
-		Your email
-		<input type="email" bind:value={email} required />
-	</label>
+		<label>
+			Your name
+			<input type="text" name="name" bind:value={name} required />
+		</label>
 
-	<label>
-		Notes (optional)
-		<textarea bind:value={notes} rows="2"></textarea>
-	</label>
+		<label>
+			Your email
+			<input type="email" name="email" bind:value={email} required />
+		</label>
 
-	<a class="btn btn-primary" class:disabled={!canSend} href={canSend ? mailtoHref : undefined} aria-disabled={!canSend}>
-		Send order request
-	</a>
-	<p class="form-note">
-		Opens your email client with the order pre-filled — we'll confirm pricing and delivery by reply.
-	</p>
-</form>
+		<label>
+			Notes (optional)
+			<textarea name="notes" bind:value={notes} rows="2"></textarea>
+		</label>
+
+		<button class="btn btn-primary" class:disabled={!canSend} type="submit" disabled={!canSend || status === "sending"}>
+			{status === "sending" ? "Sending…" : "Send order request"}
+		</button>
+
+		{#if status === "error"}
+			<p class="form-note form-error">
+				Something went wrong sending that — you can
+				<a href={mailtoFallbackHref}>email your order to us directly</a> instead.
+			</p>
+		{:else}
+			<p class="form-note">We'll confirm pricing and delivery by reply.</p>
+		{/if}
+	</form>
+{/if}
 
 <style>
 	.order-form {
@@ -92,12 +138,29 @@
 		margin: 0;
 	}
 
-	.disabled {
+	.form-error {
+		color: var(--st-red, #dd4b59);
+	}
+
+	.disabled,
+	.btn:disabled {
 		pointer-events: none;
 		opacity: 0.5;
 	}
 
 	.btn {
 		width: fit-content;
+		border: none;
+		cursor: pointer;
+		font: inherit;
+	}
+
+	.honeypot-field {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
 	}
 </style>

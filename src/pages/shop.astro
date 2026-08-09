@@ -73,4 +73,19 @@ const products = await getProducts();
 		</div>
 		<OrderForm client:visible productNames={products.map((p) => p.name)} />
 	</section>
+
+	<!--
+		Static duplicate of the order-request form, hidden from view. Netlify detects
+		form names by scanning the built HTML at deploy time, and the real form lives
+		inside a hydrated Svelte island — this plain copy guarantees Netlify registers
+		it regardless of how the island renders.
+	-->
+	<form name="order-request" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+		<input type="text" name="product" />
+		<input type="number" name="quantity" />
+		<input type="text" name="name" />
+		<input type="email" name="email" />
+		<textarea name="notes"></textarea>
+		<input type="text" name="bot-field" />
+	</form>
 </Layout>

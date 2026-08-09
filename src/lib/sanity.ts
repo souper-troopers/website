@@ -1,11 +1,19 @@
 import { createClient } from "@sanity/client";
+import { createImageUrlBuilder } from "@sanity/image-url";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export const sanityClient = createClient({
 	projectId: "wqa0no5g",
 	dataset: "production",
 	apiVersion: "2026-08-08",
-	useCdn: true,
+	useCdn: !import.meta.env.DEV,
 });
+
+const imageBuilder = createImageUrlBuilder(sanityClient);
+
+export function urlFor(source: SanityImageSource) {
+	return imageBuilder.image(source);
+}
 
 export interface SuccessStory {
 	name: string;
@@ -17,11 +25,14 @@ export interface SuccessStory {
 export interface TeamMember {
 	name: string;
 	role: string;
+	photo?: SanityImageSource;
 }
 
 export interface Partner {
 	name: string;
 	blurb: string;
+	logo?: SanityImageSource;
+	logoOnDark?: boolean;
 }
 
 export interface Product {

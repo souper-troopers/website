@@ -122,7 +122,10 @@
       "mcp__playwright__browser_fill_form",
       "mcp__playwright__browser_click",
       "WebFetch(domain:www.pexels.com)",
-      "Bash(python3 extract3.py)"
+      "Bash(python3 extract3.py)",
+      "Bash(npx astro check)",
+      "Bash(npx astro dev status)",
+      "Bash(python3 -c \"import json; json.load\\(open\\('/Users/Apple/Documents/charity/souper-troopers/.claude/settings.json'\\)\\); print\\('valid json'\\)\")"
     ]
   }
 }

@@ -33,11 +33,6 @@ import Layout from "../layouts/Layout.astro";
 			<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
 		</div>
 
-		<div id="contact-form-success" class="card" hidden>
-			<h3>Message sent</h3>
-			<p>Thanks for reaching out — we'll get back to you soon.</p>
-		</div>
-
 		<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
 			<input type="hidden" name="form-name" value="contact" />
 			<label class="honeypot-field" aria-hidden="true">
@@ -67,12 +62,49 @@ import Layout from "../layouts/Layout.astro";
 			</p>
 		</form>
 	</section>
+
+	<div id="contact-toast" class="toast" role="status" aria-live="polite"></div>
 </Layout>
+
+<style>
+	.toast {
+		position: fixed;
+		left: 50%;
+		bottom: 1.5rem;
+		z-index: 200;
+		max-width: calc(100% - 2rem);
+		text-align: center;
+		background: var(--st-teal-dark);
+		color: var(--st-white);
+		padding: 0.85rem 1.5rem;
+		border-radius: var(--radius);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+		opacity: 0;
+		pointer-events: none;
+		transform: translate(-50%, 0.5rem);
+		transition: opacity 0.25s ease, transform 0.25s ease;
+	}
+
+	.toast.show {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(-50%, 0);
+	}
+</style>
 
 <script>
 	const form = document.querySelector<HTMLFormElement>("#contact-form");
-	const successEl = document.querySelector<HTMLElement>("#contact-form-success");
 	const errorEl = document.querySelector<HTMLElement>("#contact-form-error");
+	const toastEl = document.querySelector<HTMLElement>("#contact-toast");
+	let toastTimer: ReturnType<typeof setTimeout>;
+
+	function showToast(message: string) {
+		if (!toastEl) return;
+		toastEl.textContent = message;
+		toastEl.classList.add("show");
+		clearTimeout(toastTimer);
+		toastTimer = setTimeout(() => toastEl.classList.remove("show"), 4000);
+	}
 
 	form?.addEventListener("submit", async (event) => {
 		event.preventDefault();
@@ -88,8 +120,22 @@ import Layout from "../layouts/Layout.astro";
 				body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
 			});
 			if (!response.ok) throw new Error("Form submission failed");
-			form.hidden = true;
-			if (successEl) successEl.hidden = false;
+
+			form.reset();
+			showToast(
+				import.meta.env.DEV
+					? "Message sent (local dev — Netlify only emails this notification from the live deployed site, not from dev)."
+					: "Message sent — thanks for reaching out, we'll get back to you soon.",
+			);
+
+			if (submitButton) {
+				const originalText = submitButton.textContent;
+				submitButton.textContent = "Sent ✓";
+				setTimeout(() => {
+					submitButton.textContent = originalText;
+					submitButton.disabled = false;
+				}, 1800);
+			}
 		} catch {
 			if (errorEl) errorEl.hidden = false;
 			if (submitButton) submitButton.disabled = false;

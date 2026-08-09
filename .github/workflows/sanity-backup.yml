@@ -28,7 +28,7 @@ jobs:
       - name: Export Sanity dataset
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
-        run: npx --yes sanity@latest dataset export production sanity-backup.tar.gz --project wqa0no5g
+        run: npx --yes sanity@latest dataset export production sanity-backup.tar.gz --project-id wqa0no5g
 
       - name: Push backup to private backups repo
         env:

@@ -9,15 +9,23 @@ The one thing definitely changing regardless: product prices and variants are mo
 
 The open question is whether to go further and add **real, automatic online payment** at checkout.
 
-## Option A — Add real checkout (Paystack)
+## Option A — Add real checkout (PayFast, direct integration)
 A shopper picks products, pays online by card or EFT at the moment of ordering, instead of waiting for an email reply to arrange payment.
 
-- **Processor**: Paystack (Stripe's African arm — Stripe itself doesn't support South African merchant accounts directly). Supports card **and EFT** as first-class payment methods.
-- **Fees**: 2% flat on EFT, 2.9% + R1.50 on card. No monthly fee, no setup fee — only pay when something actually sells.
-- **Setup**: needs a Paystack account verified with FICA documents (standard South African business/KYC verification), 1–2 business days to activate — likely needs Souper Troopers' own registration paperwork, so this step needs Kerry either way.
-- **Order notifications**: automatic — Paystack emails the merchant a receipt on every successful payment (a dashboard setting, not something we need to build), and emails the customer a receipt too.
-- **What we'd build**: a shopping cart on the site, plus one small piece of backend automation to hand off to Paystack's payment page and confirm the payment went through. A real but bounded amount of new work — not simple, not huge either.
+**Processor corrected 2026-08-09**: not Paystack. The user found the *current* live site (soupertroopers.org) already has a working WooCommerce cart and checkout via **PayFast** — a real, proven, already-verified merchant account, not something to set up from scratch. PayFast also isn't tied to WooCommerce/WordPress — they offer a general "Custom Integration" API (Merchant ID + Merchant Key, a signed redirect to their hosted payment page, an ITN webhook on completion) usable from any tech stack. So the plan is a **direct PayFast integration**: our own cart and checkout UI on the new site, reusing the *same already-verified merchant account* (Kerry retrieves the Merchant ID/Key from the existing PayFast dashboard — a credential lookup, not a new signup), with no WordPress dependency going forward.
+
+- **Fees** (already being paid today, not new): 2% flat on EFT, 3.2% + R2 on card, plus a ~R8.70 payout fee and a R250 dispute fee if either comes up.
+- **Setup**: none, in principle — reuses the existing verified account. Not yet confirmed whether the same Merchant ID can genuinely serve two simultaneous integrations (old WooCommerce site + new direct one) without conflict — worth confirming with PayFast before relying on it.
+- **What we'd build**: a shopping cart (client-side state), a Netlify Function to build the signed payment request server-side, and a Netlify Function to handle PayFast's ITN webhook confirming payment. See "Build plan" below.
 - **What doesn't change**: fulfillment is still a manual, in-person step regardless — someone still needs to prepare the order for pickup/courier. Real checkout speeds up *getting paid*, not *getting the product to the buyer*.
+- **Unresolved, worth asking Kerry alongside everything else below**: she mentioned buying a domain for "Shmiley" (the entity that actually runs this shop) — purpose unknown, but there's a real chance the shop is meant to live on its own domain rather than as a section of this site. Doesn't block building (the code is portable), but should be resolved before this goes live anywhere.
+
+## Build plan (in progress, 2026-08-09)
+1. **Sanity**: finalize the `product` schema — name, description, photo, badge, and a `variants` array (label + price) per product line. One-time data entry/migration for the three real product lines (Troopers Coffee, African Worry Dolls, Gift Tags), sourced from the Notion discovery doc's confirmed pricing.
+2. **Cart**: a Svelte 5 runes store (`$state`), persisted to `localStorage`, plus a cart UI (item count in header, a drawer/page with running total).
+3. **`create-payfast-payment` Netlify Function**: takes the cart contents, computes the total **server-side** (never trust a client-supplied total), builds PayFast's required signed fields, returns the redirect target.
+4. **`payfast-itn` Netlify Function**: PayFast's webhook target — verifies the notification actually came from PayFast and the amount matches, before treating an order as paid.
+5. **Credentials**: building/testing against PayFast's **sandbox** (free signup at sandbox.payfast.co.za, email only, no FICA) so none of this needs to wait on Kerry — swap to real credentials once retrieved.
 
 ## Option B — Keep it manual, just with real prices
 Same request-and-confirm flow as today, but the prices and options shown are finally accurate (pulled from real data instead of being unconfirmed).
@@ -26,8 +34,6 @@ Same request-and-confirm flow as today, but the prices and options shown are fin
 - **Tradeoff**: a buyer has to wait for a reply email before paying, rather than paying instantly at checkout.
 
 ## The real question, and why it's Kerry's call
-This isn't really a technical decision — Paystack is a solid, appropriately-priced fit for South Africa if real checkout is wanted. The actual question is **how many shop orders realistically come through**, and whether that volume justifies:
-- an online payment account that needs to stay verified/maintained,
-- and instant checkout being worth more to buyers than a quick email exchange.
+This isn't really a technical decision anymore — PayFast is already proven and already in use, so Option A doesn't carry the "new account to set up and maintain" cost it originally seemed to. The actual remaining question is **how many shop orders realistically come through**, and whether instant checkout is worth more to buyers than a quick email exchange — plus the Shmiley domain question above, which could affect *where* any of this ends up living.
 
-For a low-volume, handmade-goods, local-pickup shop, Option B might serve just as well for a lot less ongoing complexity. For a shop that's actually turning away/losing sales because people don't want to wait for an email reply, Option A pays for itself quickly. Kerry and Shan are the ones who'd know which of those is closer to true.
+For a low-volume, handmade-goods, local-pickup shop, Option B might still serve just as well for less ongoing complexity to maintain on our side (webhook handling, order state, etc.). For a shop that's actually turning away/losing sales because people don't want to wait for an email reply, Option A pays for itself quickly. Kerry and Shan are the ones who'd know which of those is closer to true.

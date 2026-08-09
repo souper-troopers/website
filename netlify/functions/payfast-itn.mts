@@ -12,9 +12,13 @@ function phpUrlEncode(value: string): string {
 
 // Recomputes the signature the same way create-payfast-payment.mts does, but over
 // whatever fields PayFast actually sent back (order as received, signature excluded).
-function verifySignature(fields: Record<string, string>, passphrase: string): boolean {
+// Returns the diagnostic details too, so a mismatch can be debugged from the logs
+// rather than re-guessed blind.
+function verifySignature(
+	fields: Record<string, string>,
+	passphrase: string
+): { ok: boolean; query: string; expected: string; received: string | undefined } {
 	const received = fields.signature;
-	if (!received) return false;
 
 	const pairs = Object.entries(fields)
 		.filter(([key, value]) => key !== "signature" && value !== "" && value !== undefined)
@@ -23,7 +27,7 @@ function verifySignature(fields: Record<string, string>, passphrase: string): bo
 	if (passphrase) query += `&passphrase=${phpUrlEncode(passphrase)}`;
 
 	const expected = createHash("md5").update(query).digest("hex");
-	return expected === received;
+	return { ok: !!received && expected === received, query, expected, received };
 }
 
 // PayFast's own recommended step: post the raw notification back to them so they can
@@ -57,11 +61,21 @@ export default async (request: Request) => {
 	const fields: Record<string, string> = {};
 	for (const [key, value] of params) fields[key] = value;
 
-	const signatureOk = verifySignature(fields, passphrase);
-	const payfastConfirmed = signatureOk && (await confirmWithPayfast(rawBody, mode));
+	const verification = verifySignature(fields, passphrase);
+	const payfastConfirmed = verification.ok && (await confirmWithPayfast(rawBody, mode));
 
-	if (!signatureOk || !payfastConfirmed) {
-		console.error("PayFast ITN rejected", { signatureOk, payfastConfirmed, paymentId: fields.m_payment_id });
+	if (!verification.ok || !payfastConfirmed) {
+		console.error("PayFast ITN rejected", {
+			signatureOk: verification.ok,
+			payfastConfirmed,
+			paymentId: fields.m_payment_id,
+			rawBody,
+			fieldsReceived: fields,
+			queryWeComputed: verification.query,
+			signatureWeComputed: verification.expected,
+			signaturePayfastSent: verification.received,
+			passphraseConfigured: passphrase.length > 0,
+		});
 		return new Response("Invalid notification", { status: 400 });
 	}
 

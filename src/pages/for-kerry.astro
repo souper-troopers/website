@@ -1,0 +1,177 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const liveItems = [
+	{ status: "Done", title: "Content you can edit yourselves", body: "You and Shan get your own login to update team bios, success stories, partners, and shop items — no developer needed for day-to-day changes." },
+	{ status: "Done", title: "Real shop, real prices", body: "Coffee, Worry Dolls, and Gift Tags — same products and prices as the current site, pulled directly from it." },
+	{ status: "Test mode", title: "Shop checkout", body: "A full cart and checkout, using the same PayFast account already in use today. Fully built and tested — switching it to take real payments is one small step, whenever you're ready." },
+	{ status: "Done", title: "Donate page", body: "EFT, SnapScan, PayPal, and monthly giving all linked, matching the current site." },
+	{ status: "Done", title: "Contact form", body: "Working submissions, spam-protected — no more relying on email alone." },
+	{ status: "Done", title: "Backups", body: "All content is automatically backed up every week, kept private and separate from the public site code." },
+];
+
+const asks = [
+	{ title: "The “Shmiley” domain", body: "You mentioned buying a domain for Shmiley — what was the plan for it? It might affect whether the shop should live on its own address rather than as a page on the main site." },
+	{ title: "Bank details for direct EFT donations", body: "The Donate page has an EFT option but no account details to actually send money to yet — same gap as the current site. We just need the account holder name, bank, branch code, and account number." },
+	{ title: "Which donation method people actually use", body: "EFT, SnapScan, PayPal, or monthly debit order — knowing which one gets used most lets us put it first, rather than showing all four as equally prominent." },
+	{ title: "When to switch the shop to real payments", body: "Whenever you're happy with it, flipping the shop from test mode to accepting real money is quick — just needs your go-ahead first." },
+	{ title: "A suggestion, not a request: donation amount buttons", body: "Some similar sites show quick-pick amounts (like “R150 / R350 / R500”) to make giving faster. We'd only want to do this if it's tied to real costs, so — worth it, or skip it?" },
+];
+---
+
+<Layout title="For Kerry" description="Souper Troopers website — where things stand.">
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry &amp; Shan — 2026-08-09</span>
+			<h1>Souper Troopers website: where things stand</h1>
+			<p>A preview of the new site is ready to look at, in your own time. This page covers what's already working, what we still need from you, and what any of it costs — no meeting required first.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Live in the preview</span>
+			<h2>What's already working</h2>
+			<p>This is a real, working preview — not a mockup. A couple of things (marked below) are intentionally still in "test mode" until you say go.</p>
+		</div>
+		<div class="grid grid-3">
+			{liveItems.map((item) => (
+				<div class="card">
+					<span class:list={["fk-status", { "fk-status-test": item.status === "Test mode" }]}>{item.status}</span>
+					<h3>{item.title}</h3>
+					<p>{item.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Needs you</span>
+			<h2>What we need from you</h2>
+			<p>Nothing here is urgent — take your time. Roughly ranked by what unblocks the most.</p>
+		</div>
+		<div class="fk-asks">
+			{asks.map((ask, i) => (
+				<div class="fk-ask">
+					<span class="fk-ask-number">{i + 1}</span>
+					<div>
+						<h3>{ask.title}</h3>
+						<p>{ask.body}</p>
+					</div>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Costs</span>
+			<h2>What this costs to run</h2>
+		</div>
+		<table class="fk-cost-table">
+			<thead>
+				<tr><th>Today</th><th>Cost</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Hosting</td><td>Free</td></tr>
+				<tr><td>Content editing tool (for you &amp; Shan)</td><td>Free</td></tr>
+				<tr><td>Visitor analytics</td><td>Free</td></tr>
+				<tr><td>Weekly content backups</td><td>Free</td></tr>
+				<tr><td>Payment processing</td><td>Free until something sells, then a small % per sale — same fees already being paid today, nothing new</td></tr>
+			</tbody>
+		</table>
+		<p class="fk-table-note">Everything above is free at the site's current size. If it ever needs to scale up well beyond what it's doing today (heavy traffic, very frequent edits), some of these could eventually move to a paid tier — not something on the horizon right now, just flagging it honestly rather than promising "free forever."</p>
+	</section>
+
+	<section class="section wrap">
+		<p style="color: rgba(36,35,43,0.65);">No pressure to respond to all of this at once, or quickly — happy to talk through any of it whenever suits you.</p>
+	</section>
+</Layout>
+
+<style>
+	.fk-status {
+		display: inline-block;
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		background: rgba(75, 188, 99, 0.14);
+		color: #2f7a44;
+		padding: 0.22rem 0.6rem;
+		border-radius: 999px;
+		margin-bottom: 0.6rem;
+	}
+
+	.fk-status-test {
+		background: rgba(219, 188, 59, 0.22);
+		color: #7a5f0a;
+	}
+
+	.fk-asks {
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.fk-ask {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.9rem;
+		align-items: start;
+	}
+
+	.fk-ask h3 {
+		font-size: 1.05rem;
+		margin: 0 0 0.3rem;
+	}
+
+	.fk-ask p {
+		font-size: 0.94rem;
+		color: rgba(36, 35, 43, 0.65);
+		margin: 0;
+		max-width: 62ch;
+	}
+
+	.fk-ask-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		background: rgba(219, 188, 59, 0.22);
+		color: #7a5f0a;
+		font-weight: 700;
+		font-size: 0.9rem;
+		flex-shrink: 0;
+		margin-top: 0.15rem;
+	}
+
+	.fk-cost-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.92rem;
+	}
+
+	.fk-cost-table th,
+	.fk-cost-table td {
+		text-align: left;
+		padding: 0.7rem 0.9rem;
+		border-bottom: 1px solid rgba(36, 35, 43, 0.09);
+	}
+
+	.fk-cost-table th {
+		background: rgba(36, 35, 43, 0.04);
+		font-weight: 700;
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		color: rgba(36, 35, 43, 0.64);
+	}
+
+	.fk-table-note {
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.42);
+		margin-top: 0.9rem;
+	}
+</style>

@@ -12,11 +12,14 @@ const liveItems = [
 	{ status: "Done", title: "Backups", body: "All content is automatically backed up every week - tested and confirmed actually working, not just switched on and hoped for." },
 ];
 
-const asks = [
+const questions = [
 	{ title: "The “Shmiley” domain", body: "Kerry mentioned buying a domain for Shmiley - what was the plan for it? If the idea is for the shop to have its own address, that's very achievable - a small dedicated Shmiley site that still shares all the same design and content as the main site behind the scenes, so it wouldn't mean starting over or maintaining two separate systems." },
 	{ title: "More photos & videos, and where to use them", body: "The site is using a starting set of photos for now. More to choose from would help - and just as useful, your thoughts on where specific ones should go (a homepage shot, team photos, images for the CAST journey, etc.)." },
 	{ title: "Bank details for direct EFT donations", body: "The Donate page has an EFT option but no account details to actually send money to yet - same gap as the current site. We just need the account holder name, bank, branch code, and account number." },
 	{ title: "Which donation method people actually use", body: "EFT, SnapScan, PayPal, or monthly debit order - knowing which one gets used most lets us put it first, rather than showing all four as equally prominent." },
+];
+
+const yourCall = [
 	{ title: "When to switch the shop to real payments", body: "Whenever you're happy with it, flipping the shop from test mode to accepting real money is quick - just needs your go-ahead first." },
 	{ title: "A suggestion, not a request: donation amount buttons", body: "Some similar sites show quick-pick amounts (like “R150 / R350 / R500”) to make giving faster. We'd only want to do this if it's tied to real costs, so - worth it, or skip it?" },
 ];
@@ -51,13 +54,30 @@ const asks = [
 	<section class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Needs you</span>
-			<h2>What we need from you</h2>
-			<p>Nothing here is urgent - take your time. Roughly ranked by what unblocks the most.</p>
+			<h2>A few real questions</h2>
+			<p>This is genuinely most of what's outstanding. Nothing urgent - take your time.</p>
 		</div>
 		<div class="fk-asks">
-			{asks.map((ask, i) => (
+			{questions.map((ask, i) => (
 				<div class="fk-ask">
 					<span class="fk-ask-number">{i + 1}</span>
+					<div>
+						<h3>{ask.title}</h3>
+						<p>{ask.body}</p>
+					</div>
+				</div>
+			))}
+		</div>
+
+		<div class="section-intro fk-your-call-intro">
+			<span class="badge">Your call, no rush</span>
+			<h2>Whenever you're ready</h2>
+			<p>Not open questions so much as things waiting on a go-ahead from you.</p>
+		</div>
+		<div class="fk-asks">
+			{yourCall.map((ask) => (
+				<div class="fk-ask">
+					<span class="fk-ask-dot" aria-hidden="true"></span>
 					<div>
 						<h3>{ask.title}</h3>
 						<p>{ask.body}</p>
@@ -148,6 +168,21 @@ const asks = [
 		font-size: 0.9rem;
 		flex-shrink: 0;
 		margin-top: 0.15rem;
+	}
+
+	.fk-your-call-intro {
+		margin-top: 2.5rem;
+	}
+
+	.fk-ask-dot {
+		display: block;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: rgba(36, 35, 43, 0.25);
+		flex-shrink: 0;
+		margin-top: 0.55rem;
+		margin-left: 10px;
 	}
 
 	.fk-cost-table {

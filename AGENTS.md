@@ -12,6 +12,11 @@
 - The user must be consulted before any tech/stack choice or change — do not swap frameworks, CMS, or hosting providers unilaterally.
 - Content backups: a scheduled `sanity dataset export` (e.g. via a free GitHub Actions cron) should be set up once Sanity is live — this doubles as the migration path if ever needed.
 
+## Publish → rebuild pipeline
+This is a static site (`output: "static"`) — pages are pre-rendered once at build time, so a Sanity edit alone doesn't change the live site. A Sanity webhook ("Netlify rebuild", id `IQSKUBSymrG2dmll`) POSTs to a Netlify build hook whenever a document changes in `production`, which triggers a fresh `astro build` and redeploy. Verified working 2026-08-09.
+
+**Gotcha if this ever needs recreating:** Sanity's webhook API (`POST /v2025-08-04/hooks/projects/{projectId}`) accepts a hook with `rule: null` without complaint, but a null rule silently matches nothing — the hook exists and looks fine in `sanity hooks list`, but never fires, with zero entries in `sanity hooks logs`. It needs an explicit rule set via `PATCH`: `{"rule": {"on": ["create", "update", "delete"], "filter": "true"}}`. Confirmed via the webhook's `attempts` endpoint (`GET /v2025-08-04/hooks/projects/{projectId}/{hookId}/attempts`) — that's the reliable way to check whether a webhook has actually ever fired, rather than trusting that "exists" means "works."
+
 ## Account setup checklist
 Reasoning: if these accounts are created under the user's personal logins, the charity doesn't actually own its own site — a volunteer does, on their behalf. Creating them as org/team resources from the start avoids a painful migration later and gives Souper Troopers itself ultimate control.
 - [x] **GitHub**: create a GitHub *Organization* (not a personal repo) — done, `souper-troopers/website`. Repo is public (made public 2026-08-08 — nothing sensitive in it, and Netlify's free tier can't deploy private org-owned repos or add team members without a paid plan, so public was the pragmatic choice).

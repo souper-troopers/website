@@ -56,7 +56,12 @@
       "Bash(gh repo *)",
       "Bash(cat ~/.config/gh/hosts.yml 2>&1)",
       "Read(//Users/Apple/.config/gh/**)",
-      "Bash(gh secret *)"
+      "Bash(gh secret *)",
+      "Bash(gh workflow *)",
+      "Bash(git fetch *)",
+      "Bash(git stash *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)"
     ]
   }
 }

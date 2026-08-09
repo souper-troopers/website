@@ -1,5 +1,7 @@
 # Shop checkout: build real payment now, or keep it manual for now?
 
+**See it, don't just read about it**: a visual mockup comparing both experiences side by side (real products/prices, toggle between "Current" and "Proposed") was built 2026-08-09 — ask Stephen for the link (private by default, needs sharing).
+
 ## Where things stand today
 The Shop page currently has no real checkout — a visitor picks a product and submits a request form; Kerry/Shan follow up by email to confirm pricing and arrange payment (EFT/SnapScan) and collection. That's staying true regardless of what's decided here — **collection is always in person (66 Newmarket Street) or a courier the buyer arranges themselves**, so there's no shipping/delivery automation question either way.
 

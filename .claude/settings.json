@@ -125,7 +125,9 @@
       "Bash(python3 extract3.py)",
       "Bash(npx astro check)",
       "Bash(npx astro dev status)",
-      "Bash(python3 -c \"import json; json.load\\(open\\('/Users/Apple/Documents/charity/souper-troopers/.claude/settings.json'\\)\\); print\\('valid json'\\)\")"
+      "Bash(python3 -c \"import json; json.load\\(open\\('/Users/Apple/Documents/charity/souper-troopers/.claude/settings.json'\\)\\); print\\('valid json'\\)\")",
+      "Bash(pkill -f \"astro check\")",
+      "mcp__playwright__browser_evaluate"
     ]
   }
 }

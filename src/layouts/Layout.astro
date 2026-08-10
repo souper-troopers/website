@@ -4,12 +4,35 @@ import logoReversed from "../assets/images/logo-reversed.png";
 import dignityMoment from "../assets/images/dignity-moment.jpg";
 import { getSiteSettings } from "../lib/sanity";
 import CartWidget from "../components/CartWidget.svelte";
-import "@fontsource/quicksand/400.css";
-import "@fontsource/quicksand/500.css";
-import "@fontsource/quicksand/600.css";
-import "@fontsource/quicksand/700.css";
 import quicksand400 from "@fontsource/quicksand/files/quicksand-latin-400-normal.woff2?url";
+import quicksand600 from "@fontsource/quicksand/files/quicksand-latin-600-normal.woff2?url";
 import quicksand700 from "@fontsource/quicksand/files/quicksand-latin-700-normal.woff2?url";
+
+// Hand-rolled in place of @fontsource's default CSS so we can set font-display: optional instead of
+// its hardcoded "swap" — avoids a visible fallback-to-Quicksand pop once the font finishes loading.
+// Only the weights actually used in this codebase (400/600/700) and the latin subset (covers the
+// Latin-1 diacritics used in Afrikaans names/copy) — see @fontsource/quicksand/*.css for the original.
+const quicksandUnicodeRange =
+	"U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD";
+const quicksandWeights = [
+	{ weight: 400, url: quicksand400 },
+	{ weight: 600, url: quicksand600 },
+	{ weight: 700, url: quicksand700 },
+];
+const fontFaceCSS = quicksandWeights
+	.map(
+		({ weight, url }) => `
+			@font-face {
+				font-family: 'Quicksand';
+				font-style: normal;
+				font-weight: ${weight};
+				font-display: optional;
+				src: url(${url}) format('woff2');
+				unicode-range: ${quicksandUnicodeRange};
+			}
+		`
+	)
+	.join("\n");
 
 interface Props {
 	title: string;
@@ -87,7 +110,9 @@ const structuredData = {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="preload" href={quicksand400} as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href={quicksand600} as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href={quicksand700} as="font" type="font/woff2" crossorigin />
+		<style set:html={fontFaceCSS} />
 		<!-- Pre-launch preview only — remove this once the site goes live on the real domain. -->
 		<meta name="robots" content="noindex, nofollow" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />

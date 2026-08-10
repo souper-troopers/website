@@ -51,8 +51,16 @@ const goodsCategories = [
 		</div>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
-				<a class="goods-tile" href={`mailto:manager@soupertroopers.org?subject=${encodeURIComponent(`Donation drop-off: ${item.label}`)}`}>
-					<Image src={item.photo} alt="" role="presentation" class="goods-tile-img" widths={[300, 500]} sizes="(min-width: 700px) 260px, 45vw" />
+				<a class="goods-tile shimmer-up" href={`mailto:manager@soupertroopers.org?subject=${encodeURIComponent(`Donation drop-off: ${item.label}`)}`}>
+					<Image
+						src={item.photo}
+						alt=""
+						role="presentation"
+						class="goods-tile-img"
+						widths={[300, 500]}
+						sizes="(min-width: 700px) 260px, 45vw"
+						onload="this.classList.add('is-loaded')"
+					/>
 					<div class="goods-tile-scrim"></div>
 					<span>{item.label}</span>
 				</a>

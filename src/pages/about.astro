@@ -45,8 +45,14 @@ const partners = await getPartners();
 					to a first pay cheque.
 				</p>
 			</div>
-			<div class="figure">
-				<Image src={dignityPhoto} alt="A member of the Souper Troopers community smiling" widths={[400, 800]} sizes="(min-width: 700px) 500px, 100vw" />
+			<div class="figure shimmer-up">
+				<Image
+					src={dignityPhoto}
+					alt="A member of the Souper Troopers community smiling"
+					widths={[400, 800]}
+					sizes="(min-width: 700px) 500px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
 			</div>
 		</div>
 	</section>
@@ -75,8 +81,14 @@ const partners = await getPartners();
 
 	<section class="section wrap">
 		<div class="grid grid-2" style="align-items:start;">
-			<div class="figure">
-				<Image src={workshopPhoto} alt="A Souper Squad skills workshop, making African Worry Dolls together" widths={[400, 800]} sizes="(min-width: 700px) 500px, 100vw" />
+			<div class="figure shimmer-up">
+				<Image
+					src={workshopPhoto}
+					alt="A Souper Squad skills workshop, making African Worry Dolls together"
+					widths={[400, 800]}
+					sizes="(min-width: 700px) 500px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
 			</div>
 			<div class="section-intro">
 				<span class="badge">Where we work</span>

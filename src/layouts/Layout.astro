@@ -731,6 +731,23 @@ const structuredData = {
 				opacity: 1;
 			}
 
+			/* Generic loading placeholder for local (non-Sanity) images, which have no LQIP data —
+			   a shimmer instead of a true blurred preview. See .figure and .goods-tile below. */
+			@keyframes shimmer {
+				0% { background-position: 200% 0; }
+				100% { background-position: -200% 0; }
+			}
+
+			.shimmer-up {
+				background-image: linear-gradient(100deg, rgba(27, 171, 190, 0.08) 30%, rgba(27, 171, 190, 0.18) 50%, rgba(27, 171, 190, 0.08) 70%);
+				background-size: 200% 100%;
+				animation: shimmer 1.6s ease-in-out infinite;
+			}
+
+			.shimmer-up:has(img.is-loaded) {
+				animation: none;
+			}
+
 			.category-tile-img {
 				width: 100%;
 				aspect-ratio: 4 / 3;
@@ -881,6 +898,12 @@ const structuredData = {
 				height: 100%;
 				object-fit: cover;
 				z-index: 0;
+				opacity: 0;
+				transition: opacity 0.4s ease;
+			}
+
+			.goods-tile-img.is-loaded {
+				opacity: 1;
 			}
 
 			.goods-tile-scrim {
@@ -1044,12 +1067,23 @@ const structuredData = {
 				opacity: 0.75;
 			}
 
+			.figure {
+				border-radius: var(--radius);
+				overflow: hidden;
+			}
+
 			.figure img {
 				width: 100%;
 				max-height: 460px;
 				object-fit: cover;
 				border-radius: var(--radius);
 				display: block;
+				opacity: 0;
+				transition: opacity 0.4s ease;
+			}
+
+			.figure img.is-loaded {
+				opacity: 1;
 			}
 
 			.badge {

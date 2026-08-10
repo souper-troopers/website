@@ -41,16 +41,29 @@ const goodsCategories = [
 		</div>
 	</section>
 
-	<section class="section wrap">
+	<section id="individuals" class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Individuals</span>
 			<h2>Ways to help, person to person</h2>
 		</div>
-		<div class="grid grid-4">
+		<div class="grid grid-3">
 			<div class="card"><h3>Donate money</h3><p>Fund CAST directly.</p><a href="/donate">Donate &rarr;</a></div>
 			<div class="card"><h3>Donate goods</h3><p>Food, clothing, and more — see the full list below.</p></div>
 			<div class="card"><h3>Volunteer</h3><p>Give your time and skills.</p><a href="mailto:manager@soupertroopers.org">Get in touch &rarr;</a></div>
 			<div class="card"><h3>Buy products</h3><p>Coffee and worry dolls that fund jobs.</p><a href="/shop">Shop &rarr;</a></div>
+			<div class="card">
+				<h3>Swipe your MySchool card</h3>
+				<p>
+					Make us your beneficiary and a share of what you already spend at Woolworths and other
+					partner stores comes to us — at no cost to you.
+				</p>
+				<a href="mailto:info@soupertroopers.org?subject=MySchool%20beneficiary%20details">Ask us how &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Fundraise for us</h3>
+				<p>Run a birthday, a race, or a workplace challenge in aid of Souper Troopers.</p>
+				<a href="#fundraise">See how &rarr;</a>
+			</div>
 		</div>
 	</section>
 
@@ -79,13 +92,21 @@ const goodsCategories = [
 		</div>
 	</section>
 
-	<section class="section wrap">
+	<section id="businesses" class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Businesses</span>
 			<h2>Corporate partnership</h2>
 		</div>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes — like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
+			<div class="card">
+				<h3>Give what you already do</h3>
+				<p>
+					Skills and services go as far as cash: our accountants, lawyers, and web hosting are all
+					donated. Marketing, IT, design, mentoring, training, delivery — if it's what your business
+					does, we can probably use it.
+				</p>
+			</div>
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
@@ -161,22 +182,53 @@ const goodsCategories = [
 		</section>
 	)}
 
-	<section class="section wrap">
+	<section id="fundraise" class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Fundraise for us</span>
 			<h2>Run your own fundraiser</h2>
-			<p>Prefer to rally your own community? Here are a few ways to do it.</p>
+			<p>
+				A birthday, a race, a workplace challenge, a school drive — anything can become a
+				fundraiser. Three steps, and you don't need anything from us to start.
+			</p>
 		</div>
 		<div class="grid grid-3">
-			<div class="card"><h3>Host an event</h3><p>A dinner, a challenge, a sale — anything that gets people talking and giving.</p></div>
-			<div class="card"><h3>Fundraise at work</h3><p>Team challenges, casual days, or a workplace giving campaign.</p></div>
-			<div class="card"><h3>Fundraise at school</h3><p>Get learners involved in a cause close to home.</p></div>
+			<div class="card">
+				<span class="step-number">1</span>
+				<h3>Pick a platform</h3>
+				<p>
+					<a href="https://www.backabuddy.co.za" target="_blank" rel="noopener">BackaBuddy</a> and
+					<a href="https://www.givengain.com" target="_blank" rel="noopener">GivenGain</a> both host
+					South African fundraising campaigns and handle the payments for you.
+				</p>
+			</div>
+			<div class="card">
+				<span class="step-number">2</span>
+				<h3>Set up your campaign</h3>
+				<p>Register your event or milestone, choose Souper Troopers as the cause, and set a target.</p>
+			</div>
+			<div class="card">
+				<span class="step-number">3</span>
+				<h3>Share it</h3>
+				<p>Send it to your people. Tag us and we'll share it too.</p>
+			</div>
 		</div>
-		<p>Have an idea? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> and we'll help you get started.</p>
+		<p>Planning something? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> — we'll help however we can.</p>
 	</section>
 </Layout>
 
 <style>
+	.step-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: var(--st-teal);
+		color: var(--st-white);
+		font-weight: 700;
+	}
+
 	.benefit-value {
 		font-size: 1.5rem;
 		font-weight: 700;

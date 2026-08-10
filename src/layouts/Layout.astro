@@ -630,6 +630,12 @@ const structuredData = {
 				opacity: 0.55;
 			}
 
+			/* The header is sticky at 72px, so an anchored section would otherwise land with its
+			   heading hidden underneath it. */
+			main [id] {
+				scroll-margin-top: calc(72px + var(--space-5));
+			}
+
 			/* Shared page building blocks */
 			.section {
 				display: flex;
@@ -915,6 +921,60 @@ const structuredData = {
 				color: rgba(36, 35, 43, 0.7);
 			}
 
+			/* Supporters are a plain name list rather than logo cards — the old site ran them
+			   together as one comma-separated paragraph, which nobody can scan. */
+			.supporters {
+				margin-top: var(--space-8);
+			}
+
+			.supporters h3 {
+				font-size: 1rem;
+				color: rgba(255, 255, 255, 0.75);
+				margin-bottom: var(--space-4);
+			}
+
+			.supporter-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				columns: 4;
+				column-gap: var(--space-6);
+				font-size: 0.92rem;
+				color: rgba(255, 255, 255, 0.75);
+			}
+
+			.supporter-list li {
+				break-inside: avoid;
+				padding: 0.2rem 0;
+			}
+
+			.supporter-list a {
+				color: inherit;
+			}
+
+			.supporter-note {
+				color: rgba(255, 255, 255, 0.5);
+			}
+
+			@media (max-width: 900px) {
+				.supporter-list {
+					columns: 2;
+				}
+			}
+
+			.stories-lead {
+				color: rgba(255, 255, 255, 0.8);
+				margin-bottom: var(--space-6);
+			}
+
+			.press-publication {
+				font-size: 0.75rem;
+				font-weight: 700;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: var(--st-teal-dark);
+			}
+
 			.closing-cta {
 				padding: var(--space-8) var(--space-6);
 				gap: var(--space-5);
@@ -1158,10 +1218,9 @@ const structuredData = {
 			/* Choose your path — asymmetric tiles */
 			.path-grid {
 				display: grid;
-				grid-template-columns: 1.3fr 1fr;
+				grid-template-columns: repeat(2, 1fr);
 				grid-auto-rows: 1fr;
 				gap: var(--space-5);
-				min-height: 460px;
 			}
 
 			.path-tile {
@@ -1195,21 +1254,18 @@ const structuredData = {
 				text-decoration: underline;
 			}
 
-			.path-tile-primary {
-				grid-row: span 2;
-				padding: var(--space-10);
-			}
-
-			.path-tile-primary h3 {
-				font-size: 2rem;
-			}
-
 			.path-teal {
 				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-teal-dark) 100%);
 			}
 
 			.path-green {
 				background: var(--st-green);
+			}
+
+			/* Darkened end-stop rather than flat --st-red: white body text on #dd4b59 alone is
+			   only 4.1:1, under the 4.5:1 AA threshold. */
+			.path-gold {
+				background: linear-gradient(135deg, var(--st-red) 0%, #a8353f 100%);
 			}
 
 			.path-ink {
@@ -1391,16 +1447,10 @@ const structuredData = {
 
 				.path-grid {
 					grid-template-columns: 1fr;
-					min-height: 0;
 					gap: var(--space-5);
 				}
 
-				.path-tile-primary {
-					grid-row: auto;
-				}
-
-				.path-tile,
-				.path-tile-primary {
+				.path-tile {
 					padding: var(--space-6);
 				}
 

@@ -86,6 +86,19 @@ export interface BbbeeBenefit {
 	body: string;
 }
 
+export interface Supporter {
+	name: string;
+	url?: string;
+	note?: string;
+}
+
+export interface PressMention {
+	publication: string;
+	headline: string;
+	url?: string;
+	date?: string;
+}
+
 export async function getSuccessStories(): Promise<SuccessStory[]> {
 	return sanityClient.fetch(`*[_type == "successStory"] | order(order asc)`);
 }
@@ -165,4 +178,14 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
 export async function getBbbeeBenefits(): Promise<BbbeeBenefit[]> {
 	return sanityClient.fetch(`*[_type == "bbbeeBenefit"] | order(order asc) { title, value, body }`);
+}
+
+export async function getSupporters(): Promise<Supporter[]> {
+	return sanityClient.fetch(`*[_type == "supporter"] | order(lower(name) asc) { name, url, note }`);
+}
+
+export async function getPressMentions(): Promise<PressMention[]> {
+	return sanityClient.fetch(
+		`*[_type == "pressMention"] | order(date desc) { publication, headline, url, date }`
+	);
 }

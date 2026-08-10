@@ -6,6 +6,8 @@ import shopItem from './shopItem'
 import impactStat from './impactStat'
 import siteSettings from './siteSettings'
 import bbbeeBenefit from './bbbeeBenefit'
+import supporter from './supporter'
+import pressMention from './pressMention'
 
 export const schemaTypes = [
   successStory,
@@ -16,4 +18,6 @@ export const schemaTypes = [
   impactStat,
   siteSettings,
   bbbeeBenefit,
+  supporter,
+  pressMention,
 ]

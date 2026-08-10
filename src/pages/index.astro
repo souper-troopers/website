@@ -47,17 +47,22 @@ const heroLqip =
 			<h2>However you want to help, there's a clear next step</h2>
 		</div>
 		<div class="path-grid">
-			<a href="/donate" class="path-tile path-tile-primary path-teal">
+			<a href="/donate" class="path-tile path-teal">
 				<h3>Donate</h3>
 				<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
 				<span class="path-cta">Donate now &rarr;</span>
 			</a>
-			<a href="/get-involved" class="path-tile path-green">
+			<a href="/get-involved#individuals" class="path-tile path-green">
 				<h3>Volunteer</h3>
 				<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
 				<span class="path-cta">Get involved &rarr;</span>
 			</a>
-			<a href="/get-involved" class="path-tile path-ink">
+			<a href="/shop" class="path-tile path-gold">
+				<h3>Buy something</h3>
+				<p>Troopers Coffee and African Worry Dolls&trade; — every order funds the jobs behind them.</p>
+				<span class="path-cta">Visit the shop &rarr;</span>
+			</a>
+			<a href="/get-involved#businesses" class="path-tile path-ink">
 				<h3>Partner with us</h3>
 				<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
 				<span class="path-cta">Partner with us &rarr;</span>
@@ -116,6 +121,7 @@ const heroLqip =
 		<div class="wrap">
 			<span class="badge badge-on-dark">Success stories</span>
 			<h2>People, not statistics</h2>
+			<p class="stories-lead">Some of the people below now work on our team.</p>
 			<div class="stories-grid">
 				{stories.map((story) => (
 					<div class="story-card">
@@ -123,6 +129,16 @@ const heroLqip =
 						<p class="story-name">{story.name}</p>
 					</div>
 				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card closing-cta" style="text-align:center; align-items:center;">
+			<h2>Every story here started with someone deciding to help</h2>
+			<div class="actions">
+				<a class="btn btn-primary" href="/donate">Donate now</a>
+				<a class="btn btn-outline" href="/get-involved">Other ways to help</a>
 			</div>
 		</div>
 	</section>

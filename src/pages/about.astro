@@ -3,10 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
-import { getTeamMembers, getPartners, urlFor } from "../lib/sanity";
+import { getTeamMembers, getPartners, getSupporters, getPressMentions, urlFor } from "../lib/sanity";
 
 const team = await getTeamMembers();
 const partners = await getPartners();
+const supporters = await getSupporters();
+const pressMentions = await getPressMentions();
 ---
 
 <Layout title="Who We Are" description="Souper Troopers' mission, values, and approach — dignity, love, and respect for every person we work with.">
@@ -197,8 +199,46 @@ const partners = await getPartners();
 					</div>
 				))}
 			</div>
+
+			{supporters.length > 0 && (
+				<div class="supporters">
+					<h3>And many more who give goods, services, space, and time</h3>
+					<ul class="supporter-list">
+						{supporters.map((supporter) => (
+							<li>
+								{supporter.url ? (
+									<a href={supporter.url} target="_blank" rel="noopener">{supporter.name}</a>
+								) : (
+									supporter.name
+								)}
+								{supporter.note && <span class="supporter-note"> — {supporter.note}</span>}
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
 		</div>
 	</section>
+
+	{pressMentions.length > 0 && (
+		<section class="section wrap">
+			<div class="section-intro">
+				<span class="badge">In the news</span>
+				<h2>What others have written about us</h2>
+			</div>
+			<div class="grid grid-3">
+				{pressMentions.map((mention) => (
+					<div class="card">
+						<span class="press-publication">{mention.publication}</span>
+						<h3>{mention.headline}</h3>
+						{mention.url && (
+							<a href={mention.url} target="_blank" rel="noopener">Read the article &rarr;</a>
+						)}
+					</div>
+				))}
+			</div>
+		</section>
+	)}
 
 	<section class="section wrap">
 		<div class="card closing-cta" style="text-align:center; align-items:center;">

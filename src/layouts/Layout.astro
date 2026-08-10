@@ -319,6 +319,11 @@ const structuredData = {
 				width: 100%;
 				max-width: 1100px;
 				margin: 0 auto;
+				/* Below 1100px, .wrap is the full viewport width, not just the centered 1100px box —
+				   without this, cards/content sit flush against the screen edges on any viewport
+				   narrower than 1100px, not just phone widths. */
+				padding-left: var(--space-5);
+				padding-right: var(--space-5);
 			}
 
 			.site-header {
@@ -1525,10 +1530,10 @@ const structuredData = {
 				background: var(--st-green);
 			}
 
-			/* Darkened end-stop rather than flat --st-red: white body text on #dd4b59 alone is
-			   only 4.1:1, under the 4.5:1 AA threshold. */
+			/* Dusty rose rather than brand --st-red: the saturated red reads as danger on a
+			   "buy something" CTA. Darkened end-stop keeps white body text above 4.5:1 AA. */
 			.path-gold {
-				background: linear-gradient(135deg, var(--st-red) 0%, #a8353f 100%);
+				background: linear-gradient(135deg, #d48a96 0%, #a86670 100%);
 			}
 
 			.path-ink {
@@ -1643,9 +1648,11 @@ const structuredData = {
 				opacity: 0.9;
 			}
 
-			/* Narrow-screen tightening: content gets horizontal breathing room it doesn't need on
-			   desktop (.wrap has no side padding above 700px — max-width already keeps it off the
-			   edges there), and vertical rhythm shrinks so there's less empty space to scroll past.
+			/* Narrow-screen tightening: vertical rhythm shrinks so there's less empty space to scroll
+			   past. (.wrap's side padding is unconditional now, applied above at the base rule — it
+			   used to live only in this block, back when desktop's max-width was wrongly assumed to
+			   keep content off the edges at every width above 700px; it doesn't, between 700px and
+			   1100px .wrap is full-viewport-width same as mobile, just without the media query.)
 			   Kept as the LAST rule in this stylesheet, deliberately: every selector below is also
 			   targeted by an earlier, unconditional (desktop) rule elsewhere above. Equal specificity
 			   (simple class selectors on both sides) means source order decides the winner regardless
@@ -1655,21 +1662,11 @@ const structuredData = {
 			   .stories-grid/.story-card desktop rules, which were overriding it despite that media
 			   query never applying past 700px). */
 			@media (max-width: 700px) {
-				/* Longhand, not shorthand `padding:` — several elements (.header-inner, .footer-inner)
-				   share the .wrap class alongside their own vertical padding/gap rules. A shorthand
-				   here would reset their top/bottom values to 0 (equal specificity, later in source
-				   order wins), which is exactly the header-padding bug this comment is here to prevent
-				   from coming back. */
-				.wrap {
-					padding-left: var(--space-5);
-					padding-right: var(--space-5);
-				}
-
-				/* Vertical rhythm matches the x-axis dimension (.wrap's side padding, above) throughout
-				   this block — one consistent value instead of a different one per component. Excluded
-				   on purpose: .hero-photo (deliberately asymmetric, see below) and box paddings that
-				   were already uniform on all four sides (.card, .path-tile, .story-card) — those never
-				   had a top/bottom-vs-side mismatch to begin with. */
+				/* Vertical rhythm matches the x-axis dimension (.wrap's side padding, set at the base
+				   rule above) throughout this block — one consistent value instead of a different one
+				   per component. Excluded on purpose: .hero-photo (deliberately asymmetric, see below)
+				   and box paddings that were already uniform on all four sides (.card, .path-tile,
+				   .story-card) — those never had a top/bottom-vs-side mismatch to begin with. */
 				main {
 					gap: var(--space-5);
 					padding-bottom: var(--space-5);

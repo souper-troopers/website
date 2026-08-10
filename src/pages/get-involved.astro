@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import EmailLink from "../components/EmailLink.svelte";
 import { Image } from "astro:assets";
 import foodPhoto from "../assets/images/goods/food.jpg";
 import toiletriesPhoto from "../assets/images/goods/toiletries.jpg";
@@ -84,11 +85,11 @@ const goodsCategories = [
 		<div class="section-intro">
 			<span class="badge">Goods donation list</span>
 			<h2>What you can donate</h2>
-			<p>Every item helps — drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> to arrange.</p>
+			<p>Every item helps — drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		</div>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
-				<a class="goods-tile shimmer-up" href={`mailto:manager@soupertroopers.org?subject=${encodeURIComponent(`Donation drop-off: ${item.label}`)}`}>
+				<div class="goods-tile shimmer-up">
 					<Image
 						src={item.photo}
 						alt=""
@@ -100,7 +101,7 @@ const goodsCategories = [
 					/>
 					<div class="goods-tile-scrim"></div>
 					<span>{item.label}</span>
-				</a>
+				</div>
 			))}
 		</div>
 	</section>
@@ -123,7 +124,7 @@ const goodsCategories = [
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
-		<p>Interested in partnering? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.</p>
+		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" />.</p>
 	</section>
 
 	<section class="section wrap">
@@ -225,7 +226,7 @@ const goodsCategories = [
 				<p>Send it to your people. Tag us and we'll share it too.</p>
 			</div>
 		</div>
-		<p>Planning something? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> — we'll help however we can.</p>
+		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> — we'll help however we can.</p>
 	</section>
 </Layout>
 

@@ -1,5 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import EmailLink from "../components/EmailLink.svelte";
+import AddressLink from "../components/AddressLink.svelte";
+
+const emailDirectory = [
+	{ label: "Donations & drop-offs", address: "manager@soupertroopers.org" },
+	{ label: "Visits & appointments", address: "manager@soupertroopers.org" },
+	{ label: "Section 18A certificates", address: "accounts@soupertroopers.org" },
+	{ label: "Programme & partnerships", address: "kerry@soupertroopers.org" },
+	{ label: "Anything else", address: "info@soupertroopers.org" },
+];
+
+const openingHours = [
+	{ days: "Mon–Thu", hours: "8:30am–4pm" },
+	{ days: "Fri", hours: "8:30am–3pm" },
+];
+
+const shopBrands = [
+	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
+	{ handle: "@africanworrydolls", href: "https://instagram.com/africanworrydolls" },
+];
 ---
 
 <Layout title="Contact" description="Get in touch with Souper Troopers.">
@@ -11,24 +31,42 @@ import Layout from "../layouts/Layout.astro";
 	</section>
 
 	<section class="section wrap">
-		<div class="grid grid-2">
-			<div class="card">
-				<h3>Visit us</h3>
-				<p>66 Newmarket Street<br />Woodstock, Cape Town</p>
-				<p>Open Mondays–Thursdays, 8:30am–4pm, and Fridays, 8:30am–3pm.</p>
-				<p>Visits to the Humanity Hub are by appointment — Moeshfieqah arranges those on <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.</p>
+		<div class="contact-grid">
+			<div class="contact-aside">
+				<div class="card">
+					<h3>Visit us</h3>
+					<p><AddressLink client:visible lines={["66 Newmarket Street, Woodstock, Cape Town"]} /></p>
+					<dl class="visit-hours">
+						{openingHours.map((entry) => (
+							<div>
+								<dt>{entry.days}</dt>
+								<dd>{entry.hours}</dd>
+							</div>
+						))}
+					</dl>
+					<p class="visit-note">Humanity Hub visits are by appointment — Moeshfieqah sets those up.</p>
+				</div>
+				<div class="card brand-card">
+					<h3>Follow the shop brands</h3>
+					<ul class="brand-list">
+						{shopBrands.map((brand) => (
+							<li>
+								<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
 			<div class="card">
 				<h3>Who to email</h3>
-				<p><strong>Donations and drop-offs</strong><br /><a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a></p>
-				<p><strong>Section 18A tax certificates</strong><br /><a href="mailto:accounts@soupertroopers.org">accounts@soupertroopers.org</a></p>
-				<p><strong>Anything else</strong><br /><a href="mailto:info@soupertroopers.org">info@soupertroopers.org</a></p>
-			</div>
-			<div class="card">
-				<h3>Programme &amp; partnerships</h3>
-				<p><a href="mailto:kerry@soupertroopers.org">kerry@soupertroopers.org</a></p>
-				<p>For Troopers Coffee specifically: <a href="https://instagram.com/troopers_coffee" target="_blank" rel="noopener">@troopers_coffee</a></p>
-				<p>For African Worry Dolls&trade;: <a href="https://instagram.com/africanworrydolls" target="_blank" rel="noopener">@africanworrydolls</a></p>
+				<dl class="email-directory">
+					{emailDirectory.map((entry) => (
+						<div>
+							<dt>{entry.label}</dt>
+							<dd><EmailLink client:visible address={entry.address} /></dd>
+						</div>
+					))}
+				</dl>
 			</div>
 		</div>
 	</section>
@@ -64,8 +102,7 @@ import Layout from "../layouts/Layout.astro";
 
 			<button class="btn btn-primary" type="submit">Send message</button>
 			<p id="contact-form-error" class="form-note form-error" hidden>
-				Something went wrong sending that — you can email
-				<a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> directly instead.
+				Something went wrong sending that — you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
 			</p>
 		</form>
 	</section>
@@ -78,6 +115,112 @@ import Layout from "../layouts/Layout.astro";
 		width: 100%;
 		max-width: 480px;
 		margin: 0 auto;
+	}
+
+	/* Left column stacks Visit us + shop brands; the brand card grows (flex: 1) so leftover
+	   height from the taller email card fills that card rather than sitting as a gap between them. */
+	.contact-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: stretch;
+		gap: var(--space-6);
+	}
+
+	.contact-aside {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		min-height: 0;
+	}
+
+	.brand-card {
+		flex: 1;
+	}
+
+	@media (max-width: 700px) {
+		.contact-grid {
+			grid-template-columns: 1fr;
+			gap: var(--space-5);
+		}
+
+		.contact-aside {
+			gap: var(--space-5);
+		}
+
+		.brand-card {
+			flex: none;
+		}
+	}
+
+	.visit-hours {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+		margin: 0;
+	}
+
+	.visit-hours > div {
+		display: flex;
+		gap: var(--space-3);
+	}
+
+	.visit-hours dt {
+		min-width: 4.5rem;
+		font-weight: 600;
+	}
+
+	.visit-hours dd {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	.visit-note {
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	/* Hairline-separated rows so five routes read as one directory to scan, rather than five
+	   free-standing paragraphs. */
+	.email-directory {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		width: 100%;
+		margin: 0;
+	}
+
+	.email-directory > div {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+		padding-bottom: var(--space-3);
+		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.email-directory > div:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.email-directory dt {
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: rgba(36, 35, 43, 0.55);
+	}
+
+	.email-directory dd {
+		margin: 0;
+	}
+
+	.brand-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
 	.toast {

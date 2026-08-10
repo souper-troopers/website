@@ -4,6 +4,8 @@ import logoReversed from "../assets/images/logo-reversed.png";
 import dignityMoment from "../assets/images/dignity-moment.jpg";
 import { getSiteSettings } from "../lib/sanity";
 import CartWidget from "../components/CartWidget.svelte";
+import EmailLink from "../components/EmailLink.svelte";
+import AddressLink from "../components/AddressLink.svelte";
 import quicksand400 from "@fontsource/quicksand/files/quicksand-latin-400-normal.woff2?url";
 import quicksand600 from "@fontsource/quicksand/files/quicksand-latin-600-normal.woff2?url";
 import quicksand700 from "@fontsource/quicksand/files/quicksand-latin-700-normal.woff2?url";
@@ -197,8 +199,8 @@ const structuredData = {
 		<footer class="site-footer">
 			<div class="wrap footer-inner">
 				<strong>Souper Troopers</strong>
-				<span>{settings.address}</span>
-				<a href={`mailto:${settings.email}`}>{settings.email}</a>
+				<AddressLink client:visible lines={[settings.address]} copyable={false} />
+				<EmailLink client:visible address={settings.email} />
 			</div>
 			<div class="wrap footer-social">
 				<span class="footer-social-label">Follow us</span>
@@ -324,6 +326,9 @@ const structuredData = {
 				position: sticky;
 				top: 0;
 				z-index: 100;
+				/* Hairline of light (not a black drop shadow) so the header stays distinct when a
+				   matching ink band scrolls up under it — shadow on ink-on-ink barely reads. */
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 			}
 
 			/*
@@ -331,12 +336,15 @@ const structuredData = {
 			 * index.astro) sets --header-fade continuously as the user scrolls through the hero,
 			 * fading the header to solid ink rather than snapping — no CSS transition here, since
 			 * a transition would lag behind the scroll-driven updates instead of tracking them.
+			 * The hairline fades with the same variable so it doesn't sit across the hero photo
+			 * while the header is still clear.
 			 */
 			.site-header-overlay {
 				position: fixed;
 				left: 0;
 				right: 0;
 				background: rgba(36, 35, 43, var(--header-fade, 0));
+				border-bottom-color: rgba(255, 255, 255, calc(0.1 * var(--header-fade, 0)));
 			}
 
 			.header-inner {
@@ -577,6 +585,8 @@ const structuredData = {
 				background: var(--st-ink);
 				color: rgba(255, 255, 255, 0.85);
 				padding: var(--space-6) 0 var(--space-5);
+				/* Lighter teal so copy buttons stay legible against the dark footer. */
+				--copy-button-color: var(--st-teal);
 			}
 
 			.footer-inner {
@@ -792,6 +802,33 @@ const structuredData = {
 				}
 			}
 
+			/* Six payment methods with genuinely different content shapes — a bank-details table, a
+			   form, a QR code, a redirect note — so a strict grid stretched the short cards (PayPal) to
+			   match the tall ones (EFT) for no reason. Three columns keeps the page shorter than two;
+			   below ~950px that gets tight (button labels and table rows start wrapping), so it steps
+			   down to two, then one. */
+			.pay-masonry {
+				columns: 3;
+				column-gap: var(--space-6);
+			}
+
+			.pay-masonry > .card {
+				break-inside: avoid;
+				margin-bottom: var(--space-6);
+			}
+
+			@media (max-width: 950px) {
+				.pay-masonry {
+					columns: 2;
+				}
+			}
+
+			@media (max-width: 700px) {
+				.pay-masonry {
+					columns: 1;
+				}
+			}
+
 			/* Services are a reference list, not a set of cards. Without the card chrome, rows of
 			   uneven length stop reading as boxes with dead space in them. */
 			.service-list {
@@ -937,6 +974,74 @@ const structuredData = {
 			.redirect-note {
 				font-size: 0.8rem;
 				color: rgba(36, 35, 43, 0.55);
+			}
+
+			.bank-details {
+				display: grid;
+				gap: var(--space-2);
+				width: 100%;
+				margin: 0;
+				padding: var(--space-4);
+				background: rgba(36, 35, 43, 0.04);
+				border-radius: calc(var(--radius) / 2);
+				font-size: 0.9rem;
+			}
+
+			.bank-details > div {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: var(--space-4);
+			}
+
+			.bank-details dt {
+				color: rgba(36, 35, 43, 0.6);
+			}
+
+			.bank-details dd {
+				display: flex;
+				align-items: baseline;
+				justify-content: flex-end;
+				gap: 0.4em;
+				margin: 0;
+				font-weight: 700;
+			}
+
+			.payfast-form {
+				display: grid;
+				gap: var(--space-2);
+				width: 100%;
+			}
+
+			.payfast-form label {
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: rgba(36, 35, 43, 0.7);
+			}
+
+			.payfast-form input[type="number"] {
+				width: 100%;
+				padding: var(--space-3);
+				margin-bottom: var(--space-2);
+				border: 1px solid rgba(36, 35, 43, 0.18);
+				border-radius: calc(var(--radius) / 2);
+				font: inherit;
+				font-size: 1rem;
+			}
+
+			.payfast-form button {
+				justify-self: start;
+				border: none;
+				cursor: pointer;
+				font: inherit;
+				font-weight: 700;
+			}
+
+			.pay-qr {
+				display: block;
+				width: 160px;
+				height: auto;
+				border-radius: calc(var(--radius) / 2);
 			}
 
 			.contact-form {
@@ -1099,6 +1204,8 @@ const structuredData = {
 				color: rgba(36, 35, 43, 0.7);
 			}
 
+			/* Non-interactive category labels (donate + get-involved) — no hover lift, so they
+			   don't read as clickable now that the mailto wrapping has been removed. */
 			.goods-tile {
 				position: relative;
 				display: flex;
@@ -1106,12 +1213,6 @@ const structuredData = {
 				aspect-ratio: 4 / 3;
 				border-radius: var(--radius);
 				overflow: hidden;
-				text-decoration: none;
-				transition: transform 0.2s ease, color 0.3s ease;
-			}
-
-			.goods-tile:hover {
-				transform: translateY(-4px);
 			}
 
 			.goods-tile-img {

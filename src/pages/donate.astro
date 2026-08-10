@@ -1,14 +1,23 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CountUp from "../components/CountUp.svelte";
+import EmailLink from "../components/EmailLink.svelte";
+import CopyButton from "../components/CopyButton.svelte";
 import { Image } from "astro:assets";
 import { getImpactStats } from "../lib/sanity";
 import transportPhoto from "../assets/images/donation-funds/transport.jpg";
 import trainingPhoto from "../assets/images/donation-funds/training.jpg";
 import idDocumentsPhoto from "../assets/images/donation-funds/id-documents.jpg";
 import carePacksPhoto from "../assets/images/donation-funds/care-packs.jpg";
+import snapscanQr from "../assets/images/pay/snapscan-qr.png";
+import zapperQr from "../assets/images/pay/zapper-qr.png";
 
 const impactStats = await getImpactStats("donate");
+
+// The old site's PayFast "Pay Now" form pointed return_url/cancel_url at soupertroopers.org
+// (itself) — copying that as-is would send a donor on this site back to the old one after paying.
+const payfastReturnUrl = new URL("/donate?donated=1", Astro.site).href;
+const payfastCancelUrl = new URL("/donate", Astro.site).href;
 
 const fundedItems = [
 	{ label: "Transport to appointments and training", photo: transportPhoto },
@@ -23,6 +32,10 @@ const fundedItems = [
 		<div class="wrap">
 			<h1>Donate</h1>
 			<p>Every donation funds a step in someone's CAST journey — from a first conversation to a first pay cheque.</p>
+			<p id="payfast-thanks" class="payfast-thanks" hidden>
+				Thank you — your PayFast payment is on its way to us. If it doesn't reflect within a day or
+				two, email <EmailLink client:visible address="info@soupertroopers.org" />.
+			</p>
 		</div>
 	</section>
 
@@ -73,47 +86,79 @@ const fundedItems = [
 			<span class="badge">Ways to give</span>
 			<h2>Choose the method that works for you</h2>
 		</div>
-		<div class="grid grid-2">
-			<div class="card">
-				<div class="payment-method-header">
-					<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2 9h20L12 2zM3 10v8h2v-8H3zm4 0v8h2v-8H7zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zM2 19v2h20v-2H2z" /></svg>
-					<h3>Direct EFT</h3>
+			<div class="pay-masonry">
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2 9h20L12 2zM3 10v8h2v-8H3zm4 0v8h2v-8H7zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zM2 19v2h20v-2H2z" /></svg>
+						<h3>Direct EFT</h3>
+					</div>
+					<p>Our preferred method — no card fees, so more of your gift reaches the work.</p>
+					<dl class="bank-details">
+						<div><dt>Account name</dt><dd>Souper Troopers</dd></div>
+						<div><dt>Bank</dt><dd>ABSA</dd></div>
+						<div><dt>Account type</dt><dd>Cheque</dd></div>
+						<div><dt>Account number</dt><dd><CopyButton client:visible value="4092622072" label="account number" /> 4092622072</dd></div>
+						<div><dt>Reference</dt><dd>Your name</dd></div>
+					</dl>
+					<p class="redirect-note">
+						Email your proof of payment to <EmailLink client:visible address="info@soupertroopers.org" />.
+						Section 18A tax certificates are issued by our accounts team on <EmailLink client:visible address="accounts@soupertroopers.org" />.
+					</p>
 				</div>
-				<p>
-					Our preferred method. Once you've made the transfer, email your proof of payment to
-					<a href="mailto:info@soupertroopers.org">info@soupertroopers.org</a>. For a Section 18A
-					tax certificate, our accounts team handles those directly on
-					<a href="mailto:accounts@soupertroopers.org">accounts@soupertroopers.org</a>.
-				</p>
-			</div>
-			<div class="card">
-				<div class="payment-method-header">
-					<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 4h2v2h-2v-2z" /></svg>
-					<h3>SnapScan</h3>
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5h20a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 3v2h20V8H2zm2 5v2h6v-2H4z" /></svg>
+						<h3>Card — South African</h3>
+					</div>
+					<p>Donate with a South African credit or debit card, through PayFast.</p>
+					<form class="payfast-form" action="https://www.payfast.co.za/eng/process" method="post">
+						<input type="hidden" name="cmd" value="_paynow" />
+						<input type="hidden" name="receiver" value="13206553" />
+						<input type="hidden" name="item_name" value="Donate to Souper Troopers" />
+						<input type="hidden" name="return_url" value={payfastReturnUrl} />
+						<input type="hidden" name="cancel_url" value={payfastCancelUrl} />
+						<label for="payfast-amount">Amount (R)</label>
+						<input id="payfast-amount" type="number" name="amount" step="0.01" min="5.00" value="250" required />
+						<button class="btn btn-primary" type="submit">Donate by card &rarr;</button>
+					</form>
 				</div>
-				<p>Scan or tap to pay instantly from your phone.</p>
-				<a class="btn btn-primary" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">Donate via SnapScan &rarr;</a>
-			</div>
-			<div class="card">
-				<div class="payment-method-header">
-					<svg class="payment-icon payment-icon-paypal" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.153-.041.232-.591 3.031-2.412 5.11-5.744 6.024a13.15 13.15 0 0 1-3.494.462h-2.14l-.564 3.573h4.02c.524 0 .968-.382 1.05-.9l.043-.222.812-5.156.052-.28c.082-.518.526-.9 1.05-.9h.66c4.291 0 7.646-1.744 8.63-6.788.031-.16.058-.316.083-.47.026-.161.038-.32.036-.478z" /></svg>
-					<h3>PayPal</h3>
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 4h2v2h-2v-2z" /></svg>
+						<h3>Zapper</h3>
+					</div>
+					<p>Scan the code with the Zapper app to donate — no link to tap if you're not on your phone already.</p>
+					<Image class="pay-qr" src={zapperQr} alt="Zapper QR code for donating to Souper Troopers" widths={[240, 480]} sizes="200px" />
 				</div>
-				<p>Card or PayPal balance, once-off.</p>
-				<a class="btn btn-primary" href="https://www.paypal.com/donate/?hosted_button_id=ZLTV4BYWFALX2" target="_blank" rel="noopener">Donate via PayPal &rarr;</a>
-			</div>
-			<div class="card">
-				<div class="payment-method-header">
-					<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6V3L8 7l4 4V8c2.21 0 4 1.79 4 4 0 .82-.25 1.58-.67 2.22l1.46 1.46A5.98 5.98 0 0 0 18 12c0-3.31-2.69-6-6-6zm-6 6c0-.82.25-1.58.67-2.22L5.21 8.32A5.98 5.98 0 0 0 4 12c0 3.31 2.69 6 6 6v3l4-4-4-4v3c-2.21 0-4-1.79-4-4z" /></svg>
-					<h3>Monthly giving</h3>
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon payment-icon-paypal" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.153-.041.232-.591 3.031-2.412 5.11-5.744 6.024a13.15 13.15 0 0 1-3.494.462h-2.14l-.564 3.573h4.02c.524 0 .968-.382 1.05-.9l.043-.222.812-5.156.052-.28c.082-.518.526-.9 1.05-.9h.66c4.291 0 7.646-1.744 8.63-6.788.031-.16.058-.316.083-.47.026-.161.038-.32.036-.478z" /></svg>
+						<h3>Card — international</h3>
+					</div>
+					<p>Donating from outside South Africa? PayPal handles non-SA cards and PayPal balances.</p>
+					<a class="btn btn-primary" href="https://www.paypal.com/donate/?hosted_button_id=ZLTV4BYWFALX2" target="_blank" rel="noopener">Donate via PayPal &rarr;</a>
 				</div>
-				<p>Set up a recurring monthly donation to sustain the CAST programme.</p>
-				<a class="btn btn-primary" href="https://st.paysoftimpact.co.za/public/api/Template/Index/?id=26" target="_blank" rel="noopener">Give monthly &rarr;</a>
-				<p class="redirect-note">You'll be securely redirected to PaySoftImpact to set up your monthly gift.</p>
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6V3L8 7l4 4V8c2.21 0 4 1.79 4 4 0 .82-.25 1.58-.67 2.22l1.46 1.46A5.98 5.98 0 0 0 18 12c0-3.31-2.69-6-6-6zm-6 6c0-.82.25-1.58.67-2.22L5.21 8.32A5.98 5.98 0 0 0 4 12c0 3.31 2.69 6 6 6v3l4-4-4-4v3c-2.21 0-4-1.79-4-4z" /></svg>
+						<h3>Monthly debit order</h3>
+					</div>
+					<p>Give a set amount each month from a South African bank account — the most useful kind of gift, because it lets us plan.</p>
+					<a class="btn btn-primary" href="https://st.paysoftimpact.co.za/public/api/Template/Index/?id=26" target="_blank" rel="noopener">Set up a debit order &rarr;</a>
+					<p class="redirect-note">You'll be securely redirected to PaySoftImpact to set this up.</p>
+				</div>
+				<div class="card">
+					<div class="payment-method-header">
+						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 4h2v2h-2v-2z" /></svg>
+						<h3>SnapScan</h3>
+					</div>
+					<p>Scan the code with the SnapScan app, or tap through if you're already on your phone.</p>
+					<Image class="pay-qr" src={snapscanQr} alt="SnapScan QR code for donating to Souper Troopers" widths={[240, 480]} sizes="200px" />
+					<a class="btn btn-primary" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">Open SnapScan &rarr;</a>
+				</div>
 			</div>
-		</div>
-		<p style="font-size:0.9rem; color: rgba(36,35,43,0.6);">
-			Questions about giving? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.
+			<p style="font-size:0.9rem; color: rgba(36,35,43,0.6);">
+			Questions about giving? Email <EmailLink client:visible address="manager@soupertroopers.org" />.
 		</p>
 	</section>
 
@@ -122,9 +167,32 @@ const fundedItems = [
 			<span class="badge">Prefer to give another way?</span>
 			<h2>Goods and products also help</h2>
 		</div>
-		<div class="grid grid-2">
+		<div class="grid grid-2 giving-grid">
 			<div class="card"><h3>Donate goods</h3><p>Food, clothing, household items, and materials for African Worry Dolls.</p><a href="/get-involved">See the full list &rarr;</a></div>
 			<div class="card"><h3>Shop with purpose</h3><p>Troopers Coffee and African Worry Dolls&trade; fund jobs directly.</p><a href="/shop">Shop &rarr;</a></div>
 		</div>
 	</section>
 </Layout>
+
+<style>
+	.payfast-thanks {
+		margin-top: var(--space-4);
+		font-weight: 600;
+	}
+
+	/* .card is already a flex column (see Layout.astro); grid rows stretch both cards to the
+	   same height by default, so pushing the link down with margin-top: auto is enough to align
+	   both links to the bottom regardless of how much body copy each card has. */
+	.giving-grid a {
+		margin-top: auto;
+	}
+</style>
+
+<script>
+	// PayFast's Pay Now form returns here with ?donated=1 (see payfastReturnUrl in the frontmatter).
+	// Reveal the thank-you line, then drop the param so a refresh or share doesn't repeat it.
+	if (new URLSearchParams(location.search).get("donated") === "1") {
+		document.querySelector<HTMLElement>("#payfast-thanks")?.removeAttribute("hidden");
+		history.replaceState(null, "", location.pathname);
+	}
+</script>

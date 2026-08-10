@@ -39,14 +39,19 @@ const categories = await getProductCategories();
 			{categories.map((category) => (
 				<a class="card category-tile" href={`/shop/${category.slug}`}>
 					{category.photo && (
-						<img
-							src={urlFor(category.photo).width(500).height(375).fit("crop").auto("format").url()}
-							alt={category.name}
-							width="500"
-							height="375"
-							loading="lazy"
-							class="category-tile-img"
-						/>
+						<div
+							class="category-tile-img blur-up"
+							style={category.photoLqip ? `background-image:url(${category.photoLqip})` : undefined}
+						>
+							<img
+								src={urlFor(category.photo).width(500).height(375).fit("crop").auto("format").url()}
+								alt={category.name}
+								width="500"
+								height="375"
+								loading="lazy"
+								onload="this.classList.add('is-loaded')"
+							/>
+						</div>
 					)}
 					<h2>{category.name}</h2>
 					<p>{category.blurb}</p>

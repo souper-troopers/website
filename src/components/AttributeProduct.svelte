@@ -1,15 +1,17 @@
 <script lang="ts">
 	import { cart } from "../lib/cart.svelte";
 
-	let { categorySlug, categoryName, photoUrl, variants } = $props<{
+	let { categorySlug, categoryName, photoUrl, photoLqip, variants } = $props<{
 		categorySlug: string;
 		categoryName: string;
 		photoUrl?: string;
+		photoLqip?: string;
 		variants: { _key: string; label: string; price: number }[];
 	}>();
 
 	let selectedIndex = $state(0);
 	let added = $state(false);
+	let photoLoaded = $state(false);
 
 	let selected = $derived(variants[selectedIndex]);
 
@@ -33,7 +35,17 @@
 
 <div class="card attribute-product">
 	{#if photoUrl}
-		<img src={photoUrl} alt={categoryName} width="700" height="700" loading="lazy" class="attribute-product-img" />
+		<div class="attribute-product-img blur-up" style={photoLqip ? `background-image:url(${photoLqip})` : undefined}>
+			<img
+				src={photoUrl}
+				alt={categoryName}
+				width="700"
+				height="700"
+				loading="lazy"
+				class:is-loaded={photoLoaded}
+				onload={() => (photoLoaded = true)}
+			/>
+		</div>
 	{/if}
 
 	<div class="attribute-product-body">
@@ -72,7 +84,6 @@
 	.attribute-product-img {
 		width: 100%;
 		aspect-ratio: 1 / 1;
-		object-fit: cover;
 		border-radius: calc(var(--radius, 18px) - 6px);
 	}
 

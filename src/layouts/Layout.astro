@@ -548,10 +548,29 @@ const structuredData = {
 				transform: translateY(-3px);
 			}
 
+			.blur-up {
+				position: relative;
+				overflow: hidden;
+				background-size: cover;
+				background-position: center;
+			}
+
+			.blur-up img {
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				opacity: 0;
+				transition: opacity 0.4s ease;
+			}
+
+			.blur-up img.is-loaded {
+				opacity: 1;
+			}
+
 			.category-tile-img {
 				width: 100%;
 				aspect-ratio: 4 / 3;
-				object-fit: cover;
 				border-radius: calc(var(--radius) - 6px);
 				margin-bottom: 1rem;
 			}
@@ -671,10 +690,8 @@ const structuredData = {
 			}
 
 			.team-photo {
-				display: block;
 				width: 120px;
 				height: 120px;
-				object-fit: cover;
 				border-radius: 50%;
 				margin: 0 auto;
 			}

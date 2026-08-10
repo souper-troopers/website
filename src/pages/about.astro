@@ -100,14 +100,19 @@ const partners = await getPartners();
 			{team.map((person) => (
 				<div class="card" style="text-align:center; align-items:center;">
 					{person.photo && (
-						<img
-							class="team-photo"
-							src={urlFor(person.photo).width(300).height(300).fit("crop").url()}
-							alt={person.name}
-							width="120"
-							height="120"
-							loading="lazy"
-						/>
+						<div
+							class="team-photo blur-up"
+							style={person.photoLqip ? `background-image:url(${person.photoLqip})` : undefined}
+						>
+							<img
+								src={urlFor(person.photo).width(300).height(300).fit("crop").auto("format").url()}
+								alt={person.name}
+								width="120"
+								height="120"
+								loading="lazy"
+								onload="this.classList.add('is-loaded')"
+							/>
+						</div>
 					)}
 					<h3>{person.name}</h3>
 					<p>{person.role}</p>

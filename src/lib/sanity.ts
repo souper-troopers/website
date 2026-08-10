@@ -26,6 +26,7 @@ export interface TeamMember {
 	name: string;
 	role: string;
 	photo?: SanityImageSource;
+	photoLqip?: string;
 }
 
 export interface Partner {
@@ -46,6 +47,7 @@ export interface ProductCategory {
 	slug: string;
 	blurb: string;
 	photo?: SanityImageSource;
+	photoLqip?: string;
 	displayMode: "items" | "attributes";
 	description?: any[];
 	attributeVariants?: AttributeVariant[];
@@ -56,6 +58,7 @@ export interface ShopItem {
 	name: string;
 	price: number;
 	photo?: SanityImageSource;
+	photoLqip?: string;
 	description?: string;
 }
 
@@ -83,7 +86,14 @@ export async function getFeaturedSuccessStories(): Promise<SuccessStory[]> {
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
-	return sanityClient.fetch(`*[_type == "teamMember"] | order(order asc)`);
+	return sanityClient.fetch(
+		`*[_type == "teamMember"] | order(order asc) {
+			name,
+			role,
+			photo,
+			"photoLqip": photo.asset->metadata.lqip,
+		}`
+	);
 }
 
 export async function getPartners(): Promise<Partner[]> {
@@ -97,6 +107,7 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
 			"slug": slug.current,
 			blurb,
 			photo,
+			"photoLqip": photo.asset->metadata.lqip,
 			displayMode,
 			description,
 			attributeVariants,
@@ -111,6 +122,7 @@ export async function getProductCategory(slug: string): Promise<ProductCategory 
 			"slug": slug.current,
 			blurb,
 			photo,
+			"photoLqip": photo.asset->metadata.lqip,
 			displayMode,
 			description,
 			attributeVariants,
@@ -126,6 +138,7 @@ export async function getShopItems(categorySlug: string): Promise<ShopItem[]> {
 			name,
 			price,
 			photo,
+			"photoLqip": photo.asset->metadata.lqip,
 			description,
 		}`,
 		{ categorySlug }

@@ -41,6 +41,7 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 				categorySlug={category.slug}
 				categoryName={category.name}
 				photoUrl={category.photo ? urlFor(category.photo).width(700).height(700).fit("crop").auto("format").url() : undefined}
+				photoLqip={category.photoLqip}
 				variants={category.attributeVariants ?? []}
 			/>
 		) : (
@@ -54,6 +55,7 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 						price={item.price}
 						description={item.description}
 						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
+						photoLqip={item.photoLqip}
 					/>
 				))}
 			</div>

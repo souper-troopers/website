@@ -126,6 +126,7 @@ const heroLqip =
 	const heroImg = document.querySelector<HTMLElement>(".hero-bg");
 	const header = document.querySelector<HTMLElement>(".site-header-overlay");
 	const hero = document.querySelector<HTMLElement>(".hero-photo");
+	const heroDonateBtn = document.querySelector<HTMLElement>(".hero .btn-primary");
 	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 	const parallaxRate = 0.3;
 	let ticking = false;
@@ -147,6 +148,13 @@ const heroLqip =
 			const threshold = Math.max(heroHeight - header.offsetHeight, 1);
 			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
 			header.style.setProperty("--header-fade", String(progress));
+
+			// Mobile only (see .site-header-overlay .donate-cta in Layout.astro): the header's own
+			// Donate button stays hidden — redundant right next to the hero's — until the hero's
+			// button has actually scrolled out from under the header, at which point it's the only
+			// Donate CTA left on screen and needs to reappear.
+			const heroDonateHidden = heroDonateBtn ? heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight : window.scrollY > 0;
+			header.classList.toggle("show-header-donate", heroDonateHidden);
 		}
 		ticking = false;
 	}

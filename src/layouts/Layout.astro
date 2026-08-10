@@ -8,8 +8,10 @@ import quicksand400 from "@fontsource/quicksand/files/quicksand-latin-400-normal
 import quicksand600 from "@fontsource/quicksand/files/quicksand-latin-600-normal.woff2?url";
 import quicksand700 from "@fontsource/quicksand/files/quicksand-latin-700-normal.woff2?url";
 
-// Hand-rolled in place of @fontsource's default CSS so we can set font-display: optional instead of
-// its hardcoded "swap" — avoids a visible fallback-to-Quicksand pop once the font finishes loading.
+// Hand-rolled in place of @fontsource's default CSS so we can trim to the weights/subset we actually
+// use. font-display: swap (not optional) is deliberate — text is hidden by our own .fonts-pending
+// mechanism below until the font is ready or a timeout fires, so the browser should always eventually
+// use the real font once loaded rather than permanently giving up on it (which is what optional does).
 // Only the weights actually used in this codebase (400/600/700) and the latin subset (covers the
 // Latin-1 diacritics used in Afrikaans names/copy) — see @fontsource/quicksand/*.css for the original.
 const quicksandUnicodeRange =
@@ -26,7 +28,7 @@ const fontFaceCSS = quicksandWeights
 				font-family: 'Quicksand';
 				font-style: normal;
 				font-weight: ${weight};
-				font-display: optional;
+				font-display: swap;
 				src: url(${url}) format('woff2');
 				unicode-range: ${quicksandUnicodeRange};
 			}
@@ -113,6 +115,32 @@ const structuredData = {
 		<link rel="preload" href={quicksand600} as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href={quicksand700} as="font" type="font/woff2" crossorigin />
 		<style set:html={fontFaceCSS} />
+		<script is:inline>
+			// Runs synchronously before <body> paints. Text stays invisible (see the .fonts-pending CSS
+			// rule) only for as long as this class is present — if JS never runs at all (disabled, blocked,
+			// errors before this line), the class is simply never added and text renders normally, same as
+			// if none of this existed. That's the safety net: the default is "visible," not "hidden."
+			//
+			// Deliberately NOT using document.fonts.ready here: it's documented to resolve before the
+			// font's network request has actually finished in some engines (e.g. WebKit bug 225790),
+			// which would reveal text before Quicksand is really ready — exactly the pop this exists to
+			// prevent. The <link rel=preload> elements' own load/error events are tied directly to the
+			// fetch completing, with no such ambiguity.
+			document.documentElement.classList.add("fonts-pending");
+			var preloadLinks = document.querySelectorAll('link[rel="preload"][as="font"]');
+			var loadPromises = Array.prototype.map.call(preloadLinks, function (link) {
+				return new Promise(function (resolve) {
+					link.addEventListener("load", resolve, { once: true });
+					link.addEventListener("error", resolve, { once: true });
+				});
+			});
+			var timeout = new Promise(function (resolve) {
+				setTimeout(resolve, 2000);
+			});
+			Promise.race([Promise.all(loadPromises), timeout]).then(function () {
+				document.documentElement.classList.remove("fonts-pending");
+			});
+		</script>
 		<!-- Pre-launch preview only — remove this once the site goes live on the real domain. -->
 		<meta name="robots" content="noindex, nofollow" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -201,11 +229,43 @@ const structuredData = {
 				--st-white: #ffffff;
 				--radius: 18px;
 				--header-height: 71px;
+
+				/* Spacing scale — the only padding/margin/gap values used across the site (mobile
+				   included). Keeps every gap/padding drawing from the same finite, standard 4px-based
+				   scale instead of one-off values per rule. */
+				--space-1: 0.25rem;
+				--space-2: 0.5rem;
+				--space-3: 0.75rem;
+				--space-4: 1rem;
+				--space-5: 1.25rem;
+				--space-6: 1.5rem;
+				--space-8: 2rem;
+				--space-10: 2.5rem;
+				--space-12: 3rem;
+				--space-16: 4rem;
+				--space-20: 5rem;
+				--space-24: 6rem;
+
 				font-family: "Quicksand", "Segoe UI", system-ui, sans-serif;
 			}
 
+			/* Standard mobile breakpoint — every narrow-screen override in this file uses this same
+			   700px cutoff (the .nav-toggle switch at 760px is a separate, unrelated concern: when the
+			   nav collapses into a menu button, not spacing rhythm). */
+
 			* {
 				box-sizing: border-box;
+			}
+
+			/* Text stays transparent while .fonts-pending is on <html> (see the inline script in <head>),
+			   then fades in once it's removed. Scoped away from svg so icons relying on fill: currentColor
+			   (cart icon, footer social links) aren't blanked out by the same rule. */
+			*:not(svg):not(svg *) {
+				transition: color 0.3s ease;
+			}
+
+			html.fonts-pending *:not(svg):not(svg *) {
+				color: transparent !important;
 			}
 
 			h1,
@@ -238,8 +298,8 @@ const structuredData = {
 				position: relative;
 				display: flex;
 				flex-direction: column;
-				gap: 3.5rem;
-				padding-bottom: 3.5rem;
+				gap: var(--space-16);
+				padding-bottom: var(--space-16);
 			}
 
 			h1,
@@ -282,16 +342,16 @@ const structuredData = {
 			.header-inner {
 				display: flex;
 				align-items: center;
-				gap: 2rem;
-				padding-top: 0.75rem;
-				padding-bottom: 0.75rem;
+				gap: var(--space-8);
+				padding-top: var(--space-3);
+				padding-bottom: var(--space-3);
 				flex-wrap: wrap;
 			}
 
 			.brand {
 				display: flex;
 				align-items: center;
-				gap: 0.6rem;
+				gap: var(--space-2);
 				font-weight: 700;
 				font-size: 1.1rem;
 				color: var(--st-white);
@@ -339,6 +399,11 @@ const structuredData = {
 				background: transparent;
 				cursor: pointer;
 				flex-shrink: 0;
+				/* #primary-nav is position:absolute (see below), which paints above non-positioned
+				   flow content regardless of DOM order — without this, the open dropdown would paint
+				   over the toggle button that opened it. */
+				position: relative;
+				z-index: 1;
 			}
 
 			.nav-toggle-bar {
@@ -363,37 +428,110 @@ const structuredData = {
 			}
 
 			@media (max-width: 760px) {
+				/* Fixed (not content-driven) height, one step taller than the old content-driven ~56px
+				   for a bit more breathing room. Content-driven padding used to mean the row's height
+				   would jump by a few px whenever a taller child appeared — e.g. the header's own
+				   Donate button (see .show-header-donate below) is taller than the logo, so the header
+				   grew slightly the moment it showed up on scroll. A fixed height plus align-items:
+				   center (already set on .header-inner, see base rule) keeps the row height constant
+				   and content centered regardless of which children are present.
+				   --header-height is redeclared here to match — .hero-photo's padding calc() (and
+				   anything else keyed off it) picks the new value up automatically. */
+				:root {
+					--header-height: var(--space-16);
+				}
+
 				.header-inner {
-					gap: 0.85rem;
+					gap: var(--space-3);
+					height: var(--header-height);
+					/* The base rule's padding-top/bottom (var(--space-3), 12px each) is still in the
+					   cascade here and has to be zeroed explicitly — with a fixed height, that leftover
+					   24px of padding left only 40px for content, less than the 44px logo (the tallest
+					   child), so it overflowed the padded area and rendered pinned to the top-padding
+					   edge instead of truly centered (less room below than above — read as "closer to
+					   the bottom"). Zeroing it hands the full 64px to align-items:center to work with. */
+					padding-top: 0;
+					padding-bottom: 0;
 				}
 
 				.brand span {
 					display: none;
 				}
 
+				/* Visual order only (order: doesn't affect DOM/tab order) — Donate reads before the
+				   cart icon instead of the two crowding together in DOM order (brand, cart, Donate,
+				   toggle). brand is left at its default order (0). */
+				.donate-cta {
+					order: 1;
+				}
+
+				.header-inner .cart-toggle {
+					order: 2;
+				}
+
 				.nav-toggle {
+					order: 3;
 					display: flex;
 				}
 
-				nav[aria-label="Primary"] {
+				/* Homepage only (.site-header-overlay): the hero has its own "Donate now" button right
+				   below, so the header's copy is redundant at rest and the two visibly crowd each other.
+				   Hard display toggle (not opacity/visibility) — those still reserve layout space while
+				   fading, which leaves a dead gap between the cart and hamburger icons; display:none
+				   removes it from the flex row entirely so its share of the `gap` closes up too. Toggled
+				   by index.astro's scroll script once the hero's own button has scrolled out of view. */
+				.site-header-overlay .donate-cta {
 					display: none;
+				}
+
+				.site-header-overlay.show-header-donate .donate-cta {
+					display: inline-block;
+				}
+
+				/* Always in the flex layout (no display:none) so transform/visibility can transition —
+				   display can't be animated. Closed state sits translated fully above its own box
+				   (behind the header), non-interactive via visibility:hidden. The visibility delay is
+				   asymmetric on purpose: show immediately when opening (delay 0s) so content is visible
+				   for the whole slide-in, but only hide once closing has fully finished sliding away
+				   (delay = transition duration), so it doesn't vanish mid-slide.
+				   top:0 (not 100%) + padding-top covering --header-height, rather than starting below
+				   the header: on the homepage the header is still transparent at rest (fades in on
+				   scroll, see index.astro), so a menu that only started below it left a gap showing the
+				   hero photo through that transparent strip. Extending the menu's own solid background
+				   up behind the header removes that gap; z-index:-1 (below) keeps it behind the header's
+				   own controls (logo/cart/donate/toggle — all non-positioned or explicitly stacked
+				   above, see .nav-toggle) so they stay visible and clickable on top of it. */
+				nav[aria-label="Primary"] {
+					display: flex;
 					position: absolute;
-					top: 100%;
+					top: 0;
 					left: 0;
 					right: 0;
 					flex-direction: column;
 					gap: 0;
 					background: var(--st-ink);
-					padding: 0.5rem 1.5rem 1.25rem;
+					padding: calc(var(--header-height) + var(--space-2)) var(--space-6) var(--space-5);
 					box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+					transform: translateY(-100%);
+					visibility: hidden;
+					transition: transform 0.25s ease, visibility 0s linear 0.25s;
+					z-index: -1;
 				}
 
 				nav[aria-label="Primary"].is-open {
-					display: flex;
+					transform: translateY(0);
+					visibility: visible;
+					transition: transform 0.25s ease, visibility 0s linear 0s;
+				}
+
+				@media (prefers-reduced-motion: reduce) {
+					nav[aria-label="Primary"] {
+						transition: none;
+					}
 				}
 
 				nav[aria-label="Primary"] a {
-					padding: 0.75rem 0;
+					padding: var(--space-3) 0;
 					border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 				}
 
@@ -404,7 +542,7 @@ const structuredData = {
 
 			.btn {
 				display: inline-block;
-				padding: 0.7rem 1.4rem;
+				padding: var(--space-3) var(--space-6);
 				border-radius: 999px;
 				font-weight: 700;
 				text-decoration: none;
@@ -438,14 +576,14 @@ const structuredData = {
 			.site-footer {
 				background: var(--st-ink);
 				color: rgba(255, 255, 255, 0.85);
-				padding: 1.75rem 0 1.25rem;
+				padding: var(--space-6) 0 var(--space-5);
 			}
 
 			.footer-inner {
 				display: flex;
 				align-items: baseline;
 				flex-wrap: wrap;
-				gap: 0.5rem 1rem;
+				gap: var(--space-2) var(--space-4);
 			}
 
 			.site-footer a {
@@ -455,8 +593,8 @@ const structuredData = {
 			.footer-social {
 				display: flex;
 				align-items: center;
-				gap: 0.9rem;
-				margin-top: 1.1rem;
+				gap: var(--space-4);
+				margin-top: var(--space-4);
 			}
 
 			.footer-social-label {
@@ -469,7 +607,7 @@ const structuredData = {
 
 			.social-links {
 				display: flex;
-				gap: 0.85rem;
+				gap: var(--space-3);
 			}
 
 			.social-links a {
@@ -487,7 +625,7 @@ const structuredData = {
 			}
 
 			.fine-print {
-				margin-top: 0.75rem;
+				margin-top: var(--space-3);
 				font-size: 0.8rem;
 				opacity: 0.55;
 			}
@@ -496,13 +634,13 @@ const structuredData = {
 			.section {
 				display: flex;
 				flex-direction: column;
-				gap: 2rem;
+				gap: var(--space-8);
 			}
 
 			.section-intro {
 				display: flex;
 				flex-direction: column;
-				gap: 0.6rem;
+				gap: var(--space-2);
 			}
 
 			.section-intro h2 {
@@ -516,7 +654,7 @@ const structuredData = {
 
 			.grid {
 				display: grid;
-				gap: 1.5rem;
+				gap: var(--space-6);
 			}
 
 			.grid-2 {
@@ -535,11 +673,11 @@ const structuredData = {
 				display: flex;
 				flex-direction: column;
 				align-items: flex-start;
-				gap: 0.75rem;
+				gap: var(--space-3);
 				background: var(--st-white);
 				color: var(--st-ink);
 				border-radius: var(--radius);
-				padding: 1.75rem;
+				padding: var(--space-6);
 				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 			}
 
@@ -566,7 +704,7 @@ const structuredData = {
 				display: flex;
 				flex-direction: column;
 				gap: 0;
-				transition: transform 0.15s ease;
+				transition: transform 0.15s ease, color 0.3s ease;
 			}
 
 			.category-tile:hover {
@@ -597,18 +735,18 @@ const structuredData = {
 				width: 100%;
 				aspect-ratio: 4 / 3;
 				border-radius: calc(var(--radius) - 6px);
-				margin-bottom: 1rem;
+				margin-bottom: var(--space-4);
 			}
 
 			.category-tile h2 {
 				font-size: 1.2rem;
-				margin-bottom: 0.4rem;
+				margin-bottom: var(--space-2);
 			}
 
 			.category-tile p {
 				color: rgba(36, 35, 43, 0.65);
 				font-size: 0.92rem;
-				margin-bottom: 0.75rem;
+				margin-bottom: var(--space-3);
 			}
 
 			.category-tile-cta {
@@ -621,7 +759,7 @@ const structuredData = {
 			.payment-method-header {
 				display: flex;
 				align-items: center;
-				gap: 0.6rem;
+				gap: var(--space-2);
 			}
 
 			.payment-method-header h3 {
@@ -647,7 +785,7 @@ const structuredData = {
 
 			.contact-form {
 				display: grid;
-				gap: 1rem;
+				gap: var(--space-4);
 				width: 100%;
 				max-width: 480px;
 				margin: 0 auto;
@@ -655,7 +793,7 @@ const structuredData = {
 
 			.contact-form label {
 				display: grid;
-				gap: 0.35rem;
+				gap: var(--space-1);
 				font-weight: 600;
 				font-size: 0.9rem;
 			}
@@ -663,7 +801,7 @@ const structuredData = {
 			.contact-form input,
 			.contact-form textarea {
 				font: inherit;
-				padding: 0.6rem 0.75rem;
+				padding: var(--space-2) var(--space-3);
 				border-radius: 10px;
 				border: 1px solid rgba(0, 0, 0, 0.15);
 				background: var(--st-white);
@@ -704,7 +842,7 @@ const structuredData = {
 
 			.partner-logo-frame.on-dark {
 				background: var(--st-ink);
-				padding: 0.5rem;
+				padding: var(--space-2);
 			}
 
 			.partner-logo {
@@ -729,7 +867,7 @@ const structuredData = {
 				border-radius: var(--radius);
 				overflow: hidden;
 				text-decoration: none;
-				transition: transform 0.2s ease;
+				transition: transform 0.2s ease, color 0.3s ease;
 			}
 
 			.goods-tile:hover {
@@ -759,7 +897,7 @@ const structuredData = {
 				font-weight: 600;
 				font-size: 0.92rem;
 				line-height: 1.3;
-				padding: 1rem;
+				padding: var(--space-4);
 			}
 
 			.stat {
@@ -785,12 +923,12 @@ const structuredData = {
 			.hero {
 				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-red) 100%);
 				color: var(--st-white);
-				padding: 4rem 0;
+				padding: var(--space-16) 0;
 			}
 
 			.hero-photo {
 				position: relative;
-				padding: calc(5.5rem + var(--header-height)) 0 5.5rem;
+				padding: calc(var(--space-20) + var(--header-height)) 0 var(--space-20);
 				overflow: hidden;
 				background: var(--st-ink);
 			}
@@ -830,7 +968,7 @@ const structuredData = {
 			.hero h1 {
 				font-size: clamp(2.2rem, 5vw, 3.4rem);
 				max-width: 20ch;
-				margin-bottom: 1rem;
+				margin-bottom: var(--space-4);
 			}
 
 			.hero-highlight {
@@ -840,19 +978,19 @@ const structuredData = {
 			.hero p {
 				max-width: 55ch;
 				font-size: 1.1rem;
-				margin-bottom: 2rem;
+				margin-bottom: var(--space-8);
 				opacity: 0.95;
 			}
 
 			.hero .actions {
 				display: flex;
-				gap: 1rem;
+				gap: var(--space-4);
 				flex-wrap: wrap;
 			}
 
 			.hero-secondary-link {
 				display: inline-block;
-				margin-top: 1.25rem;
+				margin-top: var(--space-5);
 				color: rgba(255, 255, 255, 0.8);
 				font-weight: 600;
 				font-size: 0.9rem;
@@ -877,11 +1015,11 @@ const structuredData = {
 			.page-hero {
 				background: var(--st-ink);
 				color: var(--st-white);
-				padding: 3rem 0;
+				padding: var(--space-12) 0;
 			}
 
 			.page-hero h1 {
-				margin-bottom: 0.5rem;
+				margin-bottom: var(--space-2);
 				font-size: clamp(2rem, 4vw, 2.8rem);
 			}
 
@@ -892,14 +1030,14 @@ const structuredData = {
 
 			.quote {
 				border-left: 4px solid var(--st-teal);
-				padding-left: 1.25rem;
+				padding-left: var(--space-5);
 				font-style: italic;
 				font-size: 1.15rem;
 			}
 
 			.quote cite {
 				display: block;
-				margin-top: 0.5rem;
+				margin-top: var(--space-2);
 				font-style: normal;
 				font-weight: 600;
 				font-size: 0.9rem;
@@ -920,7 +1058,7 @@ const structuredData = {
 				background: rgba(27, 171, 190, 0.12);
 				color: var(--st-teal-dark);
 				border-radius: 999px;
-				padding: 0.3rem 0.9rem;
+				padding: var(--space-1) var(--space-4);
 				font-size: 0.8rem;
 				font-weight: 700;
 				letter-spacing: 0.03em;
@@ -937,7 +1075,7 @@ const structuredData = {
 				display: grid;
 				grid-template-columns: 1.3fr 1fr;
 				grid-auto-rows: 1fr;
-				gap: 1.25rem;
+				gap: var(--space-5);
 				min-height: 460px;
 			}
 
@@ -945,11 +1083,11 @@ const structuredData = {
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-end;
-				padding: 2rem;
+				padding: var(--space-8);
 				border-radius: 24px;
 				color: var(--st-white);
 				text-decoration: none;
-				transition: transform 0.2s ease;
+				transition: transform 0.2s ease, color 0.3s ease;
 			}
 
 			.path-tile:hover {
@@ -958,12 +1096,12 @@ const structuredData = {
 
 			.path-tile h3 {
 				font-size: 1.6rem;
-				margin-bottom: 0.6rem;
+				margin-bottom: var(--space-2);
 			}
 
 			.path-tile p {
 				opacity: 0.92;
-				margin-bottom: 1.25rem;
+				margin-bottom: var(--space-5);
 				max-width: 38ch;
 			}
 
@@ -974,7 +1112,7 @@ const structuredData = {
 
 			.path-tile-primary {
 				grid-row: span 2;
-				padding: 2.75rem;
+				padding: var(--space-10);
 			}
 
 			.path-tile-primary h3 {
@@ -993,23 +1131,12 @@ const structuredData = {
 				background: var(--st-ink);
 			}
 
-			@media (max-width: 700px) {
-				.path-grid {
-					grid-template-columns: 1fr;
-					min-height: 0;
-				}
-
-				.path-tile-primary {
-					grid-row: auto;
-				}
-			}
-
 			/* Impact — full-bleed band */
 			.impact-band,
 			.dark-band {
 				background: var(--st-ink);
 				color: var(--st-white);
-				padding: 4.5rem 0;
+				padding: var(--space-16) 0;
 			}
 
 			.impact-band h2,
@@ -1026,25 +1153,25 @@ const structuredData = {
 			.impact-band .wrap {
 				display: flex;
 				flex-direction: column;
-				gap: 3rem;
+				gap: var(--space-12);
 			}
 
 			.dark-band .wrap {
 				display: flex;
 				flex-direction: column;
-				gap: 2rem;
+				gap: var(--space-8);
 			}
 
 			.impact-stats {
 				display: grid;
 				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-				gap: 2.5rem;
+				gap: var(--space-10);
 			}
 
 			.impact-stat {
 				display: flex;
 				flex-direction: column;
-				gap: 0.6rem;
+				gap: var(--space-2);
 			}
 
 			.impact-stat strong {
@@ -1064,12 +1191,12 @@ const structuredData = {
 			.stories-band {
 				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-red) 100%);
 				color: var(--st-white);
-				padding: 4.5rem 0;
+				padding: var(--space-16) 0;
 			}
 
 			.stories-band h2 {
 				font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-				margin-top: 0.6rem;
+				margin-top: var(--space-2);
 			}
 
 			.stories-band .badge-on-dark {
@@ -1080,19 +1207,19 @@ const structuredData = {
 			.stories-grid {
 				display: grid;
 				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-				gap: 2rem;
-				margin-top: 2.75rem;
+				gap: var(--space-8);
+				margin-top: var(--space-10);
 				align-items: stretch;
 			}
 
 			.story-card {
 				display: flex;
 				flex-direction: column;
-				gap: 1.25rem;
+				gap: var(--space-5);
 				background: rgba(255, 255, 255, 0.14);
 				border: 1px solid rgba(255, 255, 255, 0.22);
 				border-radius: var(--radius);
-				padding: 2rem;
+				padding: var(--space-8);
 				backdrop-filter: blur(6px);
 				-webkit-backdrop-filter: blur(6px);
 			}
@@ -1111,11 +1238,124 @@ const structuredData = {
 				letter-spacing: 0.02em;
 				opacity: 0.9;
 			}
+
+			/* Narrow-screen tightening: content gets horizontal breathing room it doesn't need on
+			   desktop (.wrap has no side padding above 700px — max-width already keeps it off the
+			   edges there), and vertical rhythm shrinks so there's less empty space to scroll past.
+			   Kept as the LAST rule in this stylesheet, deliberately: every selector below is also
+			   targeted by an earlier, unconditional (desktop) rule elsewhere above. Equal specificity
+			   (simple class selectors on both sides) means source order decides the winner regardless
+			   of the media condition — this block has to stay after all of them, or the desktop
+			   declarations silently win back the cascade even on mobile (confirmed happening: this
+			   block used to sit mid-stylesheet, ahead of the .impact-band/.dark-band/.stories-band/
+			   .stories-grid/.story-card desktop rules, which were overriding it despite that media
+			   query never applying past 700px). */
+			@media (max-width: 700px) {
+				/* Longhand, not shorthand `padding:` — several elements (.header-inner, .footer-inner)
+				   share the .wrap class alongside their own vertical padding/gap rules. A shorthand
+				   here would reset their top/bottom values to 0 (equal specificity, later in source
+				   order wins), which is exactly the header-padding bug this comment is here to prevent
+				   from coming back. */
+				.wrap {
+					padding-left: var(--space-5);
+					padding-right: var(--space-5);
+				}
+
+				/* Vertical rhythm matches the x-axis dimension (.wrap's side padding, above) throughout
+				   this block — one consistent value instead of a different one per component. Excluded
+				   on purpose: .hero-photo (deliberately asymmetric, see below) and box paddings that
+				   were already uniform on all four sides (.card, .path-tile, .story-card) — those never
+				   had a top/bottom-vs-side mismatch to begin with. */
+				main {
+					gap: var(--space-5);
+					padding-bottom: var(--space-5);
+				}
+
+				.section {
+					gap: var(--space-5);
+				}
+
+				.grid {
+					gap: var(--space-5);
+				}
+
+				.card {
+					padding: var(--space-4);
+				}
+
+				/* Asymmetric on purpose: the fixed header already occupies the top, framing the hero
+				   text on its own — stacking the full var(--space-12) on top of --header-height as well
+				   doubles up on that framing and reads as too much dead air before the heading. The
+				   bottom, with nothing above it, keeps the fuller gap before the next section. */
+				.hero-photo {
+					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-12);
+				}
+
+				/* No padding override here: .hero and .hero-photo are always applied together (see
+				   index.astro) and .hero-photo's own padding above is the one that actually needs to
+				   account for --header-height — a .hero padding rule here would win the whole shorthand
+				   by source order and silently erase that offset (confirmed happening before this fix:
+				   hero-content rendered 16px underneath the fixed header on mobile). */
+				.hero p {
+					margin-bottom: var(--space-6);
+				}
+
+				.page-hero {
+					padding: var(--space-5) 0;
+				}
+
+				.path-grid {
+					grid-template-columns: 1fr;
+					min-height: 0;
+					gap: var(--space-5);
+				}
+
+				.path-tile-primary {
+					grid-row: auto;
+				}
+
+				.path-tile,
+				.path-tile-primary {
+					padding: var(--space-6);
+				}
+
+				.impact-band,
+				.dark-band,
+				.stories-band {
+					padding: var(--space-5) 0;
+				}
+
+				.impact-band .wrap {
+					gap: var(--space-5);
+				}
+
+				.dark-band .wrap {
+					gap: var(--space-5);
+				}
+
+				.impact-stats {
+					gap: var(--space-5);
+				}
+
+				.stories-grid {
+					gap: var(--space-5);
+					margin-top: var(--space-5);
+				}
+
+				.story-card {
+					padding: var(--space-6);
+				}
+			}
 		</style>
 
 		<script>
 			const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
 			const primaryNav = document.querySelector<HTMLElement>("#primary-nav");
+
+			function closeNav() {
+				navToggle?.setAttribute("aria-expanded", "false");
+				primaryNav?.classList.remove("is-open");
+			}
 
 			navToggle?.addEventListener("click", () => {
 				const isOpen = navToggle.getAttribute("aria-expanded") === "true";
@@ -1125,10 +1365,25 @@ const structuredData = {
 
 			primaryNav?.addEventListener("click", (event) => {
 				if ((event.target as HTMLElement).tagName === "A") {
-					navToggle?.setAttribute("aria-expanded", "false");
-					primaryNav.classList.remove("is-open");
+					closeNav();
 				}
 			});
+
+			// Auto-close on downward scroll only (not upward) — the menu overlays the page content
+			// right below the header, so continuing to scroll down through it reads as the user moving
+			// on, not adjusting their position within an open menu.
+			let lastScrollY = window.scrollY;
+			window.addEventListener(
+				"scroll",
+				() => {
+					const currentScrollY = window.scrollY;
+					if (currentScrollY > lastScrollY && primaryNav?.classList.contains("is-open")) {
+						closeNav();
+					}
+					lastScrollY = currentScrollY;
+				},
+				{ passive: true },
+			);
 		</script>
 	</body>
 </html>

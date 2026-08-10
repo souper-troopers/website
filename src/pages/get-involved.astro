@@ -9,6 +9,17 @@ import householdPhoto from "../assets/images/goods/household.jpg";
 import craftPhoto from "../assets/images/goods/craft.jpg";
 import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
 import electronicsPhoto from "../assets/images/goods/electronics.jpg";
+import { getBbbeeBenefits, getSiteSettings } from "../lib/sanity";
+
+const bbbeeBenefits = await getBbbeeBenefits();
+const settings = await getSiteSettings();
+const bbbeeVerified = settings?.bbbeeLastVerified
+	? new Date(settings.bbbeeLastVerified).toLocaleDateString("en-ZA", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		})
+	: null;
 
 const goodsCategories = [
 	{ label: "Non-perishable food", photo: foodPhoto },
@@ -75,12 +86,80 @@ const goodsCategories = [
 		</div>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes — like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
-			<div class="card"><h3>B-BBEE points</h3><p>Buy Troopers Coffee or donate — both count. Souper Troopers is B-BBEE Level 1.</p></div>
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
-		<p>Interested in partnering? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>. Financial donations come with Section 18A tax certificates.</p>
+		<p>Interested in partnering? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.</p>
 	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Work with us</span>
+			<h2>Two things you can book that fund the work</h2>
+			<p>
+				Not everything here is a donation. These are things your business would spend money on
+				anyway — the difference is where the money goes afterwards.
+			</p>
+		</div>
+		<div class="grid grid-2">
+			<div class="card">
+				<h3>Corporate workshops</h3>
+				<p>
+					Our Reconnection Workshops bring a team together around identity, reflection, and
+					emotional wellbeing — facilitated by Jake Gluckman, a registered counsellor on our staff.
+					Voltalia recently hosted one for their team.
+				</p>
+				<p>
+					Every workshop directly funds the programmes at the Humanity Hub: skills development and
+					daily meals, transport to interviews, interview clothing, and healthcare as basic and as
+					decisive as an eye test or a set of dentures.
+				</p>
+				<a href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Enquire about a workshop &rarr;</a>
+			</div>
+			<div class="card">
+				<h3>Coffee for your workplace</h3>
+				<p>
+					Troopers Coffee — our Dignity Blend — is available as a standing order for offices,
+					guesthouses, and Airbnbs, not just as a one-off gift. The Lab Blue in Franschhoek serves
+					it to guests at sunrise.
+				</p>
+				<p>
+					Every bag funds the jobs behind it: the Souper Squad members who pack and sell it. And
+					because we're a B-BBEE Level 1 contributor, it counts as preferential procurement spend
+					on your scorecard.
+				</p>
+				<a href="/shop">See the coffee &rarr;</a>
+			</div>
+		</div>
+	</section>
+
+	{bbbeeBenefits.length > 0 && (
+		<section class="section wrap">
+			<div class="section-intro">
+				<span class="badge">What your business gets back</span>
+				<h2>Supporting us counts on your scorecard</h2>
+				<p>
+					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
+					is measurable on both your scorecard and your tax return.
+				</p>
+			</div>
+			<div class="grid grid-4">
+				{bbbeeBenefits.map((benefit) => (
+					<div class="card">
+						{benefit.value && <span class="benefit-value">{benefit.value}</span>}
+						<h3>{benefit.title}</h3>
+						<p>{benefit.body}</p>
+					</div>
+				))}
+			</div>
+			{(settings?.bbbeeNote || bbbeeVerified) && (
+				<p class="benefit-note">
+					{settings?.bbbeeNote}
+					{bbbeeVerified && <span class="benefit-verified">Last verified {bbbeeVerified}.</span>}
+				</p>
+			)}
+		</section>
+	)}
 
 	<section class="section wrap">
 		<div class="section-intro">
@@ -96,3 +175,25 @@ const goodsCategories = [
 		<p>Have an idea? Email <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a> and we'll help you get started.</p>
 	</section>
 </Layout>
+
+<style>
+	.benefit-value {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--st-teal-dark);
+		line-height: 1.1;
+	}
+
+	.benefit-note {
+		font-size: 0.85rem;
+		line-height: 1.7;
+		color: rgba(36, 35, 43, 0.5);
+		max-width: 78ch;
+	}
+
+	.benefit-verified {
+		display: block;
+		margin-top: 0.35rem;
+		font-weight: 600;
+	}
+</style>

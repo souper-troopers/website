@@ -5,6 +5,7 @@ import productCategory from './productCategory'
 import shopItem from './shopItem'
 import impactStat from './impactStat'
 import siteSettings from './siteSettings'
+import bbbeeBenefit from './bbbeeBenefit'
 
 export const schemaTypes = [
   successStory,
@@ -14,4 +15,5 @@ export const schemaTypes = [
   shopItem,
   impactStat,
   siteSettings,
+  bbbeeBenefit,
 ]

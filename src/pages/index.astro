@@ -3,6 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
+import workshopPhoto from "../assets/images/workshop-craft.jpg";
+import shopPhoto from "../assets/images/shop-products.jpg";
+import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import CountUp from "../components/CountUp.svelte";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
@@ -48,24 +51,36 @@ const heroLqip =
 		</div>
 		<div class="path-grid">
 			<a href="/donate" class="path-tile path-teal">
-				<h3>Donate</h3>
-				<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
-				<span class="path-cta">Donate now &rarr;</span>
+				<Image class="path-tile-img" src={supportPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<div class="path-tile-body">
+					<h3>Donate</h3>
+					<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
+					<span class="path-cta">Donate now &rarr;</span>
+				</div>
 			</a>
 			<a href="/get-involved#individuals" class="path-tile path-green">
-				<h3>Volunteer</h3>
-				<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
-				<span class="path-cta">Get involved &rarr;</span>
+				<Image class="path-tile-img" src={workshopPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<div class="path-tile-body">
+					<h3>Volunteer</h3>
+					<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
+					<span class="path-cta">Get involved &rarr;</span>
+				</div>
 			</a>
 			<a href="/shop" class="path-tile path-gold">
-				<h3>Buy something</h3>
-				<p>Troopers Coffee and African Worry Dolls&trade; — every order funds the jobs behind them.</p>
-				<span class="path-cta">Visit the shop &rarr;</span>
+				<Image class="path-tile-img" src={shopPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<div class="path-tile-body">
+					<h3>Buy something</h3>
+					<p>Troopers Coffee and African Worry Dolls&trade; — every order funds the jobs behind them.</p>
+					<span class="path-cta">Visit the shop &rarr;</span>
+				</div>
 			</a>
 			<a href="/get-involved#businesses" class="path-tile path-ink">
-				<h3>Partner with us</h3>
-				<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
-				<span class="path-cta">Partner with us &rarr;</span>
+				<Image class="path-tile-img" src={dignityPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<div class="path-tile-body">
+					<h3>Partner with us</h3>
+					<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
+					<span class="path-cta">Partner with us &rarr;</span>
+				</div>
 			</a>
 		</div>
 	</section>

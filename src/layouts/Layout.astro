@@ -712,6 +712,92 @@ const structuredData = {
 				display: none;
 			}
 
+			/* CAST is a sequence, so draw it as one — a connecting rule behind the letters instead
+			   of four disconnected cards. */
+			.cast-journey {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: var(--space-6);
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.cast-step {
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				gap: var(--space-3);
+				padding-top: var(--space-6);
+			}
+
+			/* The rule runs between this step's letter and the next one's. */
+			.cast-step:not(:last-child)::before {
+				content: "";
+				position: absolute;
+				top: calc(var(--space-6) + 22px);
+				left: 44px;
+				width: calc(100% + var(--space-6) - 44px);
+				height: 2px;
+				background: repeating-linear-gradient(
+					to right,
+					var(--st-teal) 0 8px,
+					transparent 8px 14px
+				);
+				opacity: 0.5;
+			}
+
+			.cast-step h3 {
+				font-size: 1.15rem;
+			}
+
+			.cast-step p {
+				color: rgba(36, 35, 43, 0.75);
+			}
+
+			@media (max-width: 900px) {
+				.cast-journey {
+					grid-template-columns: 1fr;
+					gap: var(--space-5);
+				}
+
+				.cast-step:not(:last-child)::before {
+					display: none;
+				}
+			}
+
+			/* Services are a reference list, not a set of cards. Without the card chrome, rows of
+			   uneven length stop reading as boxes with dead space in them. */
+			.service-list {
+				margin: 0;
+				border-top: 1px solid rgba(36, 35, 43, 0.12);
+			}
+
+			.service-row {
+				display: grid;
+				grid-template-columns: minmax(180px, 1fr) 2fr;
+				gap: var(--space-4) var(--space-8);
+				padding: var(--space-5) 0;
+				border-bottom: 1px solid rgba(36, 35, 43, 0.12);
+			}
+
+			.service-row dt {
+				font-weight: 700;
+				font-size: 1.05rem;
+			}
+
+			.service-row dd {
+				margin: 0;
+				color: rgba(36, 35, 43, 0.75);
+			}
+
+			@media (max-width: 700px) {
+				.service-row {
+					grid-template-columns: 1fr;
+					gap: var(--space-2);
+				}
+			}
+
 			.cast-letter {
 				display: flex;
 				align-items: center;
@@ -1224,9 +1310,13 @@ const structuredData = {
 			}
 
 			.path-tile {
+				position: relative;
+				isolation: isolate;
+				overflow: hidden;
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-end;
+				min-height: 260px;
 				padding: var(--space-8);
 				border-radius: 24px;
 				color: var(--st-white);
@@ -1234,8 +1324,54 @@ const structuredData = {
 				transition: transform 0.2s ease, color 0.3s ease;
 			}
 
+			/* A real photo, knocked well back, plus a scrim under the text. The scrim is doing two
+			   jobs: keeping the photo from competing with the copy, and lifting contrast on the
+			   lighter brand colours (white on --st-green alone is only 2.4:1). */
+			.path-tile-img {
+				position: absolute;
+				inset: 0;
+				z-index: -1;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				opacity: 0.3;
+				transition: transform 0.4s ease, opacity 0.3s ease;
+			}
+
+			.path-tile::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				z-index: -1;
+				background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.34) 60%, rgba(0, 0, 0, 0.12) 100%);
+			}
+
+			.path-tile-body {
+				position: relative;
+			}
+
 			.path-tile:hover {
 				transform: translateY(-4px);
+			}
+
+			.path-tile:hover .path-tile-img {
+				transform: scale(1.06);
+				opacity: 0.42;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.path-tile,
+				.path-tile-img {
+					transition: none;
+				}
+
+				.path-tile:hover {
+					transform: none;
+				}
+
+				.path-tile:hover .path-tile-img {
+					transform: none;
+				}
 			}
 
 			.path-tile h3 {

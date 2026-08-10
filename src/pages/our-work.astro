@@ -53,15 +53,15 @@ const hubServices = [
 			<span class="badge">The CAST journey</span>
 			<h2>They show up for themselves. We meet them halfway.</h2>
 		</div>
-		<div class="grid grid-4">
+		<ol class="cast-journey">
 			{castSteps.map((step) => (
-				<div class="card">
+				<li class="cast-step">
 					<span class="cast-letter">{step.letter}</span>
 					<h3>{step.title}</h3>
 					<p>{step.body}</p>
-				</div>
+				</li>
 			))}
-		</div>
+		</ol>
 	</section>
 
 	<section class="section wrap">
@@ -69,14 +69,14 @@ const hubServices = [
 			<span class="badge">What support looks like</span>
 			<h2>The Humanity Hub, in practice</h2>
 		</div>
-		<div class="grid grid-3">
+		<dl class="service-list">
 			{hubServices.map((item) => (
-				<div class="card">
-					<h3>{item.title}</h3>
-					<p>{item.body}</p>
+				<div class="service-row">
+					<dt>{item.title}</dt>
+					<dd>{item.body}</dd>
 				</div>
 			))}
-		</div>
+		</dl>
 	</section>
 
 	<section class="impact-band">

@@ -46,28 +46,41 @@ const goodsCategories = [
 			<span class="badge">Individuals</span>
 			<h2>Ways to help, person to person</h2>
 		</div>
-		<div class="grid grid-3">
-			<div class="card"><h3>Donate money</h3><p>Fund CAST directly.</p><a href="/donate">Donate &rarr;</a></div>
-			<div class="card"><h3>Donate goods</h3><p>Food, clothing, and more — see the full list below.</p></div>
-			<div class="card"><h3>Volunteer</h3><p>Give your time and skills.</p><a href="mailto:manager@soupertroopers.org">Get in touch &rarr;</a></div>
-			<div class="card"><h3>Buy products</h3><p>Coffee and worry dolls that fund jobs.</p><a href="/shop">Shop &rarr;</a></div>
-			<div class="card">
+		<div class="grid grid-3 action-grid">
+			<a class="card action-card" href="/donate">
+				<h3>Donate money</h3>
+				<p>Fund the CAST programme directly — from a first conversation to a first pay cheque.</p>
+				<span class="action-cta">Donate &rarr;</span>
+			</a>
+			<a class="card action-card" href="#goods">
+				<h3>Donate goods</h3>
+				<p>Food, toiletries, clothing, bedding, and more. Drop-offs welcome at the Humanity Hub.</p>
+				<span class="action-cta">See what we need &rarr;</span>
+			</a>
+			<a class="card action-card" href="mailto:manager@soupertroopers.org?subject=Volunteering%20with%20Souper%20Troopers">
+				<h3>Volunteer</h3>
+				<p>Give time or share a skill. Individuals and groups both make the Hub run.</p>
+				<span class="action-cta">Get in touch &rarr;</span>
+			</a>
+			<a class="card action-card" href="/shop">
+				<h3>Buy products</h3>
+				<p>Troopers Coffee and African Worry Dolls&trade; — every order funds a job.</p>
+				<span class="action-cta">Visit the shop &rarr;</span>
+			</a>
+			<a class="card action-card" href="mailto:info@soupertroopers.org?subject=MySchool%20beneficiary%20details">
 				<h3>Swipe your MySchool card</h3>
-				<p>
-					Make us your beneficiary and a share of what you already spend at Woolworths and other
-					partner stores comes to us — at no cost to you.
-				</p>
-				<a href="mailto:info@soupertroopers.org?subject=MySchool%20beneficiary%20details">Ask us how &rarr;</a>
-			</div>
-			<div class="card">
+				<p>Name us as your beneficiary and a share of what you already spend comes to us — at no cost to you.</p>
+				<span class="action-cta">Ask us how &rarr;</span>
+			</a>
+			<a class="card action-card" href="#fundraise">
 				<h3>Fundraise for us</h3>
-				<p>Run a birthday, a race, or a workplace challenge in aid of Souper Troopers.</p>
-				<a href="#fundraise">See how &rarr;</a>
-			</div>
+				<p>Turn a birthday, a race, or a workplace challenge into support for the Hub.</p>
+				<span class="action-cta">See how &rarr;</span>
+			</a>
 		</div>
 	</section>
 
-	<section class="section wrap">
+	<section id="goods" class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Goods donation list</span>
 			<h2>What you can donate</h2>
@@ -217,6 +230,51 @@ const goodsCategories = [
 </Layout>
 
 <style>
+	/* Whole-card links with the CTA pinned to the bottom, so a row of six reads as six equal
+	   choices rather than six boxes whose links happen to sit at different heights. */
+	/* Exactly six items, so pin to three columns for a balanced 3+3 rather than letting auto-fit
+	   make it 4+2 with two empty slots. */
+	@media (min-width: 901px) {
+		.action-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.action-card {
+		text-decoration: none;
+		color: inherit;
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.action-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 18px 36px rgba(0, 0, 0, 0.09);
+	}
+
+	.action-card p {
+		margin-bottom: var(--space-4);
+	}
+
+	.action-cta {
+		margin-top: auto;
+		font-weight: 700;
+		color: var(--st-teal-dark);
+	}
+
+	.action-card:hover .action-cta {
+		text-decoration: underline;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.action-card {
+			transition: none;
+		}
+
+		.action-card:hover {
+			transform: none;
+		}
+	}
+
 	.step-number {
 		display: flex;
 		align-items: center;

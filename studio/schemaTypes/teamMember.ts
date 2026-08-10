@@ -8,6 +8,13 @@ export default defineType({
     defineField({name: 'name', title: 'Name', type: 'string', validation: (rule) => rule.required()}),
     defineField({name: 'role', title: 'Role', type: 'string', validation: (rule) => rule.required()}),
     defineField({name: 'photo', title: 'Photo', type: 'image', options: {hotspot: true}}),
+    defineField({
+      name: 'bio',
+      title: 'Short bio',
+      type: 'text',
+      rows: 3,
+      description: 'Optional one or two sentences shown under the role on the Who We Are page.',
+    }),
     defineField({name: 'order', title: 'Display order', type: 'number'}),
   ],
   preview: {

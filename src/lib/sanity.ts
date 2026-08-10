@@ -25,6 +25,7 @@ export interface SuccessStory {
 export interface TeamMember {
 	name: string;
 	role: string;
+	bio?: string;
 	photo?: SanityImageSource;
 	photoLqip?: string;
 }
@@ -75,6 +76,14 @@ export interface SiteSettings {
 	npoNumber: string;
 	pboNumber: string;
 	bbbeeLevel: string;
+	bbbeeLastVerified?: string;
+	bbbeeNote?: string;
+}
+
+export interface BbbeeBenefit {
+	title: string;
+	value?: string;
+	body: string;
 }
 
 export async function getSuccessStories(): Promise<SuccessStory[]> {
@@ -90,6 +99,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 		`*[_type == "teamMember"] | order(order asc) {
 			name,
 			role,
+			bio,
 			photo,
 			"photoLqip": photo.asset->metadata.lqip,
 		}`
@@ -151,4 +161,8 @@ export async function getImpactStats(page: "home" | "our-work" | "donate"): Prom
 
 export async function getSiteSettings(): Promise<SiteSettings> {
 	return sanityClient.fetch(`*[_id == "siteSettings"][0]`);
+}
+
+export async function getBbbeeBenefits(): Promise<BbbeeBenefit[]> {
+	return sanityClient.fetch(`*[_type == "bbbeeBenefit"] | order(order asc) { title, value, body }`);
 }

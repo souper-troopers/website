@@ -652,6 +652,27 @@ const structuredData = {
 				color: rgba(36, 35, 43, 0.75);
 			}
 
+			/* Centred, larger variant for a section that is a single statement rather than an
+			   intro to the block beneath it. */
+			.section-intro.statement {
+				align-items: center;
+				text-align: center;
+			}
+
+			/* .badge pins itself to flex-start; the centred variant needs it to follow the block. */
+			.section-intro.statement .badge {
+				align-self: center;
+			}
+
+			.section-intro.statement h2 {
+				font-size: clamp(2rem, 4.5vw, 3rem);
+				max-width: 20ch;
+			}
+
+			.section-intro.statement p {
+				font-size: 1.15rem;
+			}
+
 			.grid {
 				display: grid;
 				gap: var(--space-6);
@@ -876,6 +897,36 @@ const structuredData = {
 				margin: 0 auto;
 			}
 
+			/* Flex rather than .grid-4 so a trailing part-row (7 members = 4 + 3) centres itself
+			   instead of hanging off the left edge. */
+			.team-grid {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: var(--space-6);
+			}
+
+			.team-grid > .card {
+				flex: 0 1 200px;
+			}
+
+			.team-bio {
+				font-size: 0.9rem;
+				color: rgba(36, 35, 43, 0.7);
+			}
+
+			.closing-cta {
+				padding: var(--space-8) var(--space-6);
+				gap: var(--space-5);
+			}
+
+			.closing-credentials {
+				margin-top: var(--space-2);
+				font-size: 0.9rem;
+				line-height: 1.7;
+				color: rgba(36, 35, 43, 0.7);
+			}
+
 			.goods-tile {
 				position: relative;
 				display: flex;
@@ -1005,7 +1056,7 @@ const structuredData = {
 				opacity: 0.95;
 			}
 
-			.hero .actions {
+			.actions {
 				display: flex;
 				gap: var(--space-4);
 				flex-wrap: wrap;

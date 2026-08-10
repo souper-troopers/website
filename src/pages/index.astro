@@ -5,7 +5,8 @@ import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
-import dignityPhoto from "../assets/images/dignity-moment.jpg";
+import oneToOnePhoto from "../assets/images/support-one-to-one.jpg";
+import partnerPhoto from "../assets/images/partner-visit.jpg";
 import CountUp from "../components/CountUp.svelte";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
@@ -51,7 +52,7 @@ const heroLqip =
 		</div>
 		<div class="path-grid">
 			<a href="/donate" class="path-tile path-teal">
-				<Image class="path-tile-img" src={supportPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<Image class="path-tile-img" src={oneToOnePhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
 				<div class="path-tile-body">
 					<h3>Donate</h3>
 					<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
@@ -75,7 +76,7 @@ const heroLqip =
 				</div>
 			</a>
 			<a href="/get-involved#businesses" class="path-tile path-ink">
-				<Image class="path-tile-img" src={dignityPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+				<Image class="path-tile-img" src={partnerPhoto} alt="" role="presentation" widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
 				<div class="path-tile-body">
 					<h3>Partner with us</h3>
 					<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>

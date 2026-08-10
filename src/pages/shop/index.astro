@@ -40,7 +40,7 @@ const categories = await getProductCategories();
 				<a class="card category-tile" href={`/shop/${category.slug}`}>
 					{category.photo && (
 						<img
-							src={urlFor(category.photo).width(500).height(375).fit("crop").url()}
+							src={urlFor(category.photo).width(500).height(375).fit("crop").auto("format").url()}
 							alt={category.name}
 							width="500"
 							height="375"

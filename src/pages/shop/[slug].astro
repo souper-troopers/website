@@ -40,7 +40,7 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 				client:load
 				categorySlug={category.slug}
 				categoryName={category.name}
-				photoUrl={category.photo ? urlFor(category.photo).width(700).height(700).fit("crop").url() : undefined}
+				photoUrl={category.photo ? urlFor(category.photo).width(700).height(700).fit("crop").auto("format").url() : undefined}
 				variants={category.attributeVariants ?? []}
 			/>
 		) : (
@@ -53,7 +53,7 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 						name={item.name}
 						price={item.price}
 						description={item.description}
-						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").url() : undefined}
+						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
 					/>
 				))}
 			</div>

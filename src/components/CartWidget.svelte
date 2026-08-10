@@ -53,62 +53,73 @@
 	{/if}
 </button>
 
-{#if cart.isOpen}
-	<div class="cart-scrim" onclick={() => cart.close()} role="presentation"></div>
-	<aside class="cart-drawer" aria-label="Shopping cart">
-		<div class="cart-drawer-header">
-			<h2>Your cart</h2>
-			<button class="cart-close" onclick={() => cart.close()} aria-label="Close cart">&times;</button>
+<!-- Always mounted so transform/visibility can transition — display/if-mount can't be animated.
+     Same asymmetric visibility delay as the mobile nav in Layout.astro. -->
+<div
+	class="cart-scrim"
+	class:is-open={cart.isOpen}
+	onclick={() => cart.close()}
+	role="presentation"
+></div>
+<aside
+	class="cart-drawer"
+	class:is-open={cart.isOpen}
+	aria-label="Shopping cart"
+	aria-hidden={!cart.isOpen}
+	inert={!cart.isOpen}
+>
+	<div class="cart-drawer-header">
+		<h2>Your cart</h2>
+		<button class="cart-close" onclick={() => cart.close()} aria-label="Close cart">&times;</button>
+	</div>
+
+	{#if cart.items.length === 0}
+		<div class="cart-empty">
+			<svg viewBox="0 0 24 24" width="64" height="64" aria-hidden="true" class="cart-empty-icon">
+				<path d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2m4 3l1.6 9.6a2 2 0 0 0 2 1.4h8.8a2 2 0 0 0 2-1.7L21 9H6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+				<circle cx="9.5" cy="20" r="1.2" fill="currentColor" />
+				<circle cx="17.5" cy="20" r="1.2" fill="currentColor" />
+			</svg>
+			<p class="cart-empty-text">Your cart is empty.</p>
+			<a href="/shop" class="cart-empty-link">Browse the shop &rarr;</a>
+		</div>
+	{:else}
+		<ul class="cart-lines">
+			{#each cart.items as item (item.key)}
+				<li class="cart-line">
+					<div class="cart-line-info">
+						<span class="cart-line-name">{item.name}</span>
+						<span class="cart-line-price">{rand(item.price)} each</span>
+					</div>
+					<div class="cart-line-controls">
+						<input
+							type="number"
+							min="1"
+							value={item.qty}
+							class="cart-qty"
+							onchange={(e) => cart.updateQty(item.key, +e.currentTarget.value)}
+							aria-label={`Quantity for ${item.name}`}
+						/>
+						<button class="cart-remove" onclick={() => cart.remove(item.key)} aria-label={`Remove ${item.name}`}>Remove</button>
+					</div>
+				</li>
+			{/each}
+		</ul>
+
+		<div class="cart-total">
+			<span>Total</span>
+			<strong>{rand(cart.total)}</strong>
 		</div>
 
-		{#if cart.items.length === 0}
-			<div class="cart-empty">
-				<svg viewBox="0 0 24 24" width="64" height="64" aria-hidden="true" class="cart-empty-icon">
-					<path d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2m4 3l1.6 9.6a2 2 0 0 0 2 1.4h8.8a2 2 0 0 0 2-1.7L21 9H6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-					<circle cx="9.5" cy="20" r="1.2" fill="currentColor" />
-					<circle cx="17.5" cy="20" r="1.2" fill="currentColor" />
-				</svg>
-				<p class="cart-empty-text">Your cart is empty.</p>
-				<a href="/shop" class="cart-empty-link">Browse the shop &rarr;</a>
-			</div>
-		{:else}
-			<ul class="cart-lines">
-				{#each cart.items as item (item.key)}
-					<li class="cart-line">
-						<div class="cart-line-info">
-							<span class="cart-line-name">{item.name}</span>
-							<span class="cart-line-price">{rand(item.price)} each</span>
-						</div>
-						<div class="cart-line-controls">
-							<input
-								type="number"
-								min="1"
-								value={item.qty}
-								class="cart-qty"
-								onchange={(e) => cart.updateQty(item.key, +e.currentTarget.value)}
-								aria-label={`Quantity for ${item.name}`}
-							/>
-							<button class="cart-remove" onclick={() => cart.remove(item.key)} aria-label={`Remove ${item.name}`}>Remove</button>
-						</div>
-					</li>
-				{/each}
-			</ul>
-
-			<div class="cart-total">
-				<span>Total</span>
-				<strong>{rand(cart.total)}</strong>
-			</div>
-
-			<button class="checkout-btn" onclick={checkout} disabled={checkingOut}>
-				{checkingOut ? "Redirecting to PayFast…" : "Checkout with PayFast →"}
-			</button>
-			{#if checkoutError}
-				<p class="cart-error">{checkoutError}</p>
-			{/if}
-			<p class="cart-note">Collection is in person (66 Newmarket Street, Woodstock) or your own arranged courier.</p>
+		<button class="checkout-btn" onclick={checkout} disabled={checkingOut}>
+			{checkingOut ? "Redirecting to PayFast…" : "Checkout with PayFast →"}
+		</button>
+		{#if checkoutError}
+			<p class="cart-error">{checkoutError}</p>
 		{/if}
-	</aside>
-{/if}
+		<p class="cart-note">Collection is in person (66 Newmarket Street, Woodstock) or your own arranged courier.</p>
+	{/if}
+</aside>
 
 <style>
 	.cart-toggle {
@@ -146,6 +157,15 @@
 		inset: 0;
 		background: rgba(24, 23, 31, 0.45);
 		z-index: 200;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+	}
+
+	.cart-scrim.is-open {
+		opacity: 1;
+		visibility: visible;
+		transition: opacity 0.25s ease, visibility 0s linear 0s;
 	}
 
 	.cart-drawer {
@@ -163,6 +183,22 @@
 		padding: 1.5rem;
 		box-shadow: -12px 0 30px rgba(0, 0, 0, 0.15);
 		overflow-y: auto;
+		transform: translateX(100%);
+		visibility: hidden;
+		transition: transform 0.25s ease, visibility 0s linear 0.25s;
+	}
+
+	.cart-drawer.is-open {
+		transform: translateX(0);
+		visibility: visible;
+		transition: transform 0.25s ease, visibility 0s linear 0s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cart-scrim,
+		.cart-drawer {
+			transition: none;
+		}
 	}
 
 	.cart-drawer-header {

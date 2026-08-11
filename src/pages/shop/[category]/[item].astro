@@ -138,7 +138,11 @@ const breadcrumbJsonLd = {
 	{related.length > 0 && (
 		<section class="section wrap">
 			<h2>More from {item.categoryName}</h2>
-			<div class="grid grid-3">
+			{/* grid-fill, not the bare .grid-3: .grid-3 uses auto-fit, which collapses empty tracks,
+			    so a category with only one sibling left stretched that single card across the whole
+			    row - rendering the related thumbnail at 1012px against the actual product's 510px.
+			    auto-fill keeps the empty tracks, so one card stays one column wide. */}
+			<div class="grid grid-3 grid-fill">
 				{related.map((other) => (
 					<ItemCard
 						client:load
@@ -179,9 +183,10 @@ const breadcrumbJsonLd = {
 		opacity: 0.5;
 	}
 
+	/* Underlined — same reason as .back-link in shop/[slug].astro. The "/" separators are not
+	   links and stay undecorated, which is what makes the trail readable. */
 	.breadcrumbs a {
 		color: rgba(255, 255, 255, 0.8);
-		text-decoration: none;
 		font-weight: 600;
 	}
 
@@ -209,10 +214,13 @@ const breadcrumbJsonLd = {
 		border-radius: var(--radius, 18px);
 	}
 
+	/* Ink, not teal-dark: the teal family is reserved for things you can act on. As the largest
+	   teal text on the page this read as the primary link. Also fixes contrast — teal-dark on
+	   --st-bg is 4.29:1, under AA. */
 	.product-price {
 		font-weight: 700;
 		font-size: 1.6rem;
-		color: var(--st-teal-dark, #148294);
+		color: var(--st-ink, #24232b);
 	}
 
 	.product-body {
@@ -237,9 +245,10 @@ const breadcrumbJsonLd = {
 		margin-top: 1.5rem;
 	}
 
+	/* Underline kept (no text-decoration: none): this had colour as its only affordance, with no
+	   hover underline either, so it was invisible as a link to anyone who can't pick out the teal. */
 	.back-to-category a {
 		font-weight: 600;
-		text-decoration: none;
 		color: var(--st-teal-dark, #148294);
 	}
 </style>

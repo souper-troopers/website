@@ -93,14 +93,15 @@
 		font-size: 1.05rem;
 	}
 
+	/* Underlined at rest, not only on hover: this is the crawl and click path into the item's own
+	   page, and a hover-only affordance doesn't exist at all on touch. Colour is left to inherit so
+	   the heading still reads as a heading; the underline is what says "link". */
 	.item-card h3 a {
 		color: inherit;
-		text-decoration: none;
 	}
 
 	.item-card h3 a:hover {
 		color: var(--st-teal-dark, #148294);
-		text-decoration: underline;
 	}
 
 	.item-card-img a {
@@ -124,10 +125,12 @@
 		color: rgba(36, 35, 43, 0.65);
 	}
 
+	/* Ink, not teal-dark: the teal family is reserved for things you can act on, and a bold teal
+	   price sitting directly under the product-name link read as the clickable one of the two. */
 	.item-card-price {
 		font-weight: 700;
 		font-size: 1.1rem;
-		color: var(--st-teal-dark, #148294);
+		color: var(--st-ink, #24232b);
 	}
 
 	.item-card button {

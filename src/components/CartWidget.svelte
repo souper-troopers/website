@@ -237,14 +237,10 @@
 		color: rgba(36, 35, 43, 0.6);
 	}
 
+	/* Underlined at rest rather than on hover only — colour was its sole affordance. */
 	.cart-empty-link {
 		color: var(--st-teal-dark, #148294);
 		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.cart-empty-link:hover {
-		text-decoration: underline;
 	}
 
 	.cart-lines {

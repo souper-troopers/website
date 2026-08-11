@@ -107,10 +107,11 @@
 		background: white;
 	}
 
+	/* Ink, not teal-dark — see .product-price in shop/[category]/[item].astro. */
 	.attribute-product-price {
 		font-size: 1.4rem;
 		font-weight: 700;
-		color: var(--st-teal-dark, #148294);
+		color: var(--st-ink, #24232b);
 	}
 
 	.attribute-product-body button {

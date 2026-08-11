@@ -765,6 +765,24 @@ const structuredData = {
 				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 			}
 
+			/* Opt-in modifier for grids whose item count can drop below the column count. The
+			   auto-fit above collapses empty tracks, so a lone item stretches across the full row —
+			   fine for a deliberately short row of cards, wrong where the count is data-driven and
+			   a card carries a square image (it scales with the card). auto-fill keeps the empty
+			   tracks so items stay one column wide however few there are. Add alongside .grid-N,
+			   don't replace it — this only overrides the track sizing. */
+			.grid-fill.grid-2 {
+				grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			}
+
+			.grid-fill.grid-3 {
+				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+			}
+
+			.grid-fill.grid-4 {
+				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+			}
+
 			.card {
 				display: flex;
 				flex-direction: column;
@@ -1077,12 +1095,15 @@ const structuredData = {
 				margin: 0;
 			}
 
+			/* Muted ink, not teal-dark: these sit in non-interactive "Ways to give" cards, where a
+			   teal glyph next to a heading suggested the card itself was the control. The real
+			   control is the button below it. (.payment-icon-paypal keeps its brand blue.) */
 			.payment-icon {
 				display: block;
 				flex-shrink: 0;
 				width: 28px;
 				height: 28px;
-				fill: var(--st-teal-dark);
+				fill: rgba(36, 35, 43, 0.7);
 			}
 
 			.payment-icon-paypal {
@@ -1302,12 +1323,15 @@ const structuredData = {
 				margin-bottom: var(--space-6);
 			}
 
+			/* Muted ink, not teal-dark: this static eyebrow shared a card with the real
+			   "Read the article" link and wore the identical colour, so the card offered two
+			   apparent links and only one worked. */
 			.press-publication {
 				font-size: 0.75rem;
 				font-weight: 700;
 				letter-spacing: 0.05em;
 				text-transform: uppercase;
-				color: var(--st-teal-dark);
+				color: rgba(36, 35, 43, 0.65);
 			}
 
 			.closing-cta {
@@ -1374,10 +1398,12 @@ const structuredData = {
 				text-align: center;
 			}
 
+			/* Ink, not teal-dark — a static figure, and the teal family is reserved for things you
+			   can act on. */
 			.stat strong {
 				display: block;
 				font-size: 2rem;
-				color: var(--st-teal-dark);
+				color: var(--st-ink);
 			}
 
 			.stat span {
@@ -1534,11 +1560,15 @@ const structuredData = {
 				opacity: 1;
 			}
 
+			/* Ink text on the teal tint, not teal-dark on teal tint. Two reasons: a pill-shaped,
+			   teal-filled, teal-lettered label reads as a button, and teal-dark on this tint was
+			   4.02:1 — under AA, and at 12.8px bold it does not qualify as large text. Ink is
+			   13.85:1. The tint alone still carries the brand accent. */
 			.badge {
 				display: inline-block;
 				align-self: flex-start;
 				background: rgba(27, 171, 190, 0.12);
-				color: var(--st-teal-dark);
+				color: var(--st-ink);
 				border-radius: 999px;
 				padding: var(--space-1) var(--space-4);
 				font-size: 0.8rem;
@@ -1547,9 +1577,11 @@ const structuredData = {
 				text-transform: uppercase;
 			}
 
+			/* White rather than --st-teal for the same reason as .badge above: --st-teal is the
+			   primary button fill, and a static pill wearing it reads as pressable. */
 			.badge-on-dark {
 				background: rgba(255, 255, 255, 0.14);
-				color: var(--st-teal);
+				color: var(--st-white);
 			}
 
 			/* Choose your path — one lead tile over a supporting row.
@@ -1755,11 +1787,14 @@ const structuredData = {
 				gap: var(--space-2);
 			}
 
+			/* White, not a teal: same call as .path-fact below — a static figure at this size doesn't
+			   need a colour to stand out, and any teal on static *text* competes with the buttons and
+			   links that the teal family is reserved for. 15.55:1 on ink. */
 			.impact-stat strong {
 				display: block;
 				font-size: clamp(2.5rem, 5vw, 3.5rem);
 				font-weight: 700;
-				color: var(--st-teal);
+				color: var(--st-white);
 				line-height: 1;
 			}
 
@@ -1783,6 +1818,14 @@ const structuredData = {
 			.stories-band .badge-on-dark {
 				background: rgba(255, 255, 255, 0.22);
 				color: var(--st-white);
+			}
+
+			/* The global `a` colour is --st-teal-dark, which lands on this band's own teal->red
+			   gradient at 1.1-1.6:1 — the link was effectively invisible. Inheriting the band's white
+			   (same approach as .supporter-list a on the ink band) brings it to parity with the body
+			   copy around it; the browser's default underline is what marks it as a link. */
+			.stories-band a {
+				color: inherit;
 			}
 
 			.stories-grid {

@@ -61,7 +61,11 @@
 		background: none;
 		/* Set --copy-button-color on an ancestor to re-tint this against a dark background. */
 		color: var(--copy-button-color, var(--st-teal-dark, #148294));
-		opacity: 0.4;
+		/* Was 0.4, which put this control at 1.72:1 against white — below the 3:1 an icon button
+		   needs, so a real action (copying the EFT account number on the donate page) was nearly
+		   invisible until hovered. 0.85 keeps it deliberately quiet but legible (3.5:1 on white,
+		   4.47:1 on the footer's ink), and hover/focus now brightens to full rather than up from 0.4. */
+		opacity: 0.85;
 		cursor: pointer;
 		vertical-align: baseline;
 		transform: translateY(0.1em);
@@ -72,7 +76,7 @@
 
 	.copy-button:hover,
 	.copy-button:focus-visible {
-		opacity: 0.85;
+		opacity: 1;
 	}
 
 	.copy-button:focus-visible {
@@ -82,7 +86,7 @@
 	}
 
 	.copy-button.is-copied {
-		opacity: 0.85;
+		opacity: 1;
 		color: var(--st-green, #4bbc63);
 	}
 

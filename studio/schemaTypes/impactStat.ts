@@ -15,7 +15,7 @@ export default defineType({
     defineField({
       name: 'value',
       title: 'Numeric value',
-      description: 'Leave blank for non-numeric stats (e.g. "ID docs") — set Display value instead.',
+      description: 'Leave blank for non-numeric stats (e.g. "ID docs") - set Display value instead.',
       type: 'number',
     }),
     defineField({

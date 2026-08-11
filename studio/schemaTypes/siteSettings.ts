@@ -23,7 +23,7 @@ export default defineType({
       type: 'text',
       rows: 4,
       description:
-        'Caveats shown under the B-BBEE benefits — which scorecard the figures apply to, and that this is general information rather than advice.',
+        'Caveats shown under the B-BBEE benefits - which scorecard the figures apply to, and that this is general information rather than advice.',
     }),
   ],
 })

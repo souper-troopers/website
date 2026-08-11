@@ -14,7 +14,7 @@ const stories = await getFeaturedSuccessStories();
 // than retyped here so the two can't drift apart when Kerry updates it.
 const leadStat = impactStats.find((stat) => stat.value != null);
 
-// Generated once via sharp (resize 24px wide, jpeg q40) from mandela-mural.png — see commit history if it
+// Generated once via sharp (resize 24px wide, jpeg q40) from mandela-mural.png - see commit history if it
 // ever needs regenerating after the source photo changes.
 const heroLqip =
 	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAMABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAUCAwb/xAAjEAACAQUAAAcBAAAAAAAAAAABAgMABBESIQUGFCIxQWGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABcRAQEBAQAAAAAAAAAAAAAAAAIAAVH/2gAMAwEAAhEDEQA/ALL0TWXjFqi66tIN9EAD5yf5TBL4TGUBu7kYOBjlZWBnVGcOwPM9+alFI4bYMQfyjQ5Jj7MfLrJFPP6yQRLnIMhxt9czRStLqYTySs+7DnvAPKKU5Elf/9k=";
@@ -36,7 +36,7 @@ const heroLqip =
 		<div class="wrap hero-content">
 			<h1>We are all <span class="hero-highlight">human</span>. We all have a story. Together, we are the change.</h1>
 			<p>
-				Souper Troopers helps people move from crisis to dignity — through the CAST programme,
+				Souper Troopers helps people move from crisis to dignity - through the CAST programme,
 				the Humanity Hub, and a community that meets people halfway.
 			</p>
 			<div class="actions">
@@ -60,7 +60,7 @@ const heroLqip =
 						<p class="path-fact">{leadStat.value?.toLocaleString("en-US")}{leadStat.suffix}</p>
 					)}
 					<p class="path-fact-label">
-						people supported since 2014 — your donation funds the next one, from a first
+						people supported since 2014 - your donation funds the next one, from a first
 						conversation to a job.
 					</p>
 					<span class="btn btn-on-tile">Donate now &rarr;</span>
@@ -101,7 +101,7 @@ const heroLqip =
 			<div class="section-intro">
 				<span class="badge badge-on-dark">Impact</span>
 				<h2>Impact you can't miss</h2>
-				<p>Real outcomes from the CAST programme — the numbers behind every story.</p>
+				<p>Real outcomes from the CAST programme - the numbers behind every story.</p>
 			</div>
 			<div class="impact-stats">
 				{impactStats.map((stat) => (
@@ -133,7 +133,7 @@ const heroLqip =
 				<span class="badge">The CAST journey</span>
 				<h2>Connect. Assess. Support. Transform.</h2>
 				<p>
-					Every journey starts with a person requesting help and a social worker who shows up —
+					Every journey starts with a person requesting help and a social worker who shows up -
 					rooted in dignity, love, and respect. From there: an honest assessment of what's needed,
 					tailored support (documents, training, referrals, job-readiness), and a path toward
 					independence.
@@ -190,7 +190,7 @@ const heroLqip =
 			heroImg.style.transform = `translateY(${shift}px)`;
 		}
 		// Fade the header from transparent to solid ink continuously as the hero scrolls by,
-		// reaching fully solid right as the hero's bottom edge reaches the header — instead of
+		// reaching fully solid right as the hero's bottom edge reaches the header - instead of
 		// snapping at that threshold, which read as a sudden jump rather than a scroll effect.
 		if (header && hero) {
 			const threshold = Math.max(heroHeight - header.offsetHeight, 1);
@@ -198,7 +198,7 @@ const heroLqip =
 			header.style.setProperty("--header-fade", String(progress));
 
 			// Mobile only (see .site-header-overlay .donate-cta in Layout.astro): the header's own
-			// Donate button stays hidden — redundant right next to the hero's — until the hero's
+			// Donate button stays hidden - redundant right next to the hero's - until the hero's
 			// button has actually scrolled out from under the header, at which point it's the only
 			// Donate CTA left on screen and needs to reappear.
 			const heroDonateHidden = heroDonateBtn ? heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight : window.scrollY > 0;

@@ -31,7 +31,7 @@ export default defineType({
         list: [
           {title: 'A grid of individual items (e.g. Worry Dolls, Gift Tags)', value: 'items'},
           {
-            title: 'A single product with dropdown options (e.g. Coffee — weight/type)',
+            title: 'A single product with dropdown options (e.g. Coffee - weight/type)',
             value: 'attributes',
           },
         ],
@@ -50,7 +50,7 @@ export default defineType({
     defineField({
       name: 'attributeVariants',
       title: 'Options (for "single product with dropdown options" categories only)',
-      description: 'e.g. "250g, Ground Filter/Plunger" — R140. Ignored for grid-of-items categories.',
+      description: 'e.g. "250g, Ground Filter/Plunger" - R140. Ignored for grid-of-items categories.',
       type: 'array',
       hidden: ({document}) => document?.displayMode !== 'attributes',
       of: [

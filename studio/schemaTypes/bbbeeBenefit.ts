@@ -5,7 +5,7 @@ export default defineType({
   title: 'B-BBEE / tax benefit',
   type: 'document',
   description:
-    'Benefits a business gets by supporting Souper Troopers, shown on the Get Involved page. These are regulated figures — check the "last verified" date in Site Settings before relying on them.',
+    'Benefits a business gets by supporting Souper Troopers, shown on the Get Involved page. These are regulated figures - check the "last verified" date in Site Settings before relying on them.',
   fields: [
     defineField({
       name: 'title',

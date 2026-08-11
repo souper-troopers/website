@@ -25,7 +25,7 @@
 			key: `${categorySlug}::${selected._key}`,
 			ref: { kind: "attribute", categorySlug, variantKey: selected._key },
 			categoryName,
-			name: `${categoryName} — ${selected.label}`,
+			name: `${categoryName} - ${selected.label}`,
 			price: selected.price,
 		});
 		added = true;
@@ -53,7 +53,7 @@
 			Choose an option
 			<select bind:value={selectedIndex}>
 				{#each variants as variant, i}
-					<option value={i}>{variant.label} — {rand(variant.price)}</option>
+					<option value={i}>{variant.label} - {rand(variant.price)}</option>
 				{/each}
 			</select>
 		</label>

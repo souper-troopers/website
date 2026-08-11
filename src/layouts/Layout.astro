@@ -90,7 +90,7 @@ const socialLinks = [
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const settings = await getSiteSettings();
-const fullTitle = `${title} — Souper Troopers`;
+const fullTitle = `${title} - Souper Troopers`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = await getImage({ src: dignityMoment, width: 1200, height: 630 });
 const ogImageURL = new URL(ogImage.src, Astro.site);

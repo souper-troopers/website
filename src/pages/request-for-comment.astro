@@ -1,6 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
+// Static site: this is the date of the most recent build/deploy, which is what
+// "as of" should mean for a page describing the current state of the preview.
+const updated = new Date().toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
+
 const liveItems = [
 	{ status: "Done", title: "Content Kerry & Shan can edit directly", body: "They get their own login to update team bios, success stories, partners, and shop items - no developer needed for day-to-day changes." },
 	{ status: "Done", title: "Real shop, real prices", body: "Coffee, Worry Dolls, and Gift Tags - same products and prices as the current site, pulled directly from it." },
@@ -10,6 +14,10 @@ const liveItems = [
 	{ status: "Done", title: "Visitor insights", body: "See how many people visit and which pages they look at - done in a privacy-friendly way, with no tracking of individual visitors." },
 	{ status: "Done", title: "Built to be found", body: "Links look right when shared on WhatsApp or social media, the site is set up properly for Google, and it's also readable by the newer AI-powered search tools - future-proofing, not just today's search engines." },
 	{ status: "Done", title: "Backups", body: "All content is automatically backed up every week - tested and confirmed actually working, not just switched on and hoped for." },
+	{ status: "Done", title: "Works properly on a phone", body: "Every page is built for phones and tablets as much as for a laptop - the menu, the shop, the donate page and the forms all adapt to the screen rather than being a shrunk-down desktop site. Most people will find you on a phone, so that's the version that matters most." },
+	{ status: "Done", title: "Fast, even on mobile data", body: "Pages are pre-built and served from servers around the world, so they arrive almost instantly. Every photo is automatically resized and converted to a modern, much smaller file format - a visitor on a phone gets a phone-sized image, not the full-resolution original. The whole homepage is lighter than a single unoptimised photo would be." },
+	{ status: "Done", title: "Card details never touch the site", body: "Payment happens on PayFast's own secure page, so no card numbers ever pass through this site or get stored here. The whole site is served over a secure (https) connection as standard." },
+	{ status: "Done", title: "Accessible to more people", body: "Photos carry text descriptions for screen readers, the site can be navigated by keyboard, and animations are switched off automatically for anyone whose device asks for reduced motion." },
 ];
 
 const questions = [
@@ -37,7 +45,7 @@ const yourCall = [
 <Layout title="Request for Comment" description="Souper Troopers website - where things stand.">
 	<section class="page-hero">
 		<div class="wrap">
-			<span class="badge badge-on-dark">Request for comment - 2026-08-09</span>
+			<span class="badge badge-on-dark">Request for comment - {updated}</span>
 			<h1>Souper Troopers website: where things stand</h1>
 			<p>A preview of the new site is ready for a look - in your own time, no meeting required first. This page covers what's already working, what we still need input on, and what any of it costs.</p>
 		</div>

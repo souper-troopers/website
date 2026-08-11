@@ -24,6 +24,9 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-latest
+    # Job-level so the App step's own `if:` can read it — a step cannot see env it defines itself.
+    env:
+      BACKUP_APP_ID: ${{ secrets.BACKUP_APP_ID }}
     steps:
       - name: Export Sanity dataset
         env:
@@ -77,48 +80,43 @@ jobs:
           # backup, which means cloning the backups repo before this step rather than after.
           PY
 
-      # Auth prefers a deploy key and falls back to the PAT.
+      # Mints a short-lived token from a GitHub App installed only on website-backups.
       #
-      # BACKUP_REPO_TOKEN is a fine-grained PAT, and those carry a mandatory expiry — this one dies
-      # on 8 Sep 2026, after which the push fails every week until a human rotates it. A deploy key
-      # doesn't expire and is scoped to this one repository, so it's both less maintenance and
-      # tighter than a PAT that could later be re-scoped.
+      # Replaces BACKUP_REPO_TOKEN, a fine-grained PAT that expires 8 Sep 2026 and would then fail
+      # the push every week until a human rotated it. A deploy key was the first choice — it doesn't
+      # expire either — but the org has `deploy_keys_enabled_for_repositories: false` set
+      # organisation-wide, so that route is closed and GitHub itself points at Apps instead.
       #
-      # The fallback exists so the switchover needs no coordination: add BACKUP_REPO_DEPLOY_KEY when
-      # ready and the next run uses it; until then nothing changes. Once a run has succeeded on the
-      # key, delete the PAT and its secret.
+      # An App is better than both anyway: the App's private key doesn't expire, while the token it
+      # issues lives about an hour and is scoped to the one repository, so a leaked log is worth far
+      # less than a leaked year-long PAT.
       #
-      # To create it:
-      #   ssh-keygen -t ed25519 -C "sanity-backup" -f ./st-backup-key -N ""
-      #   - public half  (st-backup-key.pub): website-backups > Settings > Deploy keys > Add,
-      #                                       "Allow write access" ticked
-      #   - private half (st-backup-key):     website repo > Settings > Secrets > Actions,
-      #                                       named BACKUP_REPO_DEPLOY_KEY
-      #   then delete both local files.
+      # Skips itself when BACKUP_APP_ID is unset, so the PAT below keeps working until the App
+      # secrets exist. Once a run reports "Auth: GitHub App", delete the PAT and its secret.
+      - name: Mint a GitHub App token
+        id: app-token
+        if: env.BACKUP_APP_ID != ''
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BACKUP_APP_ID }}
+          private-key: ${{ secrets.BACKUP_APP_PRIVATE_KEY }}
+          owner: souper-troopers
+          repositories: website-backups
+
       - name: Push backup to private backups repo
         env:
           GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
-          DEPLOY_KEY: ${{ secrets.BACKUP_REPO_DEPLOY_KEY }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           DATE=$(date +%Y-%m-%d)
-          if [ -n "$DEPLOY_KEY" ]; then
-            echo "Auth: deploy key"
-            KEY_PATH="$HOME/.ssh/st-backup-key"
-            mkdir -p "$HOME/.ssh"
-            # printf, not echo: the key is multi-line and must keep its trailing newline or ssh
-            # rejects it as malformed.
-            printf '%s\n' "$DEPLOY_KEY" > "$KEY_PATH"
-            chmod 600 "$KEY_PATH"
-            ssh-keyscan -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts" 2>/dev/null
-            SSH_CMD="ssh -i $KEY_PATH -o IdentitiesOnly=yes"
-            GIT_SSH_COMMAND="$SSH_CMD" git clone git@github.com:souper-troopers/website-backups.git backups-repo
-            # Persist into the clone's own config: env vars don't survive into the retention step,
-            # which pushes too.
-            git -C backups-repo config core.sshCommand "$SSH_CMD"
+          if [ -n "$APP_TOKEN" ]; then
+            echo "Auth: GitHub App"
+            TOKEN="$APP_TOKEN"
           else
-            echo "Auth: PAT (no deploy key set)"
-            git clone "https://x-access-token:${GH_TOKEN}@github.com/souper-troopers/website-backups.git" backups-repo
+            echo "Auth: PAT (no GitHub App configured)"
+            TOKEN="$GH_TOKEN"
           fi
+          git clone "https://x-access-token:${TOKEN}@github.com/souper-troopers/website-backups.git" backups-repo
           mkdir -p backups-repo/sanity
           mv sanity-backup.tar.gz "backups-repo/sanity/production-${DATE}.tar.gz"
           cd backups-repo

@@ -697,6 +697,45 @@ const structuredData = {
 				font-size: 1.15rem;
 			}
 
+			/* Slow breathe for the one load-bearing word in a headline ("Every" in the mission
+			   statement, "human" in the hero). Defaults to teal for light backgrounds; override
+			   --glow-rgb / --glow-dim / --glow-bright to retune it per placement (see
+			   .hero-highlight). --glow-rgb is a bare "r, g, b" triplet because it feeds rgba(). */
+			.glow-word {
+				--glow-rgb: 27, 171, 190;
+				--glow-dim: var(--st-teal-dark);
+				--glow-bright: var(--st-teal);
+				color: var(--glow-dim);
+				text-shadow:
+					0 0 12px rgba(var(--glow-rgb), 0.35),
+					0 0 28px rgba(var(--glow-rgb), 0.18);
+				animation: word-glow 3.5s ease-in-out infinite;
+			}
+
+			@keyframes word-glow {
+				0%,
+				100% {
+					color: var(--glow-dim);
+					text-shadow:
+						0 0 12px rgba(var(--glow-rgb), 0.3),
+						0 0 28px rgba(var(--glow-rgb), 0.14);
+				}
+				50% {
+					color: var(--glow-bright);
+					text-shadow:
+						0 0 18px rgba(var(--glow-rgb), 0.55),
+						0 0 44px rgba(var(--glow-rgb), 0.3);
+				}
+			}
+
+			/* Keeps the colour and a static halo - the word still reads as emphasised without the
+			   pulse. */
+			@media (prefers-reduced-motion: reduce) {
+				.glow-word {
+					animation: none;
+				}
+			}
+
 			.grid {
 				display: grid;
 				gap: var(--space-6);
@@ -1385,8 +1424,14 @@ const structuredData = {
 				margin-bottom: var(--space-4);
 			}
 
+			/* Same breathe as the mission statement, retuned for yellow-on-dark: the hero sits on
+			   ink + photo, so the pulse brightens the word rather than deepening it (the reverse of
+			   the light-background case), and the halo is warm yellow instead of teal. */
 			.hero-highlight {
 				color: var(--st-yellow);
+				--glow-rgb: 219, 188, 59;
+				--glow-dim: var(--st-yellow);
+				--glow-bright: #f0dd8a;
 			}
 
 			.hero p {

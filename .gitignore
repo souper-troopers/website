@@ -32,3 +32,9 @@ pnpm-debug.log*
 
 # Local Deno Edge Functions tooling state (from `netlify dev`) — not used by the deployed site
 deno.lock
+
+# SSH keys must never land in this repo - it is public.
+st-backup-key
+st-backup-key.pub
+*.pem
+id_ed25519*

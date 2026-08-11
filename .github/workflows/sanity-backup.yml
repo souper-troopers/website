@@ -30,6 +30,53 @@ jobs:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
         run: npx --yes sanity@latest dataset export production sanity-backup.tar.gz --project-id wqa0no5g
 
+      # `sanity dataset export` can exit 0 having produced something useless — most plausibly if the
+      # API token is narrowed or partially revoked, where the export succeeds but returns a fraction
+      # of the documents. Without this, that tarball gets committed and the heartbeat below reports
+      # success: a green monitor guarding a worthless archive, which is worse than no monitor.
+      # Failing here means the bad file is never committed AND the failure ping fires immediately.
+      - name: Verify the export is not empty or truncated
+        run: |
+          python3 - <<'PY'
+          import os, sys, tarfile
+
+          ARCHIVE = "sanity-backup.tar.gz"
+          MIN_BYTES = 10_000
+          MIN_DOCS = 25  # see note below on why this is a floor, not a target
+
+          if not os.path.exists(ARCHIVE):
+              sys.exit(f"FAIL: {ARCHIVE} was never created")
+
+          size = os.path.getsize(ARCHIVE)
+          if size < MIN_BYTES:
+              sys.exit(f"FAIL: archive is {size:,} bytes, below the {MIN_BYTES:,} floor - almost certainly empty")
+
+          with tarfile.open(ARCHIVE) as tar:
+              members = tar.getnames()
+              nd = [n for n in members if n.endswith("data.ndjson")]
+              if not nd:
+                  sys.exit(f"FAIL: no data.ndjson inside the archive - contents: {members[:10]}")
+              handle = tar.extractfile(nd[0])
+              docs = sum(1 for line in handle if line.strip())
+              assets = [n for n in members if "/images/" in n or "/files/" in n]
+
+          if docs < MIN_DOCS:
+              sys.exit(f"FAIL: only {docs} documents in the export, below the floor of {MIN_DOCS}")
+
+          # Documents and assets are fetched in separate passes, so assets can fail on their own.
+          # The dataset always has product photos and team portraits in it - zero means the asset
+          # pass silently did nothing, and a text-only backup would lose every image on restore.
+          if not assets:
+              sys.exit("FAIL: no assets in the archive - the asset download produced nothing")
+
+          print(f"OK: {size:,} bytes, {docs} documents, {len(assets)} assets")
+
+          # MIN_DOCS is a catastrophe floor, not a correctness check. It catches "the token lost
+          # access and we got almost nothing"; it will NOT catch a subtler shortfall, e.g. 42
+          # documents quietly becoming 30. Catching that needs comparing against the previous
+          # backup, which means cloning the backups repo before this step rather than after.
+          PY
+
       - name: Push backup to private backups repo
         env:
           GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
@@ -44,3 +91,85 @@ jobs:
           git add "sanity/production-${DATE}.tar.gz"
           git commit -m "Sanity dataset backup: production-${DATE}"
           git push
+
+      - name: Apply retention policy
+        working-directory: backups-repo
+        env:
+          GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os, re, subprocess
+          from datetime import date, timedelta
+
+          # Grandfather-father-son. Every snapshot is a *full* copy (documents + assets), not a
+          # diff, so without this the folder grows by one complete copy of the site's content every
+          # week, forever.
+          #
+          #   - every weekly backup for the last 8 weeks   -> recover from a recent mistake
+          #   - the first backup of each month for a year  -> recover from damage noticed late
+          #   - the first backup of each year, kept always -> a long-term historical record
+          #
+          # Steady state is roughly 20 files instead of 52-and-climbing per year.
+          KEEP_ALL_DAYS = 56
+
+          today = date.today()
+          names = sorted(os.listdir("sanity")) if os.path.isdir("sanity") else []
+          dated = []
+          for n in names:
+              m = re.fullmatch(r"production-(\d{4})-(\d{2})-(\d{2})\.tar\.gz", n)
+              if m:
+                  dated.append((date(*map(int, m.groups())), n))
+          dated.sort()
+
+          keep, seen_month, seen_year = set(), set(), set()
+          for d, n in dated:
+              if (today - d).days <= KEEP_ALL_DAYS:
+                  keep.add(n)
+              if (d.year, d.month) not in seen_month:
+                  seen_month.add((d.year, d.month))
+                  if (today - d).days <= 365:
+                      keep.add(n)
+              if d.year not in seen_year:
+                  seen_year.add(d.year)
+                  keep.add(n)
+
+          drop = [n for _, n in dated if n not in keep]
+          # Never let a bug here wipe the archive: today's backup must survive, and a policy that
+          # wants to delete everything is a bug by definition, not a valid outcome.
+          today_name = f"production-{today.isoformat()}.tar.gz"
+          if today_name in drop or (dated and len(drop) == len(dated)):
+              raise SystemExit("Retention policy tried to delete today's backup or all backups - aborting")
+
+          if not drop:
+              print(f"Retention: {len(dated)} backups, nothing to prune.")
+          else:
+              for n in drop:
+                  subprocess.run(["git", "rm", "--quiet", f"sanity/{n}"], check=True)
+              print(f"Retention: kept {len(keep)}, pruned {len(drop)}: {', '.join(drop)}")
+              subprocess.run(["git", "commit", "-m",
+                              f"Apply retention policy: prune {len(drop)} old backup(s)"], check=True)
+              subprocess.run(["git", "push"], check=True)
+          PY
+
+      # Dead-man's-switch. The failure that actually threatens this backup isn't a crash — it's the
+      # job quietly never running at all, which produces no error and therefore no notification.
+      # Causes: BACKUP_REPO_TOKEN expiring (a fine-grained PAT always has an expiry date), or GitHub
+      # disabling the schedule after 60 days of repo inactivity. Both look exactly like success.
+      #
+      # So instead of watching for errors, the monitor watches for the heartbeat: healthchecks.io
+      # expects a ping every week and emails if one doesn't arrive. Set HEALTHCHECK_URL as a repo
+      # secret to switch this on; leave it unset and both steps skip harmlessly.
+      - name: Signal success to healthchecks.io
+        if: success() && env.HEALTHCHECK_URL != ''
+        continue-on-error: true
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: curl -fsS --retry 3 --max-time 15 "$HEALTHCHECK_URL"
+
+      # Reports a failed run immediately rather than waiting for the weekly ping window to lapse.
+      - name: Signal failure to healthchecks.io
+        if: failure() && env.HEALTHCHECK_URL != ''
+        continue-on-error: true
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: curl -fsS --retry 3 --max-time 15 "$HEALTHCHECK_URL/fail"

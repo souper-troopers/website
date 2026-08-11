@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "concurrently -n astro,sanity,functions -c blue,magenta,green \"astro dev\" \"npm --prefix studio run dev\" \"netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open\"",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -19,11 +20,12 @@
     "@sanity/image-url": "^2.1.1",
     "astro": "^7.2.0",
     "astro-portabletext": "^0.13.0",
-    "svelte": "^5.56.8",
-    "typescript": "^6.0.3"
+    "svelte": "^5.56.8"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "concurrently": "^10.0.4",
-    "netlify-cli": "^27.1.1"
+    "netlify-cli": "^27.1.1",
+    "typescript": "^6.0.3"
   }
 }

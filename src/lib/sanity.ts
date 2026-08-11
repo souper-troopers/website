@@ -1,6 +1,8 @@
 import { createClient } from "@sanity/client";
-import { createImageUrlBuilder } from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+// SanityImageSource comes from the package root, not `@sanity/image-url/lib/types/types` — that
+// deep path was a v1 layout, and v2's `exports` map doesn't expose subpaths at all, so the old
+// import resolved to nothing. It never broke the build because `astro build` doesn't typecheck.
+import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 
 export const sanityClient = createClient({
 	projectId: "wqa0no5g",

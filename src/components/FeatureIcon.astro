@@ -1,0 +1,67 @@
+---
+/**
+ * Line icons for the "What's already working" cards on the request-for-comment page.
+ *
+ * One consistent drawing system on purpose: 24x24 box, stroke-only, no fills, uniform 1.75 stroke
+ * with round caps and joins. Mixing stroke icons with solid glyphs is what makes a set look
+ * assembled from clip art rather than designed, and this page is going in front of the client.
+ *
+ * Colour comes from `currentColor`, so the caller controls it — see .fk-feature-icon.
+ */
+interface Props {
+	name: string;
+	size?: number;
+}
+
+const { name, size = 22 } = Astro.props;
+
+const icons: Record<string, string> = {
+	// Pencil — editing content yourself
+	edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
+	// Price tag
+	tag: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.1"/>',
+	// Trolley — checkout
+	cart: '<circle cx="9" cy="21" r="1.4"/><circle cx="19" cy="21" r="1.4"/><path d="M2 2h3l2.4 12.1a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L22 7H6"/>',
+	// Heart — donations
+	heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21.2l7.8-7.7 1-1a5.5 5.5 0 0 0 0-7.9z"/>',
+	// Envelope — contact form
+	mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+	// Bar chart — visitor insights
+	chart: '<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>',
+	// Magnifier — findability
+	search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+	// Document — a page per product
+	page: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/>',
+	// Toggle — the sold-out switch
+	toggle: '<rect x="1.5" y="5.5" width="21" height="13" rx="6.5"/><circle cx="8" cy="12" r="3"/>',
+	// Stacked discs — backups
+	backup: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 5v6c0 1.7-4 3-9 3s-9-1.3-9-3V5"/><path d="M21 12v6c0 1.7-4 3-9 3s-9-1.3-9-3v-6"/>',
+	// Handset — mobile
+	phone: '<rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/>',
+	// Lightning — speed
+	zap: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>',
+	// Padlock — card security
+	lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+	// Universal access figure
+	access: '<circle cx="12" cy="4" r="2"/><path d="M12 7v6"/><path d="M6 9h12"/><path d="M9 21l3-8 3 8"/>',
+	// Artist's palette — brand identity. A paint drop was tried first and read as "water"; the
+	// palette says colour-and-identity without a caption.
+	brand: '<path d="M12 21a9 9 0 1 1 9-9c0 1.66-1.34 3-3 3h-1.5a2 2 0 0 0-1.4 3.4A2 2 0 0 1 12 21z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/>',
+};
+
+const inner = icons[name] ?? icons.page;
+---
+
+<svg
+	viewBox="0 0 24 24"
+	width={size}
+	height={size}
+	fill="none"
+	stroke="currentColor"
+	stroke-width="1.75"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	aria-hidden="true"
+	focusable="false"
+	set:html={inner}
+/>

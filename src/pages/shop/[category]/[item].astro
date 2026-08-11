@@ -1,0 +1,245 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
+import AddToCartButton from "../../../components/AddToCartButton.svelte";
+import ItemCard from "../../../components/ItemCard.svelte";
+
+export async function getStaticPaths() {
+	const items = await getAllShopItems();
+	return items.map((item) => ({
+		params: { category: item.categorySlug, item: item.slug },
+		props: {
+			item,
+			// Siblings, so each product links onward instead of being a dead end. Capped at three to
+			// keep the row to a single grid line.
+			related: items
+				.filter((other) => other.categorySlug === item.categorySlug && other._id !== item._id)
+				.slice(0, 3),
+		},
+	}));
+}
+
+interface Props {
+	item: ShopItemWithCategory;
+	related: ShopItemWithCategory[];
+}
+
+const { item, related } = Astro.props;
+
+const rand = (n: number) => "R" + n.toLocaleString("en-ZA");
+
+const photoUrl = item.photo
+	? urlFor(item.photo).width(900).height(900).fit("crop").auto("format").url()
+	: undefined;
+
+// Trailing slashes deliberately match Astro's own canonical/sitemap URLs — structured data that
+// disagrees with the canonical tag on the same page reads as two URLs for one product.
+const shopUrl = new URL("/shop/", Astro.site).href;
+const categoryUrl = new URL(`/shop/${item.categorySlug}/`, Astro.site).href;
+const pageUrl = new URL(`/shop/${item.categorySlug}/${item.slug}/`, Astro.site).href;
+
+// The short card blurb is the fallback when nobody has written the longer page copy yet.
+const bodyCopy = item.details || item.description;
+
+const productJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Product",
+	name: item.name,
+	url: pageUrl,
+	sku: item._id,
+	...(photoUrl && { image: [photoUrl] }),
+	...(bodyCopy && { description: bodyCopy }),
+	brand: { "@type": "Brand", name: "Shmiley" },
+	offers: {
+		"@type": "Offer",
+		url: pageUrl,
+		priceCurrency: "ZAR",
+		price: item.price,
+		availability: item.soldOut
+			? "https://schema.org/OutOfStock"
+			: "https://schema.org/InStock",
+		itemCondition: "https://schema.org/NewCondition",
+		seller: { "@type": "Organization", name: "Shmiley" },
+	},
+};
+
+const breadcrumbJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	itemListElement: [
+		{ "@type": "ListItem", position: 1, name: "Shop", item: shopUrl },
+		{ "@type": "ListItem", position: 2, name: item.categoryName, item: categoryUrl },
+		{ "@type": "ListItem", position: 3, name: item.name, item: pageUrl },
+	],
+};
+---
+
+<Layout
+	title={item.name}
+	description={bodyCopy ?? `${item.name} from Souper Troopers' ${item.categoryName} range, handmade in Cape Town.`}
+	ogType="product"
+	ogImage={photoUrl}
+	jsonLd={[productJsonLd, breadcrumbJsonLd]}
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<nav class="breadcrumbs" aria-label="Breadcrumb">
+				<ol>
+					<li><a href="/shop">Shop</a></li>
+					<li><a href={`/shop/${item.categorySlug}`}>{item.categoryName}</a></li>
+					<li aria-current="page">{item.name}</li>
+				</ol>
+			</nav>
+			<h1>{item.name}</h1>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="product">
+			{photoUrl && (
+				<div class="product-photo">
+					<img
+						src={photoUrl}
+						alt={item.name}
+						width="900"
+						height="900"
+						fetchpriority="high"
+					/>
+				</div>
+			)}
+
+			<div class="product-detail">
+				<div class="product-price">{rand(item.price)}</div>
+
+				{bodyCopy && <p class="product-body">{bodyCopy}</p>}
+
+				{item.soldOut ? (
+					<p class="sold-out">
+						Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
+					</p>
+				) : (
+					<AddToCartButton
+						client:load
+						id={item._id}
+						categoryName={item.categoryName}
+						name={item.name}
+						price={item.price}
+					/>
+				)}
+
+				<p class="product-note">
+					Every purchase funds Souper Troopers' work with people experiencing homelessness in Cape Town.
+					Orders are collected in person or by a courier you arrange.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	{related.length > 0 && (
+		<section class="section wrap">
+			<h2>More from {item.categoryName}</h2>
+			<div class="grid grid-3">
+				{related.map((other) => (
+					<ItemCard
+						client:load
+						id={other._id}
+						categoryName={other.categoryName}
+						name={other.name}
+						price={other.price}
+						description={other.description}
+						soldOut={other.soldOut}
+						href={`/shop/${other.categorySlug}/${other.slug}`}
+						photoUrl={other.photo ? urlFor(other.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
+						photoLqip={other.photoLqip}
+					/>
+				))}
+			</div>
+			<p class="back-to-category">
+				<a href={`/shop/${item.categorySlug}`}>&larr; All {item.categoryName}</a>
+			</p>
+		</section>
+	)}
+</Layout>
+
+<style>
+	.breadcrumbs ol {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0 0 1rem;
+		padding: 0;
+		list-style: none;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.breadcrumbs li + li::before {
+		content: "/";
+		margin-right: 0.4rem;
+		opacity: 0.5;
+	}
+
+	.breadcrumbs a {
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.breadcrumbs a:hover {
+		color: var(--st-teal);
+	}
+
+	.product {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 2.5rem;
+		align-items: start;
+	}
+
+	@media (max-width: 720px) {
+		.product {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1.5rem;
+		}
+	}
+
+	.product-photo img {
+		width: 100%;
+		height: auto;
+		border-radius: var(--radius, 18px);
+	}
+
+	.product-price {
+		font-weight: 700;
+		font-size: 1.6rem;
+		color: var(--st-teal-dark, #148294);
+	}
+
+	.product-body {
+		margin: 1rem 0 1.75rem;
+		line-height: 1.65;
+		white-space: pre-line;
+	}
+
+	.sold-out {
+		font-weight: 600;
+		margin: 0 0 1rem;
+	}
+
+	.product-note {
+		margin-top: 1.5rem;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.65);
+		line-height: 1.6;
+	}
+
+	.back-to-category {
+		margin-top: 1.5rem;
+	}
+
+	.back-to-category a {
+		font-weight: 600;
+		text-decoration: none;
+		color: var(--st-teal-dark, #148294);
+	}
+</style>

@@ -43,12 +43,21 @@ interface Props {
 	description?: string;
 	/** Float the header transparently over the page's own hero, instead of sitting in normal flow above it. Only meaningful for pages whose hero is a photo (currently just the homepage) — the hero must supply its own darkening scrim for nav legibility. */
 	heroOverlay?: boolean;
+	/** Override the default og:image — pass an absolute URL. Product pages use the product photo so a shared link previews the actual item. */
+	ogImage?: string;
+	/** Open Graph type. Defaults to "website"; product pages pass "product". */
+	ogType?: string;
+	/** Extra schema.org blocks emitted alongside the site-wide NGO one — e.g. Product and BreadcrumbList on a product page. */
+	jsonLd?: Record<string, unknown>[];
 }
 
 const {
 	title,
 	description = "Souper Troopers helps people move from crisis to dignity through food, work, and community in Cape Town.",
 	heroOverlay = false,
+	ogImage: ogImageOverride,
+	ogType = "website",
+	jsonLd = [],
 } = Astro.props;
 
 const navLinks = [
@@ -93,7 +102,7 @@ const settings = await getSiteSettings();
 const fullTitle = `${title} - Souper Troopers`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = await getImage({ src: dignityMoment, width: 1200, height: 630 });
-const ogImageURL = new URL(ogImage.src, Astro.site);
+const ogImageURL = ogImageOverride ?? new URL(ogImage.src, Astro.site).href;
 
 const structuredData = {
 	"@context": "https://schema.org",
@@ -153,7 +162,7 @@ const structuredData = {
 		<title>{fullTitle}</title>
 		<link rel="canonical" href={canonicalURL} />
 
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={ogType} />
 		<meta property="og:site_name" content="Souper Troopers" />
 		<meta property="og:title" content={fullTitle} />
 		<meta property="og:description" content={description} />
@@ -165,6 +174,9 @@ const structuredData = {
 		<meta name="twitter:image" content={ogImageURL} />
 
 		<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		{jsonLd.map((block) => (
+			<script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+		))}
 
 		<!-- Cloudflare Web Analytics -->
 		<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "db07bdfbee474364b7d4e4d32a400bb6"}'></script>

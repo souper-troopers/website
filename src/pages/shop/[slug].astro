@@ -15,9 +15,64 @@ export async function getStaticPaths() {
 
 const { category } = Astro.props;
 const items = category.displayMode === "items" ? await getShopItems(category.slug) : [];
+
+// Trailing slashes match Astro's canonical/sitemap URLs — see the same note on [item].astro.
+const shopUrl = new URL("/shop/", Astro.site).href;
+const categoryUrl = new URL(`/shop/${category.slug}/`, Astro.site).href;
+
+const categoryPhotoUrl = category.photo
+	? urlFor(category.photo).width(900).height(900).fit("crop").auto("format").url()
+	: undefined;
+
+/**
+ * An "attributes" category (currently just Coffee) is one product sold in several variants, so the
+ * category page *is* its product page — there are no child pages to carry the markup. Without this
+ * the coffee range would have no Product data anywhere on the site.
+ */
+const attributeProductJsonLd =
+	category.displayMode === "attributes" && (category.attributeVariants?.length ?? 0) > 0
+		? {
+				"@context": "https://schema.org",
+				"@type": "Product",
+				name: category.name,
+				url: categoryUrl,
+				description: category.blurb,
+				...(categoryPhotoUrl && { image: [categoryPhotoUrl] }),
+				brand: { "@type": "Brand", name: "Shmiley" },
+				offers: category.attributeVariants!.map((variant) => ({
+					"@type": "Offer",
+					name: variant.label,
+					url: categoryUrl,
+					priceCurrency: "ZAR",
+					price: variant.price,
+					availability: "https://schema.org/InStock",
+					itemCondition: "https://schema.org/NewCondition",
+					seller: { "@type": "Organization", name: "Shmiley" },
+				})),
+			}
+		: null;
+
+const breadcrumbJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	itemListElement: [
+		{ "@type": "ListItem", position: 1, name: "Shop", item: shopUrl },
+		{ "@type": "ListItem", position: 2, name: category.name, item: categoryUrl },
+	],
+};
+
+const jsonLd = attributeProductJsonLd
+	? [attributeProductJsonLd, breadcrumbJsonLd]
+	: [breadcrumbJsonLd];
 ---
 
-<Layout title={category.name} description={category.blurb}>
+<Layout
+	title={category.name}
+	description={category.blurb}
+	jsonLd={jsonLd}
+	ogType={attributeProductJsonLd ? "product" : "website"}
+	ogImage={categoryPhotoUrl}
+>
 	<section class="page-hero">
 		<div class="wrap">
 			<a class="back-link" href="/shop">&larr; All products</a>
@@ -54,6 +109,8 @@ const items = category.displayMode === "items" ? await getShopItems(category.slu
 						name={item.name}
 						price={item.price}
 						description={item.description}
+						soldOut={item.soldOut}
+						href={`/shop/${category.slug}/${item.slug}`}
 						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
 						photoLqip={item.photoLqip}
 					/>

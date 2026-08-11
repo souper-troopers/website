@@ -57,10 +57,52 @@ export interface ProductCategory {
 export interface ShopItem {
 	_id: string;
 	name: string;
+	slug: string;
 	price: number;
 	photo?: SanityImageSource;
 	photoLqip?: string;
 	description?: string;
+	details?: string;
+	soldOut: boolean;
+}
+
+/** A ShopItem plus the category it belongs to — what a product page needs to render breadcrumbs and siblings. */
+export interface ShopItemWithCategory extends ShopItem {
+	categoryName: string;
+	categorySlug: string;
+}
+
+/**
+ * URL-safe slug from a product name, used when a `shopItem` has no explicit slug set.
+ *
+ * The 11 items migrated from WooCommerce predate the slug field, so without this every one of them
+ * would have no product page at all until someone opened Sanity and generated slugs by hand. The
+ * trade-off is that renaming an unslugged item silently changes its URL — hence the nudge in the
+ * schema's field description to set a real slug once a product is out in the world.
+ */
+function slugify(name: string): string {
+	return name
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+}
+
+const SHOP_ITEM_PROJECTION = `
+	_id,
+	name,
+	"slug": slug.current,
+	price,
+	photo,
+	"photoLqip": photo.asset->metadata.lqip,
+	description,
+	details,
+	"soldOut": coalesce(soldOut, false),
+`;
+
+function withSlug<T extends { name: string; slug: string | null }>(item: T): T {
+	return { ...item, slug: item.slug || slugify(item.name) };
 }
 
 export interface ImpactStat {
@@ -155,17 +197,28 @@ export async function getProductCategory(slug: string): Promise<ProductCategory 
 }
 
 export async function getShopItems(categorySlug: string): Promise<ShopItem[]> {
-	return sanityClient.fetch(
+	const items = await sanityClient.fetch(
 		`*[_type == "shopItem" && category->slug.current == $categorySlug] | order(order asc) {
-			_id,
-			name,
-			price,
-			photo,
-			"photoLqip": photo.asset->metadata.lqip,
-			description,
+			${SHOP_ITEM_PROJECTION}
 		}`,
 		{ categorySlug }
 	);
+	return items.map(withSlug);
+}
+
+/**
+ * Every item across every category, with its category's name and slug — the source for
+ * `getStaticPaths` on the per-product pages, so one query covers the whole route.
+ */
+export async function getAllShopItems(): Promise<ShopItemWithCategory[]> {
+	const items = await sanityClient.fetch(
+		`*[_type == "shopItem" && defined(category->slug.current)] | order(order asc) {
+			${SHOP_ITEM_PROJECTION}
+			"categoryName": category->name,
+			"categorySlug": category->slug.current,
+		}`
+	);
+	return items.map(withSlug);
 }
 
 export async function getImpactStats(page: "home" | "our-work" | "donate"): Promise<ImpactStat[]> {

@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
+import Masonry from "../components/Masonry.astro";
 
 // Static site: this is the date of the most recent build/deploy, which is what
 // "as of" should mean for a page describing the current state of the preview.
@@ -13,6 +15,8 @@ const liveItems = [
 	{ status: "Done", title: "Contact form", body: "Working submissions, spam-protected - no more relying on email alone." },
 	{ status: "Done", title: "Visitor insights", body: "See how many people visit and which pages they look at - done in a privacy-friendly way, with no tracking of individual visitors." },
 	{ status: "Done", title: "Built to be found", body: "Links look right when shared on WhatsApp or social media, the site is set up properly for Google, and it's also readable by the newer AI-powered search tools - future-proofing, not just today's search engines." },
+	{ status: "Done", title: "Every product has its own page", body: "Each Worry Doll, gift tag and coffee option now has its own web address, rather than all of them sharing one page. That means a specific item can be found in a Google search, sent to someone as a direct link, or recommended by an AI assistant when someone asks where to buy handmade gifts in Cape Town. Each page also tells search engines the price in rands, whether it's in stock, and that it's made by Shmiley - which is what makes products eligible to appear as proper shopping results rather than plain blue links." },
+	{ status: "Done", title: "You can mark things sold out", body: "There's now a “Sold out” tick-box on each shop item. Ticking it removes the Add to cart button and tells Google the item is unavailable, so nobody orders something you can't send. Untick it when stock is back. It's not automatic stock counting - just a switch you control." },
 	{ status: "Done", title: "Backups", body: "All content is automatically backed up every week - tested and confirmed actually working, not just switched on and hoped for." },
 	{ status: "Done", title: "Works properly on a phone", body: "Every page is built for phones and tablets as much as for a laptop - the menu, the shop, the donate page and the forms all adapt to the screen rather than being a shrunk-down desktop site. Most people will find you on a phone, so that's the version that matters most." },
 	{ status: "Done", title: "Fast, even on mobile data", body: "Pages are pre-built and served from servers around the world, so they arrive almost instantly. Every photo is automatically resized and converted to a modern, much smaller file format - a visitor on a phone gets a phone-sized image, not the full-resolution original. The whole homepage is lighter than a single unoptimised photo would be." },
@@ -21,20 +25,35 @@ const liveItems = [
 ];
 
 const questions = [
-	{ title: "The “Shmiley” domain", body: "Kerry mentioned buying a domain for Shmiley - what was the plan for it? If the idea is for the shop to have its own address, that's very achievable - a small dedicated Shmiley site that still shares all the same design and content as the main site behind the scenes, so it wouldn't mean starting over or maintaining two separate systems." },
-	{ title: "More photos & videos, and where to use them", body: "The site is using a starting set of photos for now. More to choose from would help - and just as useful, your thoughts on where specific ones should go (a homepage shot, team photos, images for the CAST journey, etc.)." },
-	{ title: "Please confirm the payment details are still current", body: "The Donate page now matches the current site properly - bank details, PayFast, SnapScan, Zapper, PayPal, and the monthly debit order are all there (SnapScan and PayPal were missing entirely before). Everything was pulled directly from the current site, including the ABSA account number and the PayFast/SnapScan/Zapper codes - but we haven't been able to test any of them with a real payment, so please have a look and confirm the bank account and PayFast details are still the ones you use today, in case anything changed since the current site was built." },
-	{ title: "Which donation method people actually use", body: "EFT, SnapScan, Zapper, PayPal, card, or monthly debit order - knowing which ones actually get used lets us put them first, rather than showing six as equally prominent." },
-	{ title: "Your MySchool beneficiary link", body: "We've added MySchool to the ways-to-help list - it's the easiest ask on the whole site, because it costs the supporter nothing. To make it actually work we need your MySchool beneficiary code, or the sign-up link that names Souper Troopers, so people can nominate you in one click instead of having to search for you." },
-	{ title: "Do you have existing fundraising campaign pages?", body: "The Get Involved page now walks someone through starting their own fundraiser on BackaBuddy or GivenGain. If you already have a page set up on either, send us the link and we'll point people straight at it rather than making them create one from scratch." },
-	{ title: "Two of the impact numbers aren't numbers", body: "The homepage shows four impact figures, but only two are actual numbers - “1,700+ lives supported” and “77% employment success”. The other two just say “ID docs” and “Skills”. Those two land much softer as a result. If you have real figures - how many ID documents you've helped secure, how many people have been through skills training - we'll swap them in and the whole section gets stronger." },
-	{ title: "Is the supporters list still current?", body: "We've brought back the supporters list from the current site (the Mount Nelson, Twelve Apostles, Superbalist, Charly's Bakery, Nik Rabinowitz and about twenty others) - it's real credibility that was missing. Some of those relationships may have wound down since it was written, though. Worth a quick read to check nobody's listed who shouldn't be, and to tell us who's missing. It's all editable by you later." },
-	{ title: "Which press coverage should we show?", body: "We've started an “in the news” section with two articles we found - Good Things Guy and the Cape Argus. We couldn't open them to double-check, so please confirm they're right. More importantly: if you have a list of your best coverage, send it. Being written about by someone else is one of the most persuasive things a donor can see, and right now the site doesn't show any of it." },
-	{ title: "Is Souper News a regular thing?", body: "We found the March 2026 magazine - the Healing & Human Rights edition. It's genuinely good, and a lot of what's in it now appears on the new site (the corporate workshops and the office coffee are both on Get Involved). Two things would help: are there earlier issues we haven't seen, and is a new one planned each month? If they keep coming, they deserve a proper home on the site rather than a page of images you have to open one at a time." },
-	{ title: "Could we get the original photos from EF Ogle?", body: "Six pages of the magazine are beautiful professional photography, but they're baked into the page layouts, so we can't lift them out at any usable quality. The original image files would go a long way toward the “more photos” gap above - it's likely the biggest set of good photography you already own and aren't using on the website." },
-	{ title: "Permission to name people online", body: "The magazine tells people's stories by name and pairs them with photographs - Unam's move into work as a barista, for example. These are exactly the stories that make the site land. But there's a real difference between a magazine and a website: a web page is permanent, and it's searchable by someone's name for years afterwards, including by future employers or family. Agreeing to appear in the March issue isn't automatically agreeing to that. Before we publish any of it, could you check with each person that they're happy for their story and photo to be on the public site - and let us know if anyone would rather we use a first name only, or leave them out entirely? We'd rather ask now than have to unpick it later." },
-	{ title: "Could Werksmans check the B-BBEE wording?", body: "The Get Involved page now spells out what a business gets back for supporting you - the procurement and socio-economic development points, the Section 18A deduction. We've checked these against the current Codes of Good Practice and believe they're right, but they're regulated figures, and the procurement rules in particular are mid-review (changes were gazetted in January and aren't law yet). Since Werksmans already gives you pro bono legal time - and has published its own analysis of these exact changes - would you be willing to ask them to glance over that one section? It's a short read for them, and it means the numbers we're putting in front of corporate donors are ones you can stand behind. The page is built so the figures can be corrected in seconds without a developer." },
+	{ title: "The “Shmiley” domain", ask: "What did you have in mind for the Shmiley domain - point it at the shop, or give Shmiley its own separate look?", body: "Kerry mentioned buying a domain for Shmiley - what was the plan for it? If the goal is for the products to be easier to find on Google, that part is now handled on the main site: every item has its own page, and each one names Shmiley as the maker. Our suggestion would be to point the Shmiley address at the shop for now, because a brand new web address starts with no history and takes months to build up standing with Google, whereas soupertroopers.org already has years of it. If instead you're picturing Shmiley as its own brand with its own look - aimed at shoppers rather than donors - that's very achievable too, and would share all the same design and content behind the scenes rather than being a second thing to maintain. It's really a question of how separate you want Shmiley to feel, and that one's yours to answer. Worth knowing before you decide: a second site wouldn't add a new monthly bill, but it isn't free either - it uses more of the same free allowance the main site runs on, it's a second thing to publish each time you update content, and the Shmiley domain itself has to be renewed every year. Pointing the domain at the shop avoids all three." },
+	{ title: "Descriptions for the shop items", ask: "Could you write a few sentences about each shop item - materials, size, who makes it, the story behind it?", body: "This is the single most useful thing you could send us for the shop. Most products currently have a line or two at most, and several have nothing at all. Now that each item has its own page there's room for a proper description - what it's made of, how big it is, who makes it, the story behind that particular design. It matters more than it sounds: when someone asks Google or ChatGPT for “handmade gifts that support a Cape Town charity”, the products that get recommended are the ones the system can actually describe. A few sentences per item, in your own words, would do it - and you can type them straight into the shop items yourselves, no developer needed." },
+	{ title: "More photos & videos, and where to use them", ask: "Could you send more photos and videos, and say where you'd like specific ones used?", body: "The site is using a starting set of photos for now. More to choose from would help - and just as useful, your thoughts on where specific ones should go (a homepage shot, team photos, images for the CAST journey, etc.)." },
+	{ title: "Please confirm the payment details are still current", ask: "Are the bank account, PayFast, SnapScan and Zapper details on the Donate page still the ones you use today?", body: "The Donate page now matches the current site properly - bank details, PayFast, SnapScan, Zapper, PayPal, and the monthly debit order are all there (SnapScan and PayPal were missing entirely before). Everything was pulled directly from the current site, including the ABSA account number and the PayFast/SnapScan/Zapper codes - but we haven't been able to test any of them with a real payment, so please have a look and confirm the bank account and PayFast details are still the ones you use today, in case anything changed since the current site was built." },
+	{ title: "Which donation method people actually use", ask: "Which donation method do people actually use most?", body: "EFT, SnapScan, Zapper, PayPal, card, or monthly debit order - knowing which ones actually get used lets us put them first, rather than showing six as equally prominent." },
+	{ title: "Your MySchool beneficiary link", ask: "What is your MySchool beneficiary code, or the sign-up link that names Souper Troopers?", body: "We've added MySchool to the ways-to-help list - it's the easiest ask on the whole site, because it costs the supporter nothing. To make it actually work we need your MySchool beneficiary code, or the sign-up link that names Souper Troopers, so people can nominate you in one click instead of having to search for you." },
+	{ title: "Do you have existing fundraising campaign pages?", ask: "Do you already have a BackaBuddy or GivenGain page we should link to?", body: "The Get Involved page now walks someone through starting their own fundraiser on BackaBuddy or GivenGain. If you already have a page set up on either, send us the link and we'll point people straight at it rather than making them create one from scratch." },
+	{ title: "Two of the impact numbers aren't numbers", ask: "Do you have real figures for ID documents secured and people through skills training?", body: "The homepage shows four impact figures, but only two are actual numbers - “1,700+ lives supported” and “77% employment success”. The other two just say “ID docs” and “Skills”. Those two land much softer as a result. If you have real figures - how many ID documents you've helped secure, how many people have been through skills training - we'll swap them in and the whole section gets stronger." },
+	{ title: "Is the supporters list still current?", ask: "Is anyone on the supporters list who shouldn't be, and who is missing?", body: "We've brought back the supporters list from the current site (the Mount Nelson, Twelve Apostles, Superbalist, Charly's Bakery, Nik Rabinowitz and about twenty others) - it's real credibility that was missing. Some of those relationships may have wound down since it was written, though. Worth a quick read to check nobody's listed who shouldn't be, and to tell us who's missing. It's all editable by you later." },
+	{ title: "Which press coverage should we show?", ask: "Are those two articles correct, and can you send a list of your best coverage?", body: "We've started an “in the news” section with two articles we found - Good Things Guy and the Cape Argus. We couldn't open them to double-check, so please confirm they're right. More importantly: if you have a list of your best coverage, send it. Being written about by someone else is one of the most persuasive things a donor can see, and right now the site doesn't show any of it." },
+	{ title: "Is Souper News a regular thing?", ask: "Are there earlier issues of Souper News, and is a new one planned each month?", body: "We found the March 2026 magazine - the Healing & Human Rights edition. It's genuinely good, and a lot of what's in it now appears on the new site (the corporate workshops and the office coffee are both on Get Involved). Two things would help: are there earlier issues we haven't seen, and is a new one planned each month? If they keep coming, they deserve a proper home on the site rather than a page of images you have to open one at a time." },
+	{ title: "Could we get the original photos from EF Ogle?", ask: "Could you ask EF Ogle for the original photo files?", body: "Six pages of the magazine are beautiful professional photography, but they're baked into the page layouts, so we can't lift them out at any usable quality. The original image files would go a long way toward the “more photos” gap above - it's likely the biggest set of good photography you already own and aren't using on the website." },
+	{ title: "Permission to name people online", ask: "Could you check with each person that they're happy for their story and photo to be on the public site?", body: "The magazine tells people's stories by name and pairs them with photographs - Unam's move into work as a barista, for example. These are exactly the stories that make the site land. But there's a real difference between a magazine and a website: a web page is permanent, and it's searchable by someone's name for years afterwards, including by future employers or family. Agreeing to appear in the March issue isn't automatically agreeing to that. Before we publish any of it, could you check with each person that they're happy for their story and photo to be on the public site - and let us know if anyone would rather we use a first name only, or leave them out entirely? We'd rather ask now than have to unpick it later." },
+	{ title: "Could Werksmans check the B-BBEE wording?", ask: "Would you be willing to ask Werksmans to glance over the B-BBEE section?", body: "The Get Involved page now spells out what a business gets back for supporting you - the procurement and socio-economic development points, the Section 18A deduction. We've checked these against the current Codes of Good Practice and believe they're right, but they're regulated figures, and the procurement rules in particular are mid-review (changes were gazetted in January and aren't law yet). Since Werksmans already gives you pro bono legal time - and has published its own analysis of these exact changes - would you be willing to ask them to glance over that one section? It's a short read for them, and it means the numbers we're putting in front of corporate donors are ones you can stand behind. The page is built so the figures can be corrected in seconds without a developer." },
 ];
+
+/**
+ * The questions as plain text for the clipboard button — numbered, with an "A:" line under each so
+ * the paste doubles as an answer template rather than something Kerry has to reformat.
+ *
+ * Deliberately carries only the title and the one-line ask, not the full `body`: she'll have just
+ * read the context on the page, and including it would bury the actual questions in an email.
+ */
+const questionsText = [
+	`Souper Troopers website - questions (as of ${updated})`,
+	"",
+	...questions.flatMap((ask, i) => [`${i + 1}. ${ask.title}`, `Q: ${ask.ask}`, "A: ", ""]),
+	`Full context for each question: ${new URL("/request-for-comment/", Astro.site).href}`,
+].join("\n");
 
 const yourCall = [
 	{ title: "When to switch the shop to real payments", body: "Whenever you're happy with it, flipping the shop from test mode to accepting real money is quick - just needs your go-ahead first." },
@@ -57,7 +76,7 @@ const yourCall = [
 			<h2>What's already working</h2>
 			<p>This is a real, working preview - not a mockup. A couple of things (marked below) are intentionally still in "test mode" until you say go.</p>
 		</div>
-		<div class="grid grid-3">
+		<Masonry>
 			{liveItems.map((item) => (
 				<div class="card">
 					<span class:list={["fk-status", { "fk-status-test": item.status === "Test mode" }]}>{item.status}</span>
@@ -65,14 +84,17 @@ const yourCall = [
 					<p>{item.body}</p>
 				</div>
 			))}
-		</div>
+		</Masonry>
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Needs you</span>
-			<h2>A few real questions</h2>
-			<p>This is genuinely most of what's outstanding. Nothing urgent - take your time.</p>
+		<div class="fk-asks-head">
+			<div class="section-intro">
+				<span class="badge">Needs you</span>
+				<h2>A few real questions</h2>
+				<p>This is genuinely most of what's outstanding. Nothing urgent - take your time. Each one ends with the actual question, in bold.</p>
+			</div>
+			<CopyQuestionsButton client:load text={questionsText} />
 		</div>
 		<div class="fk-asks">
 			{questions.map((ask, i) => (
@@ -81,6 +103,7 @@ const yourCall = [
 					<div>
 						<h3>{ask.title}</h3>
 						<p>{ask.body}</p>
+						<p class="fk-ask-question">{ask.ask}</p>
 					</div>
 				</div>
 			))}
@@ -121,7 +144,7 @@ const yourCall = [
 				<tr><td>Payment processing</td><td>Free until something sells, then a small % per sale - same fees already being paid today, nothing new</td></tr>
 			</tbody>
 		</table>
-		<p class="fk-table-note">* Free at the site's current size and usage. If it ever grows well beyond what it's doing today (heavy traffic, very frequent edits), some of these could eventually move to a paid tier - not something on the horizon right now, just flagging it honestly rather than promising "free forever."</p>
+		<p class="fk-table-note">* Free at the site's current size and usage. Two honest caveats rather than promising "free forever." First, if the site grows well beyond what it does today (heavy traffic, very frequent edits), some of these could eventually move to a paid tier - not something on the horizon right now. Second, these are commercial companies, and free tiers do sometimes get reduced or withdrawn; it has happened across the industry. The protection against that isn't a promise from them, it's that nothing here is locked in: the site is plain files in your own GitHub account, all the content lives in a system you own with weekly backups to your own private copy, and it could be moved to a different host without rebuilding it. The two pieces genuinely tied to the current host are the contact form and the shop's payment handling, and both are small enough to rebuild elsewhere in a day if it ever came to that.</p>
 	</section>
 
 	<section class="section wrap">
@@ -145,6 +168,19 @@ const yourCall = [
 	.fk-status-test {
 		background: rgba(219, 188, 59, 0.22);
 		color: #7a5f0a;
+	}
+
+	/* Heading on the left, copy-to-clipboard on the right; wraps to stacked on narrow screens. */
+	.fk-asks-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: var(--space-6);
+	}
+
+	.fk-asks-head .section-intro {
+		flex: 1 1 320px;
 	}
 
 	.fk-asks {
@@ -173,6 +209,19 @@ const yourCall = [
 		font-size: 0.94rem;
 		color: rgba(36, 35, 43, 0.65);
 		max-width: 62ch;
+	}
+
+	/* The context above each of these is necessary but long, so the thing actually being asked gets
+	   pulled out: teal, which is the site's established emphasis ink (prices, links), rather than
+	   the near-black of the title just above it - bold alone read as a second heading.
+	   Selector is `p.fk-ask-question` rather than the bare class so it outweighs `.fk-ask p` above,
+	   which mutes the body copy to 65% ink. */
+	.fk-ask p.fk-ask-question {
+		margin-top: 0.55rem;
+		padding-left: 0.85rem;
+		border-left: 3px solid var(--st-teal, #1babbe);
+		font-weight: 700;
+		color: var(--st-teal-dark, #148294);
 	}
 
 	.fk-ask-number {

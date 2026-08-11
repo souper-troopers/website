@@ -1,0 +1,114 @@
+---
+/**
+ * Masonry layout that preserves reading order.
+ *
+ * The CSS multi-column approach used elsewhere on the site (`.story-masonry`, `.pay-masonry`) fills
+ * column 1 top-to-bottom before starting column 2, so item 2 sits *below* item 1 rather than beside
+ * it. That's fine for an unordered set of cards, but wrong anywhere the sequence carries meaning.
+ *
+ * This uses CSS Grid with a very fine row unit (1px) and gives each item a `grid-row-end: span N`
+ * matching its measured height, so items flow left-to-right in DOM order while each keeps its own
+ * height. No library, no dependency - the whole thing is the ~30 lines of script below.
+ *
+ * Progressive enhancement: until the script runs (or if it never does) `data-masonry` is absent and
+ * the CSS below is a plain responsive grid with each item top-aligned in its row - which is exactly
+ * what these sections looked like before masonry. Nothing breaks without JS; it's just less tightly
+ * packed. See the note on the script below for why it's inline rather than a bundled module - the
+ * whole point is that the packed layout is what gets painted first, not a shift into it.
+ *
+ * Known remaining shift: this site hides text until Quicksand loads (`.fonts-pending`), and the
+ * fallback font's metrics differ, so card heights can change when the real font lands. The
+ * ResizeObserver re-packs when that happens. That reflow is site-wide, not specific to masonry, but
+ * masonry makes it slightly more visible because cards move vertically rather than just re-wrapping.
+ *
+ * Native `grid-template-rows: masonry` would replace all of this, but as of 2026 it is still behind
+ * a flag in Firefox and unshipped elsewhere, and the CSS WG is still deciding on the final syntax.
+ */
+interface Props {
+	/** Minimum column width; columns fit as many as will hold at this width. */
+	min?: string;
+	/** Gap between items, both directions. */
+	gap?: string;
+	/** Extra class(es) on the grid element. */
+	class?: string;
+}
+
+const { min = "280px", gap = "1.5rem", class: className } = Astro.props;
+---
+
+<div
+	class:list={["masonry", className]}
+	data-masonry-grid
+	style={`--masonry-min: ${min}; --masonry-gap: ${gap};`}
+>
+	<slot />
+</div>
+
+<style>
+	.masonry {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(var(--masonry-min, 280px), 1fr));
+		gap: var(--masonry-gap, 1.5rem);
+		align-items: start;
+	}
+
+	/* Switched on by the script once it has measured. Rows become a 1px ruler that each item spans
+	   a whole number of; the visual row gap moves from `row-gap` onto the items themselves, so it
+	   can be counted into each span. */
+	.masonry[data-masonry="on"] {
+		grid-auto-rows: 1px;
+		row-gap: 0;
+	}
+
+	/* Slotted children come from the parent component, so they carry the parent's scope attribute
+	   rather than this one's - these selectors have to be :global to reach them. */
+	.masonry[data-masonry="on"] > :global(*) {
+		margin-bottom: var(--masonry-gap, 1.5rem);
+	}
+</style>
+
+<!--
+	Deliberately `is:inline` and deliberately placed immediately after the grid, rather than an Astro
+	`<script>`: Astro bundles those as deferred modules, which run *after* the document has parsed and
+	typically after first paint — so the visitor would see the plain grid render and then visibly snap
+	into the packed layout. An inline script here runs synchronously the moment the grid element has
+	been parsed, before that region is painted, so the first thing drawn is already the final layout.
+
+	The cost is a forced synchronous layout mid-parse. For the card counts this is used with (tens,
+	not thousands) that's negligible, and it buys a measurably better CLS than the deferred version.
+
+	Being inline, it is duplicated once per instance on the page — hence the shared-function guard.
+	It's plain JS rather than TypeScript because `is:inline` scripts are passed through untouched.
+-->
+<script is:inline>
+	(function () {
+		var grid = document.currentScript.previousElementSibling;
+
+		if (!window.__stMasonry) {
+			window.__stMasonry = function (g) {
+				var gap = parseFloat(getComputedStyle(g).columnGap) || 0;
+				g.dataset.masonry = "on";
+				for (var i = 0; i < g.children.length; i++) {
+					var item = g.children[i];
+					// The item's own height plus one gap, rounded up to whole 1px rows.
+					var next = "span " + Math.ceil(item.getBoundingClientRect().height + gap);
+					// Writing the same value back would have ResizeObserver re-fire forever.
+					if (item.style.gridRowEnd !== next) item.style.gridRowEnd = next;
+				}
+			};
+		}
+
+		window.__stMasonry(grid);
+
+		// Re-measure whenever anything changes height: the column count changing at a breakpoint, text
+		// reflowing, an image arriving, or - the big one on this site - Quicksand swapping in for the
+		// fallback font, which changes line counts and therefore card heights.
+		if ("ResizeObserver" in window) {
+			var observer = new ResizeObserver(function () {
+				window.__stMasonry(grid);
+			});
+			observer.observe(grid);
+			for (var j = 0; j < grid.children.length; j++) observer.observe(grid.children[j]);
+		}
+	})();
+</script>

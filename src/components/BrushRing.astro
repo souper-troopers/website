@@ -1,0 +1,66 @@
+---
+/**
+ * A rough, broken ring echoing the brush circle in the Souper Troopers logo.
+ *
+ * The roughness is a turbulence displacement filter rather than hand-authored path data, so a
+ * different `seed` gives a genuinely different ring from the same primitive — that's what lets each
+ * tile carry its own mark without four sets of bespoke SVG.
+ *
+ * `id` must be unique per instance: SVG filter ids are document-global, and a repeated one makes
+ * every ring on the page render with the first instance's roughness.
+ */
+interface Props {
+	id: string;
+	/** Ring geometry, in the coordinate space of `viewBox`. */
+	cx: number;
+	cy: number;
+	r: number;
+	strokeWidth?: number;
+	color?: string;
+	opacity?: number;
+	/** Dash pattern is what breaks the circle open, like a brush lifting off. */
+	dash?: string;
+	seed?: number;
+	/** Lower frequency = longer, lazier wobbles; higher = more jitter. */
+	frequency?: number;
+	/** How far the filter pushes the stroke around. Roughly "how loose the hand was." */
+	displace?: number;
+	viewBox?: string;
+}
+
+const {
+	id,
+	cx,
+	cy,
+	r,
+	strokeWidth = 26,
+	color = "#ffffff",
+	opacity = 0.22,
+	dash = "440 120",
+	seed = 11,
+	frequency = 0.014,
+	displace = 19,
+	viewBox = "0 0 400 280",
+} = Astro.props;
+---
+
+<svg class="brush-ring" viewBox={viewBox} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+	<defs>
+		<filter id={`br-${id}`} x="-35%" y="-35%" width="170%" height="170%">
+			<feTurbulence type="fractalNoise" baseFrequency={frequency} numOctaves="3" seed={seed} result="noise" />
+			<feDisplacementMap in="SourceGraphic" in2="noise" scale={displace} xChannelSelector="R" yChannelSelector="G" />
+		</filter>
+	</defs>
+	<circle
+		cx={cx}
+		cy={cy}
+		r={r}
+		fill="none"
+		stroke={color}
+		stroke-opacity={opacity}
+		stroke-width={strokeWidth}
+		stroke-linecap="round"
+		stroke-dasharray={dash}
+		filter={`url(#br-${id})`}
+	/>
+</svg>

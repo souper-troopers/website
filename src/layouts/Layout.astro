@@ -223,6 +223,9 @@ const structuredData = {
 				--st-teal: #1babbe;
 				--st-teal-dark: #148294;
 				--st-teal-secondary: #24badd;
+				/* A 50% tint of --st-teal on white. Kept as a token rather than a one-off literal so
+				   it stays tied to the brand teal if that ever shifts. */
+				--st-teal-light: #8dd5df;
 				--st-ink: #24232b;
 				--st-yellow: #dbbc3b;
 				--st-green: #4bbc63;
@@ -1433,12 +1436,19 @@ const structuredData = {
 				color: var(--st-teal);
 			}
 
-			/* Choose your path — asymmetric tiles */
+			/* Choose your path — one lead tile over a supporting row.
+			   Donate gets the width and the headline number because it's the primary action; the
+			   other three are told apart by their brush ring, not by a background colour each. That
+			   keeps the section to two fills (teal, ink) and leaves --st-green/--st-red free to go on
+			   meaning success/error in the cart and copy components. */
 			.path-grid {
 				display: grid;
-				grid-template-columns: repeat(2, 1fr);
-				grid-auto-rows: 1fr;
+				grid-template-columns: repeat(3, 1fr);
 				gap: var(--space-5);
+			}
+
+			.path-lead {
+				grid-column: 1 / -1;
 			}
 
 			.path-tile {
@@ -1448,34 +1458,52 @@ const structuredData = {
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-end;
-				min-height: 260px;
+				min-height: 240px;
 				padding: var(--space-8);
 				border-radius: 24px;
 				color: var(--st-white);
 				text-decoration: none;
-				transition: transform 0.2s ease, color 0.3s ease;
+				transition: transform 0.2s ease;
 			}
 
-			/* A real photo, knocked well back, plus a scrim under the text. The scrim is doing two
-			   jobs: keeping the photo from competing with the copy, and lifting contrast on the
-			   lighter brand colours (white on --st-green alone is only 2.4:1). */
-			.path-tile-img {
+			.path-lead {
+				min-height: 260px;
+			}
+
+			/* --st-teal-dark, not --st-teal: white body text on the lighter teal is only 2.76:1, which
+			   fails AA. The old teal→teal-dark gradient was hiding this by putting the dark end under
+			   the text; going flat means the fill itself has to carry the contrast. */
+			.path-lead {
+				background: var(--st-teal-dark);
+			}
+
+			/* Pale teal rather than ink: three ink tiles sat directly above the ink impact band and the
+			   two read as one dark mass, as though the tiles were part of that band. Keeping them in
+			   the teal family makes the whole section one idea, and the light/dark step against the
+			   lead tile is what carries the hierarchy. */
+			.path-support {
+				background: var(--st-teal-light);
+				color: var(--st-ink);
+			}
+
+			/* Ink rather than a teal: any of the brand teals as an eyebrow falls under 4.5:1 on this
+			   fill, and at 13px it doesn't qualify as large text. Opacity stays high enough to clear
+			   AA while still reading as secondary. */
+			.path-support .path-mini-fact {
+				color: var(--st-ink);
+				opacity: 0.8;
+			}
+
+			/* Flat fills, not gradients: the logo is flat unshaded teal, and the ring is already
+			   giving the surface somewhere for the eye to travel. Two soft effects on one small tile
+			   just blunt each other. */
+			.brush-ring {
 				position: absolute;
 				inset: 0;
 				z-index: -1;
 				width: 100%;
 				height: 100%;
-				object-fit: cover;
-				opacity: 0.3;
-				transition: transform 0.4s ease, opacity 0.3s ease;
-			}
-
-			.path-tile::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				z-index: -1;
-				background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.34) 60%, rgba(0, 0, 0, 0.12) 100%);
+				pointer-events: none;
 			}
 
 			.path-tile-body {
@@ -1486,28 +1514,18 @@ const structuredData = {
 				transform: translateY(-4px);
 			}
 
-			.path-tile:hover .path-tile-img {
-				transform: scale(1.06);
-				opacity: 0.42;
-			}
-
 			@media (prefers-reduced-motion: reduce) {
-				.path-tile,
-				.path-tile-img {
+				.path-tile {
 					transition: none;
 				}
 
 				.path-tile:hover {
 					transform: none;
 				}
-
-				.path-tile:hover .path-tile-img {
-					transform: none;
-				}
 			}
 
 			.path-tile h3 {
-				font-size: 1.6rem;
+				font-size: 1.45rem;
 				margin-bottom: var(--space-2);
 			}
 
@@ -1522,22 +1540,60 @@ const structuredData = {
 				text-decoration: underline;
 			}
 
-			.path-teal {
-				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-teal-dark) 100%);
+			/* Lead tile — the headline figure comes from the same Sanity impactStat as the band below */
+			.path-chip {
+				display: inline-block;
+				font-size: 0.75rem;
+				font-weight: 700;
+				letter-spacing: 0.09em;
+				text-transform: uppercase;
+				background: rgba(255, 255, 255, 0.18);
+				padding: var(--space-1) var(--space-3);
+				border-radius: 999px;
+				margin-bottom: var(--space-4);
 			}
 
-			.path-green {
-				background: var(--st-green);
+			/* Deliberately white rather than --st-yellow: yellow on teal is 2.43:1, below the 3:1 that
+			   even large text needs. At this size the figure doesn't need a colour to stand out. */
+			.path-fact {
+				font-size: clamp(2.4rem, 6vw, 3.4rem);
+				font-weight: 700;
+				line-height: 1;
+				letter-spacing: -0.02em;
+				margin-bottom: var(--space-2);
 			}
 
-			/* Dusty rose rather than brand --st-red: the saturated red reads as danger on a
-			   "buy something" CTA. Darkened end-stop keeps white body text above 4.5:1 AA. */
-			.path-gold {
-				background: linear-gradient(135deg, #d48a96 0%, #a86670 100%);
+			/* Full opacity, unlike the other tile paragraphs: the inherited 0.92 is comfortable on ink
+			   but drops this to 4.08:1 on teal, just under AA. */
+			.path-lead .path-fact-label {
+				font-size: 1.05rem;
+				max-width: 36ch;
+				margin-bottom: var(--space-6);
+				opacity: 1;
 			}
 
-			.path-ink {
-				background: var(--st-ink);
+			.path-mini-fact {
+				display: block;
+				font-weight: 700;
+				font-size: 0.8rem;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				opacity: 0.85;
+				margin-bottom: var(--space-2);
+			}
+
+			/* A real button on the lead tile — the underlined text link is too quiet for the page's
+			   primary call to action. The supporting three keep the link treatment so the hierarchy
+			   reads. */
+			.btn-on-tile {
+				background: var(--st-white);
+				color: var(--st-ink);
+				align-self: flex-start;
+				transition: background 0.2s ease;
+			}
+
+			.path-tile:hover .btn-on-tile {
+				background: var(--st-bg);
 			}
 
 			/* Impact — full-bleed band */
@@ -1646,6 +1702,28 @@ const structuredData = {
 				font-size: 1rem;
 				letter-spacing: 0.02em;
 				opacity: 0.9;
+			}
+
+			/* Between the phone breakpoint and tablet width the supporting trio is still three across
+			   but genuinely narrow, and the headings start wrapping every couple of words. Trimming
+			   the padding and type buys back enough room without dropping to a fourth layout.
+			   Must sit after the base .path-* rules above (equal specificity — source order decides). */
+			@media (min-width: 701px) and (max-width: 900px) {
+				.path-tile {
+					padding: var(--space-6);
+				}
+
+				.path-support h3 {
+					font-size: 1.2rem;
+				}
+
+				.path-support .path-mini-fact {
+					font-size: 0.72rem;
+				}
+
+				.path-support p {
+					font-size: 0.95rem;
+				}
 			}
 
 			/* Narrow-screen tightening: vertical rhythm shrinks so there's less empty space to scroll

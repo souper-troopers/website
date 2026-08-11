@@ -17,4 +17,6 @@
 	});
 </script>
 
-<strong>{value.toLocaleString()}{suffix}</strong>
+<!-- Explicit locale: bare toLocaleString() follows the visitor's browser, so an en-ZA visitor saw
+     "1 700" here while the homepage tile and our written copy both say "1,700". -->
+<strong>{value.toLocaleString("en-US")}{suffix}</strong>

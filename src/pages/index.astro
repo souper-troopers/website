@@ -3,15 +3,16 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
-import workshopPhoto from "../assets/images/workshop-craft.jpg";
-import shopPhoto from "../assets/images/shop-products.jpg";
-import oneToOnePhoto from "../assets/images/support-one-to-one.jpg";
-import partnerPhoto from "../assets/images/partner-visit.jpg";
+import BrushRing from "../components/BrushRing.astro";
 import CountUp from "../components/CountUp.svelte";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
 const stories = await getFeaturedSuccessStories();
+
+// The Donate tile leads on the same headline number as the impact band, read from Sanity rather
+// than retyped here so the two can't drift apart when Kerry updates it.
+const leadStat = impactStats.find((stat) => stat.value != null);
 
 // Generated once via sharp (resize 24px wide, jpeg q40) from mandela-mural.png — see commit history if it
 // ever needs regenerating after the source photo changes.
@@ -51,35 +52,44 @@ const heroLqip =
 			<h2>However you want to help, there's a clear next step</h2>
 		</div>
 		<div class="path-grid">
-			<a href="/donate" class="path-tile path-teal">
-				<Image class="path-tile-img" src={oneToOnePhoto} alt="" role="presentation" width={800} widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+			<a href="/donate" class="path-tile path-lead">
+				<BrushRing id="donate" viewBox="0 0 900 240" cx={760} cy={66} r={132} strokeWidth={28} opacity={0.22} dash="500 130" seed={11} frequency={0.011} displace={20} />
 				<div class="path-tile-body">
-					<h3>Donate</h3>
-					<p>Support a person directly through the CAST programme — from a first conversation to a job.</p>
-					<span class="path-cta">Donate now &rarr;</span>
+					<span class="path-chip">Most direct way to help</span>
+					{leadStat && (
+						<p class="path-fact">{leadStat.value?.toLocaleString("en-US")}{leadStat.suffix}</p>
+					)}
+					<p class="path-fact-label">
+						people supported since 2014 — your donation funds the next one, from a first
+						conversation to a job.
+					</p>
+					<span class="btn btn-on-tile">Donate now &rarr;</span>
 				</div>
 			</a>
-			<a href="/get-involved#individuals" class="path-tile path-green">
-				<Image class="path-tile-img" src={workshopPhoto} alt="" role="presentation" width={800} widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+			<a href="/get-involved#individuals" class="path-tile path-support">
+				<BrushRing id="volunteer" viewBox="0 0 300 240" cx={44} cy={204} r={106} strokeWidth={26} color="var(--st-teal-dark)" opacity={0.22} dash="330 120" seed={29} frequency={0.018} displace={20} />
 				<div class="path-tile-body">
+					<span class="path-mini-fact">Individuals &amp; groups</span>
 					<h3>Volunteer</h3>
-					<p>Give time, skills, or goods. Individuals and groups both make the Humanity Hub run.</p>
+					<p>Give time, skills, or goods. Both make the Humanity Hub run.</p>
 					<span class="path-cta">Get involved &rarr;</span>
 				</div>
 			</a>
-			<a href="/shop" class="path-tile path-gold">
-				<Image class="path-tile-img" src={shopPhoto} alt="" role="presentation" width={800} widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+			<a href="/shop" class="path-tile path-support">
+				<BrushRing id="shop" viewBox="0 0 300 240" cx={258} cy={48} r={98} strokeWidth={24} color="#ffffff" opacity={0.55} dash="290 105" seed={53} frequency={0.014} displace={17} />
 				<div class="path-tile-body">
+					<span class="path-mini-fact">Troopers Coffee &amp; Worry Dolls</span>
 					<h3>Buy something</h3>
-					<p>Troopers Coffee and African Worry Dolls&trade; — every order funds the jobs behind them.</p>
+					<p>Every order funds the jobs behind them.</p>
 					<span class="path-cta">Visit the shop &rarr;</span>
 				</div>
 			</a>
-			<a href="/get-involved#businesses" class="path-tile path-ink">
-				<Image class="path-tile-img" src={partnerPhoto} alt="" role="presentation" width={800} widths={[400, 800]} sizes="(min-width: 700px) 560px, 100vw" loading="lazy" />
+			<a href="/get-involved#businesses" class="path-tile path-support">
+				<BrushRing id="partner" viewBox="0 0 300 240" cx={250} cy={212} r={102} strokeWidth={26} color="var(--st-ink)" opacity={0.14} dash="340 120" seed={77} frequency={0.016} displace={20} />
 				<div class="path-tile-body">
+					<span class="path-mini-fact">B-BBEE Level 1</span>
 					<h3>Partner with us</h3>
-					<p>Corporate giving, B-BBEE points, and sponsorship for businesses who want measurable impact.</p>
+					<p>Corporate giving, B-BBEE points, and sponsorship with measurable impact.</p>
 					<span class="path-cta">Partner with us &rarr;</span>
 				</div>
 			</a>

@@ -1,0 +1,81 @@
+name: Deploy Sanity Studio
+
+# The hosted Studio (souper-troopers.sanity.studio, and the same app under the sanity.io
+# dashboard URL) is a separately built application. `sanity dev` reads studio/schemaTypes/
+# straight off disk, so localhost is always current while the hosted Studio stays frozen at
+# its last deploy — they drift silently and nothing warns you.
+#
+# On 2026-08-11 that meant `pressMention` and `supporter` were missing entirely, and shopItem
+# lacked slug/details/soldOut, for anyone opening the hosted Studio. The consequence lands on
+# Kerry rather than on us: she opens the tool, the thing she was told about isn't there.
+#
+# Deliberately NOT part of the Netlify site build:
+#   - a Studio failure would share an exit code with the site, so a schema problem would block
+#     shipping a copy fix. The public site should not be held hostage by an internal tool.
+#   - the site deploys far more often than the schema changes, so it would be near-pure waste.
+#   - it would put a privileged Sanity token into every site build's environment.
+#
+# Needs one repo secret:
+#   SANITY_DEPLOY_TOKEN — a Sanity token with permission to deploy a Studio. This is MORE
+#                         privileged than SANITY_API_TOKEN (Viewer/read-only, used by the
+#                         backup), so it is deliberately a separate secret rather than reusing
+#                         that one. Create at manage.sanity.io > project wqa0no5g > API > Tokens.
+#
+# Skips itself when that secret is unset, so this file can land on main before the token exists.
+
+on:
+  push:
+    branches: [main]
+    # Only when the Studio actually changes. Everything else on main is site work, and
+    # redeploying the Studio for a homepage copy edit is noise with a credential attached.
+    paths:
+      - "studio/**"
+      - ".github/workflows/studio-deploy.yml"
+  workflow_dispatch: {}
+
+# A second push while a deploy is running should supersede it, not race it — the Studio has one
+# live version and the newest commit is the one that should win.
+concurrency:
+  group: studio-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SANITY_DEPLOY_TOKEN: ${{ secrets.SANITY_DEPLOY_TOKEN }}
+    steps:
+      - name: Say why nothing happened
+        if: env.SANITY_DEPLOY_TOKEN == ''
+        run: |
+          echo "SANITY_DEPLOY_TOKEN is not set, so the Studio was not deployed."
+          echo "Add it under Settings > Secrets and variables > Actions, then re-run."
+          echo "Until then the hosted Studio must be updated by hand:"
+          echo "  cd studio && npx sanity deploy"
+
+      - uses: actions/checkout@v4
+        if: env.SANITY_DEPLOY_TOKEN != ''
+
+      - uses: actions/setup-node@v4
+        if: env.SANITY_DEPLOY_TOKEN != ''
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: studio/package-lock.json
+
+      # studio/ is its own package with its own lockfile — the root install does not cover it.
+      # This is the same separation that broke the site build when `astro check` tried to
+      # typecheck studio/ sources on CI, where those dependencies are absent.
+      - name: Install Studio dependencies
+        if: env.SANITY_DEPLOY_TOKEN != ''
+        working-directory: studio
+        run: npm ci
+
+      # `sanity deploy` builds before it uploads, so a schema that fails to compile fails here
+      # rather than shipping a broken Studio.
+      - name: Deploy the Studio
+        if: env.SANITY_DEPLOY_TOKEN != ''
+        working-directory: studio
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_DEPLOY_TOKEN }}
+        run: npx sanity deploy

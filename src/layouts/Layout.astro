@@ -784,6 +784,65 @@ const structuredData = {
 				}
 			}
 
+			/* First-load reveal: each step arrives in turn and the dashed rule draws toward the next
+			   one, so the eye travels C → A → S → T the way the journey itself does. Armed by an
+			   inline script on our-work.astro rather than by default, so the steps stay visible if
+			   JS is off or motion is reduced. Plays once per page load. */
+			.cast-journey.cast-armed .cast-step {
+				opacity: 0;
+			}
+
+			.cast-journey.cast-armed .cast-step:not(:last-child)::before {
+				transform: scaleX(0);
+				transform-origin: left center;
+			}
+
+			.cast-journey.cast-playing .cast-step {
+				animation: cast-step-in 450ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+				animation-delay: var(--cast-delay, 0ms);
+			}
+
+			.cast-journey.cast-playing .cast-letter {
+				animation: cast-letter-in 450ms cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+				animation-delay: var(--cast-delay, 0ms);
+			}
+
+			/* Starts just after its own letter lands and finishes as the next step fades in, so the
+			   line reads as handing off to the node it points at. */
+			.cast-journey.cast-playing .cast-step:not(:last-child)::before {
+				animation: cast-line-draw 300ms ease-out forwards;
+				animation-delay: calc(var(--cast-delay, 0ms) + 150ms);
+			}
+
+			@keyframes cast-step-in {
+				from {
+					opacity: 0;
+					transform: translateX(-28px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			@keyframes cast-letter-in {
+				from {
+					transform: scale(0.5);
+				}
+				to {
+					transform: scale(1);
+				}
+			}
+
+			@keyframes cast-line-draw {
+				from {
+					transform: scaleX(0);
+				}
+				to {
+					transform: scaleX(1);
+				}
+			}
+
 			/* Success stories vary a lot in length, and in a grid the short ones inherit the height of
 			   the tallest in their row — which made the second row look like a different kind of
 			   content. Multi-column lets each card be its own height. Reading order becomes

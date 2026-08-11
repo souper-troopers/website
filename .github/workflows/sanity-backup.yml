@@ -5,12 +5,15 @@ name: Sanity dataset backup
 # deliberately — the export likely contains personal data (beneficiary
 # names/stories, team contact details, unpublished drafts).
 #
-# Needs two repo secrets (Settings > Secrets and variables > Actions, on
-# this repo):
-#   SANITY_API_TOKEN   — a Sanity API token with Viewer (read-only) access,
-#                         from manage.sanity.io > project wqa0no5g > API > Tokens.
-#   BACKUP_REPO_TOKEN  — a GitHub personal access token (repo scope) for an
-#                         account with write access to website-backups.
+# Needs these repo secrets (Settings > Secrets and variables > Actions, on
+# this repo — note they live on `website`, not on `website-backups`):
+#   SANITY_API_TOKEN         — Sanity API token, Viewer (read-only), from
+#                              manage.sanity.io > project wqa0no5g > API > Tokens.
+#   BACKUP_APP_ID            — App ID of the "souper-troopers-backup-bot" GitHub
+#                              App (the plain number, NOT the Client ID).
+#   BACKUP_APP_PRIVATE_KEY   — that App's private key, .pem contents and all.
+#   HEALTHCHECK_URL          — healthchecks.io ping URL. Optional: without it the
+#                              two ping steps skip and nothing else changes.
 #
 # Note: scheduled (cron) triggers only fire from the default branch, so this
 # won't actually run on schedule until it's merged to main — see AGENTS.md.
@@ -24,9 +27,6 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-latest
-    # Job-level so the App step's own `if:` can read it — a step cannot see env it defines itself.
-    env:
-      BACKUP_APP_ID: ${{ secrets.BACKUP_APP_ID }}
     steps:
       - name: Export Sanity dataset
         env:
@@ -80,22 +80,24 @@ jobs:
           # backup, which means cloning the backups repo before this step rather than after.
           PY
 
-      # Mints a short-lived token from a GitHub App installed only on website-backups.
+      # Mints a short-lived token from the "souper-troopers-backup-bot" GitHub App, installed on
+      # website-backups only, with Contents: read and write and nothing else.
       #
-      # Replaces BACKUP_REPO_TOKEN, a fine-grained PAT that expires 8 Sep 2026 and would then fail
-      # the push every week until a human rotated it. A deploy key was the first choice — it doesn't
-      # expire either — but the org has `deploy_keys_enabled_for_repositories: false` set
-      # organisation-wide, so that route is closed and GitHub itself points at Apps instead.
+      # This replaced a fine-grained PAT that would have expired on 8 Sep 2026 and then failed the
+      # push every week until a human rotated it — the exact silent-decay problem the rest of this
+      # workflow guards against. A deploy key was the first choice, since those don't expire either,
+      # but the org sets `deploy_keys_enabled_for_repositories: false` organisation-wide.
       #
-      # An App is better than both anyway: the App's private key doesn't expire, while the token it
-      # issues lives about an hour and is scoped to the one repository, so a leaked log is worth far
-      # less than a leaked year-long PAT.
+      # The App is the better answer regardless: its private key doesn't expire, while the token it
+      # issues lives about an hour and reaches one repository, so a token leaked in a log is worth
+      # far less than a leaked year-long PAT.
       #
-      # Skips itself when BACKUP_APP_ID is unset, so the PAT below keeps working until the App
-      # secrets exist. Once a run reports "Auth: GitHub App", delete the PAT and its secret.
+      # Gotcha: "Not Found - get-a-repository-installation-for-the-authenticated-app" here does NOT
+      # mean bad credentials — a wrong app-id or key fails earlier, at JWT signing. It means the
+      # installation doesn't cover website-backups. Check the repository selection at
+      # https://github.com/organizations/souper-troopers/settings/installations/152954958
       - name: Mint a GitHub App token
         id: app-token
-        if: env.BACKUP_APP_ID != ''
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.BACKUP_APP_ID }}
@@ -105,18 +107,10 @@ jobs:
 
       - name: Push backup to private backups repo
         env:
-          GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           DATE=$(date +%Y-%m-%d)
-          if [ -n "$APP_TOKEN" ]; then
-            echo "Auth: GitHub App"
-            TOKEN="$APP_TOKEN"
-          else
-            echo "Auth: PAT (no GitHub App configured)"
-            TOKEN="$GH_TOKEN"
-          fi
-          git clone "https://x-access-token:${TOKEN}@github.com/souper-troopers/website-backups.git" backups-repo
+          git clone "https://x-access-token:${APP_TOKEN}@github.com/souper-troopers/website-backups.git" backups-repo
           mkdir -p backups-repo/sanity
           mv sanity-backup.tar.gz "backups-repo/sanity/production-${DATE}.tar.gz"
           cd backups-repo
@@ -128,8 +122,6 @@ jobs:
 
       - name: Apply retention policy
         working-directory: backups-repo
-        env:
-          GH_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
         run: |
           python3 - <<'PY'
           import os, re, subprocess
@@ -187,7 +179,7 @@ jobs:
 
       # Dead-man's-switch. The failure that actually threatens this backup isn't a crash — it's the
       # job quietly never running at all, which produces no error and therefore no notification.
-      # Causes: BACKUP_REPO_TOKEN expiring (a fine-grained PAT always has an expiry date), or GitHub
+      # Causes: the App losing access to website-backups, or GitHub
       # disabling the schedule after 60 days of repo inactivity. Both look exactly like success.
       #
       # So instead of watching for errors, the monitor watches for the heartbeat: healthchecks.io

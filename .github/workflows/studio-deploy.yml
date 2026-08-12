@@ -53,10 +53,14 @@ jobs:
           echo "Until then the hosted Studio must be updated by hand:"
           echo "  cd studio && npx sanity deploy"
 
-      - uses: actions/checkout@v4
+      # v7 for both (bumped 2026-08-12 from v4, which targeted Node 20 and warned on every run).
+      # Verified by dispatching this workflow on `dev` — see the note in AGENTS.md. setup-node v5
+      # changed how it auto-detects package managers for caching, so the explicit `cache` and
+      # `cache-dependency-path` below are the thing to re-check if caching ever looks wrong.
+      - uses: actions/checkout@v7
         if: env.SANITY_DEPLOY_TOKEN != ''
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: env.SANITY_DEPLOY_TOKEN != ''
         with:
           node-version: "22"

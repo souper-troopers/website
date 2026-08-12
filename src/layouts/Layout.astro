@@ -3,6 +3,7 @@ import { Image, getImage } from "astro:assets";
 import logoReversed from "../assets/images/logo-reversed.png";
 import dignityMoment from "../assets/images/dignity-moment.jpg";
 import { getSiteSettings } from "../lib/sanity";
+import { openingHoursSpecification } from "../lib/opening-hours";
 import CartWidget from "../components/CartWidget.svelte";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
@@ -49,7 +50,15 @@ interface Props {
 	ogType?: string;
 	/** Extra schema.org blocks emitted alongside the site-wide NGO one — e.g. Product and BreadcrumbList on a product page. */
 	jsonLd?: Record<string, unknown>[];
+	/** Keep this page out of search results permanently, independently of the pre-launch blanket below. For internal pages that are real routes but shouldn't be findable — pair it with an exclusion in the sitemap `filter` in `astro.config.mjs`. */
+	noindex?: boolean;
 }
+
+/**
+ * Set to `false` at launch — see "Before real launch" in AGENTS.md. A flag rather than a deleted
+ * line so that flipping it can't also un-hide the pages that pass `noindex` for their own reasons.
+ */
+const PRE_LAUNCH_NOINDEX = true;
 
 const {
 	title,
@@ -58,6 +67,7 @@ const {
 	ogImage: ogImageOverride,
 	ogType = "website",
 	jsonLd = [],
+	noindex = false,
 } = Astro.props;
 
 const navLinks = [
@@ -104,15 +114,47 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = await getImage({ src: dignityMoment, width: 1200, height: 630 });
 const ogImageURL = ogImageOverride ?? new URL(ogImage.src, Astro.site).href;
 
+/**
+ * The site-wide organisation entity. This is how a search engine knows *what* Souper Troopers is,
+ * *where* it operates and that the social accounts are the same organisation — none of which is
+ * inferable from the page copy alone.
+ *
+ * `description` deliberately isn't the brand tagline ("We are all human..."). A tagline is the right
+ * thing on the page and the wrong thing here: this field is read as a factual summary of the
+ * organisation, and the tagline never says what the organisation actually does or where.
+ *
+ * `address` is a structured PostalAddress rather than the flat string, because a string can't be
+ * resolved to a place. Only `streetAddress` comes from Sanity — the rest are constants, since the
+ * locality/region/country are not fields Kerry can edit today. If the organisation ever moves city,
+ * these three need changing here alongside the Sanity value.
+ */
 const structuredData = {
 	"@context": "https://schema.org",
 	"@type": "NGO",
 	name: "Souper Troopers",
 	url: Astro.site?.href,
 	logo: new URL(logoReversed.src, Astro.site).href,
-	description: "We are all human. We all have a story. Together, we are the change.",
+	description:
+		"Souper Troopers is a Cape Town non-profit working with people experiencing homelessness, offering food, dignity, skills training and a route back into work through its CAST programme.",
 	email: settings.email,
-	address: settings.address,
+	address: {
+		"@type": "PostalAddress",
+		// The Sanity value ends "..., Cape Town", which `addressLocality` already asserts. Stripping it
+		// avoids stating the city twice in one address. If the string ever stops ending that way the
+		// match simply fails and the full value is used, which is still valid.
+		streetAddress: settings.address.replace(/,\s*Cape Town\s*$/i, ""),
+		addressLocality: "Cape Town",
+		addressRegion: "Western Cape",
+		addressCountry: "ZA",
+	},
+	areaServed: {
+		"@type": "City",
+		name: "Cape Town",
+	},
+	// Shared with the visible list on the contact page — see `src/lib/opening-hours.ts` for why these
+	// are derived rather than written twice, and for the by-appointment caveat.
+	openingHoursSpecification,
+	sameAs: socialLinks.map((link) => link.href),
 	taxID: settings.npoNumber,
 };
 ---
@@ -152,8 +194,12 @@ const structuredData = {
 				document.documentElement.classList.remove("fonts-pending");
 			});
 		</script>
-		<!-- Pre-launch preview only — remove this once the site goes live on the real domain. -->
-		<meta name="robots" content="noindex, nofollow" />
+		{/* Two independent reasons a page can be unlisted, deliberately emitted as one tag so no page
+		    ever carries two conflicting robots metas. `PRE_LAUNCH_NOINDEX` is the blanket over the
+		    whole preview and comes off at launch; the per-page `noindex` prop must *survive* that,
+		    because the internal pages (request-for-comment, google-listing) should stay out of search
+		    permanently. Deleting the blanket without this would have quietly published both. */}
+		{(PRE_LAUNCH_NOINDEX || noindex) && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="/favicon-512.png" sizes="512x512" />

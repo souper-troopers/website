@@ -1,9 +1,26 @@
 <script lang="ts">
-	let { text, label = "Copy questions for email" } = $props<{
+	let {
+		text,
+		label = "Copy questions for email",
+		hint,
+		copiedHint = "Paste it into an email and answer under each one.",
+	} = $props<{
 		text: string;
 		/** Button text in its resting state. */
 		label?: string;
+		/**
+		 * Line under the button before copying. Defaults to counting the numbered questions in `text`,
+		 * which only makes sense for the request-for-comment list — pass this for any other payload.
+		 */
+		hint?: string;
+		/** Line under the button after a successful copy. */
+		copiedHint?: string;
 	}>();
+
+	const restingHint = $derived(
+		hint ??
+			`Copies all ${text.split("\n").filter((line) => /^\d+\./.test(line)).length} questions as a list you can paste into an email and answer under each one.`
+	);
 
 	let copied = $state(false);
 	let failed = $state(false);
@@ -58,11 +75,11 @@
 	</button>
 	<p class="copy-questions-hint" aria-live="polite">
 		{#if copied}
-			Paste it into an email and answer under each one.
+			{copiedHint}
 		{:else if failed}
-			Couldn't copy automatically - please select the questions above and copy them by hand.
+			Couldn't copy automatically - please select the text above and copy it by hand.
 		{:else}
-			Copies all {text.split("\n").filter((line) => /^\d+\./.test(line)).length} questions as a list you can paste into an email and answer under each one.
+			{restingHint}
 		{/if}
 	</p>
 </div>

@@ -1,0 +1,423 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
+import { displayHours } from "../lib/opening-hours";
+
+/**
+ * Internal page, same family as `request-for-comment.astro` — written for Kerry and Shan, not for
+ * the public. It passes `noindex` and is excluded from the sitemap in `astro.config.mjs`; both are
+ * needed, since the sitemap only controls what's advertised, not what can be indexed.
+ *
+ * Developer-facing source for all of this is `docs/google-business-profile.md`. The address, hours
+ * and description appear in both — the hours are imported rather than retyped, but the rest is not,
+ * so keep them in step.
+ */
+
+const updated = new Date().toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
+
+/**
+ * One source for the listing description: rendered as paragraphs below *and* joined into the string
+ * the copy button puts on the clipboard. Google's limit is 750 characters, counted below from this
+ * array rather than written down, so the figure can't drift if the wording is edited.
+ */
+const description = [
+	"Souper Troopers is a Cape Town non-profit working alongside people experiencing homelessness. We started with soup and conversation on the streets, and grew into the Humanity Hub in Woodstock, where our CAST programme - Connect, Assess, Support, Transform - walks with people from a first conversation through to skills training, identity documents and steady work.",
+	"We accept donations of clothing, toiletries, linen, household goods and non-perishable food, and we welcome volunteers and corporate partners. Our social enterprise, Shmiley, sells Troopers Coffee and handmade African Worry Dolls made by people the programme has supported, with income going back into the work.",
+	"Visits to the Humanity Hub are by appointment.",
+];
+
+const descriptionText = description.join("\n\n");
+const descriptionLimit = 750;
+
+const listingValues = [
+	{ label: "Name", value: "Souper Troopers" },
+	{
+		label: "Address",
+		value: "66 Newmarket Street, Woodstock, Cape Town",
+		note: "Please confirm the postal code - we have 7925 for Woodstock generally, but haven't verified it for this street.",
+	},
+	{
+		label: "Hours",
+		value: displayHours.map((entry) => `${entry.days} ${entry.hours}`).join(", "),
+		note: "Closed Saturday and Sunday.",
+	},
+	{
+		label: "Important setting",
+		value: "Tick “by appointment only”",
+		note: "Without this the hours read as drop-in, and people will simply arrive.",
+	},
+	{ label: "Main category", value: "Non-profit organization" },
+	{
+		label: "Extra categories",
+		value: "Charity, Social services organization, Volunteer organization",
+		note: "Pick from whatever Google offers, and only what's accurate. Anything suggesting a shelter or an overnight facility will bring people to the door expecting a bed.",
+	},
+	{
+		label: "Website",
+		value: "The real soupertroopers.org address",
+		note: "Not the temporary preview link - wait until the new site is live, or use the current site for now.",
+	},
+	{ label: "Phone", value: "We don't have one", note: "See the last section." },
+];
+
+const steps = [
+	{
+		title: "Check before you create",
+		lede: "Search Google Maps for “Souper Troopers”, and again for the Newmarket Street address. One of three things will happen.",
+		points: [
+			"**A listing exists and looks managed.** Someone has the login - most likely a volunteer from years back. Worth tracking down before anything else.",
+			"**A listing exists with a “Claim this business” link.** Google generates these on its own. Claim that one.",
+			"**Nothing comes up.** Create a new one.",
+		],
+		close: "The middle case is the one to watch for, because it looks identical to having no listing at all. If you create a second one alongside it you end up with duplicates, which then have to be merged - slower than claiming would have been.",
+	},
+	{
+		title: "Use an organisation account",
+		lede: "Please set this up on a Souper Troopers Google account rather than a personal Gmail, and add both of you as owners rather than managers.",
+		close: "Whoever holds that login controls how Souper Troopers appears on Google Maps, indefinitely. It's the same reasoning behind the website living in a Souper Troopers GitHub account rather than a volunteer's - recovering a listing from someone who has moved on is genuinely difficult, and two owners means one person leaving is never a crisis.",
+	},
+	{
+		title: "Add photos",
+		lede: "The most-skipped part of a listing, and it visibly changes whether people click. In rough order of usefulness:",
+		points: [
+			"**Your logo**, and one good landscape photo as the cover - the Hub, or the Mandela mural.",
+			"**A photo of the building from the street.** Genuinely useful: it's how somebody with an appointment knows they've found the right door. We don't have one of these.",
+			"**A few more** - inside the Hub, the team, the coffee and the worry dolls.",
+		],
+		close: "This overlaps the photos we've already asked you for. The product photos we inherited from the current site are too small to use here.",
+	},
+	{
+		title: "Verification, and what happens after",
+		lede: "Google has to confirm you're really at that address before the listing goes public. It picks the method - usually a postcard with a code, sometimes a phone call, an email, or a short video showing the premises. A postcard takes roughly five to fourteen days, which is the main reason to start this sooner rather than later.",
+		pointsLede: "Once it's live, three things keep it working:",
+		points: [
+			"**Ask for reviews.** Corporate partners, volunteers, people you've worked with. How many you have and how recent they are feeds directly into whether you appear in that map block - and you have a more willing group of people to ask than most organisations do.",
+			"**Get onto the round-up lists.** Articles like “charities to support in Cape Town” rank for exactly the searches you want. Being included in them is far easier than outranking them.",
+			"**Post occasionally.** The listing has a posts feature, and active listings do better than dormant ones. Souper News is ready-made material for this.",
+		],
+	},
+];
+
+/**
+ * The steps are a genuine sequence, so they're numbered — but "Fill it in" is rendered separately
+ * below (it carries the values table and the description block), and has to keep its place in the
+ * count. Everything before it numbers normally; everything after is offset by one.
+ */
+const fillItInPosition = 3;
+
+/** Bold spans written as **…** in the copy above, since these are data strings rather than markup. */
+function withBold(text: string) {
+	return text.split(/\*\*(.+?)\*\*/g);
+}
+---
+
+<Layout
+	title="Setting up your Google listing"
+	description="A practical walkthrough for claiming and filling in the Souper Troopers Google Business Profile."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry &amp; Shan - {updated}</span>
+			<h1>Setting up your Google listing</h1>
+			<p>Everything needed to claim and fill in a Google Business Profile, with the wording already written. Around ten minutes of actual work, plus a wait while Google verifies you.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="gl-why">
+			<h2>Why this is worth doing</h2>
+			<p>Search <strong>“homeless charities cape town”</strong> and the first thing on the page is a small map with three organisations listed beside it. That block doesn't come from anybody's website. It comes from Google Business Profile - a free listing an organisation claims and fills in itself.</p>
+			<p>This is the one part the new website genuinely cannot do for you. The site can win the ordinary results underneath, and we've done that work. The map block at the top needs this listing, and nothing else.</p>
+		</div>
+	</section>
+
+	<section class="section wrap gl-steps">
+		{steps.map((step, i) => {
+			const number = i < fillItInPosition - 1 ? i + 1 : i + 2;
+			return (
+				<div class="gl-step">
+					<span class="gl-step-number" aria-hidden="true">{number}</span>
+					<div class="gl-step-body">
+						<h2>{step.title}</h2>
+						<p>{step.lede}</p>
+						{step.pointsLede && <p>{step.pointsLede}</p>}
+						{step.points && (
+							<ul class="gl-list">
+								{step.points.map((point) => (
+									<li>{withBold(point).map((part, j) => (j % 2 ? <strong>{part}</strong> : part))}</li>
+								))}
+							</ul>
+						)}
+						{step.close && <p>{step.close}</p>}
+					</div>
+				</div>
+			);
+		})}
+	</section>
+
+	{/* Rendered outside the loop above because it carries the table and the copy block. */}
+	<section class="section wrap gl-steps">
+		<div class="gl-step">
+			<span class="gl-step-number" aria-hidden="true">{fillItInPosition}</span>
+			<div class="gl-step-body">
+				<h2>Fill it in</h2>
+				<p>These match the new website exactly, which matters more than it sounds - Google compares the two, and details that disagree undermine both.</p>
+
+				<dl class="gl-values">
+					{listingValues.map((row) => (
+						<div>
+							<dt>{row.label}</dt>
+							<dd>
+								{row.value}
+								{row.note && <span class="gl-note">{row.note}</span>}
+							</dd>
+						</div>
+					))}
+				</dl>
+
+				<div class="gl-description">
+					<div class="gl-description-head">
+						<h3>The description, ready to paste</h3>
+						<CopyQuestionsButton
+							client:load
+							text={descriptionText}
+							label="Copy the description"
+							hint={`${descriptionText.length} characters, within Google's ${descriptionLimit} limit. Change anything you like - you know the work better than we do.`}
+							copiedHint="Paste it into the description box on your listing."
+						/>
+					</div>
+					<div class="gl-description-text">
+						{description.map((paragraph) => <p>{paragraph}</p>)}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="card gl-needs">
+			<h2>Two things we need from you</h2>
+			<div>
+				<h3>A phone number, or a decision not to have one</h3>
+				<p>We can't find a phone number for Souper Troopers anywhere - not on the current website, not on the new one, not in a search. Google's listing wants one, and it's often the first thing people look for. If there's a number you're happy to make public, send it and we'll add it in both places. If you'd rather stay email-only, that's a perfectly reasonable choice for a small team - just tell us, and we'll stop flagging it as a gap.</p>
+			</div>
+			<div>
+				<h3>The postal code</h3>
+				<p>We have 7925 as Woodstock's code, but haven't confirmed it for 66 Newmarket Street specifically.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="gl-close">
+			<p>The address, hours and description here match what the new site says - if you change one, tell us and we'll change the other. Back to <a href="/request-for-comment">the main update page</a>.</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* Tinted panel rather than a card: this is the argument for doing any of it, and it should read
+	   as a lead-in to the steps rather than as the first item in a set of them. Teal here is an
+	   ambient surface, not an affordance — see AGENTS.md. */
+	.gl-why {
+		border-left: 3px solid var(--st-teal);
+		border-radius: 0 var(--radius) var(--radius) 0;
+		background: rgba(27, 171, 190, 0.08);
+		padding: var(--space-5) var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.gl-why h2 {
+		font-size: 1.15rem;
+	}
+
+	.gl-why p {
+		max-width: 62ch;
+	}
+
+	/* The two step sections sit back to back, so the second must not restart the rhythm with a full
+	   section's padding above it. */
+	.gl-steps {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-10);
+	}
+
+	.gl-steps + .gl-steps {
+		padding-top: 0;
+	}
+
+	.gl-step {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: var(--space-4);
+		align-items: start;
+	}
+
+	.gl-step-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		min-width: 0;
+	}
+
+	.gl-step-body h2 {
+		font-size: 1.25rem;
+	}
+
+	.gl-step-body p {
+		max-width: 62ch;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	/* Same yellow puck the request-for-comment page uses for its question numbers. Deliberately not
+	   a filled teal circle: on this site that combination reads as a button, and these are ordinals
+	   rather than controls (see AGENTS.md). */
+	.gl-step-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		background: rgba(219, 188, 59, 0.22);
+		color: #7a5f0a;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		flex-shrink: 0;
+	}
+
+	.gl-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		max-width: 62ch;
+		padding-left: 1.15rem;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.gl-list strong {
+		color: var(--st-ink);
+	}
+
+	/* Hairline-separated rows, matching the email directory on the contact page — a set of values to
+	   scan and transcribe, not free-standing paragraphs. */
+	.gl-values {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		margin: var(--space-2) 0 0;
+		padding: var(--space-5) var(--space-6);
+		background: var(--st-white);
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: var(--radius);
+	}
+
+	.gl-values > div {
+		display: grid;
+		grid-template-columns: 11rem 1fr;
+		gap: var(--space-1) var(--space-4);
+		padding-bottom: var(--space-3);
+		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.gl-values > div:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.gl-values dt {
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: rgba(36, 35, 43, 0.55);
+		padding-top: 0.2rem;
+	}
+
+	.gl-values dd {
+		margin: 0;
+		font-weight: 600;
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.gl-note {
+		display: block;
+		margin-top: 0.15rem;
+		font-weight: 400;
+		font-size: 0.88rem;
+		color: rgba(36, 35, 43, 0.6);
+	}
+
+	@media (max-width: 640px) {
+		.gl-values > div {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.gl-description {
+		margin-top: var(--space-2);
+		background: var(--st-white);
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: var(--radius);
+		padding: var(--space-5) var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.gl-description-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+
+	.gl-description-head h3 {
+		font-size: 1rem;
+	}
+
+	.gl-description-text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		max-width: 62ch;
+	}
+
+	.gl-needs {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		align-items: flex-start;
+	}
+
+	.gl-needs h2 {
+		font-size: 1.15rem;
+	}
+
+	.gl-needs h3 {
+		font-size: 1rem;
+		margin-bottom: 0.2rem;
+	}
+
+	.gl-needs p {
+		max-width: 62ch;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.gl-close {
+		padding-top: var(--space-6);
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+	}
+
+	.gl-close p {
+		max-width: 62ch;
+		font-size: 0.94rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+</style>

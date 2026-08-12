@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
+import { displayHours } from "../lib/opening-hours";
 
 const emailDirectory = [
 	{ label: "Donations & drop-offs", address: "manager@soupertroopers.org" },
@@ -11,18 +12,13 @@ const emailDirectory = [
 	{ label: "Anything else", address: "info@soupertroopers.org" },
 ];
 
-const openingHours = [
-	{ days: "Mon–Thu", hours: "8:30am–4pm" },
-	{ days: "Fri", hours: "8:30am–3pm" },
-];
-
 const shopBrands = [
 	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
 	{ handle: "@africanworrydolls", href: "https://instagram.com/africanworrydolls" },
 ];
 ---
 
-<Layout title="Contact" description="Get in touch with Souper Troopers.">
+<Layout title="Contact us - Woodstock, Cape Town" description="Get in touch with Souper Troopers - our address in Woodstock, Cape Town, our email, and a contact form that reaches the team directly.">
 	<section class="page-hero">
 		<div class="wrap">
 			<h1>Contact Us</h1>
@@ -37,7 +33,7 @@ const shopBrands = [
 					<h3>Visit us</h3>
 					<p><AddressLink client:visible lines={["66 Newmarket Street, Woodstock, Cape Town"]} /></p>
 					<dl class="visit-hours">
-						{openingHours.map((entry) => (
+						{displayHours.map((entry) => (
 							<div>
 								<dt>{entry.days}</dt>
 								<dd>{entry.hours}</dd>

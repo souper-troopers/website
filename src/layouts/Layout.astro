@@ -52,6 +52,8 @@ interface Props {
 	jsonLd?: Record<string, unknown>[];
 	/** Keep this page out of search results permanently, independently of the pre-launch blanket below. For internal pages that are real routes but shouldn't be findable — pair it with an exclusion in the sitemap `filter` in `astro.config.mjs`. */
 	noindex?: boolean;
+	/** Use `title` exactly as given, instead of appending " - Souper Troopers". Only the homepage should need this: "Brand - descriptor" is the convention for a site's front door, and the automatic suffix can only ever produce "descriptor - Brand". Every other page reads correctly with the brand last. */
+	rawTitle?: boolean;
 }
 
 /**
@@ -68,6 +70,7 @@ const {
 	ogType = "website",
 	jsonLd = [],
 	noindex = false,
+	rawTitle = false,
 } = Astro.props;
 
 const navLinks = [
@@ -109,7 +112,10 @@ const socialLinks = [
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const settings = await getSiteSettings();
-const fullTitle = `${title} - Souper Troopers`;
+// Keep a page's own title free of " - ": the suffix already supplies one separator, and a title
+// carrying its own produced three segments with no hierarchy ("Donate - support our work in Cape
+// Town - Souper Troopers"). Commas are fine.
+const fullTitle = rawTitle ? title : `${title} - Souper Troopers`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = await getImage({ src: dignityMoment, width: 1200, height: 630 });
 const ogImageURL = ogImageOverride ?? new URL(ogImage.src, Astro.site).href;

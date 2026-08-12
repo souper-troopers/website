@@ -61,7 +61,9 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: studio/package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            studio/package-lock.json
 
       # studio/ is its own package with its own lockfile — the root install does not cover it.
       # This is the same separation that broke the site build when `astro check` tried to
@@ -69,6 +71,25 @@ jobs:
       - name: Install Studio dependencies
         if: env.SANITY_DEPLOY_TOKEN != ''
         working-directory: studio
+        run: npm ci
+
+      # …and the exact mirror of that failure, found 2026-08-12 on this workflow's first real run.
+      #
+      # `sanity build` uses Vite, whose rolldown resolver scans up out of studio/ and reads the
+      # repo-root tsconfig.json. That file starts `"extends": "astro/tsconfigs/strict"`, so the
+      # build dies with `Tsconfig not found astro/tsconfigs/strict` unless the ROOT dependencies
+      # are installed too — astro lives there, not in studio/node_modules.
+      #
+      # It cannot fail locally, by construction: a dev machine always has both installed. Reproduce
+      # by moving node_modules/astro aside and running `npx sanity build` from studio/.
+      #
+      # Nothing here builds the site; this install exists purely so that one `extends` resolves.
+      # Tried and rejected: dropping `exclude: ["node_modules"]` from studio/tsconfig.json (the
+      # resolver finds the root config regardless of include/exclude). The alternative to this
+      # step is hiding the root tsconfig for the duration of the build, which works but reads as
+      # sabotage to anyone reviewing it later.
+      - name: Install root dependencies (only so the root tsconfig resolves)
+        if: env.SANITY_DEPLOY_TOKEN != ''
         run: npm ci
 
       # `sanity deploy` builds before it uploads, so a schema that fails to compile fails here

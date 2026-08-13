@@ -55,6 +55,15 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
+		/* WCAG 2.2 target-size (2.5.8) wants >=24x24 CSS px and axe measures this element's own
+		   border box, so the box has to grow -- a ::after hit-area overlay would improve the real
+		   tap target but still fail the audit, since a pseudo-element doesn't enlarge its parent's
+		   rect. The icon stays 14px; only the box around it grows. Height is free: the line box
+		   these sit in already measures 24px. Deliberately no negative margin to claw the ~10px of
+		   width back -- that would overlap the adjacent mailto link's rect, trading a size failure
+		   for mis-taps on the wrong control, which is the thing the criterion exists to prevent. */
+		min-width: 24px;
+		min-height: 24px;
 		padding: 0;
 		margin: 0;
 		border: none;

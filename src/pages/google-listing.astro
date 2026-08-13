@@ -197,7 +197,8 @@ function withBold(text: string) {
 
 	<section class="section wrap">
 		<div class="card gl-needs">
-			<h2>Two things we need from you</h2>
+			<h2>Two things we couldn't fill in for you</h2>
+			<p class="gl-needs-lede">Both are asked on the main update page as well - they're repeated here because this is where you'll meet the empty boxes.</p>
 			<div>
 				<h3>A phone number, or a decision not to have one</h3>
 				<p>We can't find a phone number for Souper Troopers anywhere - not on the current website, not on the new one, not in a search. Google's listing wants one, and it's often the first thing people look for. If there's a number you're happy to make public, send it and we'll add it in both places. If you'd rather stay email-only, that's a perfectly reasonable choice for a small team - just tell us, and we'll stop flagging it as a gap.</p>
@@ -398,6 +399,13 @@ function withBold(text: string) {
 
 	.gl-needs h2 {
 		font-size: 1.15rem;
+	}
+
+	/* Belongs to the heading above it, not to the two items below. `.gl-needs` is a flex column
+	   with a uniform gap, so without this the lede sits exactly as far from the heading as the
+	   items do and reads as a third one — the same flattening the mobile rhythm had (see AGENTS.md). */
+	.gl-needs-lede {
+		margin-top: calc(var(--space-3) - var(--space-5));
 	}
 
 	.gl-needs h3 {

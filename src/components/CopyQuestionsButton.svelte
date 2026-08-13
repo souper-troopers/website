@@ -112,6 +112,6 @@
 	.copy-questions-hint {
 		font-size: 0.8rem;
 		line-height: 1.5;
-		color: rgba(36, 35, 43, 0.5);
+		color: rgba(36, 35, 43, 0.65);
 	}
 </style>

@@ -229,12 +229,16 @@
 		gap: 0.6rem;
 	}
 
+	/* The one ink alpha deliberately left below 0.65 (the AA floor for muted text on every
+	   background this site uses — see "Colour is an affordance" in AGENTS.md). This is a purely
+	   decorative empty-state glyph, not text, and .cart-empty-text right below states the same
+	   thing in words, so it carries no information of its own. Don't "fix" it to 0.65. */
 	.cart-empty-icon {
 		color: rgba(36, 35, 43, 0.18);
 	}
 
 	.cart-empty-text {
-		color: rgba(36, 35, 43, 0.6);
+		color: rgba(36, 35, 43, 0.65);
 	}
 
 	/* Underlined at rest rather than on hover only — colour was its sole affordance. */
@@ -273,7 +277,7 @@
 
 	.cart-line-price {
 		font-size: 0.8rem;
-		color: rgba(36, 35, 43, 0.6);
+		color: rgba(36, 35, 43, 0.65);
 	}
 
 	.cart-line-controls {
@@ -333,6 +337,6 @@
 
 	.cart-note {
 		font-size: 0.78rem;
-		color: rgba(36, 35, 43, 0.55);
+		color: rgba(36, 35, 43, 0.65);
 	}
 </style>

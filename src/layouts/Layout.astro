@@ -1,7 +1,7 @@
 ---
 import { Image, getImage } from "astro:assets";
 import logoReversed from "../assets/images/logo-reversed.png";
-import dignityMoment from "../assets/images/dignity-moment.jpg";
+import mandelaMural from "../assets/images/mandela-mural.png";
 import { getSiteSettings } from "../lib/sanity";
 import { openingHoursSpecification } from "../lib/opening-hours";
 import CartWidget from "../components/CartWidget.svelte";
@@ -117,7 +117,19 @@ const settings = await getSiteSettings();
 // Town - Souper Troopers"). Commas are fine.
 const fullTitle = rawTitle ? title : `${title} - Souper Troopers`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImage = await getImage({ src: dignityMoment, width: 1200, height: 630 });
+// The default share-card image, used by every page that doesn't pass its own `ogImage`. Three
+// things here are deliberate (all set 2026-08-13):
+//   - The homepage hero, not a portrait photo. Share cards are landscape, so a 2:3 source
+//     (dignity-moment.jpg, what this was until now) gets centre-cropped to a narrow band — in a real
+//     WhatsApp preview that landed below the subject's eyes, showing a scarf and no face.
+//   - 1260x630, not 1200x630. The mural is natively 2:1, and 1200x630 (1.91:1) crops ~2.4% off each
+//     side, which is just enough to clip the Souper Troopers badge painted at the right-hand edge.
+//     1260x630 keeps the whole frame while still clearing Facebook's "at least 1200x630" floor in
+//     both dimensions; the platforms crop to their own shape at display time regardless.
+//   - `format: "jpeg"`, because Astro's default output is webp. WhatsApp renders webp fine (the old
+//     card did), but LinkedIn and X are unreliable with it, and a share card is the wrong place to
+//     depend on the scraper being modern.
+const ogImage = await getImage({ src: mandelaMural, width: 1260, height: 630, format: "jpeg" });
 const ogImageURL = ogImageOverride ?? new URL(ogImage.src, Astro.site).href;
 
 /**

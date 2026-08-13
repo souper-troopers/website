@@ -184,8 +184,9 @@ Also noted and left alone as out of scope: `.btn-secondary` is white-on-green at
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.
-- `wireframes/` — early static HTML wireframes (reference only; superseded by the real Astro build as pages land).
+- `scripts/` — dev-environment guards run by `npm run dev` (see "Development" above).
 - `src/` — the actual Astro/Svelte site.
+- ~~`wireframes/`~~ — early static HTML mockups, **deleted 2026-08-13**. They were untouched since the initial commit, superseded by every page they covered, and still carried the pre-brand green palette, so opening one would have misled rather than informed. Recoverable from commit `7d20495` if ever wanted.
 - Media assets (photos, videos, logos, brand PDFs, product one-pagers) live in a sibling directory, `../souper-troopers-media/`, not in this repo.
 
 ## Development

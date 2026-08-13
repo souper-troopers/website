@@ -66,7 +66,7 @@ src/
 studio/          Sanity Studio — schema definitions (its own package)
 netlify/         serverless functions (PayFast payment + ITN webhook)
 docs/            planning notes and decision write-ups
-wireframes/      early static mockups, superseded by the real build
+scripts/         dev-environment guards (see Development in AGENTS.md)
 ```
 
 Media (photos, video, brand assets) lives in a sibling `../souper-troopers-media/` directory,

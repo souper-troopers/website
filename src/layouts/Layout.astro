@@ -1951,18 +1951,34 @@ const structuredData = {
 			   .stories-grid/.story-card desktop rules, which were overriding it despite that media
 			   query never applying past 700px). */
 			@media (max-width: 700px) {
-				/* Vertical rhythm matches the x-axis dimension (.wrap's side padding, set at the base
-				   rule above) throughout this block — one consistent value instead of a different one
-				   per component. Excluded on purpose: .hero-photo (deliberately asymmetric, see below)
-				   and box paddings that were already uniform on all four sides (.card, .path-tile,
+				/* Vertical rhythm is regularized here: the same value for the same *kind* of boundary,
+				   rather than a different one per component. What it is NOT is a single value for
+				   every boundary — that was tried and it removed the only cue mobile has for where a
+				   section ends, since a nested layout is read entirely from the size of the gaps
+				   between things. Three tiers, and the tier is chosen by how deep the boundary is:
+
+				     --space-5  (20px)  siblings inside one group   .grid, .impact-stats, .path-grid
+				     --space-6  (24px)  a group and its own heading  .section, .*-band .wrap
+				     --space-12 (48px)  one whole section to the next  main
+
+				   The ratio is what does the work, not the absolute numbers: a section break has to
+				   read as clearly bigger than a card break at a glance, without either side of it
+				   being on screen at the same time. 48/20 here is close to desktop's 64/24, so both
+				   widths read the same way; it was 20/20 when every tier shared a value, which is
+				   why an <h2> starting a new section looked like the next item in the list above it.
+				   20px still sets the x-axis (.wrap's side padding, at the base rule above), so the
+				   innermost tier stays square with the horizontal margin.
+
+				   Excluded on purpose: .hero-photo (deliberately asymmetric, see below) and box
+				   paddings that were already uniform on all four sides (.card, .path-tile,
 				   .story-card) — those never had a top/bottom-vs-side mismatch to begin with. */
 				main {
-					gap: var(--space-5);
-					padding-bottom: var(--space-5);
+					gap: var(--space-12);
+					padding-bottom: var(--space-12);
 				}
 
 				.section {
-					gap: var(--space-5);
+					gap: var(--space-6);
 				}
 
 				.grid {
@@ -1991,7 +2007,7 @@ const structuredData = {
 				}
 
 				.page-hero {
-					padding: var(--space-5) 0;
+					padding: var(--space-8) 0;
 				}
 
 				.path-grid {
@@ -2003,18 +2019,25 @@ const structuredData = {
 					padding: var(--space-6);
 				}
 
+				/* A band's own padding is what separates its content from the section boundary, so it
+				   belongs to the outer tier — not the --space-5 it shared with everything else, which
+				   left the heading almost touching the colour change that announces it. It can sit a
+				   tier below main's gap (--space-8, not --space-12) because a band changes background
+				   as well, and that edge marks the boundary on its own; the padding here only has to
+				   stop the content crowding it. */
 				.impact-band,
 				.dark-band,
 				.stories-band {
-					padding: var(--space-5) 0;
+					padding: var(--space-8) 0;
 				}
 
+				/* Middle tier: these are a band's heading-to-content gap, the .section equivalent. */
 				.impact-band .wrap {
-					gap: var(--space-5);
+					gap: var(--space-6);
 				}
 
 				.dark-band .wrap {
-					gap: var(--space-5);
+					gap: var(--space-6);
 				}
 
 				.impact-stats {
@@ -2023,7 +2046,7 @@ const structuredData = {
 
 				.stories-grid {
 					gap: var(--space-5);
-					margin-top: var(--space-5);
+					margin-top: var(--space-6);
 				}
 
 				.story-card {

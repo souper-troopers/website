@@ -6,7 +6,9 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "concurrently -n astro,sanity,functions -c blue,magenta,green \"astro dev\" \"npm --prefix studio run dev\" \"netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open\"",
+    "predev": "node scripts/free-dev-ports.mjs",
+    "dev": "concurrently -n astro,sanity,functions,check -c blue,magenta,green,yellow \"astro dev\" \"npm --prefix studio run dev\" \"netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open\" \"node scripts/check-dev-assets.mjs\"",
+    "dev:check": "node scripts/check-dev-assets.mjs",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -20,6 +22,7 @@
     "@sanity/image-url": "^2.1.1",
     "astro": "^7.2.0",
     "astro-portabletext": "^0.13.0",
+    "sharp": "^0.35.3",
     "svelte": "^5.56.8"
   },
   "devDependencies": {

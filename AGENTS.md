@@ -182,6 +182,17 @@ Established by an audit of every page and component on 2026-08-11, after the pal
 
 Also noted and left alone as out of scope: `.btn-secondary` is white-on-green at **2.42:1** and `.btn-primary` white-on-teal at **2.76:1**. Both fail AA for their 16px bold labels. Fixing either means changing a brand colour or the button system.
 
+## Link prefetching — `prefetch: true` on its own prefetches nothing (fixed 2026-08-13)
+Reported as "other pages still load lazily when I tap through from home on my phone", against a config that already said `prefetch: true` and a commit titled "Enable hover prefetch". **It had never prefetched a single link, on any device** — the flag only ships the prefetch *runtime*; it opts no links in. In Astro's `elMatchesStrategy` (`node_modules/astro/dist/prefetch/index.js`) a link matches only if it carries `data-astro-prefetch` **or** `prefetchAll` is on, and `prefetchAll` defaults to `false`. There were no such attributes anywhere in `src/`, so every link failed every strategy. Confirmed in the built bundle: the injected constants were `undefined`, falling through to `prefetchAll = false` / `defaultStrategy = "hover"`.
+
+**The tell that this is the failure mode, not a slow network: nothing changes on desktop either.** Verify at the bundle, never at the config line — `grep -o "prefetchAll??[^,]*" dist/_astro/page.*.js` shows only the unchanged *fallback* expression and looks identical either way; the real values are the bare initialisers near the top of that module (``r=!0,i=`viewport` `` when set, `undefined` when not).
+
+Now `prefetch: { prefetchAll: true, defaultStrategy: 'viewport' }`. Two things worth not undoing:
+- **`viewport`, not the `hover` default.** `hover` is pointer-only; on a touch device it can at best fire on the tap that is already navigating, which is why this was noticed on a phone.
+- **The six nav links in `Layout.astro` additionally carry `data-astro-prefetch="load"`, and need it.** Under 760px the nav is `translateY(-100%)` behind the hamburger, so an IntersectionObserver never sees it — measured at 390px it sits at `top: -379px`, `visibility: hidden`. `viewport` alone would therefore have skipped the primary nav on exactly the device the complaint came from. `load` ignores position and fetches at idle. Affordable because it is the *fixed* nav: ~10KB gzipped × 5–6 docs, less than one hero photo, and the same six on every page so they are cache hits after the first.
+
+Astro skips prefetch entirely when the browser reports Save-Data or a 2g connection, so this stays polite on poor connections; Netlify bandwidth (20 credits/GB) stays noise at this traffic. **This is still a static MPA with no `ClientRouter`** — prefetch removes the blocking HTML round-trip, it does not make navigation SPA-instant. View transitions are the next lever and are a per-page behavioural change, so they need the user's sign-off, not a quiet add.
+
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.
 - `scripts/` — dev-environment guards run by `npm run dev` (see "Development" above).

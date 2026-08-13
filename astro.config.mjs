@@ -11,7 +11,14 @@ export default defineConfig({
   // Netlify preview URL — update again for the real domain before launch (see
   // "Before real launch" in AGENTS.md). Used to build absolute canonical/Open Graph URLs.
   site: 'https://souper-troopers.netlify.app',
-  prefetch: true,
+  // `prefetch: true` on its own prefetches NOTHING — it only loads the runtime. `prefetchAll`
+  // defaults to false, so with no `data-astro-prefetch` attribute anywhere, every link failed
+  // `elMatchesStrategy` and no strategy ever matched (verified in the built bundle, 2026-08-13).
+  // `prefetchAll` opts every same-origin link in; `viewport` rather than the `hover` default
+  // because hover is a pointer-only event and this was reported on a phone, where it can only
+  // fire on the tap that is already navigating. Astro skips prefetch when the browser reports
+  // Save-Data or a 2g connection, so this stays polite on poor mobile connections.
+  prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
   integrations: [
     svelte(),
     sitemap({

@@ -241,9 +241,16 @@ const structuredData = {
 					<Image src={logoReversed} alt="Souper Troopers" width={44} height={44} densities={[1, 2, 3]} />
 					<span>Souper Troopers</span>
 				</a>
+				{/* data-astro-prefetch="load" overrides the site-wide `viewport` default (astro.config.mjs)
+				    for these six links only. Under 760px this nav is translate-Y'd fully above the
+				    viewport until the hamburger opens it, so an IntersectionObserver never sees it and
+				    `viewport` would not fire until the menu is already open — on the exact device where
+				    the delay was noticed. `load` prefetches at idle regardless of position. Affordable
+				    precisely because it is the fixed nav: six documents at ~10KB gzipped each, less than
+				    one hero photo, and the same six on every page so they are cache hits after the first. */}
 				<nav aria-label="Primary" id="primary-nav">
 					{navLinks.map((link) => (
-						<a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+						<a href={link.href} data-astro-prefetch="load" aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
 					))}
 				</nav>
 				<CartWidget client:load />

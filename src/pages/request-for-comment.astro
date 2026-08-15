@@ -365,13 +365,24 @@ const sections = [
 									</span>
 								</div>
 								{/* The question stays visible; everything else about it — why we asked, what came
-								    back, what we did — is now timeline entries inside the thread below. */}
-								<p class="fk-ask-question">{ask.ask}</p>
-								{ask.link && (
-									<p class="fk-ask-link">
-										<a href={ask.link.href}>{ask.link.label} &rarr;</a>
-									</p>
-								)}
+								    back, what we did — is now timeline entries inside the thread below.
+
+								    The "read the write-up" link sits *inside* the callout. It used to sit under
+								    it, on the reasoning that a link inside the tinted box would read as part of
+								    the question's wording — sound when the only thing below was whitespace, and
+								    wrong once the comment thread arrived. That summary is also teal, also
+								    underlined, also about the same size, and the two stacked were near enough
+								    identical to be mistaken for each other. Inside the box the link is clearly
+								    part of the question; outside it, the only teal control left is the one that
+								    expands the thread. A div rather than a p, since a p can't contain one. */}
+								<div class="fk-ask-question">
+									<p>{ask.ask}</p>
+									{ask.link && (
+										<p class="fk-ask-link">
+											<a href={ask.link.href}>{ask.link.label} &rarr;</a>
+										</p>
+									)}
+								</div>
 								<Comments
 									client:visible
 									id={`q${i + 1}`}
@@ -940,31 +951,48 @@ const sections = [
 		max-width: 62ch;
 	}
 
-	/* The context above each of these is necessary but long, so the thing actually being asked gets
-	   pulled out as a tinted callout. It's differentiated from the <h3> title by *surface* — a wash
-	   and a rule — rather than by colour or weight alone: bold ink on plain background read as a
-	   second heading, and teal text is reserved for things you can act on (see AGENTS.md). Weight
-	   600 against the title's 700 completes the separation, so the three levels read as heading /
-	   prose / question.
-	   Selector is `p.fk-ask-question` rather than the bare class so it outweighs `.fk-ask p` above,
-	   which mutes the body copy to 65% ink. */
-	.fk-ask p.fk-ask-question {
+	/* The thing actually being asked, pulled out as a tinted callout. It's differentiated from the
+	   <h3> title by *surface* — a wash and a rule — rather than by colour or weight alone: bold ink
+	   on plain background read as a second heading, and teal text is reserved for things you can act
+	   on (see AGENTS.md). Weight 600 against the title's 700 completes the separation. */
+	.fk-ask-question {
 		margin-top: 0.6rem;
 		padding: 0.6rem 0.85rem;
 		border-left: 3px solid var(--st-teal, #1babbe);
 		border-radius: 0 8px 8px 0;
 		background: rgba(27, 171, 190, 0.08);
+		/* The paragraphs inside are capped at 62ch by `.fk-ask p`. Without the same limit here the
+		   tint runs the full column width while the text stops two-thirds across — this was a `p`
+		   until the link moved inside it, and inherited the cap for free. Plus its own padding.
+
+		   `font-size` is set here rather than only on the inner `p` because **`ch` is font-relative**:
+		   62ch measured at the box's inherited 1rem is wider than 62ch measured at the paragraph's
+		   0.94rem, so the box would sit a little wider than its own text and the rule below it would
+		   visibly stop short of the edge. Matching the font-size makes the two agree. */
+		font-size: 0.94rem;
+		max-width: calc(62ch + 1.7rem);
+	}
+
+	/* Selector carries `.fk-ask` so it outweighs `.fk-ask p`, which mutes body copy to 65% ink. */
+	.fk-ask .fk-ask-question > p {
 		font-weight: 600;
 		color: var(--st-ink, #24232b);
 	}
 
-	/* Sits under the highlighted question rather than inside it: the callout is the thing being asked,
-	   and a link inside a tinted box reads as part of the question's wording. Inherits the global
-	   underline — see the note on body links in AGENTS.md. */
-	.fk-ask-link {
-		margin-top: 0.45rem;
-		font-size: 0.9rem;
+	/* Inside the callout, under the question it belongs to. A hairline separates it from the question
+	   itself so it doesn't read as another sentence of it — the concern that originally kept this
+	   link outside the box, now solved without putting it next to the thread's expand control, which
+	   it was indistinguishable from. Inherits the global underline (see AGENTS.md). */
+	.fk-ask .fk-ask-question > .fk-ask-link {
+		margin-top: 0.5rem;
+		padding-top: 0.5rem;
+		border-top: 1px solid rgba(27, 171, 190, 0.25);
+		font-size: 0.88rem;
 		font-weight: 600;
+		color: var(--st-ink, #24232b);
+		/* The callout already caps the width, and this line's own 62ch is narrower again at a smaller
+		   font size — which would leave the rule floating short of the box's edge. */
+		max-width: none;
 	}
 
 

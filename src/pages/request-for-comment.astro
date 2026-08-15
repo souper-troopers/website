@@ -355,10 +355,13 @@ const sections = [
 									    answered would close a question the page is still asking, and calling it
 									    awaiting would look like the reply had been ignored. */}
 									<span class:list={["fk-ask-status", { "is-answered": isSettled(ask), "is-replied": ask.answer && !isSettled(ask) }]}>
-										{/* The label has to carry both halves. "Shan replied" alone reads as finished —
-										    a reply is the very thing these questions are waiting for — so only the
-										    amber said otherwise, which is no help to anyone reading it as words. */}
-										{isSettled(ask) ? "Answered" : ask.answer ? `${ask.answer.from} replied - still open` : "Awaiting your answer"}
+										{/* Three things this wording has to get right. The label must carry *both*
+										    halves of the middle state — "Shan replied" alone reads as finished, since a
+										    reply is the very thing these are waiting for. It must not say "your answer":
+										    five people read this page and some items are waiting on us, so naming an
+										    owner the page can't actually know is worse than naming none. And the open
+										    and closed states should be the same word — hence resolution / resolved. */}
+										{isSettled(ask) ? "Resolved" : ask.answer ? `${ask.answer.from} replied - still open` : "Awaiting resolution"}
 									</span>
 								</div>
 								{/* The question stays visible; everything else about it — why we asked, what came
@@ -483,7 +486,7 @@ const sections = [
 		<div class="fk-close">
 			<h2>Replying to all this</h2>
 			<p>Answer them here rather than by email - every item has a comment box under it, so your answer sits next to the question it answers and the five of us can all see it. Pick your name once and it remembers you. There's no need to do them in order or in one go; a thread stays where it is until someone picks it up.</p>
-			<p>We're emailed whenever anyone comments, so nothing posted here waits on us noticing it. If you'd sooner talk something through than write it down, that works just as well - and anything discussed that way we'll write into the thread afterwards, so this page stays the full record rather than half of one.</p>
+			<p>We're emailed whenever anyone comments, so nothing posted here sits unnoticed. If you'd sooner talk something through than write it down, that works just as well - and anything discussed that way we'll write into the thread afterwards, so this page stays the full record rather than half of one.</p>
 		</div>
 	</section>
 </Layout>

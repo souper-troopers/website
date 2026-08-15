@@ -147,8 +147,19 @@ export default async (request: Request, context: Context) => {
 	}
 
 	const item = (payload.item || "").trim();
-	const author = (payload.author || "").trim();
 	const body = (payload.body || "").trim();
+
+	/**
+	 * Identity comes from the edge function when it can, and from the client's picker when it can't.
+	 *
+	 * `status-auth.ts` sets `x-status-user` on every request and overwrites whatever arrived, so
+	 * under per-person logins (`STATUS_USERS`) it is a fact rather than a claim and outranks the
+	 * dropdown. Under the shared login it is always "Souper", which identifies nobody — so that
+	 * value is ignored and the self-declared name stands. Configuring `STATUS_USERS` therefore
+	 * upgrades attribution from claimed to authenticated with no change here.
+	 */
+	const signedIn = (request.headers.get("x-status-user") || "").trim();
+	const author = (KNOWN_PEOPLE.has(signedIn) ? signedIn : (payload.author || "").trim());
 
 	if (!item || !author || !body) {
 		return json({ error: "item, author and body are all required." }, 400, origin);

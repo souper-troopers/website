@@ -257,8 +257,11 @@
 		white-space: pre-wrap;
 	}
 
+	/* Set off from the conversation above it rather than sitting tight against the last comment —
+	   it's a control, not another entry, and at the flex gap alone it read as one. */
 	.cm-open {
 		align-self: flex-start;
+		margin-top: 1rem;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
@@ -290,7 +293,9 @@
 		color: rgba(36, 35, 43, 0.65);
 	}
 
+	/* Same offset as the button it replaces, so opening the box doesn't shift everything up. */
 	.cm-form {
+		margin-top: 1rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.4rem;

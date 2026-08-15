@@ -240,7 +240,11 @@ export async function getSupporters(): Promise<Supporter[]> {
 }
 
 export async function getPressMentions(): Promise<PressMention[]> {
+	// `date` is optional in the schema, and a plain `order(date desc)` sorts nulls *first* — so an
+	// undated mention outranks every dated one, which is the exact opposite of "newest first". The
+	// two mentions migrated before the field existed have no date, and were pushing genuinely recent
+	// coverage down the page. Sorting on `defined(date)` first drops the undated ones to the end.
 	return sanityClient.fetch(
-		`*[_type == "pressMention"] | order(date desc) { publication, headline, url, date }`
+		`*[_type == "pressMention"] | order(defined(date) desc, date desc) { publication, headline, url, date }`
 	);
 }

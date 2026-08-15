@@ -81,6 +81,21 @@ const {
 	rawTitle = false,
 } = Astro.props;
 
+/**
+ * A shortcut to the internal update page, which is otherwise reachable only from a link someone
+ * pasted into an email — and it now has two sub-pages of its own, which made it easy to get lost in.
+ *
+ * ⚠ Tied to `PRE_LAUNCH_NOINDEX` deliberately, not a separate flag. `/request-for-comment` is a
+ * `noindex` page written for Kerry and Shan; the moment this site serves the real domain, a link to
+ * it in the public nav would put an internal working document one click from every visitor. Sharing
+ * the launch flag means it cannot survive launch by being forgotten — flipping that one constant
+ * removes the link and the blanket noindex together.
+ *
+ * Styled apart from the real nav (see `.nav-internal`) for the same reason: it should never read as
+ * part of the site's own structure.
+ */
+const internalLink = PRE_LAUNCH_NOINDEX ? { href: "/request-for-comment", label: "Update" } : null;
+
 const navLinks = [
 	{ href: "/", label: "Home" },
 	{ href: "/about", label: "Who We Are" },
@@ -273,6 +288,16 @@ const structuredData = {
 				    precisely because it is the fixed nav: six documents at ~10KB gzipped each, less than
 				    one hero photo, and the same six on every page so they are cache hits after the first. */}
 				<nav aria-label="Primary" id="primary-nav">
+					{/* Sits before Home and is separated by a rule, so it reads as "not part of this
+					    menu" rather than as the first item of it. Only rendered before launch. */}
+					{internalLink && (
+						<a
+							class="nav-internal"
+							href={internalLink.href}
+							data-astro-prefetch="load"
+							aria-current={currentPath === internalLink.href ? "page" : undefined}
+						>{internalLink.label}</a>
+					)}
 					{navLinks.map((link) => (
 						<a href={link.href} data-astro-prefetch="load" aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
 					))}
@@ -498,6 +523,38 @@ const structuredData = {
 				border-bottom-color: var(--st-teal);
 			}
 
+			/* The internal update page, before launch only. Deliberately not styled like the six real
+			   nav items: it is scaffolding for Kerry and Shan, not part of the site, and it should
+			   read that way at a glance rather than being discovered by clicking.
+
+			   Amber rather than teal is the whole point — teal is this site's "you can act on this"
+			   colour and the current-page marker, so borrowing it would file this alongside the real
+			   pages. Amber is already the page family's "temporary, in progress" colour (the Test-mode
+			   chip, the question numbers, the "still open" badge). #f0cf5a rather than the raw brand
+			   #dbbc3b: on the ink header that lifts contrast from 6.9:1 to 9.4:1. */
+			/* The divider is a border on the link itself rather than an element between two flex
+			   children, so it travels with the item and disappears with it at launch. Its own
+			   padding-right plus the nav's 1.25rem gap put equal space either side of the rule. */
+			.nav-internal {
+				color: #f0cf5a !important;
+				padding-right: 1rem;
+				border-right: 1px solid rgba(255, 255, 255, 0.25);
+				/* Smaller than the real items, which reinforces "not part of this menu" and, more
+				   practically, keeps it affordable: `.wrap` caps the header at 1100px and the six real
+				   links plus the brand, cart and Donate already use most of it. At the full 0.95rem
+				   with a two-word label this pushed Donate onto a second row at 1280px. A temporary
+				   link must not cost the permanent header its layout. */
+				font-size: 0.85rem;
+			}
+
+			.nav-internal:hover {
+				color: #f7e08a !important;
+			}
+
+			.nav-internal[aria-current="page"] {
+				border-bottom-color: #f0cf5a !important;
+			}
+
 			.nav-toggle {
 				display: none;
 				flex-direction: column;
@@ -648,6 +705,17 @@ const structuredData = {
 
 				nav[aria-label="Primary"] a[aria-current="page"] {
 					border-bottom-color: var(--st-teal);
+				}
+
+				/* Stacked menu: a vertical rule between two items in a column separates nothing, so the
+				   divider becomes a stronger version of the bottom hairline the items already carry,
+				   plus a little space below it. */
+				.nav-internal {
+					padding-right: 0;
+					border-right: 0;
+					margin-bottom: var(--space-2);
+					padding-bottom: var(--space-3);
+					border-bottom-color: rgba(255, 255, 255, 0.28) !important;
 				}
 			}
 

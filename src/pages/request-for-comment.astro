@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
 import MarkDone from "../components/MarkDone.svelte";
+import Comments from "../components/Comments.svelte";
 import Masonry from "../components/Masonry.astro";
 import FeatureIcon from "../components/FeatureIcon.astro";
 
@@ -238,6 +239,17 @@ const guides = [
 	},
 ];
 
+/**
+ * Every comment thread id on the page, published to the client so the store can fetch them all in
+ * one request. The threads are `client:visible` and hydrate one at a time as the reader scrolls, so
+ * they never share a tick — without this the page made one request per thread.
+ */
+const commentIds = [
+	...orderedQuestions.map((_, i) => `q${i + 1}`),
+	...guides.map((guide) => `guide-${guide.href.replace("/", "")}`),
+	...deviations.map((_, i) => `choice-${i + 1}`),
+];
+
 const sections = [
 	{ id: "working", label: "What works", count: liveItems.length },
 	{ id: "questions", label: "Questions", count: outstandingCount },
@@ -289,6 +301,10 @@ const sections = [
 	{/* Sticky under the site header, which is itself sticky — hence `top: var(--header-height)`
 	    rather than 0. `aria-label` rather than a visible heading: it repeats on every scroll and a
 	    heading would land in the document outline five times over. */}
+	<script is:inline define:vars={{ commentIds }}>
+		window.__rfcCommentIds = commentIds;
+	</script>
+
 	<nav class="fk-toc" aria-label="Sections of this page">
 		<div class="wrap fk-toc-inner">
 			{sections.map((s) => (
@@ -422,6 +438,10 @@ const sections = [
 								{g.tracksCompletion && !isSettled(ask) && (
 									<MarkDone client:visible id={`q${i + 1}`} title={ask.title} />
 								)}
+								{/* `client:visible` throughout: there are ~30 threads on this page and
+								    hydrating them all up front would ship a lot of JS for something most
+								    readers never open. The shared store still batches whatever mounts. */}
+								<Comments client:visible id={`q${i + 1}`} label={`${i + 1}. ${ask.title}`} />
 							</div>
 						</div>
 					))}
@@ -447,6 +467,14 @@ const sections = [
 				</a>
 			))}
 		</div>
+		<div class="fk-guide-threads">
+			{guides.map((guide) => (
+				<div>
+					<h3>{guide.label}</h3>
+					<Comments client:visible id={`guide-${guide.href.replace("/", "")}`} label={guide.label} />
+				</div>
+			))}
+		</div>
 	</section>
 
 	<section class="section wrap" id="choices">
@@ -457,10 +485,14 @@ const sections = [
 			<p>A few things work the way they do because we chose it, not because we ran out of time. Flagging them here so none of it looks like an oversight - and every one of them is a decision you can overrule.</p>
 		</div>
 		<Masonry>
-			{deviations.map((item) => (
+			{deviations.map((item, i) => (
 				<div class="card">
 					<h3>{item.title}</h3>
 					<p>{item.body}</p>
+					{/* This section has always said "tell us if you disagree" without offering anywhere
+					    to do it. A thread is the right shape for that: it needs no approve button and
+					    stays silent unless somebody actually objects. */}
+					<Comments client:visible id={`choice-${i + 1}`} label={item.title} />
 				</div>
 			))}
 		</Masonry>
@@ -504,6 +536,16 @@ const sections = [
 	    name would be unknown — submissions then 404. This plain Astro-rendered duplicate is what
 	    registers "task-done"; it is never shown or submitted. Same pattern the shop's order form
 	    used before the cart replaced it. Field names must stay in step with the component. */}
+	<form name="new-comment" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+		<input type="hidden" name="form-name" value="new-comment" />
+		<input type="text" name="bot-field" />
+		<input type="text" name="item" />
+		<input type="text" name="label" />
+		<input type="text" name="author" />
+		<input type="text" name="comment" />
+		<input type="text" name="at" />
+	</form>
+
 	<form name="task-done" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
 		<input type="hidden" name="form-name" value="task-done" />
 		<input type="text" name="bot-field" />
@@ -771,6 +813,20 @@ const sections = [
 		font-weight: 700;
 		font-size: 0.9rem;
 		color: var(--st-teal-dark, #148294);
+	}
+
+	/* Threads sit below the cards, not inside them: the whole card is a link, and a comment box
+	   nested in an <a> would be both invalid and unusable. */
+	.fk-guide-threads {
+		margin-top: var(--space-5);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.fk-guide-threads h3 {
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.65);
 	}
 
 	@media (prefers-reduced-motion: reduce) {

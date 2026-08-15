@@ -510,6 +510,9 @@ const sections = [
 		<input type="text" name="task" />
 		<input type="text" name="title" />
 		<input type="text" name="name" />
+		{/* "done" or "not done" — undoing sends a correction rather than only clearing the local
+		    tick, so the submissions we receive stay true to what the page says. */}
+		<input type="text" name="status" />
 		<input type="text" name="marked-at" />
 	</form>
 

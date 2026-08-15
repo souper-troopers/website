@@ -15,6 +15,7 @@
 	 * localStorage is used *as well*, to keep the button ticked on return, never instead.
 	 */
 	import { onMount } from "svelte";
+	import { clientPeople } from "../lib/people";
 
 	let { id, title }: { id: string; title: string } = $props();
 
@@ -22,7 +23,12 @@
 
 	type State = "idle" | "sending" | "done" | "error";
 	let state = $state<State>("idle");
-	let name = $state("");
+	/**
+	 * A dropdown, not a text box. Everyone who can mark one of these done is already known, and a
+	 * free-text field for a two-person audience only produces typos, blanks and "me" — none of which
+	 * we can act on. It also makes the control one tap on a phone rather than a keyboard.
+	 */
+	let who = $state<string>("");
 	let asking = $state(false);
 
 	/**
@@ -42,26 +48,31 @@
 		if (readDone()[id]) state = "done";
 	});
 
+	async function post(status: "done" | "not done", person: string) {
+		const body = new URLSearchParams({
+			"form-name": "task-done",
+			task: id,
+			title,
+			name: person,
+			status,
+			"marked-at": new Date().toISOString(),
+			"bot-field": "",
+		});
+		const response = await fetch("/", {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: body.toString(),
+		});
+		if (!response.ok) throw new Error(String(response.status));
+	}
+
 	async function submit() {
-		if (!name.trim()) return;
+		if (!who) return;
 		state = "sending";
 		try {
-			const body = new URLSearchParams({
-				"form-name": "task-done",
-				task: id,
-				title,
-				name: name.trim(),
-				"marked-at": new Date().toISOString(),
-				"bot-field": "",
-			});
-			const response = await fetch("/", {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: body.toString(),
-			});
-			if (!response.ok) throw new Error(String(response.status));
+			await post("done", who);
 			try {
-				localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...readDone(), [id]: name.trim() }));
+				localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...readDone(), [id]: who }));
 			} catch {
 				// Persisting is only a convenience; the submission has already reached us, which is
 				// the part that matters. Failing to remember it locally must not report an error.
@@ -73,7 +84,17 @@
 		}
 	}
 
-	function undo() {
+	/**
+	 * Undoing sends a *second* submission saying so, rather than only clearing the local tick.
+	 *
+	 * A form submission can't be unsent, so if undo were local-only our inbox would keep a "done"
+	 * record for something that isn't — the page would say one thing and our notifications another,
+	 * with no way to tell which was current. A correction costs one more submission and keeps the
+	 * record honest. The tick clears either way, so undo always works from the reader's point of
+	 * view even if the network call fails.
+	 */
+	async function undo() {
+		const person = readDone()[id] || who || "unknown";
 		try {
 			const done = readDone();
 			delete done[id];
@@ -83,6 +104,12 @@
 		}
 		state = "idle";
 		asking = false;
+		who = "";
+		try {
+			await post("not done", person);
+		} catch {
+			/* The visible state is already reverted; a failed correction is not worth an error here. */
+		}
 	}
 </script>
 
@@ -90,23 +117,20 @@
 	<p class="md-done">
 		<span class="md-tick" aria-hidden="true">✓</span>
 		Marked as done - thank you, that's come through to us.
-		<!-- Undo clears the local tick only. The submission has already been sent and can't be
-		     unsent, so the wording promises nothing more than it does. -->
+		<!-- Undo clears the tick *and* tells us, so the record on our side stays true. -->
 		<button type="button" class="md-undo" onclick={undo}>Not done after all?</button>
 	</p>
 {:else if asking}
 	<div class="md-ask">
-		<label for={`md-name-${id}`}>Who's marking this done?</label>
+		<label for={`md-who-${id}`}>Who's marking this done?</label>
 		<div class="md-row">
-			<input
-				id={`md-name-${id}`}
-				type="text"
-				bind:value={name}
-				placeholder="Your name"
-				autocomplete="given-name"
-				onkeydown={(e) => e.key === "Enter" && submit()}
-			/>
-			<button type="button" class="md-send" onclick={submit} disabled={state === "sending" || !name.trim()}>
+			<select id={`md-who-${id}`} bind:value={who}>
+				<option value="" disabled>Choose...</option>
+				{#each clientPeople as person}
+					<option value={person}>{person}</option>
+				{/each}
+			</select>
+			<button type="button" class="md-send" onclick={submit} disabled={state === "sending" || !who}>
 				{state === "sending" ? "Sending..." : "Send"}
 			</button>
 			<button type="button" class="md-cancel" onclick={() => (asking = false)}>Cancel</button>
@@ -162,16 +186,19 @@
 
 	/* Asked for because two people share this page and "done" is not useful without knowing which of
 	   them did it — and because it is the only thing standing between a stray click and a
-	   notification claiming the Google listing exists. */
-	.md-row input {
+	   notification claiming the Google listing exists. A select rather than a text input: the list of
+	   people who could answer it is known and two items long. */
+	.md-row select {
 		font: inherit;
 		font-size: 0.88rem;
 		padding: 0.35rem 0.6rem;
 		border: 1px solid rgba(36, 35, 43, 0.25);
 		border-radius: 8px;
-		min-width: 8rem;
-		flex: 1 1 8rem;
-		max-width: 14rem;
+		background: var(--st-white, #fff);
+		color: var(--st-ink, #24232b);
+		min-width: 7rem;
+		/* 24px minimum, matching the touch-target floor set in AGENTS.md. */
+		min-height: 32px;
 	}
 
 	.md-send,

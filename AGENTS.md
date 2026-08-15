@@ -100,6 +100,16 @@ Three details worth not undoing:
 
 **Kerry hasn't chosen this image**, she's only had it applied. Asked on the RFC page ("The picture that shows up when a link is shared", in *Your call*), which also explains that it's one image for the whole site. If she names another, it needs to be landscape and ideally ~2:1. **Note this also outlives the hero-video question** — if a video replaces the homepage hero, the share card still needs a still image, and `mandela-mural.png` would have to stay in `src/assets/images/` for it.
 
+## The favicon — the brush ring was the problem, not the lettering (changed 2026-08-15)
+The tab icon was the full logo (two lines of brush lettering, "est 2014", and the teal ring) scaled to 32px, where it rendered as an unreadable grey smudge. Now a **solid teal `#1babbe` disc with white "ST"** in Quicksand 700.
+
+- **The obvious fix — keep the ring, simplify the text — was tried and rejected on evidence.** Rendered side by side at 16/32/48px, the ring is what fails first: it eats ~30% of the diameter and breaks into disconnected teal specks below 32px, so the letters inside it end up smaller *and* competing with fragments. Dropping the ring and keeping its colour as a filled disc is what made the mark legible. **Don't reinstate the ring** without re-running that comparison.
+- **"ST" over a lone "S"**, though the single letter was cleanest at 16px: an S alone reads as much like Shmiley or Souper as the organisation, and identification is the whole job.
+- **Built by rendering the letterforms in a browser with the site's real Quicksand woff2, then compositing in PIL** — inverting a black-on-white render into an alpha mask, so the glyphs keep the real font's curves instead of being redrawn or substituted. There is no TTF of Quicksand in the repo and `fontTools` isn't installed, so PIL cannot load the woff2 directly; the browser round-trip is the way around that.
+- **`apple-touch-icon.png` is a full-bleed teal square, not the circle.** iOS applies its own rounded-square mask, so a circle inside it floats undersized, and a transparent background can render black. The other three keep transparency.
+- Also much smaller as a side effect: `favicon-512.png` 223KB → 34KB, `favicon.ico` 17KB → 5KB (the `.ico` carries 16/32/48).
+- Kerry hasn't chosen this, only had it applied — same pattern as the share card. It's on the RFC page under **"Choices worth knowing about"** rather than as a numbered question, deliberately: it's low-stakes and reversible, and a 22nd question would have renumbered the group Shan already answered against.
+
 ## Account setup checklist
 Reasoning: if these accounts are created under the user's personal logins, the charity doesn't actually own its own site — a volunteer does, on their behalf. Creating them as org/team resources from the start avoids a painful migration later and gives Souper Troopers itself ultimate control.
 - [x] **GitHub**: create a GitHub *Organization* (not a personal repo) — done, `souper-troopers/website`. Repo is public (made public 2026-08-08 — nothing sensitive in it, and Netlify's free tier can't deploy private org-owned repos or add team members without a paid plan, so public was the pragmatic choice).

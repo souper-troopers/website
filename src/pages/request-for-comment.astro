@@ -1,7 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
-import MarkDone from "../components/MarkDone.svelte";
 import Comments from "../components/Comments.svelte";
 import Masonry from "../components/Masonry.astro";
 import FeatureIcon from "../components/FeatureIcon.astro";
@@ -88,28 +86,56 @@ type Question = {
 	answer?: { from: string; on: string; text: string; outcome?: string; followUp?: string };
 };
 
+/** The day the questions were written and first sent — git says 2026-08-09. */
+const ASKED_ON = "2026-08-09";
+/** The day we worked through Shan's replies and acted on them. */
+const RESPONDED_ON = "2026-08-15";
+
+/**
+ * Turn a question's fixed copy into timeline entries, so the context, the reply and our response to
+ * it read as one conversation in date order rather than as three differently-shaped boxes.
+ *
+ * These are seeded into the same thread the live comments render in — the reader shouldn't be able
+ * to tell which parts were written in the page's source and which were typed into it later, because
+ * for the purpose of following the discussion the distinction doesn't matter.
+ */
+type Entry = { author: string; at: string; body: string };
+
+function timelineFor(question: Question): Entry[] {
+	const entries: Entry[] = [{ author: "Stephen", at: ASKED_ON, body: question.body }];
+	if (question.answer) {
+		entries.push({ author: question.answer.from, at: question.answer.on, body: question.answer.text });
+		const ours = [
+			question.answer.outcome && `What we did: ${question.answer.outcome}`,
+			question.answer.followUp && `Still open: ${question.answer.followUp}`,
+		].filter(Boolean);
+		if (ours.length) entries.push({ author: "Stephen", at: RESPONDED_ON, body: ours.join("\n\n") });
+	}
+	return entries;
+}
+
 const questions: Question[] = [
-	{ group: "Your call", title: "The “Shmiley” domain", ask: "What did you have in mind for the Shmiley domain - point it at the shop, or give Shmiley its own separate look?", body: "Kerry mentioned buying a domain for Shmiley - what was the plan for it? If the goal is for the products to be easier to find on Google, that part is now handled on the main site: every item has its own page, and each one names Shmiley as the maker. Our suggestion would be to point the Shmiley address at the shop for now, because a brand new web address starts with no history and takes months to build up standing with Google, whereas soupertroopers.org already has years of it. If instead you're picturing Shmiley as its own brand with its own look - aimed at shoppers rather than donors - that's very achievable too, and would share all the same design and content behind the scenes rather than being a second thing to maintain. It's really a question of how separate you want Shmiley to feel, and that one's yours to answer. Worth knowing before you decide: a second site wouldn't add a new monthly bill, but it isn't free either - it uses more of the same free allowance the main site runs on, it's a second thing to publish each time you update content, and the Shmiley domain itself has to be renewed every year. Pointing the domain at the shop avoids all three. One more thing matters more than any of the cost, though, and it's about the people using it: on a separate site, somebody reading about the work who then decides to buy something has to leave and arrive somewhere else, with a different look and an empty basket. Every handover like that loses people. It cuts both ways, too - the shop is proof to a donor that the work creates real jobs, and the mission is the reason a shopper picks these dolls over cheaper ones somewhere else. Kept together each one sells the other; split apart, both lose their best argument. There's a page linked below that lays both options out side by side, including the two things a separate site genuinely does better.", link: { href: "/shmiley-decision", label: "Both options compared, honestly" }, answer: { from: "Shan", on: "15 August", text: "Give Shmiley its own look.", followUp: "Noted, and it's very doable. Before we start, it would help to know which of two quite different things you're picturing, because they aren't the same job - and one of them is the only thing on this page that adds ongoing cost rather than one-off work, which makes it worth the two of you landing on it together. One is Shmiley having its own look *within* this site - the shop section styled as its own brand, its own colours and feel, reached from the Shmiley address. That's inexpensive, has no real downside, and keeps everything Google already knows about soupertroopers.org working for the products. The other is Shmiley as a genuinely separate site on its own domain, which is a second thing to publish every time something changes, a yearly domain renewal, and a fresh start with Google while the main site already has years of standing. Both are reasonable; they just cost very different amounts of ongoing effort." } },
-	{ group: "Things to send us", title: "Descriptions for the shop items", ask: "Could you write a few sentences about each shop item - materials, size, who makes it, the story behind it?", body: "This is the single most useful thing you could send us for the shop. Most products currently have a line or two at most, and several have nothing at all. Now that each item has its own page there's room for a proper description - what it's made of, how big it is, who makes it, the story behind that particular design. It matters more than it sounds: when someone asks Google or ChatGPT for “handmade gifts that support a Cape Town charity”, the products that get recommended are the ones the system can actually describe. A few sentences per item, in your own words, would do it - and you can type them straight into the shop items yourselves, no developer needed.", answer: { from: "Shan", on: "15 August", text: "Sent a full description of the African Worry Dolls - palm-sized, handmade from recycled shweshwe offcuts, old stockings, paperclips, beads and pompoms, made by members of the Souper Squad since 2022, and meant to be whispered to and tucked under a pillow.", outcome: "That's now on the Worry Dolls page, above the products. It's a good one - it names the materials, the makers and what the thing is actually for, which is all three of the things a description has to do.", followUp: "Still nothing for the coffee, the two gift tags, or the nine dolls individually. The dolls are the quick ones: the story above covers all of them, so each really needs a line or two on what makes that particular doll different. The coffee and the gift tags need a description of their own." } },
-	{ group: "Things to send us", title: "Higher-resolution photos - the shop ones especially", ask: "Could you send the original, full-size photo files - particularly for the Shmiley products - plus more photos generally, and say where you'd like specific ones used?", body: "Two things here, and the first one matters more than it might sound. The product photos we inherited from the current site are small - none is bigger than 600 pixels on its longest edge, and several are much smaller than that. A product page needs a decent square image, so five of the eleven items are currently being enlarged past their real size to fill the space, which is what makes them look soft and blocky. The two Shmiley gift tags are the worst affected: those photos are being stretched to roughly three times and two and a half times their real size respectively. On a modern phone or laptop screen, which packs in twice the detail again, even the better ones look softer than they should. Nothing on our side can fix this - enlarging a small photo can't invent detail that was never captured. If the originals still exist on a camera or phone, straight off the device is ideal; a re-shoot of the gift tags on a plain background would transform that part of the shop. Second, and separately: more photos generally, and your thoughts on where specific ones should go (a homepage shot, team photos, images for the CAST journey).", answer: { from: "Shan", on: "15 August", text: "Images are in the content folder under Product on the Drive, and new pictures are planned that involve hands and the team. Asked back whether video content is going up, following the discussion in the last meeting.", outcome: "Received, and they're exactly what was needed - the originals are around 3,000 to 4,000 pixels, against the 600 we'd been working from. The two gift tag photos are fixed and live: those were by far the worst on the site, being stretched to roughly three times their real size, and they now show the whole pack card sharply. On video, yes - see the video question further down, which you've also answered. Separately, we'd been asking for a photo of the building from the street for the Google listing: it turns out you've had one all along, on the current website, and the full-size original is still there. It's now on the new Contact page as well, so anyone with an appointment can see the door before they set off.", followUp: "Three things the photos raised that we can't answer ourselves. First, the dolls: there are about 35 studio shots, all beautiful, but the shop sells nine *kinds* of doll (Angel, Elf, Madiba, Keyring, Brooch, Magnet and so on) and we can't reliably tell which photo is which kind - guessing would put the wrong picture on a product. If you can tell us even roughly which shots go with which, we'll do the rest. Second, the coffee: the new shot is the same photo we already have but much larger, except it carries a Souper Troopers watermark in the corner and a studio background, where the current one is cut out on plain white. That's a trade rather than an improvement, so we've left it alone - say the word and we'll swap it. Third, and not a photo question at all: there are three shots of a beaded bracelet reading “Souper Trooper - Dignity Love Respect”, and there's no such product in the shop. Is that something you sell? If so it's a straightforward addition, and we have the photography for it already." } },
-	{ group: "Quick things to confirm", title: "The postal code for the Hub", ask: "Is 7925 the right postal code for 66 Newmarket Street?", body: "We've used 7925 wherever a postal code is needed, which is Woodstock's code generally - but we haven't been able to confirm it's the right one for Newmarket Street specifically, and codes can differ street by street. It matters most for the Google listing, where Google cross-checks the address you enter against other records of the organisation, and a code that doesn't match weakens that check. Once it's confirmed we'll add it to the address on the site too. Ten seconds on a delivery slip or a utility bill should settle it.", link: { href: "/google-listing", label: "Where this goes on the listing" }, answer: { from: "Shan", on: "15 August", text: "7925.", outcome: "Confirmed and applied - it's now on the address on the contact page, in the address details Google reads behind the scenes, and filled in on the listing page so there's no empty box left there." } },
+	{ group: "Your call", title: "The “Shmiley” domain", ask: "What did you have in mind for the Shmiley domain - point it at the shop, or give Shmiley its own separate look?", body: "Kerry mentioned buying a domain for Shmiley - what was the plan for it? If the goal is for the products to be easier to find on Google, that part is now handled on the main site: every item has its own page, and each one names Shmiley as the maker. Our suggestion would be to point the Shmiley address at the shop for now, because a brand new web address starts with no history and takes months to build up standing with Google, whereas soupertroopers.org already has years of it. If instead you're picturing Shmiley as its own brand with its own look - aimed at shoppers rather than donors - that's very achievable too, and would share all the same design and content behind the scenes rather than being a second thing to maintain. It's really a question of how separate you want Shmiley to feel, and that one's yours to answer. Worth knowing before you decide: a second site wouldn't add a new monthly bill, but it isn't free either - it uses more of the same free allowance the main site runs on, it's a second thing to publish each time you update content, and the Shmiley domain itself has to be renewed every year. Pointing the domain at the shop avoids all three. One more thing matters more than any of the cost, though, and it's about the people using it: on a separate site, somebody reading about the work who then decides to buy something has to leave and arrive somewhere else, with a different look and an empty basket. Every handover like that loses people. It cuts both ways, too - the shop is proof to a donor that the work creates real jobs, and the mission is the reason a shopper picks these dolls over cheaper ones somewhere else. Kept together each one sells the other; split apart, both lose their best argument. There's a page linked below that lays both options out side by side, including the two things a separate site genuinely does better.", link: { href: "/shmiley-decision", label: "Both options compared, honestly" }, answer: { from: "Shan", on: "2026-08-11", text: "Give Shmiley its own look.", followUp: "Noted, and it's very doable. Before we start, it would help to know which of two quite different things you're picturing, because they aren't the same job - and one of them is the only thing on this page that adds ongoing cost rather than one-off work, which makes it worth the two of you landing on it together. One is Shmiley having its own look *within* this site - the shop section styled as its own brand, its own colours and feel, reached from the Shmiley address. That's inexpensive, has no real downside, and keeps everything Google already knows about soupertroopers.org working for the products. The other is Shmiley as a genuinely separate site on its own domain, which is a second thing to publish every time something changes, a yearly domain renewal, and a fresh start with Google while the main site already has years of standing. Both are reasonable; they just cost very different amounts of ongoing effort." } },
+	{ group: "Things to send us", title: "Descriptions for the shop items", ask: "Could you write a few sentences about each shop item - materials, size, who makes it, the story behind it?", body: "This is the single most useful thing you could send us for the shop. Most products currently have a line or two at most, and several have nothing at all. Now that each item has its own page there's room for a proper description - what it's made of, how big it is, who makes it, the story behind that particular design. It matters more than it sounds: when someone asks Google or ChatGPT for “handmade gifts that support a Cape Town charity”, the products that get recommended are the ones the system can actually describe. A few sentences per item, in your own words, would do it - and you can type them straight into the shop items yourselves, no developer needed.", answer: { from: "Shan", on: "2026-08-11", text: "Sent a full description of the African Worry Dolls - palm-sized, handmade from recycled shweshwe offcuts, old stockings, paperclips, beads and pompoms, made by members of the Souper Squad since 2022, and meant to be whispered to and tucked under a pillow.", outcome: "That's now on the Worry Dolls page, above the products. It's a good one - it names the materials, the makers and what the thing is actually for, which is all three of the things a description has to do.", followUp: "Still nothing for the coffee, the two gift tags, or the nine dolls individually. The dolls are the quick ones: the story above covers all of them, so each really needs a line or two on what makes that particular doll different. The coffee and the gift tags need a description of their own." } },
+	{ group: "Things to send us", title: "Higher-resolution photos - the shop ones especially", ask: "Could you send the original, full-size photo files - particularly for the Shmiley products - plus more photos generally, and say where you'd like specific ones used?", body: "Two things here, and the first one matters more than it might sound. The product photos we inherited from the current site are small - none is bigger than 600 pixels on its longest edge, and several are much smaller than that. A product page needs a decent square image, so five of the eleven items are currently being enlarged past their real size to fill the space, which is what makes them look soft and blocky. The two Shmiley gift tags are the worst affected: those photos are being stretched to roughly three times and two and a half times their real size respectively. On a modern phone or laptop screen, which packs in twice the detail again, even the better ones look softer than they should. Nothing on our side can fix this - enlarging a small photo can't invent detail that was never captured. If the originals still exist on a camera or phone, straight off the device is ideal; a re-shoot of the gift tags on a plain background would transform that part of the shop. Second, and separately: more photos generally, and your thoughts on where specific ones should go (a homepage shot, team photos, images for the CAST journey).", answer: { from: "Shan", on: "2026-08-11", text: "Images are in the content folder under Product on the Drive, and new pictures are planned that involve hands and the team. Asked back whether video content is going up, following the discussion in the last meeting.", outcome: "Received, and they're exactly what was needed - the originals are around 3,000 to 4,000 pixels, against the 600 we'd been working from. The two gift tag photos are fixed and live: those were by far the worst on the site, being stretched to roughly three times their real size, and they now show the whole pack card sharply. On video, yes - see the video question further down, which you've also answered. Separately, we'd been asking for a photo of the building from the street for the Google listing: it turns out you've had one all along, on the current website, and the full-size original is still there. It's now on the new Contact page as well, so anyone with an appointment can see the door before they set off.", followUp: "Three things the photos raised that we can't answer ourselves. First, the dolls: there are about 35 studio shots, all beautiful, but the shop sells nine *kinds* of doll (Angel, Elf, Madiba, Keyring, Brooch, Magnet and so on) and we can't reliably tell which photo is which kind - guessing would put the wrong picture on a product. If you can tell us even roughly which shots go with which, we'll do the rest. Second, the coffee: the new shot is the same photo we already have but much larger, except it carries a Souper Troopers watermark in the corner and a studio background, where the current one is cut out on plain white. That's a trade rather than an improvement, so we've left it alone - say the word and we'll swap it. Third, and not a photo question at all: there are three shots of a beaded bracelet reading “Souper Trooper - Dignity Love Respect”, and there's no such product in the shop. Is that something you sell? If so it's a straightforward addition, and we have the photography for it already." } },
+	{ group: "Quick things to confirm", title: "The postal code for the Hub", ask: "Is 7925 the right postal code for 66 Newmarket Street?", body: "We've used 7925 wherever a postal code is needed, which is Woodstock's code generally - but we haven't been able to confirm it's the right one for Newmarket Street specifically, and codes can differ street by street. It matters most for the Google listing, where Google cross-checks the address you enter against other records of the organisation, and a code that doesn't match weakens that check. Once it's confirmed we'll add it to the address on the site too. Ten seconds on a delivery slip or a utility bill should settle it.", link: { href: "/google-listing", label: "Where this goes on the listing" }, answer: { from: "Shan", on: "2026-08-11", text: "7925.", outcome: "Confirmed and applied - it's now on the address on the contact page, in the address details Google reads behind the scenes, and filled in on the listing page so there's no empty box left there." } },
 	{ group: "Quick things to confirm", title: "Please confirm the payment details are still current", ask: "Are the bank account, PayFast, SnapScan and Zapper details on the Donate page still the ones you use today?", body: "The Donate page now matches the current site properly - bank details, PayFast, SnapScan, Zapper, PayPal, and the monthly debit order are all there (SnapScan and PayPal were missing entirely before). Everything was pulled directly from the current site, including the ABSA account number and the PayFast/SnapScan/Zapper codes - but we haven't been able to test any of them with a real payment, so please have a look and confirm the bank account and PayFast details are still the ones you use today, in case anything changed since the current site was built." },
 	{ group: "Your call", title: "Which donation method people actually use", ask: "Which donation method do people actually use most?", body: "EFT, SnapScan, Zapper, PayPal, card, or monthly debit order - knowing which ones actually get used lets us put them first, rather than showing six as equally prominent." },
 	{ group: "Things to send us", title: "Your MySchool beneficiary link", ask: "What is your MySchool beneficiary code, or the sign-up link that names Souper Troopers?", body: "We've added MySchool to the ways-to-help list - it's the easiest ask on the whole site, because it costs the supporter nothing. To make it actually work we need your MySchool beneficiary code, or the sign-up link that names Souper Troopers, so people can nominate you in one click instead of having to search for you." },
 	{ group: "Things to send us", title: "Do you have existing fundraising campaign pages?", ask: "Do you already have a BackaBuddy or GivenGain page we should link to?", body: "The Get Involved page now walks someone through starting their own fundraiser on BackaBuddy or GivenGain. If you already have a page set up on either, send us the link and we'll point people straight at it rather than making them create one from scratch." },
 	{ group: "Things to send us", title: "Two of the impact numbers aren't numbers", ask: "Do you have real figures for ID documents secured and people through skills training?", body: "The homepage shows four impact figures, but only two are actual numbers - “1,700+ lives supported” and “77% employment success”. The other two just say “ID docs” and “Skills”. Those two land much softer as a result. If you have real figures - how many ID documents you've helped secure, how many people have been through skills training - we'll swap them in and the whole section gets stronger." },
 	{ group: "Quick things to confirm", title: "Is the supporters list still current?", ask: "Is anyone on the supporters list who shouldn't be, and who is missing?", body: "We've brought back the supporters list from the current site (the Mount Nelson, Twelve Apostles, Superbalist, Charly's Bakery, Nik Rabinowitz and about twenty others) - it's real credibility that was missing. Some of those relationships may have wound down since it was written, though. Worth a quick read to check nobody's listed who shouldn't be, and to tell us who's missing. It's all editable by you later." },
-	{ group: "Quick things to confirm", title: "Which press coverage should we show?", ask: "Are those two articles correct, and can you send a list of your best coverage?", body: "We've started an “in the news” section with two articles we found - Good Things Guy and the Cape Argus. We couldn't open them to double-check, so please confirm they're right. More importantly: if you have a list of your best coverage, send it. Being written about by someone else is one of the most persuasive things a donor can see, and right now the site doesn't show any of it. There's a second benefit that isn't obvious: when a news site links to you, Google treats that as a vote of confidence, and those votes are a large part of why some sites come up first. So the links are worth having for their own sake, not only as something to display.", answer: { from: "Shan", on: "15 August", text: "Created a folder called Press on the Drive with the most recent articles in it - Good Things Guy, People's Post and SA Jewish Report.", outcome: "Received, and two of the three are on the site now: the People's Post piece on the Hub (20 July) and the SA Jewish Report's Mandela Day article quoting Moeshfieqah (16 July). Both link straight to the papers' own sites, which is the version that counts. Worth knowing for next time: the links in that document carried newsletter tracking codes on the end, which we've stripped - one of them would have broken for anyone clicking it.", followUp: "Two loose ends. The Good Things Guy article - the one about Sidney - blocks us from reading it automatically, so we have the link but not the headline, and we'd rather not invent one. Could you paste its title? (That's the same reason we couldn't check the Good Things Guy piece already on the site, so it isn't a problem with your link.) And the Cape Argus article we'd found isn't on your list - we've left it up, but tell us if it shouldn't be." } },
-	{ group: "Your call", title: "Is Souper News a regular thing?", ask: "Are there earlier issues of Souper News, and is a new one planned each month?", body: "We found the March 2026 magazine - the Healing & Human Rights edition. It's genuinely good, and a lot of what's in it now appears on the new site (the corporate workshops and the office coffee are both on Get Involved). Two things would help: are there earlier issues we haven't seen, and is a new one planned each month? If they keep coming, they deserve a proper home on the site rather than a page of images you have to open one at a time.", answer: { from: "Shan", on: "15 August", text: "Souper News goes out monthly, and its own page would be great.", followUp: "Happy to build it - two things first. We've only ever seen the March 2026 issue, so could you send the back issues? And there's a choice worth making before we start: the page can hold each issue as a download, which is quick to build and quick for you to update, or it can hold the articles as real pages on the site. The second is more work up front but it's the version that gets found - a monthly download is invisible to a search, where a monthly article is twelve new chances a year to come up for something someone's looking for. Given it goes out every month, we'd lean towards the second." } },
-	{ group: "Things to ask someone else", title: "Could we get the original photos from EF Ogle?", ask: "Could you ask EF Ogle for the original photo files?", body: "Six pages of the magazine are beautiful professional photography, but they're baked into the page layouts, so we can't lift them out at any usable quality. The original image files would go a long way toward the “more photos” gap above - it's likely the biggest set of good photography you already own and aren't using on the website.", answer: { from: "Shan", on: "15 August", text: "“I am EF Ogle.”", outcome: "Then there's nobody to ask, which makes this the easiest question on the page - our apologies for asking you to chase yourself. Closed here and folded into the photos question under Things to send us, since the magazine originals would go a long way towards filling that gap on their own." } },
-	{ group: "Things to ask someone else", title: "Permission to name people online", ask: "Could you check with each person that they're happy for their story and photo to be on the public site?", body: "The magazine tells people's stories by name and pairs them with photographs - Unam's move into work as a barista, for example. These are exactly the stories that make the site land. But there's a real difference between a magazine and a website: a web page is permanent, and it's searchable by someone's name for years afterwards, including by future employers or family. Agreeing to appear in the March issue isn't automatically agreeing to that. Before we publish any of it, could you check with each person that they're happy for their story and photo to be on the public site - and let us know if anyone would rather we use a first name only, or leave them out entirely? We'd rather ask now than have to unpick it later.", answer: { from: "Shan", on: "15 August", text: "Each person who comes through the programme signs a consent form.", followUp: "That's genuinely good to hear, and it may well cover this - but could we see what the form actually says before we publish anyone's name and photograph? A form signed on intake is usually consent to take part and to be photographed for the organisation's own use. Naming someone on a public web page is a further step, because it's permanent and it's searchable by their name for years, including by a future employer or a family member they may not be in touch with. Sometimes the wording already stretches that far and sometimes it doesn't. If it does, we'll go ahead and use the stories as they are. If it doesn't, it's a short conversation with the handful of people whose stories we'd actually use, and much easier to have now than after the fact." } },
+	{ group: "Quick things to confirm", title: "Which press coverage should we show?", ask: "Are those two articles correct, and can you send a list of your best coverage?", body: "We've started an “in the news” section with two articles we found - Good Things Guy and the Cape Argus. We couldn't open them to double-check, so please confirm they're right. More importantly: if you have a list of your best coverage, send it. Being written about by someone else is one of the most persuasive things a donor can see, and right now the site doesn't show any of it. There's a second benefit that isn't obvious: when a news site links to you, Google treats that as a vote of confidence, and those votes are a large part of why some sites come up first. So the links are worth having for their own sake, not only as something to display.", answer: { from: "Shan", on: "2026-08-11", text: "Created a folder called Press on the Drive with the most recent articles in it - Good Things Guy, People's Post and SA Jewish Report.", outcome: "Received, and two of the three are on the site now: the People's Post piece on the Hub (20 July) and the SA Jewish Report's Mandela Day article quoting Moeshfieqah (16 July). Both link straight to the papers' own sites, which is the version that counts. Worth knowing for next time: the links in that document carried newsletter tracking codes on the end, which we've stripped - one of them would have broken for anyone clicking it.", followUp: "Two loose ends. The Good Things Guy article - the one about Sidney - blocks us from reading it automatically, so we have the link but not the headline, and we'd rather not invent one. Could you paste its title? (That's the same reason we couldn't check the Good Things Guy piece already on the site, so it isn't a problem with your link.) And the Cape Argus article we'd found isn't on your list - we've left it up, but tell us if it shouldn't be." } },
+	{ group: "Your call", title: "Is Souper News a regular thing?", ask: "Are there earlier issues of Souper News, and is a new one planned each month?", body: "We found the March 2026 magazine - the Healing & Human Rights edition. It's genuinely good, and a lot of what's in it now appears on the new site (the corporate workshops and the office coffee are both on Get Involved). Two things would help: are there earlier issues we haven't seen, and is a new one planned each month? If they keep coming, they deserve a proper home on the site rather than a page of images you have to open one at a time.", answer: { from: "Shan", on: "2026-08-11", text: "Souper News goes out monthly, and its own page would be great.", followUp: "Happy to build it - two things first. We've only ever seen the March 2026 issue, so could you send the back issues? And there's a choice worth making before we start: the page can hold each issue as a download, which is quick to build and quick for you to update, or it can hold the articles as real pages on the site. The second is more work up front but it's the version that gets found - a monthly download is invisible to a search, where a monthly article is twelve new chances a year to come up for something someone's looking for. Given it goes out every month, we'd lean towards the second." } },
+	{ group: "Things to ask someone else", title: "Could we get the original photos from EF Ogle?", ask: "Could you ask EF Ogle for the original photo files?", body: "Six pages of the magazine are beautiful professional photography, but they're baked into the page layouts, so we can't lift them out at any usable quality. The original image files would go a long way toward the “more photos” gap above - it's likely the biggest set of good photography you already own and aren't using on the website.", answer: { from: "Shan", on: "2026-08-11", text: "“I am EF Ogle.”", outcome: "Then there's nobody to ask, which makes this the easiest question on the page - our apologies for asking you to chase yourself. Closed here and folded into the photos question under Things to send us, since the magazine originals would go a long way towards filling that gap on their own." } },
+	{ group: "Things to ask someone else", title: "Permission to name people online", ask: "Could you check with each person that they're happy for their story and photo to be on the public site?", body: "The magazine tells people's stories by name and pairs them with photographs - Unam's move into work as a barista, for example. These are exactly the stories that make the site land. But there's a real difference between a magazine and a website: a web page is permanent, and it's searchable by someone's name for years afterwards, including by future employers or family. Agreeing to appear in the March issue isn't automatically agreeing to that. Before we publish any of it, could you check with each person that they're happy for their story and photo to be on the public site - and let us know if anyone would rather we use a first name only, or leave them out entirely? We'd rather ask now than have to unpick it later.", answer: { from: "Shan", on: "2026-08-11", text: "Each person who comes through the programme signs a consent form.", followUp: "That's genuinely good to hear, and it may well cover this - but could we see what the form actually says before we publish anyone's name and photograph? A form signed on intake is usually consent to take part and to be photographed for the organisation's own use. Naming someone on a public web page is a further step, because it's permanent and it's searchable by their name for years, including by a future employer or a family member they may not be in touch with. Sometimes the wording already stretches that far and sometimes it doesn't. If it does, we'll go ahead and use the stories as they are. If it doesn't, it's a short conversation with the handful of people whose stories we'd actually use, and much easier to have now than after the fact." } },
 	{ group: "Things to ask someone else", title: "Could Werksmans check the B-BBEE wording?", ask: "Would you be willing to ask Werksmans to glance over the B-BBEE section?", body: "The Get Involved page now spells out what a business gets back for supporting you - the procurement and socio-economic development points, the Section 18A deduction. We've checked these against the current Codes of Good Practice and believe they're right, but they're regulated figures, and the procurement rules in particular are mid-review (changes were gazetted in January and aren't law yet). Since Werksmans already gives you pro bono legal time - and has published its own analysis of these exact changes - would you be willing to ask them to glance over that one section? It's a short read for them, and it means the numbers we're putting in front of corporate donors are ones you can stand behind. The page is built so the figures can be corrected in seconds without a developer." },
-	{ group: "Your call", title: "A video at the top of the homepage", ask: "Do you like the idea of a short video at the top of the homepage - and is there footage we could use, or should we plan a shoot?", body: "At the moment the top of the homepage is the Mandela mural photo. We think a few seconds of video in that spot could be stronger - it's the one place on the site where movement genuinely earns its keep, and it would show the work rather than describe it. Before you say yes, the honest constraint: it needs to be short (five to fifteen seconds), silent, and filmed landscape, because it plays behind the headline rather than being something you sit and watch. We looked at the two films you already have and neither fits that job. The Capital International piece is a narrated seven-minute film - far too good to run silently behind text, and much better suited to its own “watch our story” spot further down the page. The Anthony CAST film is the right length at about a minute, but it's shot upright for a phone, so on a laptop it sits in the middle with bars down both sides. So: is this something you'd like? If so, is there other footage sitting on a phone or a camera somewhere, or should we plan a short shoot for it? Even a slow pan across the Hub on a busy morning would do it. Happy to leave the mural there if you'd rather - it's a good photo.", answer: { from: "Shan", on: "15 August", text: "Loves the idea, and would rather plan a shoot for something fresh than use what already exists.", followUp: "Agreed, and we think that's the right call - neither existing film fits this particular job. Three constraints to hand whoever shoots it, because they're easy to meet on the day and impossible to fix afterwards: filmed landscape (not upright on a phone), five to fifteen seconds, and it doesn't need sound, since it plays behind the headline rather than being something anyone sits and watches. Worth pairing with the photo shoot rather than treating it as a separate trip." } },
+	{ group: "Your call", title: "A video at the top of the homepage", ask: "Do you like the idea of a short video at the top of the homepage - and is there footage we could use, or should we plan a shoot?", body: "At the moment the top of the homepage is the Mandela mural photo. We think a few seconds of video in that spot could be stronger - it's the one place on the site where movement genuinely earns its keep, and it would show the work rather than describe it. Before you say yes, the honest constraint: it needs to be short (five to fifteen seconds), silent, and filmed landscape, because it plays behind the headline rather than being something you sit and watch. We looked at the two films you already have and neither fits that job. The Capital International piece is a narrated seven-minute film - far too good to run silently behind text, and much better suited to its own “watch our story” spot further down the page. The Anthony CAST film is the right length at about a minute, but it's shot upright for a phone, so on a laptop it sits in the middle with bars down both sides. So: is this something you'd like? If so, is there other footage sitting on a phone or a camera somewhere, or should we plan a short shoot for it? Even a slow pan across the Hub on a busy morning would do it. Happy to leave the mural there if you'd rather - it's a good photo.", answer: { from: "Shan", on: "2026-08-11", text: "Loves the idea, and would rather plan a shoot for something fresh than use what already exists.", followUp: "Agreed, and we think that's the right call - neither existing film fits this particular job. Three constraints to hand whoever shoots it, because they're easy to meet on the day and impossible to fix afterwards: filmed landscape (not upright on a phone), five to fifteen seconds, and it doesn't need sound, since it plays behind the headline rather than being something anyone sits and watches. Worth pairing with the photo shoot rather than treating it as a separate trip." } },
 	{ group: "Your call", title: "Quick-pick donation amounts", ask: "Would quick-pick donation amounts be useful, or should we skip it?", body: "Some charity sites offer set amounts to click (“R150 / R350 / R500”) instead of asking someone to type a number, which does tend to make giving quicker. This one is a suggestion rather than something we need from you. We'd only want to do it if the amounts line up with real costs you actually fund - a button that says R150 works when it pays for something specific, and rings hollow when it's just a round number someone picked." },
 	{ group: "Things to send us", title: "The words people actually use", ask: "Who do you most need to reach right now - donors, volunteers, businesses, or people needing help - and what do they actually say when they get in touch?", body: "This is the one that unlocks the search problem, and it needs you rather than us. Search “homeless charities cape town” today and Souper Troopers doesn't come up. The reason is duller than you'd think: Google can only match a page to a search if the page uses the words people are actually typing. The site currently speaks the way you speak internally - dignity, CAST, connect and support, “we are all human” - which is right for someone already reading it, but it isn't what a stranger types into a search box. No page on the site plainly says Souper Troopers is a homelessness charity in Cape Town, so there is nothing there for Google to match. What would help most isn't a list of keywords, it's the real sentences. When somebody phones or emails you out of the blue, what do they actually say? “I've got bags of clothes, who takes them?” “How do I volunteer?” “Can my company do something for Mandela Day?” Those exact sentences are close to what people type into Google, and each one is a page we could write for you. Alongside that: of donors, volunteers, businesses, and people who need help themselves - which matters most over the next six months? Each group searches in completely different words, and it's better to aim properly at the one you care about than to average across all four." },
-	{ group: "Your call", title: "The picture that shows up when a link is shared", ask: "Is the Mandela mural the right picture to appear whenever someone shares a link to the site - or would you rather it were something else?", body: "When you paste a link to the site into WhatsApp, Facebook or LinkedIn, the app goes and fetches one picture from the site and shows it above the link. Until now that was the portrait photo from the Who We Are page, and because it's an upright shot the apps were cropping it down to a wide strip - what people were actually seeing was a scarf and no face, which isn't the first impression anyone would choose. We've switched it to the Mandela mural from the top of the homepage: it's already the right shape, so nothing important gets cut off, and the Souper Troopers badge painted on the wall stays in the picture. It's worth being happy with it, because it's a single picture used for the whole site, and it's what someone sees before they see anything else - often the only thing they see, if they don't click. If you'd rather it were something else - the logo, the team, a photo from a soup run - send it and we'll swap it over. Landscape works best, roughly twice as wide as it is tall. One exception, in case it looks inconsistent: sharing a link to a specific product already shows that product's own photo rather than this.", answer: { from: "Shan", on: "15 August", text: "Would rather it were people than the mural, and will look through her images for one that suits.", outcome: "The mural stays in place until that arrives, so there's no rush on it - nothing is broken in the meantime.", followUp: "Two things to check the picture against when you're choosing, both of which rule out photos that look perfect full-size. It needs to be landscape, roughly twice as wide as it is tall, or the apps crop it themselves and choose worse than you would. And it wants to still read at the size of a WhatsApp thumbnail, which is smaller than it sounds - two or three faces filling the frame survives that; a wide shot of a crowd turns to mush." } },
-	{ group: "Things to ask someone else", title: "Set up your Google business listing", ask: "Could you check whether Souper Troopers already has a Google Business Profile, and set one up if not? It's the single biggest free thing available for being found, and worth starting soon because Google's verification can take up to two weeks. Separately: is there a phone number we can list publicly?", body: "Of everything on this page, this is the one we'd most like you to actually do rather than answer. It sits outside the website entirely, and for the search you'd most want to win it matters more than the site does. When someone searches “homeless charities cape town”, that block of results with the little map at the top of the page doesn't come from anyone's website - it comes from Google Business Profile, a free listing you claim and fill in yourself. No amount of work on the new site can win that block, which is why we're raising it separately rather than quietly handling it. Three things worth knowing. First, check before you create: Google sometimes generates an unclaimed listing for an organisation on its own, and it looks identical to having none - if you see a “Claim this business” link, claim that one rather than making a second, because duplicates then have to be merged. Second, if a listing does already exist it was probably set up years ago by a volunteer who has since moved on, so the real question is whether anyone still has access. Third, please set it up on an organisation Google account rather than a personal Gmail, and add both of you as owners - it's the same reasoning as the rest of the accounts, in that whoever holds that login controls how Souper Troopers appears on Google Maps indefinitely. We've written out everything that goes in it - the exact address, opening hours, categories, and a description ready to paste - on its own page, linked just below, so it's a ten-minute job rather than a blank form. On the phone number: we can't find one for Souper Troopers anywhere - not on the current site, not on the new one, not in a search. Google's listing really wants one and it's often the first thing people look for. If there's a number you're happy to have public, send it and we'll add it in both places. If you'd rather stay email-only, that's a perfectly reasonable choice for a small team - just say so and we'll stop treating it as a gap.", link: { href: "/google-listing", label: "Everything to put in the listing, ready to copy" }, answer: { from: "Shan", on: "15 August", text: "“Yes we do” - and on the phone number, there's no direct line, only email.", outcome: "The phone half is settled, and email-only is a perfectly workable answer. We've stopped flagging it as a gap: the listing page now says so outright rather than leaving you staring at an empty box, and it's off the list of things blocking the listing.", followUp: "The first half we'd like to be sure we've read correctly - did “yes we do” mean a Google listing already exists? If it does, the question that matters isn't whether it's there but whether anyone still has the login. Listings set up years ago by someone who has since moved on are common, and recovering one takes noticeably longer than claiming an unclaimed one, so it's worth finding out now rather than in the week you want it live." } },
-	{ group: "Your call", title: "How plainly should the site say “homeless”?", ask: "Are you happy for the site to use the word “homeless” in the summary lines Google shows, while the pages themselves keep saying “people experiencing homelessness”?", body: "A real tension, and it's yours to settle rather than ours. The site says “people experiencing homelessness”, which we've assumed is deliberate - it puts the person before the circumstance and it reads as more respectful. The difficulty is that almost nobody searches that way. People type “homeless charities cape town”, and a page that never uses the plainer word is much harder for Google to put in front of them. The middle road we'd suggest, and have already applied: keep your language in the writing on the page where people actually read it, and use the plainer wording in the one-line summary Google shows in its results. Nobody browsing the site would ever see the difference, but someone searching would find you. If you'd rather we didn't, say so and we'll take it out - we just didn't want to make that particular choice quietly on your behalf.", answer: { from: "Shan", on: "15 August", text: "Yes, happy with that.", followUp: "Thank you - and since it's already applied, nothing changes if it stands. We're leaving it open rather than closing it purely because it's about how the organisation describes the people it works with, which seemed worth having both of you behind rather than one. If you'd rather we didn't, say so - putting it back the way it was takes a few minutes." } },
+	{ group: "Your call", title: "The picture that shows up when a link is shared", ask: "Is the Mandela mural the right picture to appear whenever someone shares a link to the site - or would you rather it were something else?", body: "When you paste a link to the site into WhatsApp, Facebook or LinkedIn, the app goes and fetches one picture from the site and shows it above the link. Until now that was the portrait photo from the Who We Are page, and because it's an upright shot the apps were cropping it down to a wide strip - what people were actually seeing was a scarf and no face, which isn't the first impression anyone would choose. We've switched it to the Mandela mural from the top of the homepage: it's already the right shape, so nothing important gets cut off, and the Souper Troopers badge painted on the wall stays in the picture. It's worth being happy with it, because it's a single picture used for the whole site, and it's what someone sees before they see anything else - often the only thing they see, if they don't click. If you'd rather it were something else - the logo, the team, a photo from a soup run - send it and we'll swap it over. Landscape works best, roughly twice as wide as it is tall. One exception, in case it looks inconsistent: sharing a link to a specific product already shows that product's own photo rather than this.", answer: { from: "Shan", on: "2026-08-11", text: "Would rather it were people than the mural, and will look through her images for one that suits.", outcome: "The mural stays in place until that arrives, so there's no rush on it - nothing is broken in the meantime.", followUp: "Two things to check the picture against when you're choosing, both of which rule out photos that look perfect full-size. It needs to be landscape, roughly twice as wide as it is tall, or the apps crop it themselves and choose worse than you would. And it wants to still read at the size of a WhatsApp thumbnail, which is smaller than it sounds - two or three faces filling the frame survives that; a wide shot of a crowd turns to mush." } },
+	{ group: "Things to ask someone else", title: "Set up your Google business listing", ask: "Could you check whether Souper Troopers already has a Google Business Profile, and set one up if not? It's the single biggest free thing available for being found, and worth starting soon because Google's verification can take up to two weeks. Separately: is there a phone number we can list publicly?", body: "Of everything on this page, this is the one we'd most like you to actually do rather than answer. It sits outside the website entirely, and for the search you'd most want to win it matters more than the site does. When someone searches “homeless charities cape town”, that block of results with the little map at the top of the page doesn't come from anyone's website - it comes from Google Business Profile, a free listing you claim and fill in yourself. No amount of work on the new site can win that block, which is why we're raising it separately rather than quietly handling it. Three things worth knowing. First, check before you create: Google sometimes generates an unclaimed listing for an organisation on its own, and it looks identical to having none - if you see a “Claim this business” link, claim that one rather than making a second, because duplicates then have to be merged. Second, if a listing does already exist it was probably set up years ago by a volunteer who has since moved on, so the real question is whether anyone still has access. Third, please set it up on an organisation Google account rather than a personal Gmail, and add both of you as owners - it's the same reasoning as the rest of the accounts, in that whoever holds that login controls how Souper Troopers appears on Google Maps indefinitely. We've written out everything that goes in it - the exact address, opening hours, categories, and a description ready to paste - on its own page, linked just below, so it's a ten-minute job rather than a blank form. On the phone number: we can't find one for Souper Troopers anywhere - not on the current site, not on the new one, not in a search. Google's listing really wants one and it's often the first thing people look for. If there's a number you're happy to have public, send it and we'll add it in both places. If you'd rather stay email-only, that's a perfectly reasonable choice for a small team - just say so and we'll stop treating it as a gap.", link: { href: "/google-listing", label: "Everything to put in the listing, ready to copy" }, answer: { from: "Shan", on: "2026-08-11", text: "“Yes we do” - and on the phone number, there's no direct line, only email.", outcome: "The phone half is settled, and email-only is a perfectly workable answer. We've stopped flagging it as a gap: the listing page now says so outright rather than leaving you staring at an empty box, and it's off the list of things blocking the listing.", followUp: "The first half we'd like to be sure we've read correctly - did “yes we do” mean a Google listing already exists? If it does, the question that matters isn't whether it's there but whether anyone still has the login. Listings set up years ago by someone who has since moved on are common, and recovering one takes noticeably longer than claiming an unclaimed one, so it's worth finding out now rather than in the week you want it live." } },
+	{ group: "Your call", title: "How plainly should the site say “homeless”?", ask: "Are you happy for the site to use the word “homeless” in the summary lines Google shows, while the pages themselves keep saying “people experiencing homelessness”?", body: "A real tension, and it's yours to settle rather than ours. The site says “people experiencing homelessness”, which we've assumed is deliberate - it puts the person before the circumstance and it reads as more respectful. The difficulty is that almost nobody searches that way. People type “homeless charities cape town”, and a page that never uses the plainer word is much harder for Google to put in front of them. The middle road we'd suggest, and have already applied: keep your language in the writing on the page where people actually read it, and use the plainer wording in the one-line summary Google shows in its results. Nobody browsing the site would ever see the difference, but someone searching would find you. If you'd rather we didn't, say so and we'll take it out - we just didn't want to make that particular choice quietly on your behalf.", answer: { from: "Shan", on: "2026-08-11", text: "Yes, happy with that.", followUp: "Thank you - and since it's already applied, nothing changes if it stands. We're leaving it open rather than closing it purely because it's about how the organisation describes the people it works with, which seemed worth having both of you behind rather than one. If you'd rather we didn't, say so - putting it back the way it was takes a few minutes." } },
 ];
 
 /**
@@ -137,51 +163,6 @@ const isSettled = (q: Question) => Boolean(q.answer && !q.answer.followUp);
 
 const outstandingCount = orderedQuestions.filter((q) => !isSettled(q)).length;
 const repliedCount = orderedQuestions.filter((q) => q.answer).length;
-
-/**
- * The questions as plain text for the clipboard button — numbered, with an "A:" line under each so
- * the paste doubles as an answer template rather than something Kerry has to reformat.
- *
- * Deliberately carries only the title and the one-line ask, not the full `body`: she'll have just
- * read the context on the page, and including it would bury the actual questions in an email.
- *
- * Group headings are carried across too — the point of grouping is that the list stops reading as
- * one flat run of equal chores, and that's just as true in the email as on the page.
- *
- * A question that has been replied to but isn't settled carries the reply into the email, quoted,
- * with what's still outstanding under it. Without that the email would re-ask something already
- * answered as though nobody had bothered to read it, which is worse than not asking again at all.
- */
-const questionsText = [
-	`Souper Troopers website - questions (as of ${updated})`,
-	"",
-	...questionGroups.flatMap((g) => {
-		// Settled questions are dropped from the email but keep their page numbers, so "7" still
-		// refers to the same thing in a reply written a week after the last one.
-		const rows = orderedQuestions.flatMap((ask, i) =>
-			ask.group === g.group && !isSettled(ask)
-				? [
-						`${i + 1}. ${ask.title}`,
-						`Q: ${ask.ask}`,
-						// Absolute, because this list exists to be pasted into an email where a
-						// site-relative path would be dead.
-						...(ask.link ? [`${ask.link.label}: ${new URL(ask.link.href, Astro.site).href}`] : []),
-						...(ask.answer
-							? [
-									`${ask.answer.from} already said (${ask.answer.on}): ${ask.answer.text}`,
-									...(ask.answer.outcome ? [`What we did: ${ask.answer.outcome}`] : []),
-									...(ask.answer.followUp ? [`Still open: ${ask.answer.followUp}`] : []),
-								]
-							: []),
-						"A: ",
-						"",
-					]
-				: []
-		);
-		return rows.length ? [`== ${g.group.toUpperCase()} ==`, "", ...rows] : [];
-	}),
-	`Full context for each question: ${new URL("/request-for-comment/", Astro.site).href}`,
-].join("\n");
 
 /**
  * Deliberate choices Kerry might otherwise read as oversights.
@@ -343,14 +324,13 @@ const sections = [
 	</section>
 
 	<section class="section wrap" id="questions">
-		<div class="fk-asks-head">
+		<div>
 			<div class="section-intro">
 				<span class="badge">Needs you</span>
 				<h2>A few real questions</h2>
 				<p>{outstandingCount} still open, and this is genuinely most of what's outstanding. Nothing urgent - take your time. They're sorted by the kind of thing they need from you, and each one ends with the actual question in a highlighted box. As you answer them we'll mark them off here, so this page stays an accurate picture rather than going stale.</p>
 				<p>Shan replied to {repliedCount} of them on 15 August, and every reply is recorded under the question it answers rather than left in an inbox. Most of those are still marked open - either because the answer left something to follow up, or because it looked like a call worth having Kerry behind as well. Nothing needs saying twice: where a reply covers it, please just say so.</p>
 			</div>
-			<CopyQuestionsButton client:load text={questionsText} />
 		</div>
 		{questionGroups.map((g) => (
 			<div class="fk-ask-group">
@@ -381,67 +361,20 @@ const sections = [
 										{isSettled(ask) ? "Answered" : ask.answer ? `${ask.answer.from} replied - still open` : "Awaiting your answer"}
 									</span>
 								</div>
-								{/* Only the *context* collapses. Every title and every actual question stays
-								    visible, so nothing being asked is ever hidden behind a click - the page
-								    still reads end to end, it just isn't three screens of background per
-								    question. <details>/<summary> rather than a scripted accordion: keyboard
-								    operable and screen-reader announced for free, it prints expanded, and
-								    browser find-in-page opens a closed <details> when the match is inside. */}
-								<details class="fk-ask-context">
-									<summary>
-										<span class="fk-ask-context-label">Why we're asking</span>
-									</summary>
-									<p>{ask.body}</p>
-								</details>
+								{/* The question stays visible; everything else about it — why we asked, what came
+								    back, what we did — is now timeline entries inside the thread below. */}
 								<p class="fk-ask-question">{ask.ask}</p>
 								{ask.link && (
 									<p class="fk-ask-link">
 										<a href={ask.link.href}>{ask.link.label} &rarr;</a>
 									</p>
 								)}
-								{/* Sits below the question rather than replacing it: the question stays visible
-								    even once answered, because the reply only makes sense next to what was
-								    asked. Attribution is first and in words, not a styled quote mark — with two
-								    people replying at different times, who said it is the part that matters.
-
-								    Only the *reply* is always visible. Our commentary on it collapses, exactly
-								    as the question's own context does — when these were added they ignored that
-								    convention and put up to three permanent paragraphs on each of twelve
-								    questions, which was a third of everything on screen and is what made the
-								    page feel unreadable. What someone said is short and is the news; what we
-								    did about it is background, and background is what this page collapses. */}
-								{ask.answer && (
-									<div class="fk-ask-answer">
-										<p class="fk-ask-answer-head">{ask.answer.from} answered, {ask.answer.on}</p>
-										<p class="fk-ask-answer-said">{ask.answer.text}</p>
-										{(ask.answer.outcome || ask.answer.followUp) && (
-											<details class="fk-ask-more">
-												<summary>
-													<span class="fk-ask-more-label">
-														{ask.answer.followUp ? "What we did, and what's still open" : "What we did"}
-													</span>
-												</summary>
-												{ask.answer.outcome && (
-													<p class="fk-ask-answer-outcome"><strong>What we did:</strong> {ask.answer.outcome}</p>
-												)}
-												{ask.answer.followUp && (
-													<p class="fk-ask-answer-follow"><strong>Still open:</strong> {ask.answer.followUp}</p>
-												)}
-											</details>
-										)}
-									</div>
-								)}
-								{/* Last, below any reply. Only on the group whose items happen elsewhere —
-								    see the note on `tracksCompletion`. Hidden once settled, since a done
-								    button on a closed question invites a second notification for
-								    something already recorded. */}
-								{g.tracksCompletion && !isSettled(ask) && (
-									<MarkDone client:visible id={`q${i + 1}`} title={ask.title} />
-								)}
-								{/* `client:visible` throughout: there are ~30 threads on this page and
-								    hydrating them all up front would ship a lot of JS for something most
-								    readers never open. The shared store still batches whatever mounts. */}
-								<Comments client:visible id={`q${i + 1}`} label={`${i + 1}. ${ask.title}`} />
+								<Comments
+									client:visible
+									id={`q${i + 1}`}
+									label={`${i + 1}. ${ask.title}`}
+									seed={timelineFor(ask)}
+								/>
 							</div>
 						</div>
 					))}
@@ -491,7 +424,8 @@ const sections = [
 					<p>{item.body}</p>
 					{/* This section has always said "tell us if you disagree" without offering anywhere
 					    to do it. A thread is the right shape for that: it needs no approve button and
-					    stays silent unless somebody actually objects. */}
+					    stays silent unless somebody actually objects. No seed — the explanation is
+					    already the card, so repeating it inside the thread would say it twice. */}
 					<Comments client:visible id={`choice-${i + 1}`} label={item.title} />
 				</div>
 			))}
@@ -531,11 +465,10 @@ const sections = [
 	{/* Ends on a next step rather than a reassurance. "No rush" already appears in the questions
 	    intro, and a page that finishes on a costs table leaves the reader with nothing to do —
 	    this points back at the one control on the page that actually helps them reply. */}
-	{/* Netlify discovers forms by scanning the *built* HTML at deploy time. `MarkDone` is a Svelte
-	    island that posts with `fetch`, so its form never exists in the static output and the form
-	    name would be unknown — submissions then 404. This plain Astro-rendered duplicate is what
-	    registers "task-done"; it is never shown or submitted. Same pattern the shop's order form
-	    used before the cart replaced it. Field names must stay in step with the component. */}
+	{/* Netlify discovers forms by scanning the *built* HTML at deploy time, and the comment
+	    thread posts through a function rather than a form, so this duplicate is what registers
+	    "new-comment" and gets the notification emailed. Field names must stay in step with
+	    `netlify/functions/comments.mts`. */}
 	<form name="new-comment" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
 		<input type="hidden" name="form-name" value="new-comment" />
 		<input type="text" name="bot-field" />
@@ -546,22 +479,11 @@ const sections = [
 		<input type="text" name="at" />
 	</form>
 
-	<form name="task-done" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-		<input type="hidden" name="form-name" value="task-done" />
-		<input type="text" name="bot-field" />
-		<input type="text" name="task" />
-		<input type="text" name="title" />
-		<input type="text" name="name" />
-		{/* "done" or "not done" — undoing sends a correction rather than only clearing the local
-		    tick, so the submissions we receive stay true to what the page says. */}
-		<input type="text" name="status" />
-		<input type="text" name="marked-at" />
-	</form>
-
 	<section class="section wrap" id="reply">
 		<div class="fk-close">
 			<h2>Replying to all this</h2>
-			<p>The quickest way is the copy button in the questions section - it drops all {outstandingCount} into an email with a space to answer under each, so you can do them in any order, or a few at a time. Anything already replied to goes in with that reply quoted underneath, so those are a case of confirming rather than starting again. If you'd sooner talk any of it through than write it down, that works just as well.</p>
+			<p>Answer them here rather than by email - every item has a comment box under it, so your answer sits next to the question it answers and the five of us can all see it. Pick your name once and it remembers you. There's no need to do them in order or in one go; a thread stays where it is until someone picks it up.</p>
+			<p>We're emailed whenever anyone comments, so nothing posted here waits on us noticing it. If you'd sooner talk something through than write it down, that works just as well - and anything discussed that way we'll write into the thread afterwards, so this page stays the full record rather than half of one.</p>
 		</div>
 	</section>
 </Layout>
@@ -905,18 +827,6 @@ const sections = [
 		border-color: rgba(122, 95, 10, 0.4);
 	}
 
-	/* Heading on the left, copy-to-clipboard on the right; wraps to stacked on narrow screens. */
-	.fk-asks-head {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: flex-end;
-		justify-content: space-between;
-		gap: var(--space-6);
-	}
-
-	.fk-asks-head .section-intro {
-		flex: 1 1 320px;
-	}
 
 	.fk-asks {
 		display: grid;
@@ -1034,79 +944,6 @@ const sections = [
 		color: rgba(36, 35, 43, 0.65);
 	}
 
-	/* Disclosure for each question's background. Styled as a quiet text control, not a button —
-	   it's a reading aid, and a button per question would compete with the copy-questions
-	   button that actually does something. */
-	.fk-ask-context {
-		margin-top: 0.15rem;
-	}
-
-	.fk-ask-context summary,
-	.fk-ask-more summary {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		cursor: pointer;
-		font-size: 0.85rem;
-		font-weight: 600;
-		color: var(--st-teal-dark, #148294);
-		text-decoration: underline;
-		text-underline-offset: 2px;
-		/* Hides the native triangle in Chrome/Safari; Firefox uses list-style. */
-		list-style: none;
-		width: fit-content;
-	}
-
-	.fk-ask-context summary::-webkit-details-marker,
-	.fk-ask-more summary::-webkit-details-marker {
-		display: none;
-	}
-
-	/* Own chevron, so it can rotate — the native marker can't be animated consistently. */
-	.fk-ask-context summary::after,
-	.fk-ask-more summary::after {
-		content: "";
-		width: 6px;
-		height: 6px;
-		border-right: 2px solid currentColor;
-		border-bottom: 2px solid currentColor;
-		transform: rotate(45deg) translate(-1px, -1px);
-		transition: transform 0.15s ease;
-	}
-
-	.fk-ask-context[open] summary::after,
-	.fk-ask-more[open] summary::after {
-		transform: rotate(-135deg) translate(-2px, -2px);
-	}
-
-	.fk-ask-context summary:focus-visible,
-	.fk-ask-more summary:focus-visible {
-		outline: 2px solid var(--st-teal, #1babbe);
-		outline-offset: 3px;
-		border-radius: 3px;
-	}
-
-	.fk-ask-context p,
-	.fk-ask-more p {
-		margin-top: 0.5rem;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.fk-ask-context summary::after,
-		.fk-ask-more summary::after {
-			transition: none;
-		}
-	}
-
-	/* A closed <details> hides its content natively, not via a CSS display rule, so it can't be
-	   forced open from a print stylesheet — see the beforeprint script below, which does it. This
-	   just tidies the control itself off the printed page. */
-	@media print {
-		.fk-ask-context summary,
-		.fk-ask-more summary {
-			display: none;
-		}
-	}
 
 	.fk-ask p {
 		font-size: 0.94rem;
@@ -1141,52 +978,7 @@ const sections = [
 		font-weight: 600;
 	}
 
-	/* A neutral panel, deliberately not the teal of the question callout above it. The two sit
-	   directly on top of each other and have to read as different kinds of thing — what we asked
-	   versus what came back — which a second tinted box in the same hue would flatten. Neutral also
-	   keeps teal meaning "you can act on this" (see AGENTS.md), which nothing in here is. */
-	.fk-ask-answer {
-		margin-top: 0.55rem;
-		padding: 0.7rem 0.9rem;
-		border-radius: 8px;
-		background: rgba(36, 35, 43, 0.04);
-		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
-		/* The paragraphs inside are capped at 62ch by `.fk-ask p`, so without this the panel's fill
-		   runs to the full column width while its text stops two-thirds of the way across — the
-		   background has to be told the same limit, plus its own horizontal padding. */
-		max-width: calc(62ch + 1.8rem);
-	}
 
-	.fk-ask-answer-head {
-		font-size: 0.68rem;
-		font-weight: 700;
-		letter-spacing: 0.07em;
-		text-transform: uppercase;
-	}
-
-	/* The one line in the block that is somebody else's words, so it carries full ink where the
-	   surrounding commentary stays muted — otherwise our follow-up outweighs their answer. */
-	.fk-ask p.fk-ask-answer-said {
-		color: var(--st-ink, #24232b);
-	}
-
-	.fk-ask-more {
-		margin-top: 0.15rem;
-	}
-
-	.fk-ask-answer-outcome,
-	.fk-ask-answer-follow {
-		font-size: 0.9rem;
-	}
-
-	/* Hairline only *between* the two, now that the disclosure summary above supplies the separation
-	   from the reply itself. A rule under the summary as well would box the first paragraph in. */
-	.fk-ask-answer-outcome + .fk-ask-answer-follow {
-		padding-top: 0.5rem;
-		border-top: 1px solid rgba(36, 35, 43, 0.09);
-	}
 
 	.fk-ask-number {
 		display: flex;
@@ -1346,7 +1138,7 @@ const sections = [
 	}
 
 	const contexts = document.querySelectorAll<HTMLDetailsElement>(
-		".fk-ask-context, .fk-ask-more, .fk-live-disclosure"
+		".fk-live-disclosure, .cm"
 	);
 	let openedForPrint: HTMLDetailsElement[] = [];
 

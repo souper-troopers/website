@@ -22,7 +22,7 @@ import { postalCode, addressLocality, addressRegion } from "../lib/address";
  * dignified phrasing is the site's own voice and stays in the visible copy; this file is machine
  * input, where the plainer word is what earns the citation.
  */
-export const GET: APIRoute = async ({ site }) => {
+export const GET: APIRoute = async () => {
 	const [settings, categories, items, press] = await Promise.all([
 		getSiteSettings(),
 		getProductCategories(),

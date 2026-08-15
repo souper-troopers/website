@@ -19,8 +19,22 @@ export interface Comment {
 	at: string;
 }
 
-const ENDPOINT = "/api/comments";
+const ENDPOINT_PATH = "/api/comments";
 const AUTHOR_KEY = "st-comment-author-v1";
+
+/**
+ * Built from `location.origin` rather than used as a relative path.
+ *
+ * The page sits behind HTTP Basic auth, and a relative URL resolves against `document.baseURI` — so
+ * if anyone reaches the page through an address with credentials in it (`https://user:pass@host/…`,
+ * which browsers do produce, and which is the obvious way to share a password-protected link), every
+ * fetch throws `Request cannot be constructed from a URL that includes credentials` and the threads
+ * silently never load. `location.origin` excludes credentials by definition, so this is immune.
+ */
+function endpoint(query = ""): string {
+	const base = typeof location !== "undefined" ? location.origin : "";
+	return `${base}${ENDPOINT_PATH}${query}`;
+}
 
 class CommentStore {
 	threads = $state<Record<string, Comment[]>>({});
@@ -84,7 +98,7 @@ class CommentStore {
 		if (!ids.length) return;
 		this.loading = true;
 		try {
-			const response = await fetch(`${ENDPOINT}?items=${encodeURIComponent(ids.join(","))}`);
+			const response = await fetch(endpoint(`?items=${encodeURIComponent(ids.join(","))}`));
 			if (!response.ok) throw new Error(String(response.status));
 			const data = (await response.json()) as { threads: Record<string, Comment[]> };
 			// Seed every requested id, including the empty ones, so `register` doesn't re-queue them.
@@ -99,7 +113,7 @@ class CommentStore {
 	}
 
 	async add(item: string, author: string, body: string, label: string) {
-		const response = await fetch(ENDPOINT, {
+		const response = await fetch(endpoint(), {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ item, author, body, label }),

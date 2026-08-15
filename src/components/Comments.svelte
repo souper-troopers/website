@@ -15,7 +15,17 @@
 	import { clientPeople, projectPeople } from "../lib/people";
 	import { commentStore } from "../lib/comments.svelte";
 
-	let { id, label }: { id: string; label: string } = $props();
+	/**
+	 * `seed` is the item's fixed copy — the context we wrote, the reply that arrived by email, our
+	 * response to it — expressed as timeline entries so it merges with the live comments rather than
+	 * sitting above them in a different shape. Someone following the discussion shouldn't have to
+	 * work out which parts were typed into the page's source and which into the box at the bottom.
+	 */
+	let {
+		id,
+		label,
+		seed = [],
+	}: { id: string; label: string; seed?: { author: string; at: string; body: string }[] } = $props();
 
 	// Registers the id rather than fetching it — the store batches every id registered in the same
 	// tick into a single request. See the note in `comments.svelte.ts`.
@@ -29,8 +39,17 @@
 	let sending = $state(false);
 	let error = $state("");
 
-	const thread = $derived(commentStore.threads[id] ?? []);
+	const live = $derived(commentStore.threads[id] ?? []);
 	const loading = $derived(commentStore.loading);
+
+	const thread = $derived(
+		[
+			...seed.map((entry, i) => ({ key: `seed-${i}`, ...entry })),
+			...live.map((c) => ({ key: c.id, author: c.author, at: c.at, body: c.body })),
+		].sort((a, b) => a.at.localeCompare(b.at))
+	);
+
+	const last = $derived(thread.length ? thread[thread.length - 1] : null);
 
 	// Who you are is asked once per browser rather than once per comment — on a page with thirty
 	// threads, re-picking a name every time is the thing that would stop people using it.
@@ -59,15 +78,32 @@
 	}
 </script>
 
-<div class="cm">
+<!--
+	The whole thread collapses, not just part of it. Everything here is background: the reason we
+	asked, what came back, what we did about it. The question itself stays visible above, so the page
+	still reads end to end as a list of what's being asked — the discussion is there when wanted.
+
+	<details> rather than a scripted panel, matching the rest of the page: keyboard operable and
+	screen-reader announced for free, opens on find-in-page, and prints expanded via the beforeprint
+	handler in request-for-comment.astro.
+-->
+<details class="cm">
+	<summary>
+		<span class="cm-summary">
+			{thread.length}
+			{thread.length === 1 ? "comment" : "comments"}
+			{#if last}<span class="cm-latest">latest {last.author}, {when(last.at)}</span>{/if}
+		</span>
+	</summary>
+
 	{#if thread.length}
 		<ul class="cm-list">
-			{#each thread as comment (comment.id)}
+			{#each thread as entry (entry.key)}
 				<li>
-					<p class="cm-meta"><strong>{comment.author}</strong> <span>{when(comment.at)}</span></p>
+					<p class="cm-meta"><strong>{entry.author}</strong> <span>{when(entry.at)}</span></p>
 					<!-- Plain text, rendered as text. Nothing here is parsed as markup: five trusted
 					     people or not, an unauthenticated endpoint must not be able to inject HTML. -->
-					<p class="cm-body">{comment.body}</p>
+					<p class="cm-body">{entry.body}</p>
 				</li>
 			{/each}
 		</ul>
@@ -101,19 +137,85 @@
 	{:else}
 		<button type="button" class="cm-open" onclick={() => (open = true)}>
 			{thread.length ? "Reply" : "Comment"}
-			{#if thread.length}<span class="cm-count">{thread.length}</span>{/if}
 		</button>
-		{#if loading && !thread.length}<span class="cm-loading">Loading comments...</span>{/if}
+		{#if loading}<span class="cm-loading">Loading...</span>{/if}
 	{/if}
-</div>
+</details>
 
 <style>
 	.cm {
 		margin-top: 0.6rem;
+		max-width: 62ch;
+	}
+
+	.cm[open] {
 		display: flex;
 		flex-direction: column;
-		gap: 0.4rem;
-		max-width: 62ch;
+		gap: 0.5rem;
+	}
+
+	/* Styled as the same quiet text control as "Why we're asking" was, so the page keeps one
+	   vocabulary for "there is more here if you want it". */
+	.cm > summary {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		cursor: pointer;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--st-teal-dark, #148294);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		list-style: none;
+		width: fit-content;
+	}
+
+	.cm > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.cm > summary::after {
+		content: "";
+		width: 6px;
+		height: 6px;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(45deg) translate(-1px, -1px);
+		transition: transform 0.15s ease;
+	}
+
+	.cm[open] > summary::after {
+		transform: rotate(-135deg) translate(-2px, -2px);
+	}
+
+	.cm > summary:focus-visible {
+		outline: 2px solid var(--st-teal, #1babbe);
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	/* Who spoke last and when, without opening it — the one thing worth knowing from the outside. */
+	.cm-latest {
+		font-weight: 400;
+		color: rgba(36, 35, 43, 0.65);
+		text-decoration: none;
+	}
+
+	.cm-latest::before {
+		content: "\00b7";
+		margin: 0 0.35rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cm > summary::after {
+			transition: none;
+		}
+	}
+
+	@media print {
+		.cm > summary {
+			display: none;
+		}
 	}
 
 	.cm-list {

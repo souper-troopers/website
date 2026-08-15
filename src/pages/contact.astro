@@ -2,6 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
+import { Image } from "astro:assets";
+import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
@@ -38,6 +40,22 @@ const shopBrands = [
 			<div class="contact-aside">
 				<div class="card">
 					<h3>Visit us</h3>
+					{/* The building, from the pavement opposite. Not decoration: visits here are by
+					    appointment, so everyone arriving has arranged it in advance and the only real
+					    question on the day is "is this the right door" — which a street number painted
+					    a metre high answers better than any address line. */}
+					{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
+					    2400px source as the fallback — 272KB served to anything that ignores srcset,
+					    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
+					<Image
+						src={hubExterior}
+						alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
+						width={800}
+						height={533}
+						widths={[400, 800]}
+						sizes="(max-width: 900px) 100vw, 340px"
+						class="visit-photo"
+					/>
 					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
 					<dl class="visit-hours">
 						{displayHours.map((entry) => (
@@ -153,6 +171,16 @@ const shopBrands = [
 		.brand-card {
 			flex: none;
 		}
+	}
+
+	/* 3:2, the photo's own shape — no crop, so the whole corner and the painted 66 stay in frame. */
+	.visit-photo {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		border-radius: var(--radius);
+		margin-bottom: var(--space-4);
 	}
 
 	.visit-hours {

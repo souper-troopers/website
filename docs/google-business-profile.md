@@ -136,5 +136,9 @@ from WooCommerce are ≤600px and too small to use here.
    Re-asked on the request-for-comment page. The material question is not existence but **who holds
    the Google account it is attached to** — an orphaned listing goes through Google's dispute process
    (weeks) where an unclaimed one is same-day.
-4. **Exterior photo of the Hub** — doesn't exist in the media directory. Added to the shot list for the
-   photo/video shoot Shan is planning (see the request-for-comment page).
+4. ~~**Exterior photo of the Hub**~~ — **closed 2026-08-15.** One existed all along on the *current*
+   site (`soupertroopers.org/about-us/#where-we-do-it`): a corner shot with the street number painted
+   on the wall, Table Mountain behind. The WordPress original is **7079x4719**, reachable by dropping
+   the size suffix from the URL. Archived to `../souper-troopers-media/Content/Images/Building/` and
+   a 2400px copy is now on the new Contact page. **Lesson: check the live old site, not just the
+   media folder, before recording that an asset doesn't exist.**

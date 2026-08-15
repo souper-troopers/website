@@ -35,7 +35,6 @@
 
 	let draft = $state("");
 	let author = $state("");
-	let open = $state(false);
 	let sending = $state(false);
 	let error = $state("");
 
@@ -69,7 +68,6 @@
 		try {
 			await commentStore.add(id, author, draft.trim());
 			draft = "";
-			open = false;
 		} catch (e) {
 			error = e instanceof Error && e.message ? e.message : "That didn't send. Try again, or email us.";
 		} finally {
@@ -110,37 +108,35 @@
 		</ul>
 	{/if}
 
-	{#if open}
-		<div class="cm-form">
-			<label class="cm-who">
-				<span>Commenting as</span>
-				<select bind:value={author}>
-					<option value="" disabled>Choose...</option>
-					{#each people as person}
-						<option value={person}>{person}</option>
-					{/each}
-				</select>
-			</label>
-			<textarea
-				bind:value={draft}
-				rows="3"
-				placeholder="Your answer, or anything you want to flag..."
-				aria-label={`Comment on: ${label}`}
-			></textarea>
-			<div class="cm-actions">
-				<button type="button" class="cm-send" onclick={send} disabled={sending || !draft.trim() || !author}>
-					{sending ? "Posting..." : "Post comment"}
-				</button>
-				<button type="button" class="cm-cancel" onclick={() => (open = false)}>Cancel</button>
-			</div>
-			{#if error}<p class="cm-error">{error}</p>{/if}
+	<!--
+		The box is always here once the thread is open, rather than behind a Reply button. Opening a
+		thread is already the intent — a second click to reveal an empty textarea asked people to
+		declare that intent twice, and an empty box is the more inviting and more familiar shape.
+	-->
+	<div class="cm-form">
+		<label class="cm-who">
+			<span>Commenting as</span>
+			<select bind:value={author}>
+				<option value="" disabled>Choose...</option>
+				{#each people as person}
+					<option value={person}>{person}</option>
+				{/each}
+			</select>
+		</label>
+		<textarea
+			bind:value={draft}
+			rows="3"
+			placeholder={thread.length ? "Reply..." : "Your answer, or anything you want to flag..."}
+			aria-label={`Comment on: ${label}`}
+		></textarea>
+		<div class="cm-actions">
+			<button type="button" class="cm-send" onclick={send} disabled={sending || !draft.trim() || !author}>
+				{sending ? "Posting..." : "Post comment"}
+			</button>
+			{#if loading}<span class="cm-loading">Loading comments...</span>{/if}
 		</div>
-	{:else}
-		<button type="button" class="cm-open" onclick={() => (open = true)}>
-			{thread.length ? "Reply" : "Comment"}
-		</button>
-		{#if loading}<span class="cm-loading">Loading...</span>{/if}
-	{/if}
+		{#if error}<p class="cm-error">{error}</p>{/if}
+	</div>
 </details>
 
 <style>
@@ -257,43 +253,8 @@
 		white-space: pre-wrap;
 	}
 
-	/* Set off from the conversation above it rather than sitting tight against the last comment —
-	   it's a control, not another entry, and at the flex gap alone it read as one. */
-	.cm-open {
-		align-self: flex-start;
-		margin-top: 1rem;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		padding: 0.3rem 0.75rem;
-		font: inherit;
-		font-size: 0.82rem;
-		font-weight: 600;
-		color: var(--st-teal-dark, #148294);
-		background: transparent;
-		border: 1px solid rgba(27, 171, 190, 0.5);
-		border-radius: 999px;
-		cursor: pointer;
-	}
-
-	.cm-open:hover {
-		background: rgba(27, 171, 190, 0.1);
-	}
-
-	.cm-count {
-		font-size: 0.7rem;
-		font-weight: 700;
-		padding: 0.05rem 0.35rem;
-		border-radius: 999px;
-		background: rgba(27, 171, 190, 0.18);
-	}
-
-	.cm-loading {
-		font-size: 0.78rem;
-		color: rgba(36, 35, 43, 0.65);
-	}
-
-	/* Same offset as the button it replaces, so opening the box doesn't shift everything up. */
+	/* Set off from the conversation above it: it's a control, not another entry, and at the flex
+	   gap alone it read as one. */
 	.cm-form {
 		margin-top: 1rem;
 		display: flex;
@@ -330,23 +291,13 @@
 		resize: vertical;
 	}
 
-	.cm-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem;
-	}
-
-	.cm-send,
-	.cm-cancel {
+	.cm-send {
 		font: inherit;
 		font-size: 0.85rem;
 		font-weight: 600;
 		padding: 0.35rem 0.85rem;
 		border-radius: 999px;
 		cursor: pointer;
-	}
-
-	.cm-send {
 		color: var(--st-white, #fff);
 		background: var(--st-teal-dark, #148294);
 		border: 1px solid var(--st-teal-dark, #148294);
@@ -357,10 +308,11 @@
 		cursor: default;
 	}
 
-	.cm-cancel {
-		color: rgba(36, 35, 43, 0.65);
-		background: transparent;
-		border: 1px solid rgba(36, 35, 43, 0.2);
+	.cm-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
 	}
 
 	.cm-error {
@@ -371,7 +323,6 @@
 	/* A printout is a snapshot to read away from the screen — the controls are noise, the
 	   conversation is not. */
 	@media print {
-		.cm-open,
 		.cm-form,
 		.cm-loading {
 			display: none;

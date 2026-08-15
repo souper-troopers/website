@@ -212,7 +212,6 @@ const sections = [
 	{ id: "questions", label: "Questions", count: outstandingCount },
 	{ id: "choices", label: "Our choices", count: deviations.length },
 	{ id: "costs", label: "Costs", count: null },
-	{ id: "reply", label: "Replying", count: null },
 ];
 ---
 
@@ -299,8 +298,8 @@ const sections = [
 			<div class="section-intro">
 				<span class="badge">Needs you</span>
 				<h2>A few real questions</h2>
-				<p>{outstandingCount} still open, and this is genuinely most of what's outstanding. Nothing urgent - take your time. They're sorted by the kind of thing they need from you, and each one ends with the actual question in a highlighted box. As you answer them we'll mark them off here, so this page stays an accurate picture rather than going stale.</p>
-				<p>Shan replied to {repliedCount} of them on 15 August, and every reply is recorded under the question it answers rather than left in an inbox. Most of those are still marked open - either because the answer left something to follow up, or because it looked like a call worth having Kerry behind as well. Nothing needs saying twice: where a reply covers it, please just say so.</p>
+				<p>{outstandingCount} still open, and this is genuinely most of what's outstanding. Nothing urgent - take your time. They're sorted by the kind of thing they need from you, and each one ends with the actual question in a highlighted box. As you answer them we'll mark them off here, so this page stays an accurate picture rather than going stale. Answer in the box under any item - nothing is emailed, we read the threads as we work.</p>
+				<p>Shan replied to {repliedCount} of them on 11 August, and every reply is recorded under the question it answers rather than left in an inbox. Most of those are still marked open - either because the answer left something to follow up, or because it looked like a call worth having Kerry behind as well. Nothing needs saying twice: where a reply covers it, please just say so.</p>
 			</div>
 		</div>
 		{questionGroups.map((g) => (
@@ -326,6 +325,12 @@ const sections = [
 									    answered would close a question the page is still asking, and calling it
 									    awaiting would look like the reply had been ignored. */}
 									<span class:list={["fk-ask-status", { "is-answered": isSettled(ask), "is-replied": ask.answer && !isSettled(ask) }]}>
+										{/* An icon rather than a dot. All three states were the same 5px circle in a
+										    different colour, which asks the reader to hold a colour key in their head
+										    and fails outright for anyone who can't separate the hues — the same
+										    reasoning that keeps every link on this site underlined. An empty circle,
+										    a speech bubble and a tick are legible without the colour. */}
+										<FeatureIcon name={isSettled(ask) ? "resolved" : ask.answer ? "replied" : "awaiting"} size={13} />
 										{/* Three things this wording has to get right. The label must carry *both*
 										    halves of the middle state — "Shan replied" alone reads as finished, since a
 										    reply is the very thing these are waiting for. It must not say "your answer":
@@ -421,16 +426,6 @@ const sections = [
 		<p class="fk-table-note">* Free at the site's current size and usage. Two honest caveats rather than promising "free forever." First, if the site grows well beyond what it does today (heavy traffic, very frequent edits), some of these could eventually move to a paid tier - not something on the horizon right now. Second, these are commercial companies, and free tiers do sometimes get reduced or withdrawn; it has happened across the industry. The protection against that isn't a promise from them, it's that nothing here is locked in: the site is plain files in your own GitHub account, all the content lives in a system you own with weekly backups to your own private copy, and it could be moved to a different host without rebuilding it. The two pieces genuinely tied to the current host are the contact form and the shop's payment handling, and both are small enough to rebuild elsewhere in a day if it ever came to that.</p>
 	</section>
 
-	{/* Ends on a next step rather than a reassurance. "No rush" already appears in the questions
-	    intro, and a page that finishes on a costs table leaves the reader with nothing to do —
-	    this points back at the one control on the page that actually helps them reply. */}
-	<section class="section wrap" id="reply">
-		<div class="fk-close">
-			<h2>Replying to all this</h2>
-			<p>Answer them here rather than by email - every item has a comment box under it, so your answer sits next to the question it answers and the five of us can all see it. Pick your name once and it remembers you. There's no need to do them in order or in one go; a thread stays where it is until someone picks it up.</p>
-			<p>Nothing here is urgent and nothing needs an immediate reply - we read the threads as we work, so anything you post will be picked up. If you'd sooner talk something through than write it down, that works just as well, and we'll write it into the thread afterwards so this page stays the full record rather than half of one.</p>
-		</div>
-	</section>
 </Layout>
 
 <style>
@@ -795,14 +790,6 @@ const sections = [
 		border-radius: 999px;
 	}
 
-	.fk-ask-status::before {
-		content: "";
-		width: 5px;
-		height: 5px;
-		border-radius: 50%;
-		background: currentColor;
-	}
-
 	.fk-ask-status.is-answered {
 		color: #2f7a44;
 		border-color: rgba(47, 122, 68, 0.35);
@@ -947,21 +934,6 @@ const sections = [
 		color: rgba(36, 35, 43, 0.65);
 	}
 
-	.fk-close {
-		padding-top: var(--space-6);
-		border-top: 1px solid rgba(36, 35, 43, 0.12);
-	}
-
-	.fk-close h2 {
-		font-size: 1.15rem;
-		margin-bottom: 0.4rem;
-	}
-
-	.fk-close p {
-		font-size: 0.94rem;
-		color: rgba(36, 35, 43, 0.65);
-		max-width: 62ch;
-	}
 </style>
 
 <script>

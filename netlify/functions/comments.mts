@@ -64,6 +64,19 @@ export interface Comment {
 	at: string;
 }
 
+/**
+ * Who signed in, when that is a fact rather than a claim.
+ *
+ * `status-auth.ts` sets `x-status-user` on every request and overwrites whatever arrived, so under
+ * per-person logins (`STATUS_USERS`) the browser cannot influence it. Under the shared login the
+ * value is always "Souper", which identifies nobody and is not one of the five known people — so
+ * this returns null there and the self-declared name stands.
+ */
+function signedInPerson(request: Request): string | null {
+	const name = (request.headers.get("x-status-user") || "").trim();
+	return KNOWN_PEOPLE.has(name) ? name : null;
+}
+
 function headers(origin: string | null) {
 	return {
 		"Access-Control-Allow-Origin": origin && ALLOWED_ORIGINS.has(origin) ? origin : "null",
@@ -97,10 +110,20 @@ export default async (request: Request) => {
 
 	if (request.method === "GET") {
 		const url = new URL(request.url);
+		/**
+		 * The response carries `you` as well as the threads.
+		 *
+		 * The page is static HTML built once, so it cannot know who is reading it — only a request can,
+		 * and this is the one request every reader already makes on load. Without it the page has to
+		 * ask a signed-in person to name themselves in a dropdown, having just authenticated them,
+		 * which reads as the login not having worked. Null under the shared password, where nobody is
+		 * identified and the dropdown is genuinely the only source of a name.
+		 */
+		const you = signedInPerson(request);
 		// A single request for every thread on the page: one round trip on load rather than one per
 		// item, which for ~30 items would be 30 cold-start-prone calls.
 		const items = (url.searchParams.get("items") || "").split(",").map((s) => s.trim()).filter(Boolean);
-		if (!items.length) return json({ threads: {} }, 200, origin);
+		if (!items.length) return json({ threads: {}, you }, 200, origin);
 
 		const entries = await Promise.all(
 			items.slice(0, 100).map(async (item) => {
@@ -108,7 +131,7 @@ export default async (request: Request) => {
 				return [item, thread] as const;
 			})
 		);
-		return json({ threads: Object.fromEntries(entries) }, 200, origin);
+		return json({ threads: Object.fromEntries(entries), you }, 200, origin);
 	}
 
 	if (request.method !== "POST") {
@@ -127,15 +150,11 @@ export default async (request: Request) => {
 
 	/**
 	 * Identity comes from the edge function when it can, and from the client's picker when it can't.
-	 *
-	 * `status-auth.ts` sets `x-status-user` on every request and overwrites whatever arrived, so
-	 * under per-person logins (`STATUS_USERS`) it is a fact rather than a claim and outranks the
-	 * dropdown. Under the shared login it is always "Souper", which identifies nobody — so that
-	 * value is ignored and the self-declared name stands. Configuring `STATUS_USERS` therefore
-	 * upgrades attribution from claimed to authenticated with no change here.
+	 * Configuring `STATUS_USERS` upgrades attribution from claimed to authenticated with no change
+	 * here — and the payload's `author` is still read, because under the shared password it is the
+	 * only name there is.
 	 */
-	const signedIn = (request.headers.get("x-status-user") || "").trim();
-	const author = (KNOWN_PEOPLE.has(signedIn) ? signedIn : (payload.author || "").trim());
+	const author = signedInPerson(request) ?? (payload.author || "").trim();
 
 	if (!item || !author || !body) {
 		return json({ error: "item, author and body are all required." }, 400, origin);

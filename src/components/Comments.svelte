@@ -40,6 +40,8 @@
 
 	const live = $derived(commentStore.threads[id] ?? []);
 	const loading = $derived(commentStore.loading);
+	/** Set once the first load answers; empty under the shared password. See `comments.svelte.ts`. */
+	const signedInAs = $derived(commentStore.signedInAs);
 
 	const thread = $derived(
 		[
@@ -51,9 +53,12 @@
 	const last = $derived(thread.length ? thread[thread.length - 1] : null);
 
 	// Who you are is asked once per browser rather than once per comment — on a page with thirty
-	// threads, re-picking a name every time is the thing that would stop people using it.
+	// threads, re-picking a name every time is the thing that would stop people using it. Under
+	// per-person logins it isn't asked at all: the signed-in name wins outright, and it wins over a
+	// remembered one too, so a shared machine can't attribute a comment to whoever used it last.
 	$effect(() => {
-		if (!author) author = commentStore.rememberedAuthor;
+		if (signedInAs) author = signedInAs;
+		else if (!author) author = commentStore.rememberedAuthor;
 	});
 
 	function when(iso: string) {
@@ -114,15 +119,25 @@
 		declare that intent twice, and an empty box is the more inviting and more familiar shape.
 	-->
 	<div class="cm-form">
-		<label class="cm-who">
-			<span>Commenting as</span>
-			<select bind:value={author}>
-				<option value="" disabled>Choose...</option>
-				{#each people as person}
-					<option value={person}>{person}</option>
-				{/each}
-			</select>
-		</label>
+		<!--
+			The picker only appears when the server couldn't tell us who is here. Asking a signed-in
+			person to name themselves in a dropdown reads as the login not having taken — and it is
+			worse than redundant, because the server overrules whatever is chosen, so the control would
+			be offering a choice it does not honour.
+		-->
+		{#if signedInAs}
+			<p class="cm-who">Commenting as <strong>{signedInAs}</strong></p>
+		{:else}
+			<label class="cm-who">
+				<span>Commenting as</span>
+				<select bind:value={author}>
+					<option value="" disabled>Choose...</option>
+					{#each people as person}
+						<option value={person}>{person}</option>
+					{/each}
+				</select>
+			</label>
+		{/if}
 		<textarea
 			bind:value={draft}
 			rows="3"
@@ -269,6 +284,12 @@
 		font-size: 0.8rem;
 		font-weight: 600;
 		color: rgba(36, 35, 43, 0.65);
+	}
+
+	/* The name itself is content, not a label, so it sits at full ink like an author line above. */
+	.cm-who strong {
+		color: var(--st-ink, #24232b);
+		font-weight: 700;
 	}
 
 	.cm-who select,

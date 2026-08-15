@@ -41,6 +41,14 @@ class CommentStore {
 	loading = $state(false);
 	/** Asked once per browser, not once per comment — see the note in `Comments.svelte`. */
 	rememberedAuthor = $state("");
+	/**
+	 * Who the server says is signed in, or "" when nobody is individually identified.
+	 *
+	 * Arrives on the same bulk load as the threads, because a static page cannot know who is reading
+	 * it and that request is the first moment anything can. Empty under the shared password, where
+	 * the name genuinely is a self-declaration and the picker has to stay.
+	 */
+	signedInAs = $state("");
 
 	#pending = new Set<string>();
 	#scheduled = false;
@@ -100,7 +108,8 @@ class CommentStore {
 		try {
 			const response = await fetch(endpoint(`?items=${encodeURIComponent(ids.join(","))}`));
 			if (!response.ok) throw new Error(String(response.status));
-			const data = (await response.json()) as { threads: Record<string, Comment[]> };
+			const data = (await response.json()) as { threads: Record<string, Comment[]>; you?: string | null };
+			if (data.you) this.signedInAs = data.you;
 			// Seed every requested id, including the empty ones, so `register` doesn't re-queue them.
 			this.threads = { ...this.threads, ...Object.fromEntries(ids.map((id) => [id, []])), ...data.threads };
 		} catch {

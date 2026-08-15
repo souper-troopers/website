@@ -3,6 +3,13 @@ import Layout from "../layouts/Layout.astro";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import { displayHours } from "../lib/opening-hours";
+import { getSiteSettings } from "../lib/sanity";
+import { displayAddress } from "../lib/address";
+
+// Was a hardcoded duplicate of the Sanity value until the postal code landed. Reading it from the
+// same place the footer does means the two can't drift, which matters more than usual here: this is
+// the page Google is most likely to read the address off, and it has to match the Google listing.
+const settings = await getSiteSettings();
 
 const emailDirectory = [
 	{ label: "Donations & drop-offs", address: "manager@soupertroopers.org" },
@@ -31,7 +38,7 @@ const shopBrands = [
 			<div class="contact-aside">
 				<div class="card">
 					<h3>Visit us</h3>
-					<p><AddressLink client:visible lines={["66 Newmarket Street, Woodstock, Cape Town"]} /></p>
+					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
 					<dl class="visit-hours">
 						{displayHours.map((entry) => (
 							<div>

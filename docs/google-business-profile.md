@@ -65,13 +65,14 @@ listing against the site, and a mismatched address or hours actively undermines 
 | **Name** | `Souper Troopers` |
 | **Address** | `66 Newmarket Street, Woodstock, Cape Town, 7925, South Africa` |
 | **Website** | The live domain once launched — **not** the `netlify.app` preview URL |
-| **Phone** | **Missing — blocked.** No phone number exists on the current site, the new site, or anywhere findable. See "Open items" |
+| **Phone** | **Leave blank — settled 2026-08-15.** Shan confirmed there is no direct line and email is the only route in. Do not substitute a personal mobile |
 | **Primary category** | `Non-profit organization` |
 | **Hours** | Mon–Thu 08:30–16:00, Fri 08:30–15:00, Sat–Sun closed |
 | **Attribute** | Set **"by appointment only"** — visits are not drop-in |
 
-Confirm the postal code before entering it; `7925` is Woodstock's general code and has not been
-verified against this specific street address.
+Postal code `7925` **confirmed by Shan 2026-08-15** for this street address specifically, not just
+for Woodstock generally. It now also appears on the site — see `src/lib/address.ts`, which is the one
+place it is written down.
 
 ### Secondary categories
 
@@ -127,9 +128,13 @@ from WooCommerce are ≤600px and too small to use here.
 
 ## Open items
 
-1. **Phone number** — none exists publicly. Asked on the request-for-comment page, with the option to
-   confirm they'd rather stay email-only. If they do, the listing works without one, but it costs some
-   local ranking and some clicks.
-2. **Postal code** — `7925` unverified for this street address.
-3. **Whether a listing already exists** — unresolved; needs someone signed into Google Maps to look.
-4. **Exterior photo of the Hub** — doesn't exist in the media directory.
+1. ~~**Phone number**~~ — **closed 2026-08-15.** Shan: no direct line, email only. The field stays
+   empty; that is a valid listing, it just costs some local ranking and some clicks. Stop flagging it.
+2. ~~**Postal code**~~ — **closed 2026-08-15.** `7925` confirmed for this address.
+3. **Whether a listing already exists** — Shan's "yes we do" on 2026-08-15 reads as yes, but the reply
+   answered two questions at once and the first half is ambiguous, so it is *not* treated as settled.
+   Re-asked on the request-for-comment page. The material question is not existence but **who holds
+   the Google account it is attached to** — an orphaned listing goes through Google's dispute process
+   (weeks) where an unclaimed one is same-day.
+4. **Exterior photo of the Hub** — doesn't exist in the media directory. Added to the shot list for the
+   photo/video shoot Shan is planning (see the request-for-comment page).

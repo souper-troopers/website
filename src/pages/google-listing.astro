@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
 import { displayHours } from "../lib/opening-hours";
+import { postalCode } from "../lib/address";
 
 /**
  * Internal page, same family as `request-for-comment.astro` — written for Kerry and Shan, not for
@@ -33,8 +34,8 @@ const listingValues = [
 	{ label: "Name", value: "Souper Troopers" },
 	{
 		label: "Address",
-		value: "66 Newmarket Street, Woodstock, Cape Town",
-		note: "Please confirm the postal code - we have 7925 for Woodstock generally, but haven't verified it for this street.",
+		value: `66 Newmarket Street, Woodstock, Cape Town, ${postalCode}`,
+		note: "Postal code confirmed by Shan on 15 August, and now on the website's address too - the two match, which is what Google checks.",
 	},
 	{
 		label: "Hours",
@@ -57,7 +58,11 @@ const listingValues = [
 		value: "The real soupertroopers.org address",
 		note: "Not the temporary preview link - wait until the new site is live, or use the current site for now.",
 	},
-	{ label: "Phone", value: "We don't have one", note: "See the last section." },
+	{
+		label: "Phone",
+		value: "Leave it blank",
+		note: "Shan confirmed on 15 August there's no direct line and email is the way in. Leaving the field empty is the right answer - don't put a personal mobile in it to fill the gap, because whatever goes here is public and permanent, and it's the number strangers will ring first.",
+	},
 ];
 
 const steps = [
@@ -198,14 +203,14 @@ function withBold(text: string) {
 	<section class="section wrap">
 		<div class="card gl-needs">
 			<h2>Two things we couldn't fill in for you</h2>
-			<p class="gl-needs-lede">Both are asked on the main update page as well - they're repeated here because this is where you'll meet the empty boxes.</p>
+			<p class="gl-needs-lede">Both are asked on the main update page as well - they're repeated here because this is where you'll meet the empty boxes. The phone number and the postal code used to be on this list; Shan settled both on 15 August, and the table above now has the answers.</p>
 			<div>
-				<h3>A phone number, or a decision not to have one</h3>
-				<p>We can't find a phone number for Souper Troopers anywhere - not on the current website, not on the new one, not in a search. Google's listing wants one, and it's often the first thing people look for. If there's a number you're happy to make public, send it and we'll add it in both places. If you'd rather stay email-only, that's a perfectly reasonable choice for a small team - just tell us, and we'll stop flagging it as a gap.</p>
+				<h3>Whether a listing already exists - and who can still sign into it</h3>
+				<p>Shan's answer read as a yes, which would be good news, but it's the follow-up question that decides how long this takes. A listing nobody can sign into is closer to having none: recovering one from a person who has moved on runs through Google's own dispute process and can take weeks, where claiming an unclaimed listing is same-day. So the thing to establish first isn't whether it's there, it's whose Google account it's attached to. Step one below covers what you'll see either way.</p>
 			</div>
 			<div>
-				<h3>The postal code</h3>
-				<p>We have 7925 as Woodstock's code, but haven't confirmed it for 66 Newmarket Street specifically.</p>
+				<h3>A photo of the building from the street</h3>
+				<p>Nobody has one, and it's the single most useful photo on a listing of this kind - it's how a person with an appointment knows they've found the right door on a street of similar ones. It needs no equipment and no planning: one landscape photo from the pavement opposite, taken on a phone, in daylight. Worth adding to the shot list for the shoot Shan is planning.</p>
 			</div>
 		</div>
 	</section>

@@ -4,6 +4,14 @@ import logoReversed from "../assets/images/logo-reversed.png";
 import mandelaMural from "../assets/images/mandela-mural.png";
 import { getSiteSettings } from "../lib/sanity";
 import { openingHoursSpecification } from "../lib/opening-hours";
+import {
+	addressCountry,
+	addressLocality,
+	addressRegion,
+	displayAddress,
+	postalCode,
+	streetAddressFrom,
+} from "../lib/address";
 import CartWidget from "../components/CartWidget.svelte";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
@@ -142,9 +150,9 @@ const ogImageURL = ogImageOverride ?? new URL(ogImage.src, Astro.site).href;
  * organisation, and the tagline never says what the organisation actually does or where.
  *
  * `address` is a structured PostalAddress rather than the flat string, because a string can't be
- * resolved to a place. Only `streetAddress` comes from Sanity — the rest are constants, since the
- * locality/region/country are not fields Kerry can edit today. If the organisation ever moves city,
- * these three need changing here alongside the Sanity value.
+ * resolved to a place. Only `streetAddress` comes from Sanity — the rest are constants living in
+ * `src/lib/address.ts`, since the locality/region/country/postal code are not fields Kerry can edit
+ * today, and the contact page needs the same values.
  */
 const structuredData = {
 	"@context": "https://schema.org",
@@ -157,17 +165,15 @@ const structuredData = {
 	email: settings.email,
 	address: {
 		"@type": "PostalAddress",
-		// The Sanity value ends "..., Cape Town", which `addressLocality` already asserts. Stripping it
-		// avoids stating the city twice in one address. If the string ever stops ending that way the
-		// match simply fails and the full value is used, which is still valid.
-		streetAddress: settings.address.replace(/,\s*Cape Town\s*$/i, ""),
-		addressLocality: "Cape Town",
-		addressRegion: "Western Cape",
-		addressCountry: "ZA",
+		streetAddress: streetAddressFrom(settings.address),
+		addressLocality,
+		addressRegion,
+		postalCode,
+		addressCountry,
 	},
 	areaServed: {
 		"@type": "City",
-		name: "Cape Town",
+		name: addressLocality,
 	},
 	// Shared with the visible list on the contact page — see `src/lib/opening-hours.ts` for why these
 	// are derived rather than written twice, and for the by-appointment caveat.
@@ -282,7 +288,7 @@ const structuredData = {
 		<footer class="site-footer">
 			<div class="wrap footer-inner">
 				<strong>Souper Troopers</strong>
-				<AddressLink client:visible lines={[settings.address]} copyable={false} />
+				<AddressLink client:visible lines={[displayAddress(settings.address)]} copyable={false} />
 				<EmailLink client:visible address={settings.email} />
 			</div>
 			<div class="wrap footer-social">

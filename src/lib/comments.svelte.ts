@@ -20,7 +20,6 @@ export interface Comment {
 }
 
 const ENDPOINT_PATH = "/api/comments";
-const AUTHOR_KEY = "st-comment-author-v1";
 
 /**
  * Built from `location.origin` rather than used as a relative path.
@@ -39,29 +38,24 @@ function endpoint(query = ""): string {
 class CommentStore {
 	threads = $state<Record<string, Comment[]>>({});
 	loading = $state(false);
-	/** Asked once per browser, not once per comment — see the note in `Comments.svelte`. */
-	rememberedAuthor = $state("");
 	/**
 	 * Who the server says is signed in, or "" when nobody is individually identified.
 	 *
 	 * Arrives on the same bulk load as the threads, because a static page cannot know who is reading
-	 * it and that request is the first moment anything can. Empty under the shared password, where
-	 * the name genuinely is a self-declaration and the picker has to stay.
+	 * it — the HTML is built once and served identically to everyone, so a request is the first
+	 * moment anything can. Empty under the shared password, where nobody is identified and the
+	 * endpoint refuses writes.
 	 */
 	signedInAs = $state("");
+	/**
+	 * Whether that answer has arrived yet, which is not the same as it being empty. Without this the
+	 * compose box would have to treat "we haven't asked" as "you aren't signed in", and every thread
+	 * opened before the first response landed would tell a signed-in reader they can't comment.
+	 */
+	identityKnown = $state(false);
 
 	#pending = new Set<string>();
 	#scheduled = false;
-
-	constructor() {
-		if (typeof localStorage !== "undefined") {
-			try {
-				this.rememberedAuthor = localStorage.getItem(AUTHOR_KEY) || "";
-			} catch {
-				/* Safari private browsing can throw on access; a missing name is not an error. */
-			}
-		}
-	}
 
 	#loadedAll = false;
 
@@ -109,7 +103,8 @@ class CommentStore {
 			const response = await fetch(endpoint(`?items=${encodeURIComponent(ids.join(","))}`));
 			if (!response.ok) throw new Error(String(response.status));
 			const data = (await response.json()) as { threads: Record<string, Comment[]>; you?: string | null };
-			if (data.you) this.signedInAs = data.you;
+			this.signedInAs = data.you || "";
+			this.identityKnown = true;
 			// Seed every requested id, including the empty ones, so `register` doesn't re-queue them.
 			this.threads = { ...this.threads, ...Object.fromEntries(ids.map((id) => [id, []])), ...data.threads };
 		} catch {
@@ -121,11 +116,15 @@ class CommentStore {
 		}
 	}
 
-	async add(item: string, author: string, body: string) {
+	/**
+	 * No author is sent. The endpoint reads it from the signed-in identity and ignores anything in
+	 * the payload, so sending one would only suggest the client had a say in it.
+	 */
+	async add(item: string, body: string) {
 		const response = await fetch(endpoint(), {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ item, author, body }),
+			body: JSON.stringify({ item, body }),
 		});
 		if (!response.ok) {
 			const detail = await response.json().catch(() => ({}));
@@ -135,12 +134,6 @@ class CommentStore {
 		// The server's copy of the thread wins, so a comment posted by someone else in the meantime
 		// appears rather than being overwritten by a locally-appended guess.
 		this.threads = { ...this.threads, [item]: data.thread };
-		this.rememberedAuthor = author;
-		try {
-			localStorage.setItem(AUTHOR_KEY, author);
-		} catch {
-			/* Remembering is a convenience; the comment is already posted. */
-		}
 	}
 }
 

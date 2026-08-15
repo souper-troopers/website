@@ -36,11 +36,18 @@ const liveItems = [
  * Numbering stays global and continuous across groups rather than restarting per group, so the page matches
  * the numbered list the copy button puts on the clipboard.
  */
+/**
+ * `needs` is the group reduced to the verb — what the reader physically has to *do*, in two or three
+ * words. The `note` explains; this labels, and it's what the orientation panel at the top of the page
+ * counts. Added because the page carried four kinds of content (things to answer, things to do,
+ * things that are only for information, and things you'd only respond to if you disagreed) while
+ * signalling the difference for exactly one of them.
+ */
 const questionGroups = [
-	{ group: "Things to send us", note: "Content we can't write for you - all of it goes straight into the site." },
-	{ group: "Quick things to confirm", note: "Short checks. We've used what's on the current site, but can't verify it ourselves." },
-	{ group: "Your call", note: "Decisions that are genuinely yours - no wrong answers here." },
-	{ group: "Things to ask someone else", note: "These need someone outside the two of you, so they're worth starting early." },
+	{ group: "Things to send us", needs: "Send something", note: "Content we can't write for you - all of it goes straight into the site." },
+	{ group: "Quick things to confirm", needs: "A yes or no", note: "Short checks. We've used what's on the current site, but can't verify it ourselves." },
+	{ group: "Your call", needs: "A decision", note: "Decisions that are genuinely yours - no wrong answers here." },
+	{ group: "Things to ask someone else", needs: "Ask someone", note: "These need someone outside the two of you, so they're worth starting early." },
 ];
 
 /**
@@ -247,6 +254,31 @@ const sections = [
 	    works" is reassurance rather than anything to act on, and it sat between the reader and the
 	    questions — a screen and a half of good news to scroll past before reaching the part that
 	    needs them. The summary line keeps the reassurance; the detail is there when wanted. */}
+	{/* Orientation, before anything else. The page mixes four kinds of content and only the questions
+	    ever said which they were, so a reader could not tell what was being asked of them without
+	    reading all of it. Counts are derived, so this cannot claim a number the page doesn't contain. */}
+	<section class="section wrap fk-needs-section">
+		<div class="fk-needs">
+			<h2>What this page needs from you</h2>
+			<ul>
+				{questionGroups.map((g) => {
+					const open = orderedQuestions.filter((q) => q.group === g.group && !isSettled(q)).length;
+					return open ? (
+						<li>
+							<a href="#questions"><strong>{open}</strong> {open === 1 ? "thing" : "things"} - {g.needs.toLowerCase()}</a>
+							<span>{g.group.toLowerCase()}</span>
+						</li>
+					) : null;
+				})}
+				<li>
+					<a href="#guides"><strong>{guides.length}</strong> things to actually do</a>
+					<span>written out step by step</span>
+				</li>
+			</ul>
+			<p>Everything else here - what's working, the choices we made, the costs - is just so you know. Nothing to do with any of it unless you disagree, in which case say so and we'll change it.</p>
+		</div>
+	</section>
+
 	{/* Sticky under the site header, which is itself sticky — hence `top: var(--header-height)`
 	    rather than 0. `aria-label` rather than a visible heading: it repeats on every scroll and a
 	    heading would land in the document outline five times over. */}
@@ -265,6 +297,7 @@ const sections = [
 		<div class="section-intro">
 			<span class="badge">Live in the preview</span>
 			<h2>What's already working</h2>
+			<p class="fk-nothing-needed">Nothing to do here - just so you know</p>
 			<p>This is a real, working preview - not a mockup. <strong>{liveItems.length} things are built and running</strong>, from the shop and the donate page to weekly backups; {liveItems.filter((i) => i.status === "Test mode").length} of them is intentionally still in "test mode" until you say go.</p>
 		</div>
 		<details class="fk-live-disclosure">
@@ -299,7 +332,12 @@ const sections = [
 		{questionGroups.map((g) => (
 			<div class="fk-ask-group">
 				<div class="fk-group-head">
-					<h3>{g.group}</h3>
+					<div class="fk-group-title">
+						<h3>{g.group}</h3>
+						{/* The verb, repeated at the group so it's still on screen once the orientation
+						    panel has been scrolled past — which is most of the time on a page this long. */}
+						<span class="fk-group-needs">{g.needs}</span>
+					</div>
 					<p>{g.note}</p>
 				</div>
 				<div class="fk-asks">
@@ -383,6 +421,7 @@ const sections = [
 		<div class="section-intro">
 			<span class="badge">Written up separately</span>
 			<h2>Two things with their own page</h2>
+			<p class="fk-nothing-needed is-action">Both of these are things to do</p>
 			<p>Both come up as questions above, but each needed more room than a question allows - so they're written out properly, ready to work from rather than to read about.</p>
 		</div>
 		<div class="grid grid-2">
@@ -400,6 +439,7 @@ const sections = [
 		<div class="section-intro">
 			<span class="badge">Done this way on purpose</span>
 			<h2>Choices worth knowing about</h2>
+			<p class="fk-nothing-needed">Nothing to do here - unless you disagree with one</p>
 			<p>A few things work the way they do because we chose it, not because we ran out of time. Flagging them here so none of it looks like an oversight - and every one of them is a decision you can overrule.</p>
 		</div>
 		<Masonry>
@@ -422,13 +462,23 @@ const sections = [
 				<tr><th>Today</th><th>Cost</th></tr>
 			</thead>
 			<tbody>
-				<tr><td>Hosting</td><td>Free*</td></tr>
+				<tr><td>Hosting</td><td>Free* once we stop building - see the note below</td></tr>
 				<tr><td>Content editing tool (for Kerry &amp; Shan)</td><td>Free*</td></tr>
 				<tr><td>Visitor analytics</td><td>Free*</td></tr>
 				<tr><td>Weekly content backups</td><td>Free*</td></tr>
 				<tr><td>Payment processing</td><td>Free until something sells, then a small % per sale - same fees already being paid today, nothing new</td></tr>
 			</tbody>
 		</table>
+		{/* Added 2026-08-15 at the user's request, reversing an earlier decision to leave it out. The
+		    original reasoning was that "hosting costs $9/month" would read as a bill the charity had
+		    acquired — which is why the first sentence says who is paying and the last says when it
+		    stops, before the figure is even mentioned. Left out entirely it was arguably a small
+		    omission from a page whose whole claim is that it doesn't hide things. */}
+		<div class="fk-cost-now">
+			<h3>One thing that isn't free right now</h3>
+			<p>While the site is being actively built we're publishing new versions many times a day, which is far more than the free hosting allowance covers - so there's a $9/month plan running at the moment. <strong>That's on our side, not yours</strong>: it isn't billed to Souper Troopers, and it's tied to the building rather than to the site existing.</p>
+			<p>It goes back to free once the pace settles. The free allowance is roughly twenty publishes a month, which is plenty for normal use - you make a batch of changes in the editor and press Publish once, so a busy month might be four or five. The only thing that would keep it on the paid plan is genuinely frequent publishing, and if that ever became the pattern we'd tell you before anything changed rather than quietly leaving it running.</p>
+		</div>
 		<p class="fk-table-note">* Free at the site's current size and usage. Two honest caveats rather than promising "free forever." First, if the site grows well beyond what it does today (heavy traffic, very frequent edits), some of these could eventually move to a paid tier - not something on the horizon right now. Second, these are commercial companies, and free tiers do sometimes get reduced or withdrawn; it has happened across the industry. The protection against that isn't a promise from them, it's that nothing here is locked in: the site is plain files in your own GitHub account, all the content lives in a system you own with weekly backups to your own private copy, and it could be moved to a different host without rebuilding it. The two pieces genuinely tied to the current host are the contact form and the shop's payment handling, and both are small enough to rebuild elsewhere in a day if it ever came to that.</p>
 	</section>
 
@@ -444,6 +494,88 @@ const sections = [
 </Layout>
 
 <style>
+	/* Sits above the sticky contents bar, so it's read once on arrival and then scrolled past. */
+	.fk-needs-section {
+		padding-bottom: 0;
+	}
+
+	.fk-needs {
+		padding: var(--space-5) var(--space-6);
+		border-radius: var(--radius);
+		background: rgba(219, 188, 59, 0.14);
+		max-width: 62ch;
+	}
+
+	/* Amber, matching the question numbers and the "still open" chips — this page's colour for
+	   "outstanding". Teal would read as an action in itself; the whole panel is a summary of them. */
+	.fk-needs h2 {
+		font-size: 1.05rem;
+		margin-bottom: var(--space-3);
+	}
+
+	.fk-needs ul {
+		list-style: none;
+		margin: 0 0 var(--space-3);
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.fk-needs li {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5rem;
+		font-size: 0.94rem;
+	}
+
+	.fk-needs li strong {
+		font-size: 1.05rem;
+	}
+
+	.fk-needs li span {
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.fk-needs p {
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	/* States plainly that a section asks nothing. The absence of a marker is not something a reader
+	   can interpret — it looks identical to a marker nobody got round to adding. */
+	.fk-nothing-needed {
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.fk-nothing-needed.is-action {
+		color: #7a5f0a;
+	}
+
+	.fk-group-title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.6rem;
+	}
+
+	.fk-group-needs {
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #7a5f0a;
+		background: rgba(219, 188, 59, 0.22);
+		padding: 0.15rem 0.5rem;
+		border-radius: 999px;
+	}
+
 	/* Sticky beneath the site header, which is itself sticky at `--header-height` — so this offsets by
 	   that rather than sitting at 0, or the two would overlap. z-index stays below the header's 100. */
 	.fk-toc {
@@ -984,6 +1116,29 @@ const sections = [
 		margin-top: 0.15rem;
 	}
 
+
+	/* A tinted panel rather than another table row: the row would have had to read "$9/month", which
+	   is the number without the two facts that matter about it — who pays it and when it stops. */
+	.fk-cost-now {
+		margin-top: var(--space-5);
+		padding: var(--space-4) var(--space-5);
+		border-left: 3px solid var(--st-teal);
+		border-radius: 0 var(--radius) var(--radius) 0;
+		background: rgba(27, 171, 190, 0.08);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.fk-cost-now h3 {
+		font-size: 1rem;
+	}
+
+	.fk-cost-now p {
+		font-size: 0.92rem;
+		color: rgba(36, 35, 43, 0.65);
+		max-width: 62ch;
+	}
 
 	.fk-cost-table {
 		width: 100%;

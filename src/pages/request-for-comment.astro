@@ -188,6 +188,26 @@ const deviations = [
 	{ title: "Coffee works differently to the other products", body: "Every Worry Doll and gift tag has its own page. Coffee doesn't - it's one product you choose options for (grind, size), so its page is the coffee page with the choices on it. That's deliberate rather than something we missed." },
 	{ title: "We haven't asked you for a list of keywords", body: "If you've read anything about SEO before, you might be expecting us to ask which keywords you'd like to target - there genuinely used to be a box on every page where you typed them in. That box still exists in some tools, but Google stopped reading it in 2009, and putting words on a page that don't match what the page actually says now counts against you rather than for you. What replaced it is less exciting and more work: a page comes up when it properly answers something someone searched for, in the words they used. That's why the question we've asked instead is what people actually say when they contact you - those sentences are worth more than any keyword list. One practical consequence: if anyone ever cold-calls offering to sell you keywords or to “submit your site to 500 search engines”, that's the moment to be sceptical." },
 ];
+
+/**
+ * The sticky contents bar.
+ *
+ * Deliberately a table of contents and **not breadcrumbs**: breadcrumbs express a position in a
+ * *hierarchy*, and these five are siblings in one flat document — they would be asserting a tree
+ * that doesn't exist, and sitting in the header they'd imply this internal page is part of the
+ * site's own structure. "Where am I in a long page, and how much is left" is the question a contents
+ * bar answers.
+ *
+ * Counts are read off the same arrays the sections render from, so a number here can't drift from
+ * the section it labels. `null` means the section has nothing countable in it.
+ */
+const sections = [
+	{ id: "working", label: "What works", count: liveItems.length },
+	{ id: "questions", label: "Questions", count: outstandingCount },
+	{ id: "choices", label: "Our choices", count: deviations.length },
+	{ id: "costs", label: "Costs", count: null },
+	{ id: "reply", label: "Replying", count: null },
+];
 ---
 
 <Layout title="Request for Comment" description="Souper Troopers website - where things stand.">
@@ -199,12 +219,32 @@ const deviations = [
 		</div>
 	</section>
 
-	<section class="section wrap">
+	{/* Collapsed by default, and it's the only whole section that is. Sixteen cards of "here is what
+	    works" is reassurance rather than anything to act on, and it sat between the reader and the
+	    questions — a screen and a half of good news to scroll past before reaching the part that
+	    needs them. The summary line keeps the reassurance; the detail is there when wanted. */}
+	{/* Sticky under the site header, which is itself sticky — hence `top: var(--header-height)`
+	    rather than 0. `aria-label` rather than a visible heading: it repeats on every scroll and a
+	    heading would land in the document outline five times over. */}
+	<nav class="fk-toc" aria-label="Sections of this page">
+		<div class="wrap fk-toc-inner">
+			{sections.map((s) => (
+				<a href={`#${s.id}`} data-toc={s.id}>
+					{s.label}
+					{s.count !== null && <span class="fk-toc-count">{s.count}</span>}
+				</a>
+			))}
+		</div>
+	</nav>
+
+	<section class="section wrap" id="working">
 		<div class="section-intro">
 			<span class="badge">Live in the preview</span>
 			<h2>What's already working</h2>
-			<p>This is a real, working preview - not a mockup. A couple of things (marked below) are intentionally still in "test mode" until you say go.</p>
+			<p>This is a real, working preview - not a mockup. <strong>{liveItems.length} things are built and running</strong>, from the shop and the donate page to weekly backups; {liveItems.filter((i) => i.status === "Test mode").length} of them is intentionally still in "test mode" until you say go.</p>
 		</div>
+		<details class="fk-live-disclosure">
+			<summary><span>See all {liveItems.length}</span></summary>
 		<Masonry>
 			{liveItems.map((item) => (
 				<div class="card">
@@ -219,9 +259,10 @@ const deviations = [
 				</div>
 			))}
 		</Masonry>
+		</details>
 	</section>
 
-	<section class="section wrap">
+	<section class="section wrap" id="questions">
 		<div class="fk-asks-head">
 			<div class="section-intro">
 				<span class="badge">Needs you</span>
@@ -276,16 +317,32 @@ const deviations = [
 								{/* Sits below the question rather than replacing it: the question stays visible
 								    even once answered, because the reply only makes sense next to what was
 								    asked. Attribution is first and in words, not a styled quote mark — with two
-								    people replying at different times, who said it is the part that matters. */}
+								    people replying at different times, who said it is the part that matters.
+
+								    Only the *reply* is always visible. Our commentary on it collapses, exactly
+								    as the question's own context does — when these were added they ignored that
+								    convention and put up to three permanent paragraphs on each of twelve
+								    questions, which was a third of everything on screen and is what made the
+								    page feel unreadable. What someone said is short and is the news; what we
+								    did about it is background, and background is what this page collapses. */}
 								{ask.answer && (
 									<div class="fk-ask-answer">
 										<p class="fk-ask-answer-head">{ask.answer.from} answered, {ask.answer.on}</p>
 										<p class="fk-ask-answer-said">{ask.answer.text}</p>
-										{ask.answer.outcome && (
-											<p class="fk-ask-answer-outcome"><strong>What we did:</strong> {ask.answer.outcome}</p>
-										)}
-										{ask.answer.followUp && (
-											<p class="fk-ask-answer-follow"><strong>Still open:</strong> {ask.answer.followUp}</p>
+										{(ask.answer.outcome || ask.answer.followUp) && (
+											<details class="fk-ask-more">
+												<summary>
+													<span class="fk-ask-more-label">
+														{ask.answer.followUp ? "What we did, and what's still open" : "What we did"}
+													</span>
+												</summary>
+												{ask.answer.outcome && (
+													<p class="fk-ask-answer-outcome"><strong>What we did:</strong> {ask.answer.outcome}</p>
+												)}
+												{ask.answer.followUp && (
+													<p class="fk-ask-answer-follow"><strong>Still open:</strong> {ask.answer.followUp}</p>
+												)}
+											</details>
 										)}
 									</div>
 								)}
@@ -298,7 +355,7 @@ const deviations = [
 
 	</section>
 
-	<section class="section wrap">
+	<section class="section wrap" id="choices">
 		<div class="section-intro">
 			<span class="badge">Done this way on purpose</span>
 			<h2>Choices worth knowing about</h2>
@@ -314,7 +371,7 @@ const deviations = [
 		</Masonry>
 	</section>
 
-	<section class="section wrap">
+	<section class="section wrap" id="costs">
 		<div class="section-intro">
 			<span class="badge">Costs</span>
 			<h2>What this costs to run</h2>
@@ -337,7 +394,7 @@ const deviations = [
 	{/* Ends on a next step rather than a reassurance. "No rush" already appears in the questions
 	    intro, and a page that finishes on a costs table leaves the reader with nothing to do —
 	    this points back at the one control on the page that actually helps them reply. */}
-	<section class="section wrap">
+	<section class="section wrap" id="reply">
 		<div class="fk-close">
 			<h2>Replying to all this</h2>
 			<p>The quickest way is the copy button in the questions section - it drops all {outstandingCount} into an email with a space to answer under each, so you can do them in any order, or a few at a time. Anything already replied to goes in with that reply quoted underneath, so those are a case of confirming rather than starting again. If you'd sooner talk any of it through than write it down, that works just as well.</p>
@@ -346,6 +403,135 @@ const deviations = [
 </Layout>
 
 <style>
+	/* Sticky beneath the site header, which is itself sticky at `--header-height` — so this offsets by
+	   that rather than sitting at 0, or the two would overlap. z-index stays below the header's 100. */
+	.fk-toc {
+		position: sticky;
+		top: var(--header-height);
+		z-index: 60;
+		background: rgba(250, 249, 246, 0.94);
+		backdrop-filter: blur(8px);
+		border-bottom: 1px solid rgba(36, 35, 43, 0.1);
+	}
+
+	/* Scrolls sideways on narrow screens rather than wrapping to two rows: a sticky bar that changes
+	   height as it wraps shifts the whole page under it. */
+	.fk-toc-inner {
+		display: flex;
+		gap: 0.35rem;
+		overflow-x: auto;
+		scrollbar-width: none;
+		padding-top: 0.45rem;
+		padding-bottom: 0.45rem;
+	}
+
+	.fk-toc-inner::-webkit-scrollbar {
+		display: none;
+	}
+
+	.fk-toc a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		flex-shrink: 0;
+		padding: 0.35rem 0.7rem;
+		border-radius: 999px;
+		font-size: 0.84rem;
+		font-weight: 600;
+		text-decoration: none;
+		color: rgba(36, 35, 43, 0.65);
+		white-space: nowrap;
+	}
+
+	.fk-toc a:hover {
+		color: var(--st-ink);
+		background: rgba(36, 35, 43, 0.05);
+	}
+
+	/* The current section is marked with a tint and full ink rather than the teal this site reserves
+	   for actions — every item here is already a link, so colour would say nothing about which one
+	   you're in. */
+	.fk-toc a[aria-current="true"] {
+		color: var(--st-ink);
+		background: rgba(36, 35, 43, 0.08);
+	}
+
+	.fk-toc-count {
+		font-size: 0.7rem;
+		font-weight: 700;
+		padding: 0.05rem 0.35rem;
+		border-radius: 999px;
+		background: rgba(36, 35, 43, 0.08);
+	}
+
+	.fk-toc a[aria-current="true"] .fk-toc-count {
+		background: rgba(255, 255, 255, 0.7);
+	}
+
+	/* Anchor jumps must clear both sticky bars, or the heading lands underneath them. */
+	.section[id] {
+		scroll-margin-top: calc(var(--header-height) + 3.2rem);
+	}
+
+	@media print {
+		.fk-toc {
+			display: none;
+		}
+	}
+
+	/* The one whole section that collapses — see the note on it in the markup. Sized up from the
+	   per-question disclosures because it opens a section rather than a paragraph. */
+	.fk-live-disclosure > summary {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		cursor: pointer;
+		margin-bottom: var(--space-4);
+		padding: 0.4rem 0.9rem;
+		border: 1px solid rgba(36, 35, 43, 0.18);
+		border-radius: 999px;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--st-ink);
+		list-style: none;
+		width: fit-content;
+	}
+
+	.fk-live-disclosure > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.fk-live-disclosure > summary::after {
+		content: "";
+		width: 6px;
+		height: 6px;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(45deg) translate(-1px, -1px);
+		transition: transform 0.15s ease;
+	}
+
+	.fk-live-disclosure[open] > summary::after {
+		transform: rotate(-135deg) translate(-2px, -2px);
+	}
+
+	.fk-live-disclosure > summary:focus-visible {
+		outline: 2px solid var(--st-teal, #1babbe);
+		outline-offset: 3px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fk-live-disclosure > summary::after {
+			transition: none;
+		}
+	}
+
+	@media print {
+		.fk-live-disclosure > summary {
+			display: none;
+		}
+	}
+
 	/* Icon and status share a row so the card opens with one clean band rather than two stacked
 	   chips. Baseline-independent (center) because the icon is a fixed 40px puck and the status is
 	   small caps text. */
@@ -548,7 +734,8 @@ const deviations = [
 		margin-top: 0.15rem;
 	}
 
-	.fk-ask-context summary {
+	.fk-ask-context summary,
+	.fk-ask-more summary {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
@@ -563,12 +750,14 @@ const deviations = [
 		width: fit-content;
 	}
 
-	.fk-ask-context summary::-webkit-details-marker {
+	.fk-ask-context summary::-webkit-details-marker,
+	.fk-ask-more summary::-webkit-details-marker {
 		display: none;
 	}
 
 	/* Own chevron, so it can rotate — the native marker can't be animated consistently. */
-	.fk-ask-context summary::after {
+	.fk-ask-context summary::after,
+	.fk-ask-more summary::after {
 		content: "";
 		width: 6px;
 		height: 6px;
@@ -578,22 +767,26 @@ const deviations = [
 		transition: transform 0.15s ease;
 	}
 
-	.fk-ask-context[open] summary::after {
+	.fk-ask-context[open] summary::after,
+	.fk-ask-more[open] summary::after {
 		transform: rotate(-135deg) translate(-2px, -2px);
 	}
 
-	.fk-ask-context summary:focus-visible {
+	.fk-ask-context summary:focus-visible,
+	.fk-ask-more summary:focus-visible {
 		outline: 2px solid var(--st-teal, #1babbe);
 		outline-offset: 3px;
 		border-radius: 3px;
 	}
 
-	.fk-ask-context p {
+	.fk-ask-context p,
+	.fk-ask-more p {
 		margin-top: 0.5rem;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.fk-ask-context summary::after {
+		.fk-ask-context summary::after,
+		.fk-ask-more summary::after {
 			transition: none;
 		}
 	}
@@ -602,7 +795,8 @@ const deviations = [
 	   forced open from a print stylesheet — see the beforeprint script below, which does it. This
 	   just tidies the control itself off the printed page. */
 	@media print {
-		.fk-ask-context summary {
+		.fk-ask-context summary,
+		.fk-ask-more summary {
 			display: none;
 		}
 	}
@@ -671,18 +865,20 @@ const deviations = [
 		color: var(--st-ink, #24232b);
 	}
 
-	/* Hairline above the two commentary lines separates "what they said" from "what we say back"
-	   without a second background — inside an already-tinted panel, another fill reads as a nested
-	   box rather than a divider. */
+	.fk-ask-more {
+		margin-top: 0.15rem;
+	}
+
 	.fk-ask-answer-outcome,
 	.fk-ask-answer-follow {
-		padding-top: 0.4rem;
-		border-top: 1px solid rgba(36, 35, 43, 0.09);
 		font-size: 0.9rem;
 	}
 
+	/* Hairline only *between* the two, now that the disclosure summary above supplies the separation
+	   from the reply itself. A rule under the summary as well would box the first paragraph in. */
 	.fk-ask-answer-outcome + .fk-ask-answer-follow {
-		margin-top: -0.1rem;
+		padding-top: 0.5rem;
+		border-top: 1px solid rgba(36, 35, 43, 0.09);
 	}
 
 	.fk-ask-number {
@@ -754,10 +950,74 @@ const deviations = [
 	 * Kerry is likely to print or PDF this to go through with Shan, and a printout of
 	 * "Why we're asking" stubs with no reasoning under them would be worse than useless.
 	 *
+	 * ⚠ The selector must list every collapsible on the page. Screen reading and printing want
+	 * opposite things here — the more the page collapses to stay readable, the more a printout
+	 * silently loses — so any new <details> has to be added here at the same time.
+	 *
 	 * Only rows this script opened are closed again, so anything already expanded on screen stays
 	 * expanded after the print dialog closes.
 	 */
-	const contexts = document.querySelectorAll<HTMLDetailsElement>(".fk-ask-context");
+	/**
+	 * Mark the section currently in view in the contents bar.
+	 *
+	 * Driven off scroll position rather than an IntersectionObserver: the sections here are far
+	 * taller than the viewport, so at any moment either several are intersecting or — inside the
+	 * questions section — none is entering or leaving for thousands of pixels, and the observer
+	 * simply stops firing. "Which section contains the point just below the sticky bars" is the
+	 * question actually being asked, and it has a direct answer.
+	 */
+	const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>(".fk-toc a[data-toc]")];
+	const spied = tocLinks
+		.map((link) => ({ link, section: document.getElementById(link.dataset.toc!) }))
+		.filter((entry): entry is { link: HTMLAnchorElement; section: HTMLElement } => Boolean(entry.section));
+
+	if (spied.length) {
+		const header = document.querySelector<HTMLElement>(".site-header");
+		const toc = document.querySelector<HTMLElement>(".fk-toc");
+
+		const markCurrent = () => {
+			// The threshold sits a little *below* the two sticky bars rather than exactly at their
+			// edge. A section resting a few pixels under the bar is the one being read, and without
+			// the tolerance an anchor jump lands just short of its own line — `scroll-margin-top`
+			// deliberately leaves a gap, so the arriving section would highlight the previous one.
+			const line = (header?.offsetHeight ?? 0) + (toc?.offsetHeight ?? 0) + 24;
+			// Last section whose top has passed the line — so the marker changes as a heading slides
+			// under the bar, which is where the reader's eye already is.
+			let active = spied[0];
+			for (const entry of spied) {
+				if (entry.section.getBoundingClientRect().top <= line) active = entry;
+			}
+			// The final section is short enough that its top may never cross the line on a tall
+			// screen; at the very bottom of the page it is unambiguously the one being read.
+			if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+				active = spied[spied.length - 1];
+			}
+			for (const entry of spied) {
+				if (entry === active) entry.link.setAttribute("aria-current", "true");
+				else entry.link.removeAttribute("aria-current");
+			}
+		};
+
+		let queued = false;
+		const onScroll = () => {
+			if (queued) return;
+			queued = true;
+			requestAnimationFrame(() => {
+				queued = false;
+				markCurrent();
+			});
+		};
+
+		markCurrent();
+		addEventListener("scroll", onScroll, { passive: true });
+		addEventListener("resize", onScroll);
+		// Opening a disclosure changes every section's offset, so the marker has to be recomputed.
+		addEventListener("toggle", onScroll, true);
+	}
+
+	const contexts = document.querySelectorAll<HTMLDetailsElement>(
+		".fk-ask-context, .fk-ask-more, .fk-live-disclosure"
+	);
 	let openedForPrint: HTMLDetailsElement[] = [];
 
 	window.addEventListener("beforeprint", () => {

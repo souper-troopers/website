@@ -1,0 +1,349 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * Internal page, same family as `request-for-comment.astro` and `google-listing.astro` — written for
+ * Kerry and Shan, not for the public. It passes `noindex` and is excluded from the sitemap in
+ * `astro.config.mjs`; both are needed, since the sitemap only controls what's advertised.
+ *
+ * Exists because the Shmiley question is the one decision on the RFC page that carries ongoing cost,
+ * and the honest answer is a comparison rather than a recommendation — the RFC's per-question format
+ * is a paragraph of context, which is the wrong shape for a trade-off with eight dimensions to it.
+ * Linked from that question in place of a longer body.
+ *
+ * ⚠ The recommendation here must stay in step with the Shmiley question on `/request-for-comment`
+ * and with the "Shmiley domain" item in AGENTS.md. If one changes, change all three.
+ */
+
+const updated = new Date().toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
+
+/**
+ * The comparison. `a` is "one site", `b` is "two sites"; `edge` marks which column that row favours,
+ * so the summary underneath can be counted rather than asserted — and so a row where the split
+ * genuinely wins is visibly marked as such rather than quietly softened.
+ */
+type Row = { aspect: string; a: string; b: string; edge: "a" | "b" | "even" };
+
+const rows: Row[] = [
+	{
+		aspect: "Someone reading about the work who decides to buy",
+		a: "Moves to the shop. Same site, same basket, nothing resets.",
+		b: "Leaves for a different address, with a different look and an empty basket.",
+		edge: "a",
+	},
+	{
+		aspect: "Someone who came to shop and starts wondering who you are",
+		a: "The whole story is one click away, and it is the reason to buy these rather than cheaper ones.",
+		b: "A link out to the charity site. Most people won't follow it.",
+		edge: "a",
+	},
+	{
+		aspect: "What the Shmiley domain does",
+		a: "Redirects to the shop. Anyone typing it, or finding it on a business card, lands in the right place.",
+		b: "Serves the Shmiley site. It's the front door.",
+		edge: "even",
+	},
+	{
+		aspect: "Standing with Google",
+		a: "Everything builds on soupertroopers.org, which has years of it already.",
+		b: "Starts at zero and builds separately. Two addresses splitting the same signals rather than doubling them.",
+		edge: "a",
+	},
+	{
+		aspect: "Shmiley having its own look",
+		a: "Fully possible - own colours, own feel, its own section. It just lives at soupertroopers.org/shop.",
+		b: "Complete freedom, including a look that owes the charity nothing.",
+		edge: "b",
+	},
+	{
+		aspect: "Publishing a change",
+		a: "One publish, as now.",
+		b: "Two, every time. Easy to update one and forget the other.",
+		edge: "a",
+	},
+	{
+		aspect: "Yearly cost",
+		a: "The domain renewal only.",
+		b: "The domain renewal, plus a second site drawing on the same free hosting allowance.",
+		edge: "a",
+	},
+	{
+		aspect: "Work to build",
+		a: "The redirect is minutes. A distinct Shmiley look is a small piece of design work.",
+		b: "A second site to build, and then to keep in step with this one indefinitely.",
+		edge: "a",
+	},
+	{
+		aspect: "Selling to shoppers who'd never give to a charity",
+		a: "The charity framing is always nearby. For a pure gift-buyer that's neutral at worst.",
+		b: "A clean retail brand, aimed only at people buying a present.",
+		edge: "b",
+	},
+	{
+		aspect: "Changing your mind later",
+		a: "Splitting later is a routine move of a catalogue that already ranks.",
+		b: "Merging back means redirects and losing some of what the second address built.",
+		edge: "a",
+	},
+];
+
+const forA = rows.filter((r) => r.edge === "a").length;
+const forB = rows.filter((r) => r.edge === "b").length;
+---
+
+<Layout
+	title="Shmiley: one site or two?"
+	description="An honest comparison of keeping Shmiley inside this site versus giving it its own."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry &amp; Shan - {updated}</span>
+			<h1>Shmiley: one site, or two?</h1>
+			<p>Shan asked for Shmiley to have its own look. That's very doable - but it could mean two quite different things, and only one of them costs anything ongoing. Here's the honest version of both.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="sd-frame">
+			<h2>These are two separate questions, and they get muddled</h2>
+			<p>Almost every conversation about this treats them as one. They aren't, and separating them makes the decision much easier.</p>
+			<ol class="sd-split">
+				<li>
+					<strong>Should Shmiley look like its own brand?</strong>
+					<span>Our answer: yes, and there's no argument against it. Its own colours, its own feel, its own personality in the shop. This costs a bit of design time once, and nothing after that.</span>
+				</li>
+				<li>
+					<strong>Should Shmiley live at its own web address?</strong>
+					<span>This is the real decision, and it's the one with a permanent cost attached. Everything below is about this question only.</span>
+				</li>
+			</ol>
+			<p class="sd-frame-close">You can have the first without the second. That combination - Shmiley looking like itself, at soupertroopers.org/shop, with the Shmiley domain pointing at it - is what we'd suggest, and it's what most of the table below supports.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">The comparison</span>
+			<h2>One site, or two</h2>
+			<p>Ten things that actually differ. We've marked which way each one points, including the {forB} that favour splitting - a comparison where every row agrees with the recommendation isn't a comparison.</p>
+		</div>
+
+		<div class="sd-table-scroll">
+			<table class="sd-table">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Shmiley inside this site<span>the domain redirects here</span></th>
+						<th>Shmiley as its own site<span>its own address</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					{rows.map((row) => (
+						<tr>
+							<th scope="row">{row.aspect}</th>
+							<td class:list={{ "is-better": row.edge === "a" }}>
+								{row.edge === "a" && <span class="sd-flag">Better</span>}
+								{row.a}
+							</td>
+							<td class:list={{ "is-better": row.edge === "b" }}>
+								{row.edge === "b" && <span class="sd-flag">Better</span>}
+								{row.b}
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+		<p class="sd-tally">On the ten rows: {forA} favour one site, {forB} favour two, and {rows.length - forA - forB} is a genuine tie.</p>
+	</section>
+
+	<section class="section wrap">
+		<div class="sd-verdict">
+			<h2>What we'd do, and why</h2>
+			<p><strong>Give Shmiley its own look inside this site, and point the Shmiley domain at the shop.</strong> Shan gets what she asked for - Shmiley reading as its own brand rather than a page of the charity site - without the part that costs money and attention every year.</p>
+			<p>The reason isn't really the money. It's the second and third rows of that table. The shop is proof to a donor that the work creates real jobs, and the work is the reason a shopper picks a R250 handmade doll over a cheaper one. Those two things sell each other, and they can only do that on the same site. Split them and each one loses its best argument.</p>
+			<p>The two rows that favour splitting are real, though, and they point at one specific situation: if Shmiley's ambition is to be a proper retail brand selling to people who would never think of themselves as donors, then eventually it wants its own front door. That's a brand decision rather than a website one, and it isn't urgent - which matters, because the asymmetry runs one way.</p>
+			<p class="sd-verdict-close">Splitting later is a routine move of a catalogue that already ranks and already has customers. Starting split means launching a brand-new address with nothing behind it. If there's genuine doubt, together is the reversible choice.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Worth knowing</span>
+			<h2>Two things that often come up</h2>
+		</div>
+		<div class="grid-2">
+			<div class="card">
+				<h3>A second address doesn't double your chances on Google</h3>
+				<p>It's the natural assumption, and it's backwards. A new address starts with no standing at all, and takes months to build any. Meanwhile the same products described on two addresses compete with each other rather than adding up - Google picks one and largely ignores the other. This was the original reason for buying the Shmiley domain, and it's the part we'd most want to correct: the products being findable was a real problem, but it was a problem on this site, and it's now fixed here. Every product has its own page, its own price and stock status, and names Shmiley as the maker.</p>
+			</div>
+			<div class="card">
+				<h3>Redirecting isn't wasting the domain</h3>
+				<p>Pointing the Shmiley address at the shop doesn't retire it. It still works on a business card, on packaging, in an Instagram bio, and for anyone who half-remembers the name and types it in - they simply arrive at the shop rather than at nothing. It also keeps the name reserved, so nobody else takes it. One thing worth being clear about: the redirect works the same for everybody, whether they arrive from Google, a search, or by typing it. Sending search engines somewhere different from people is called cloaking, and Google penalises it - so it isn't something we'd build even if it sounded appealing.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="sd-close">
+			<p>Nothing here is urgent, and none of the work already done is wasted either way - the product pages, the descriptions and the photography all travel with the content whichever address it ends up at. Back to <a href="/request-for-comment">the main update page</a>.</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* Tinted panel rather than a card, matching `/google-listing`'s opener: this reframes the question
+	   before any comparison happens, so it should read as a lead-in rather than the first item in a
+	   set. Teal here is an ambient surface, not an affordance — see AGENTS.md. */
+	.sd-frame {
+		border-left: 3px solid var(--st-teal);
+		border-radius: 0 var(--radius) var(--radius) 0;
+		background: rgba(27, 171, 190, 0.08);
+		padding: var(--space-5) var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.sd-frame h2 {
+		font-size: 1.15rem;
+	}
+
+	.sd-frame p {
+		max-width: 62ch;
+	}
+
+	.sd-split {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		margin: 0;
+		padding-left: 1.2rem;
+	}
+
+	.sd-split li {
+		max-width: 62ch;
+	}
+
+	.sd-split strong {
+		display: block;
+	}
+
+	.sd-split span {
+		color: rgba(36, 35, 43, 0.65);
+		font-size: 0.94rem;
+	}
+
+	.sd-frame-close {
+		font-weight: 600;
+	}
+
+	/* The table is the point of the page and it cannot usefully get narrower than about 640px, so it
+	   scrolls inside its own container rather than forcing the page body to scroll sideways. */
+	.sd-table-scroll {
+		overflow-x: auto;
+		margin-top: var(--space-5);
+	}
+
+	.sd-table {
+		width: 100%;
+		min-width: 640px;
+		border-collapse: collapse;
+		font-size: 0.92rem;
+	}
+
+	.sd-table th,
+	.sd-table td {
+		text-align: left;
+		vertical-align: top;
+		padding: 0.8rem 0.9rem;
+		border-bottom: 1px solid rgba(36, 35, 43, 0.09);
+	}
+
+	.sd-table thead th {
+		background: rgba(36, 35, 43, 0.04);
+		font-weight: 700;
+		font-size: 0.85rem;
+		border-bottom: 2px solid rgba(36, 35, 43, 0.12);
+	}
+
+	/* The qualifier under each column heading is the thing that stops "inside this site" and "its own
+	   site" being read as the same choice twice. */
+	.sd-table thead th span {
+		display: block;
+		margin-top: 0.15rem;
+		font-weight: 400;
+		font-size: 0.78rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.sd-table tbody th {
+		width: 26%;
+		font-weight: 600;
+		color: var(--st-ink);
+		background: rgba(36, 35, 43, 0.02);
+	}
+
+	.sd-table td {
+		width: 37%;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	/* A wash rather than a tint of the brand teal: this marks which side a row favours, and teal on
+	   this site means "you can act on this". Green is already the page family's "settled" colour. */
+	.sd-table td.is-better {
+		background: rgba(47, 122, 68, 0.07);
+		color: var(--st-ink);
+	}
+
+	/* Not colour alone — the flag is the non-colour cue, for the same reason body links keep their
+	   underline (see AGENTS.md). */
+	.sd-flag {
+		display: block;
+		margin-bottom: 0.3rem;
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: #2f7a44;
+	}
+
+	.sd-tally {
+		margin-top: var(--space-4);
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.sd-verdict {
+		padding-top: var(--space-6);
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.sd-verdict h2 {
+		font-size: 1.25rem;
+	}
+
+	.sd-verdict p {
+		max-width: 62ch;
+	}
+
+	.sd-verdict-close {
+		font-weight: 600;
+		color: var(--st-ink);
+	}
+
+	.sd-close {
+		padding-top: var(--space-6);
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+		font-size: 0.94rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.sd-close p {
+		max-width: 62ch;
+	}
+</style>

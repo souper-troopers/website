@@ -27,7 +27,7 @@ export default defineConfig({
       // them being *advertised* — the internal ones also pass `noindex` to `Layout.astro`, which is
       // what actually keeps them out once the pre-launch blanket noindex comes off.
       filter: (page) =>
-        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/'].some(
+        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/', '/shmiley-decision/'].some(
           (path) => page.endsWith(path)
         ),
     }),

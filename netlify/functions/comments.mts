@@ -1,4 +1,4 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
 
 /**
@@ -23,11 +23,17 @@ import { getStore } from "@netlify/blobs";
  *
  *   - `Origin` is browser-set and unforgeable by another *page*, so this stops a third-party site
  *     reading or writing threads through a visitor's browser. It does nothing against curl.
- *   - There is **no authentication**. Anyone who has the URL can post as any of the named people.
- *     The page is `noindex`, excluded from the sitemap and unlinked from anywhere public, so this
- *     rests on the address not being guessed — the same footing as the Studio's Publish button.
- *     It is a working document between five known people, not a system of record; if it ever needs
- *     to be more than that, a shared passphrase checked here is the next step.
+ *   - **Authentication is handled upstream**, by `netlify/edge-functions/status-auth.ts`, which
+ *     covers this path as well as the pages. Nothing unauthenticated reaches here. Under the shared
+ *     password that proves only that the caller has it, not who they are — see the note on
+ *     `x-status-user` below for when the name becomes a fact rather than a claim.
+ *   - **Nothing is emailed when a comment arrives** (decided 2026-08-15). It was built and then
+ *     removed: the notification depended on a Netlify Forms notification address that was never
+ *     configured, so it posted into the void while the code read as though it worked — worse than
+ *     not having it. Netlify Forms submissions are free and unlimited on credit-based plans, so
+ *     cost was never the reason. The trade is real and accepted: **a comment is seen when someone
+ *     opens the page**, so during an active review somebody has to look. Restoring it is a small
+ *     function that POSTs to a `new-comment` form plus a notification address in the dashboard.
  *   - Comments cannot be edited or deleted from the page, deliberately. Deleting one is a
  *     `netlify blobs:delete` away for us, and an undo control would be one more thing to get wrong
  *     for a thread five people can simply reply to.
@@ -74,37 +80,7 @@ function json(body: unknown, status: number, origin: string | null) {
 	return new Response(JSON.stringify(body), { status, headers: headers(origin) });
 }
 
-/**
- * Tell the team a comment arrived, by posting to the site's own Netlify Form.
- *
- * A comment nobody sees is worse than the email it replaced, and Netlify Functions have no mail
- * transport of their own. Reusing the Forms notification that already exists (and already emails on
- * contact-form submissions) avoids adding a mail provider and another credential for one line of
- * text. Deliberately best-effort: a failed notification must never lose the comment itself, which
- * is already stored by the time this runs.
- */
-async function notify(siteUrl: string, comment: Comment, itemLabel: string) {
-	try {
-		const body = new URLSearchParams({
-			"form-name": "new-comment",
-			item: comment.item,
-			label: itemLabel,
-			author: comment.author,
-			comment: comment.body.slice(0, 800),
-			at: comment.at,
-			"bot-field": "",
-		});
-		await fetch(siteUrl, {
-			method: "POST",
-			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			body: body.toString(),
-		});
-	} catch {
-		/* Best effort only — see above. */
-	}
-}
-
-export default async (request: Request, context: Context) => {
+export default async (request: Request) => {
 	const origin = request.headers.get("origin");
 
 	if (request.method === "OPTIONS") {
@@ -139,7 +115,7 @@ export default async (request: Request, context: Context) => {
 		return json({ error: "Method not allowed." }, 405, origin);
 	}
 
-	let payload: { item?: string; author?: string; body?: string; label?: string };
+	let payload: { item?: string; author?: string; body?: string };
 	try {
 		payload = await request.json();
 	} catch {
@@ -192,17 +168,6 @@ export default async (request: Request, context: Context) => {
 
 	const thread = [...existing, comment];
 	await store.setJSON(item, thread);
-
-	// After the write, so a notification failure can never cost the comment.
-	const siteUrl = context.site?.url || process.env.URL || "";
-	if (siteUrl) {
-		await notify(siteUrl, comment, (payload.label || "").slice(0, 200));
-	} else {
-		// The comment is safely stored either way, but an un-notified comment is the one failure
-		// mode that makes this whole feature worse than the email it replaced — so it must not be
-		// silent. Shows up in the Netlify function log.
-		console.warn("comments: no site URL available, comment stored but nobody was notified");
-	}
 
 	return json({ comment, thread }, 201, origin);
 };

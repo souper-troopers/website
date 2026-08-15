@@ -112,11 +112,11 @@ class CommentStore {
 		}
 	}
 
-	async add(item: string, author: string, body: string, label: string) {
+	async add(item: string, author: string, body: string) {
 		const response = await fetch(endpoint(), {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ item, author, body, label }),
+			body: JSON.stringify({ item, author, body }),
 		});
 		if (!response.ok) {
 			const detail = await response.json().catch(() => ({}));

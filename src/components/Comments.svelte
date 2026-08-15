@@ -2,9 +2,9 @@
 	/**
 	 * A comment thread on one item of the update page.
 	 *
-	 * Replaces the copy-questions-into-an-email loop with answering in place, where the answer stays
-	 * next to the thing it answers and all five people can see it. Email still works and nobody is
-	 * being forced off it — this is the better path, not the only one.
+	 * Replaced the copy-questions-into-an-email loop: the answer now stays next to the thing it
+	 * answers and all five people can see it. Nothing is emailed when a comment arrives (see
+	 * `netlify/functions/comments.mts` for why) — a thread is read when someone opens the page.
 	 *
 	 * ── Loading ──────────────────────────────────────────────────────────────────────────────────
 	 * Threads are fetched **once for the whole page** by `commentStore`, not per component. There are
@@ -67,7 +67,7 @@
 		sending = true;
 		error = "";
 		try {
-			await commentStore.add(id, author, draft.trim(), label);
+			await commentStore.add(id, author, draft.trim());
 			draft = "";
 			open = false;
 		} catch (e) {
@@ -101,8 +101,9 @@
 			{#each thread as entry (entry.key)}
 				<li>
 					<p class="cm-meta"><strong>{entry.author}</strong> <span>{when(entry.at)}</span></p>
-					<!-- Plain text, rendered as text. Nothing here is parsed as markup: five trusted
-					     people or not, an unauthenticated endpoint must not be able to inject HTML. -->
+					<!-- Plain text, rendered as text. The endpoint is behind Basic auth and the five
+					     people are trusted, which is exactly the reasoning that ends in a stored XSS
+					     one day — nothing typed into a box gets parsed as markup. -->
 					<p class="cm-body">{entry.body}</p>
 				</li>
 			{/each}

@@ -201,9 +201,33 @@ const deviations = [
  * Counts are read off the same arrays the sections render from, so a number here can't drift from
  * the section it labels. `null` means the section has nothing countable in it.
  */
+/**
+ * Two questions needed more than a paragraph, so they have pages of their own. Those pages were
+ * reachable only from a link inside the question that prompted them — below the question callout,
+ * on a page long enough that the question itself is easily scrolled past. Anyone who didn't read
+ * that particular question never learned they existed, which for the Google listing walkthrough is
+ * the worst possible outcome: it's the one thing on the page we most want actually done.
+ *
+ * Listed here as well as inline, not instead of — someone reading the question in context should
+ * still find the link where they are.
+ */
+const guides = [
+	{
+		href: "/google-listing",
+		label: "Setting up your Google listing",
+		blurb: "The whole listing written out and ready to paste - address, hours, categories, and a description. Around ten minutes of work, and the single biggest free thing available for being found.",
+	},
+	{
+		href: "/shmiley-decision",
+		label: "Shmiley: one site, or two?",
+		blurb: "Both options side by side, with the two things a separate Shmiley site genuinely does better - and what it would cost every year to keep.",
+	},
+];
+
 const sections = [
 	{ id: "working", label: "What works", count: liveItems.length },
 	{ id: "questions", label: "Questions", count: outstandingCount },
+	{ id: "guides", label: "Guides", count: guides.length },
 	{ id: "choices", label: "Our choices", count: deviations.length },
 	{ id: "costs", label: "Costs", count: null },
 	{ id: "reply", label: "Replying", count: null },
@@ -353,6 +377,23 @@ const sections = [
 			</div>
 		))}
 
+	</section>
+
+	<section class="section wrap" id="guides">
+		<div class="section-intro">
+			<span class="badge">Written up separately</span>
+			<h2>Two things with their own page</h2>
+			<p>Both come up as questions above, but each needed more room than a question allows - so they're written out properly, ready to work from rather than to read about.</p>
+		</div>
+		<div class="grid grid-2">
+			{guides.map((guide) => (
+				<a class="card fk-guide" href={guide.href}>
+					<h3>{guide.label}</h3>
+					<p>{guide.blurb}</p>
+					<span class="fk-guide-cta">Open it &rarr;</span>
+				</a>
+			))}
+		</div>
 	</section>
 
 	<section class="section wrap" id="choices">
@@ -529,6 +570,53 @@ const sections = [
 	@media print {
 		.fk-live-disclosure > summary {
 			display: none;
+		}
+	}
+
+	/* Whole-card link. The card is the target rather than a link inside it, so the tap area is the
+	   card on a phone — but the heading still has to look like a link on its own, since a card that
+	   is entirely clickable gives no signal that it is (see the note on affordances in AGENTS.md).
+	   Hence the explicit "Open it" cue rather than relying on the card being pressable. */
+	.fk-guide {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		text-decoration: none;
+		color: inherit;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		transition: border-color 0.15s ease, transform 0.15s ease;
+	}
+
+	.fk-guide:hover {
+		border-color: var(--st-teal);
+		transform: translateY(-2px);
+	}
+
+	.fk-guide h3 {
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.fk-guide p {
+		color: rgba(36, 35, 43, 0.65);
+		font-size: 0.94rem;
+	}
+
+	/* Inside an <a>, so teal is correct here — this is genuinely an action. */
+	.fk-guide-cta {
+		margin-top: auto;
+		font-weight: 700;
+		font-size: 0.9rem;
+		color: var(--st-teal-dark, #148294);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fk-guide {
+			transition: none;
+		}
+
+		.fk-guide:hover {
+			transform: none;
 		}
 	}
 

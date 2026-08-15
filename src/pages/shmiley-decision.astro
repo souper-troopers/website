@@ -173,7 +173,8 @@ const forB = rows.filter((r) => r.edge === "b").length;
 			<span class="badge">Worth knowing</span>
 			<h2>Two things that often come up</h2>
 		</div>
-		<div class="grid-2">
+		{/* `grid` carries the gap; `grid-2` only sets the columns. Both are needed — see Layout.astro. */}
+		<div class="grid grid-2">
 			<div class="card">
 				<h3>A second address doesn't double your chances on Google</h3>
 				<p>It's the natural assumption, and it's backwards. A new address starts with no standing at all, and takes months to build any. Meanwhile the same products described on two addresses compete with each other rather than adding up - Google picks one and largely ignores the other. This was the original reason for buying the Shmiley domain, and it's the part we'd most want to correct: the products being findable was a real problem, but it was a problem on this site, and it's now fixed here. Every product has its own page, its own price and stock status, and names Shmiley as the maker.</p>

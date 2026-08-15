@@ -153,11 +153,6 @@ export default async (request: Request) => {
 		return json({ error: "Bad item id." }, 400, origin);
 	}
 
-	const existing = ((await store.get(item, { type: "json" })) as Comment[] | null) ?? [];
-	if (existing.length >= MAX_PER_ITEM) {
-		return json({ error: "This thread is full." }, 409, origin);
-	}
-
 	const comment: Comment = {
 		id: crypto.randomUUID(),
 		item,
@@ -166,8 +161,48 @@ export default async (request: Request) => {
 		at: new Date().toISOString(),
 	};
 
-	const thread = [...existing, comment];
-	await store.setJSON(item, thread);
+	/**
+	 * Append with a compare-and-swap where the platform allows one, retrying if someone else got in
+	 * first.
+	 *
+	 * A thread is one blob, so adding a comment is read-modify-write, and two people posting to the
+	 * same thread within the same second would otherwise have one silently overwrite the other.
+	 * `onlyIfMatch` makes the write conditional on the blob still being the revision we read.
+	 *
+	 * **This is why a thread is one blob rather than one blob per comment**, which would make
+	 * appends conflict-free. Netlify Blobs' `list()` returns keys only, never values, so reading a
+	 * thread would cost one `list` plus one `get` per comment — for this page's single bulk read of
+	 * ~30 threads that is roughly 120 round trips instead of 30. A retry on a rare collision is far
+	 * cheaper than quadrupling every read.
+	 *
+	 * ⚠ **The local emulator never returns an ETag on GET** (see `getLocalPaths`/`get` in
+	 * `@netlify/blobs/dist/server.js` — it sets only the metadata header), so `getWithMetadata`
+	 * yields `etag: undefined` under `netlify dev`. Requiring a condition there breaks *every*
+	 * append after the first, which is exactly what it did before this fallback existed. When no
+	 * ETag is available the write goes ahead unconditionally: that is last-write-wins, which is no
+	 * worse than having no CAS at all, and it keeps local development working. Production returns
+	 * real ETags, so the guard is live where it matters — **and cannot be tested locally.**
+	 */
+	let thread: Comment[] = [];
+	for (let attempt = 0; ; attempt++) {
+		const current = await store.getWithMetadata(item, { type: "json" });
+		const existing = (current?.data as Comment[] | null) ?? [];
+		if (existing.length >= MAX_PER_ITEM) {
+			return json({ error: "This thread is full." }, 409, origin);
+		}
+		thread = [...existing, comment];
+
+		if (!current?.etag) {
+			await store.setJSON(item, thread);
+			break;
+		}
+
+		const result = await store.setJSON(item, thread, { onlyIfMatch: current.etag });
+		if (result.modified) break;
+		if (attempt >= 3) {
+			return json({ error: "That thread is busy - try again in a moment." }, 409, origin);
+		}
+	}
 
 	return json({ comment, thread }, 201, origin);
 };

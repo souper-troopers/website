@@ -1382,6 +1382,21 @@ const structuredData = {
 				white-space: nowrap;
 			}
 
+			/* Text for screen readers only — for things a sighted reader gets from context but a
+			   listener doesn't, such as a link opening in a new tab. Same technique as
+			   `.honeypot-field` above, but that one is named for its single purpose and shouldn't be
+			   borrowed for this; a rule called "honeypot" hiding real content is a trap for whoever
+			   next tries to delete it. */
+			.visually-hidden {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				clip: rect(0 0 0 0);
+				clip-path: inset(50%);
+				white-space: nowrap;
+			}
+
 			.partner-logo-frame {
 				display: flex;
 				align-items: center;

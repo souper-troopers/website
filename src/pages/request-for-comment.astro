@@ -353,9 +353,16 @@ const sections = [
 								    expands the thread. A div rather than a p, since a p can't contain one. */}
 								<div class="fk-ask-question">
 									<p>{ask.ask}</p>
+									{/* New tab, deliberately — normally the wrong default for a same-site link, but
+									    this page is a long working document and following a reference from the middle
+									    of it would lose the reader's place and any half-typed comment. `rel="noopener"`
+									    regardless of it being our own page, and the fact that it opens elsewhere is
+									    announced rather than left to be discovered. */}
 									{ask.link && (
 										<p class="fk-ask-link">
-											<a href={ask.link.href}>{ask.link.label} &rarr;</a>
+											<a href={ask.link.href} target="_blank" rel="noopener">
+												{ask.link.label} &rarr;<span class="visually-hidden"> (opens in a new tab)</span>
+											</a>
 										</p>
 									)}
 								</div>

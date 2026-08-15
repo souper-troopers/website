@@ -24,9 +24,14 @@ import { getStore } from "@netlify/blobs";
  *   - `Origin` is browser-set and unforgeable by another *page*, so this stops a third-party site
  *     reading or writing threads through a visitor's browser. It does nothing against curl.
  *   - **Authentication is handled upstream**, by `netlify/edge-functions/status-auth.ts`, which
- *     covers this path as well as the pages. Nothing unauthenticated reaches here. Under the shared
- *     password that proves only that the caller has it, not who they are — see the note on
- *     `x-status-user` below for when the name becomes a fact rather than a claim.
+ *     covers this path as well as the pages. Nothing unauthenticated reaches here — and the function
+ *     is not separately reachable at `/.netlify/functions/comments`, which 404s: declaring a `path`
+ *     in the config below replaces the default endpoint rather than adding to it. Verified against
+ *     production, because a second door past the edge function would undo all of the above.
+ *   - **A comment can only be attributed to whoever signed in.** The name is read from the header
+ *     the edge function controls and from nowhere else, so posting as somebody else is not possible
+ *     even with valid credentials. That requires per-person logins (`STATUS_USERS`); under a shared
+ *     password nobody is identified, and writes are refused rather than guessed at.
  *   - **Nothing is emailed when a comment arrives** (decided 2026-08-15). It was built and then
  *     removed: the notification depended on a Netlify Forms notification address that was never
  *     configured, so it posted into the void while the code read as though it worked — worse than
@@ -53,8 +58,6 @@ const ALLOWED_ORIGINS = new Set([
 const MAX_PER_ITEM = 200;
 const MAX_BODY_CHARS = 4000;
 const MAX_NAME_CHARS = 40;
-/** Mirrors `clientPeople` + `projectPeople` in `src/lib/people.ts` — keep the two in step. */
-const KNOWN_PEOPLE = new Set(["Kerry", "Shan", "Adrian", "Brad", "Stephen"]);
 
 export interface Comment {
 	id: string;
@@ -62,6 +65,22 @@ export interface Comment {
 	author: string;
 	body: string;
 	at: string;
+}
+
+/**
+ * Who signed in — the only source of a name on this endpoint.
+ *
+ * `status-auth.ts` sets `x-status-user` on every request under per-person logins and **deletes** it
+ * otherwise, so the browser can neither forge nor retain one. There is deliberately no list of
+ * expected names here: the names come from the usernames in `STATUS_USERS`, and a second copy would
+ * mean adding a login for a new colleague silently left them unable to comment. The check below is
+ * a sanity bound on a malformed environment variable, not an authorisation decision — that was made
+ * at the edge, by a password.
+ */
+function signedInPerson(request: Request): string | null {
+	const name = (request.headers.get("x-status-user") || "").trim();
+	if (!name || name.length > MAX_NAME_CHARS) return null;
+	return /^[\p{L}\p{M}'’ -]+$/u.test(name) ? name : null;
 }
 
 function headers(origin: string | null) {
@@ -97,10 +116,20 @@ export default async (request: Request) => {
 
 	if (request.method === "GET") {
 		const url = new URL(request.url);
+		/**
+		 * The response carries `you` as well as the threads.
+		 *
+		 * The page is static HTML built once, so it cannot know who is reading it — only a request can,
+		 * and this is the one request every reader already makes on load. Without it the page has to
+		 * ask a signed-in person to name themselves in a dropdown, having just authenticated them,
+		 * which reads as the login not having worked. Null under the shared password, where nobody is
+		 * identified and the dropdown is genuinely the only source of a name.
+		 */
+		const you = signedInPerson(request);
 		// A single request for every thread on the page: one round trip on load rather than one per
 		// item, which for ~30 items would be 30 cold-start-prone calls.
 		const items = (url.searchParams.get("items") || "").split(",").map((s) => s.trim()).filter(Boolean);
-		if (!items.length) return json({ threads: {} }, 200, origin);
+		if (!items.length) return json({ threads: {}, you }, 200, origin);
 
 		const entries = await Promise.all(
 			items.slice(0, 100).map(async (item) => {
@@ -108,14 +137,14 @@ export default async (request: Request) => {
 				return [item, thread] as const;
 			})
 		);
-		return json({ threads: Object.fromEntries(entries) }, 200, origin);
+		return json({ threads: Object.fromEntries(entries), you }, 200, origin);
 	}
 
 	if (request.method !== "POST") {
 		return json({ error: "Method not allowed." }, 405, origin);
 	}
 
-	let payload: { item?: string; author?: string; body?: string };
+	let payload: { item?: string; body?: string };
 	try {
 		payload = await request.json();
 	} catch {
@@ -126,27 +155,21 @@ export default async (request: Request) => {
 	const body = (payload.body || "").trim();
 
 	/**
-	 * Identity comes from the edge function when it can, and from the client's picker when it can't.
-	 *
-	 * `status-auth.ts` sets `x-status-user` on every request and overwrites whatever arrived, so
-	 * under per-person logins (`STATUS_USERS`) it is a fact rather than a claim and outranks the
-	 * dropdown. Under the shared login it is always "Souper", which identifies nobody — so that
-	 * value is ignored and the self-declared name stands. Configuring `STATUS_USERS` therefore
-	 * upgrades attribution from claimed to authenticated with no change here.
+	 * The author is never taken from the request body. It was, when a shared password meant the
+	 * browser held the only name — but a payload field is a claim, and the moment identity became a
+	 * fact, accepting a claim alongside it just left the weaker path open. Anyone who can post is
+	 * signed in as themselves by definition now.
 	 */
-	const signedIn = (request.headers.get("x-status-user") || "").trim();
-	const author = (KNOWN_PEOPLE.has(signedIn) ? signedIn : (payload.author || "").trim());
+	const author = signedInPerson(request);
+	if (!author) {
+		return json({ error: "Sign in with your own login to comment." }, 401, origin);
+	}
 
-	if (!item || !author || !body) {
-		return json({ error: "item, author and body are all required." }, 400, origin);
+	if (!item || !body) {
+		return json({ error: "item and body are both required." }, 400, origin);
 	}
-	if (body.length > MAX_BODY_CHARS || author.length > MAX_NAME_CHARS) {
+	if (body.length > MAX_BODY_CHARS) {
 		return json({ error: "That comment is too long." }, 413, origin);
-	}
-	// Not a security control — anyone can claim any of these. It keeps the thread readable by
-	// rejecting arbitrary strings, so an attribution always matches one of the five known people.
-	if (!KNOWN_PEOPLE.has(author)) {
-		return json({ error: "Unknown author." }, 400, origin);
 	}
 	// The id becomes a blob key, so it must not be able to reach outside the store.
 	if (!/^[a-z0-9-]{1,64}$/i.test(item)) {

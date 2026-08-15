@@ -12,7 +12,6 @@
 	 * be slower than the email it replaces. Each instance subscribes to the shared result.
 	 */
 	import { onMount } from "svelte";
-	import { clientPeople, projectPeople } from "../lib/people";
 	import { commentStore } from "../lib/comments.svelte";
 
 	/**
@@ -31,15 +30,18 @@
 	// tick into a single request. See the note in `comments.svelte.ts`.
 	onMount(() => commentStore.register(id));
 
-	const people = [...clientPeople, ...projectPeople];
-
 	let draft = $state("");
-	let author = $state("");
 	let sending = $state(false);
 	let error = $state("");
 
 	const live = $derived(commentStore.threads[id] ?? []);
 	const loading = $derived(commentStore.loading);
+	/**
+	 * Who you are is not asked, it's known — the endpoint reads it from the login and ignores any
+	 * name the page might send. Empty under a shared password, where nobody is identified.
+	 */
+	const signedInAs = $derived(commentStore.signedInAs);
+	const identityKnown = $derived(commentStore.identityKnown);
 
 	const thread = $derived(
 		[
@@ -50,23 +52,17 @@
 
 	const last = $derived(thread.length ? thread[thread.length - 1] : null);
 
-	// Who you are is asked once per browser rather than once per comment — on a page with thirty
-	// threads, re-picking a name every time is the thing that would stop people using it.
-	$effect(() => {
-		if (!author) author = commentStore.rememberedAuthor;
-	});
-
 	function when(iso: string) {
 		const date = new Date(iso);
 		return date.toLocaleDateString("en-ZA", { day: "numeric", month: "short" });
 	}
 
 	async function send() {
-		if (!draft.trim() || !author) return;
+		if (!draft.trim() || !signedInAs) return;
 		sending = true;
 		error = "";
 		try {
-			await commentStore.add(id, author, draft.trim());
+			await commentStore.add(id, draft.trim());
 			draft = "";
 		} catch (e) {
 			error = e instanceof Error && e.message ? e.message : "That didn't send. Try again, or email us.";
@@ -113,35 +109,53 @@
 		thread is already the intent — a second click to reveal an empty textarea asked people to
 		declare that intent twice, and an empty box is the more inviting and more familiar shape.
 	-->
-	<div class="cm-form">
-		<label class="cm-who">
-			<span>Commenting as</span>
-			<select bind:value={author}>
-				<option value="" disabled>Choose...</option>
-				{#each people as person}
-					<option value={person}>{person}</option>
-				{/each}
-			</select>
-		</label>
-		<textarea
-			bind:value={draft}
-			rows="3"
-			placeholder={thread.length ? "Reply..." : "Your answer, or anything you want to flag..."}
-			aria-label={`Comment on: ${label}`}
-		></textarea>
-		<div class="cm-actions">
-			<button type="button" class="cm-send" onclick={send} disabled={sending || !draft.trim() || !author}>
-				{sending ? "Posting..." : "Post comment"}
-			</button>
-			{#if loading}<span class="cm-loading">Loading comments...</span>{/if}
+	<!--
+		There is no "commenting as" picker. Everyone reaches this page through their own login, so the
+		name is already known — asking a signed-in person to choose it from a dropdown read as the
+		login not having taken, and was worse than redundant besides, since the endpoint overrules
+		whatever was chosen. A control that offers a choice it doesn't honour is a lie about the system.
+
+		The box only appears once the server has said who is here, rather than assuming nobody until
+		told otherwise: a thread opened during that first round trip would otherwise tell a signed-in
+		reader to sign in.
+	-->
+	{#if signedInAs}
+		<div class="cm-form">
+			<p class="cm-who">Commenting as <strong>{signedInAs}</strong></p>
+			<textarea
+				bind:value={draft}
+				rows="3"
+				placeholder={thread.length ? "Reply..." : "Your answer, or anything you want to flag..."}
+				aria-label={`Comment on: ${label}`}
+			></textarea>
+			<div class="cm-actions">
+				<button type="button" class="cm-send" onclick={send} disabled={sending || !draft.trim()}>
+					{sending ? "Posting..." : "Post comment"}
+				</button>
+				{#if loading}<span class="cm-loading">Loading comments...</span>{/if}
+			</div>
+			{#if error}<p class="cm-error">{error}</p>{/if}
 		</div>
-		{#if error}<p class="cm-error">{error}</p>{/if}
-	</div>
+	{:else if identityKnown}
+		<p class="cm-who cm-signed-out">
+			This page is open with a shared password, so comments can't be signed. Ask us for your own
+			login and the box will appear here.
+		</p>
+	{/if}
 </details>
 
 <style>
 	.cm {
 		margin-top: 0.6rem;
+		/**
+		 * `width: 100%` looks redundant on a block element and is not. `.card` is a column flex
+		 * container with `align-items: flex-start`, so its children are shrink-to-fit — a <details>
+		 * dropped in there collapses to the width of its own summary (measured: 94px in a 337px
+		 * card), taking the textarea with it. Setting the width rather than `align-self: stretch`
+		 * because it holds in a grid or an inline-flex parent too, and this component is placed in
+		 * three different containers on the page.
+		 */
+		width: 100%;
 		max-width: 62ch;
 	}
 
@@ -271,24 +285,28 @@
 		color: rgba(36, 35, 43, 0.65);
 	}
 
-	.cm-who select,
+	/* The name itself is content, not a label, so it sits at full ink like an author line above. */
+	.cm-who strong {
+		color: var(--st-ink, #24232b);
+		font-weight: 700;
+	}
+
+	.cm-signed-out {
+		margin-top: 1rem;
+		font-weight: 400;
+		max-width: 48ch;
+	}
+
 	.cm-form textarea {
 		font: inherit;
 		font-size: 0.9rem;
+		width: 100%;
+		resize: vertical;
 		padding: 0.4rem 0.6rem;
 		border: 1px solid rgba(36, 35, 43, 0.25);
 		border-radius: 8px;
 		background: var(--st-white, #fff);
 		color: var(--st-ink, #24232b);
-	}
-
-	.cm-who select {
-		min-height: 32px;
-	}
-
-	.cm-form textarea {
-		width: 100%;
-		resize: vertical;
 	}
 
 	.cm-send {

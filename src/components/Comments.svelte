@@ -147,6 +147,15 @@
 <style>
 	.cm {
 		margin-top: 0.6rem;
+		/**
+		 * `width: 100%` looks redundant on a block element and is not. `.card` is a column flex
+		 * container with `align-items: flex-start`, so its children are shrink-to-fit — a <details>
+		 * dropped in there collapses to the width of its own summary (measured: 94px in a 337px
+		 * card), taking the textarea with it. Setting the width rather than `align-self: stretch`
+		 * because it holds in a grid or an inline-flex parent too, and this component is placed in
+		 * three different containers on the page.
+		 */
+		width: 100%;
 		max-width: 62ch;
 	}
 

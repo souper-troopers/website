@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CopyQuestionsButton from "../components/CopyQuestionsButton.svelte";
+import MarkDone from "../components/MarkDone.svelte";
 import Masonry from "../components/Masonry.astro";
 import FeatureIcon from "../components/FeatureIcon.astro";
 
@@ -47,7 +48,13 @@ const questionGroups = [
 	{ group: "Things to send us", needs: "Send something", note: "Content we can't write for you - all of it goes straight into the site." },
 	{ group: "Quick things to confirm", needs: "A yes or no", note: "Short checks. We've used what's on the current site, but can't verify it ourselves." },
 	{ group: "Your call", needs: "A decision", note: "Decisions that are genuinely yours - no wrong answers here." },
-	{ group: "Things to ask someone else", needs: "Ask someone", note: "These need someone outside the two of you, so they're worth starting early." },
+	/**
+	 * The only group with a "Mark as done" control, and the rule behind that is worth keeping: for
+	 * every other group the *answer is the completion* — telling us the postal code is the signal,
+	 * so a button beside it would be bookkeeping on top of the thing that already worked. These
+	 * happen elsewhere, over weeks, and nothing else would ever tell us they happened.
+	 */
+	{ group: "Things to ask someone else", needs: "Ask someone", note: "These need someone outside the two of you, so they're worth starting early.", tracksCompletion: true },
 ];
 
 /**
@@ -408,6 +415,13 @@ const sections = [
 										)}
 									</div>
 								)}
+								{/* Last, below any reply. Only on the group whose items happen elsewhere —
+								    see the note on `tracksCompletion`. Hidden once settled, since a done
+								    button on a closed question invites a second notification for
+								    something already recorded. */}
+								{g.tracksCompletion && !isSettled(ask) && (
+									<MarkDone client:visible id={`q${i + 1}`} title={ask.title} />
+								)}
 							</div>
 						</div>
 					))}
@@ -485,6 +499,20 @@ const sections = [
 	{/* Ends on a next step rather than a reassurance. "No rush" already appears in the questions
 	    intro, and a page that finishes on a costs table leaves the reader with nothing to do —
 	    this points back at the one control on the page that actually helps them reply. */}
+	{/* Netlify discovers forms by scanning the *built* HTML at deploy time. `MarkDone` is a Svelte
+	    island that posts with `fetch`, so its form never exists in the static output and the form
+	    name would be unknown — submissions then 404. This plain Astro-rendered duplicate is what
+	    registers "task-done"; it is never shown or submitted. Same pattern the shop's order form
+	    used before the cart replaced it. Field names must stay in step with the component. */}
+	<form name="task-done" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+		<input type="hidden" name="form-name" value="task-done" />
+		<input type="text" name="bot-field" />
+		<input type="text" name="task" />
+		<input type="text" name="title" />
+		<input type="text" name="name" />
+		<input type="text" name="marked-at" />
+	</form>
+
 	<section class="section wrap" id="reply">
 		<div class="fk-close">
 			<h2>Replying to all this</h2>

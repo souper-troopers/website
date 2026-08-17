@@ -37,35 +37,50 @@ const shopBrands = [
 
 	<section class="section wrap">
 		<div class="contact-grid">
-			<div class="contact-aside">
+			<div class="card visit-card">
+				<h3>Visit us</h3>
+				{/* The building, from the pavement opposite. Not decoration: visits here are by
+				    appointment, so everyone arriving has arranged it in advance and the only real
+				    question on the day is "is this the right door" — which a street number painted
+				    a metre high answers better than any address line. */}
+				{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
+				    2400px source as the fallback — 272KB served to anything that ignores srcset,
+				    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
+				<Image
+					src={hubExterior}
+					alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
+					width={800}
+					height={533}
+					widths={[400, 800]}
+					sizes="(max-width: 900px) 100vw, 340px"
+					class="visit-photo"
+				/>
+				<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+				<dl class="visit-hours">
+					{displayHours.map((entry) => (
+						<div>
+							<dt>{entry.days}</dt>
+							<dd>{entry.hours}</dd>
+						</div>
+					))}
+				</dl>
+				<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
+			</div>
+			{/* The two ways of getting hold of us, stacked: the email directory, then the shop's own
+			    accounts. Grouped this way because both are channels, where the photo and the hours
+			    are about one place — and because the photo makes the visit card much the taller of
+			    the two, so the shorter cards belong on the other side of the grid to balance it. */}
+			<div class="contact-reach">
 				<div class="card">
-					<h3>Visit us</h3>
-					{/* The building, from the pavement opposite. Not decoration: visits here are by
-					    appointment, so everyone arriving has arranged it in advance and the only real
-					    question on the day is "is this the right door" — which a street number painted
-					    a metre high answers better than any address line. */}
-					{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
-					    2400px source as the fallback — 272KB served to anything that ignores srcset,
-					    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
-					<Image
-						src={hubExterior}
-						alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
-						width={800}
-						height={533}
-						widths={[400, 800]}
-						sizes="(max-width: 900px) 100vw, 340px"
-						class="visit-photo"
-					/>
-					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
-					<dl class="visit-hours">
-						{displayHours.map((entry) => (
+					<h3>Who to email</h3>
+					<dl class="email-directory">
+						{emailDirectory.map((entry) => (
 							<div>
-								<dt>{entry.days}</dt>
-								<dd>{entry.hours}</dd>
+								<dt>{entry.label}</dt>
+								<dd><EmailLink client:visible address={entry.address} /></dd>
 							</div>
 						))}
 					</dl>
-					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
 				</div>
 				<div class="card brand-card">
 					<h3>Follow the shop brands</h3>
@@ -77,17 +92,6 @@ const shopBrands = [
 						))}
 					</ul>
 				</div>
-			</div>
-			<div class="card">
-				<h3>Who to email</h3>
-				<dl class="email-directory">
-					{emailDirectory.map((entry) => (
-						<div>
-							<dt>{entry.label}</dt>
-							<dd><EmailLink client:visible address={entry.address} /></dd>
-						</div>
-					))}
-				</dl>
 			</div>
 		</div>
 	</section>
@@ -138,8 +142,13 @@ const shopBrands = [
 		margin: 0 auto;
 	}
 
-	/* Left column stacks Visit us + shop brands; the brand card grows (flex: 1) so leftover
-	   height from the taller email card fills that card rather than sitting as a gap between them. */
+	/* Visit us on the left, the two contact channels stacked on the right.
+
+	   The photo is what decides this arrangement. It makes the visit card by far the tallest thing
+	   here (545px against the email directory's 392px), and `align-items: stretch` hands that height
+	   to whatever is beside it — so with the brand card on the left, the email card was stretched to
+	   705px with 314px of empty white below its last row, nearly half the card. Stacking both short
+	   cards opposite the tall one balances the two columns instead (545 against 561). */
 	.contact-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -147,13 +156,16 @@ const shopBrands = [
 		gap: var(--space-6);
 	}
 
-	.contact-aside {
+	.contact-reach {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-6);
 		min-height: 0;
 	}
 
+	/* Grows to absorb whichever column ends up shorter, so the slack lands inside the last card
+	   rather than as a gap between the two. Which column that is depends on content: a longer
+	   address or a sixth email route would flip it. */
 	.brand-card {
 		flex: 1;
 	}
@@ -164,7 +176,7 @@ const shopBrands = [
 			gap: var(--space-5);
 		}
 
-		.contact-aside {
+		.contact-reach {
 			gap: var(--space-5);
 		}
 

@@ -19,6 +19,29 @@ const impactStats = await getImpactStats("donate");
 const payfastReturnUrl = new URL("/donate?donated=1", Astro.site).href;
 const payfastCancelUrl = new URL("/donate", Astro.site).href;
 
+// Zapper's app link (https://zapper.gitbook.io/integrations/apps/app-links) takes the *decoded*
+// contents of the Zapper QR code as its `qr` parameter. There is no dashboard or lookup that hands
+// you that string, so it was read off zapper-qr.png itself (macOS CoreImage QR detector) - meaning
+// if that image is ever replaced with a new code, this constant has to be re-decoded from it, or
+// the button will keep paying into whatever the old QR pointed at. Verified against zapper.com:
+// the link returns 200 and the page emits a matching `zapper://payment?qr=...` deep link and iOS
+// smart-app-banner. `successCallbackURL` is deliberately omitted - it's optional, and the only
+// page to send someone back to is this one, whose thank-you banner is PayFast-specific.
+const zapperCode = "http://2.zap.pe?t=8&i=26568:26974:7[34|0.00-100.00-200.00-1|15|,39|ZAR|0|:10[38|Souper Troopers|0|,61||4|";
+const zapperUrl = `https://www.zapper.com/payWithZapper?qr=${encodeURIComponent(zapperCode)}&appName=${encodeURIComponent("Souper Troopers")}`;
+
+// The visible <dl> and the "copy all" button both derive from this array, so what a donor pastes
+// into their banking app cannot drift from what the page shows them - same reasoning as
+// opening-hours.ts and address.ts. `copy` marks the row that also keeps its own inline control.
+const bankDetails = [
+	{ term: "Account name", value: "Souper Troopers" },
+	{ term: "Bank", value: "ABSA" },
+	{ term: "Account type", value: "Cheque" },
+	{ term: "Account number", value: "4092622072", copy: true },
+	{ term: "Reference", value: "Your name" },
+];
+const bankDetailsText = bankDetails.map((detail) => `${detail.term}: ${detail.value}`).join("\n");
+
 const fundedItems = [
 	{ label: "Transport to appointments and training", photo: transportPhoto },
 	{ label: "Course & skills training fees", photo: trainingPhoto },
@@ -94,12 +117,17 @@ const fundedItems = [
 					</div>
 					<p>Our preferred method - no card fees, so more of your gift reaches the work.</p>
 					<dl class="bank-details">
-						<div><dt>Account name</dt><dd>Souper Troopers</dd></div>
-						<div><dt>Bank</dt><dd>ABSA</dd></div>
-						<div><dt>Account type</dt><dd>Cheque</dd></div>
-						<div><dt>Account number</dt><dd><CopyButton client:visible value="4092622072" label="account number" /> 4092622072</dd></div>
-						<div><dt>Reference</dt><dd>Your name</dd></div>
+						{bankDetails.map((detail) => (
+							<div>
+								<dt>{detail.term}</dt>
+								<dd>
+									{detail.copy && <CopyButton client:visible value={detail.value} label={detail.term.toLowerCase()} />}
+									{detail.value}
+								</dd>
+							</div>
+						))}
 					</dl>
+					<CopyButton client:visible value={bankDetailsText} label="bank details" text="Copy bank details" />
 					<p class="redirect-note">
 						Email your proof of payment to <EmailLink client:visible address="info@soupertroopers.org" />.
 						Section 18A tax certificates are issued by our accounts team on <EmailLink client:visible address="accounts@soupertroopers.org" />.
@@ -119,7 +147,7 @@ const fundedItems = [
 						<input type="hidden" name="cancel_url" value={payfastCancelUrl} />
 						<label for="payfast-amount">Amount (R)</label>
 						<input id="payfast-amount" type="number" name="amount" step="0.01" min="5.00" value="250" required />
-						<button class="btn btn-primary" type="submit">Donate by card &rarr;</button>
+						<button class="btn btn-outline-teal" type="submit">Donate by card &rarr;</button>
 					</form>
 				</div>
 				<div class="card">
@@ -127,8 +155,9 @@ const fundedItems = [
 						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 4h2v2h-2v-2z" /></svg>
 						<h3>Zapper</h3>
 					</div>
-					<p>Scan the code with the Zapper app to donate - no link to tap if you're not on your phone already.</p>
+					<p>Scan the code with the Zapper app, or tap through if you're already on your phone.</p>
 					<Image class="pay-qr" src={zapperQr} alt="Zapper QR code for donating to Souper Troopers" width={480} widths={[240, 480]} sizes="200px" />
+					<a class="btn btn-outline-teal" href={zapperUrl} target="_blank" rel="noopener">Open Zapper &rarr;</a>
 				</div>
 				<div class="card">
 					<div class="payment-method-header">
@@ -136,7 +165,7 @@ const fundedItems = [
 						<h3>Card - international</h3>
 					</div>
 					<p>Donating from outside South Africa? PayPal handles non-SA cards and PayPal balances.</p>
-					<a class="btn btn-primary" href="https://www.paypal.com/donate/?hosted_button_id=ZLTV4BYWFALX2" target="_blank" rel="noopener">Donate via PayPal &rarr;</a>
+					<a class="btn btn-outline-teal" href="https://www.paypal.com/donate/?hosted_button_id=ZLTV4BYWFALX2" target="_blank" rel="noopener">Donate via PayPal &rarr;</a>
 				</div>
 				<div class="card">
 					<div class="payment-method-header">
@@ -144,7 +173,7 @@ const fundedItems = [
 						<h3>Monthly debit order</h3>
 					</div>
 					<p>Give a set amount each month from a South African bank account - the most useful kind of gift, because it lets us plan.</p>
-					<a class="btn btn-primary" href="https://st.paysoftimpact.co.za/public/api/Template/Index/?id=26" target="_blank" rel="noopener">Set up a debit order &rarr;</a>
+					<a class="btn btn-outline-teal" href="https://st.paysoftimpact.co.za/public/api/Template/Index/?id=26" target="_blank" rel="noopener">Set up a debit order &rarr;</a>
 					<p class="redirect-note">You'll be securely redirected to PaySoftImpact to set this up.</p>
 				</div>
 				<div class="card">
@@ -154,7 +183,7 @@ const fundedItems = [
 					</div>
 					<p>Scan the code with the SnapScan app, or tap through if you're already on your phone.</p>
 					<Image class="pay-qr" src={snapscanQr} alt="SnapScan QR code for donating to Souper Troopers" width={480} widths={[240, 480]} sizes="200px" />
-					<a class="btn btn-primary" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">Open SnapScan &rarr;</a>
+					<a class="btn btn-outline-teal" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">Open SnapScan &rarr;</a>
 				</div>
 			</div>
 			<p style="font-size:0.9rem; color: rgba(36, 35, 43, 0.65);">

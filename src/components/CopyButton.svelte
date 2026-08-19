@@ -1,5 +1,8 @@
 <script>
-	let { value, label } = $props();
+	// `text` is optional. Without it this is the inline icon-only control (the account number
+	// beside its own copy icon); with it, it renders as a full labelled button in the site's
+	// normal .btn/.btn-outline system, for copying a whole block at once.
+	let { value, label, text = "" } = $props();
 
 	let copied = $state(false);
 	let resetTimer;
@@ -27,14 +30,7 @@
 	}
 </script>
 
-<button
-	type="button"
-	class="copy-button"
-	class:is-copied={copied}
-	onclick={copy}
-	aria-label={copied ? `${label} copied` : `Copy ${label}`}
-	title={copied ? "Copied" : "Copy"}
->
+{#snippet icon()}
 	{#if copied}
 		<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
 			<path fill="currentColor" d="M9.5 16.2 5.3 12l1.4-1.4 2.8 2.8 7.2-7.2L18.1 7.6z" />
@@ -47,7 +43,31 @@
 			/>
 		</svg>
 	{/if}
-</button>
+{/snippet}
+
+{#if text}
+	<button
+		type="button"
+		class="btn btn-outline-teal copy-button-text"
+		class:is-copied={copied}
+		onclick={copy}
+		aria-label={copied ? `${label} copied` : `Copy ${label}`}
+	>
+		{@render icon()}
+		{copied ? "Copied" : text}
+	</button>
+{:else}
+	<button
+		type="button"
+		class="copy-button"
+		class:is-copied={copied}
+		onclick={copy}
+		aria-label={copied ? `${label} copied` : `Copy ${label}`}
+		title={copied ? "Copied" : "Copy"}
+	>
+		{@render icon()}
+	</button>
+{/if}
 <span class="copy-status" aria-live="polite">{copied ? "Copied to clipboard" : ""}</span>
 
 <style>
@@ -96,6 +116,26 @@
 
 	.copy-button.is-copied {
 		opacity: 1;
+		color: var(--st-green, #4bbc63);
+	}
+
+	/* Labelled variant. It borrows .btn/.btn-outline-teal from Layout rather than defining a
+	   second, private button style, so it sits in the same system as the actions on the cards
+	   around it - currently only the donate page's payment grid. If this is ever wanted in a
+	   different button style, that becomes a prop; hardcoding it is right while there's one caller. */
+	.copy-button-text {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
+		align-self: flex-start;
+		cursor: pointer;
+		font: inherit;
+		font-weight: 700;
+	}
+
+	.copy-button-text.is-copied {
+		border-color: var(--st-green, #4bbc63);
 		color: var(--st-green, #4bbc63);
 	}
 

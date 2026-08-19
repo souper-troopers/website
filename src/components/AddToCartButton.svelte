@@ -23,7 +23,6 @@
 
 <style>
 	.add-to-cart {
-		border: none;
 		cursor: pointer;
 		font: inherit;
 		font-size: 1.05rem;

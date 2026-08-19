@@ -97,7 +97,6 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		border: none;
 		cursor: pointer;
 		font: inherit;
 		font-weight: 700;

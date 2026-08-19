@@ -730,19 +730,32 @@ const structuredData = {
 			.btn {
 				display: inline-block;
 				padding: var(--space-3) var(--space-6);
+				/* Transparent rather than none, for two reasons: it strips the UA border that a
+				   <button class="btn"> would otherwise draw, and it gives every variant the same
+				   border box - so a filled .btn-primary and an outlined .btn-outline sitting next
+				   to each other are the same height instead of differing by the outline's 4px.
+				   The outline variants recolour this border; it must not be overridden to none anywhere,
+				   which is what silently flattened the PayFast button when it was demoted. */
+				border: 2px solid transparent;
 				border-radius: 999px;
 				font-weight: 700;
 				text-decoration: none;
 				text-align: center;
 			}
 
+			/* Ink label, not white. White on --st-teal is 2.76:1 - the site's single biggest contrast
+			   failure - while ink on the very same fill is 5.64:1, so the brand teal is kept exactly
+			   and only the label changes. It also reads calmer: white on a saturated teal vibrates,
+			   dark on it doesn't, which is most of why a grid of these felt shouty.
+			   Hover therefore has to brighten rather than darken. The old --st-teal-dark hover puts
+			   ink at 3.44:1, so hovering would have failed the check the rest state just passed. */
 			.btn-primary {
 				background: var(--st-teal);
-				color: var(--st-white);
+				color: var(--st-ink);
 			}
 
 			.btn-primary:hover {
-				background: var(--st-teal-dark);
+				background: var(--st-teal-secondary);
 			}
 
 			.btn-secondary {
@@ -758,6 +771,24 @@ const structuredData = {
 				background: transparent;
 				color: var(--st-ink);
 				border: 2px solid var(--st-ink);
+			}
+
+			/* The action colour, quietly - for a group of equal-weight controls that all *do*
+			   something rather than navigate (the donate page's payment handoffs). Teal restores
+			   the colour affordance a bare ink outline lacks, without a saturated fill competing
+			   with the header's single primary CTA. 4.52:1 on a white card in both states.
+			   Deliberately a separate variant rather than a change to .btn-outline: on the closing
+			   CTA rows that one sits beside a teal-filled .btn-primary, and staying ink is exactly
+			   what makes the pair read as primary-then-secondary instead of two equal teals. */
+			.btn-outline-teal {
+				background: transparent;
+				color: var(--st-teal-dark);
+				border-color: var(--st-teal-dark);
+			}
+
+			.btn-outline-teal:hover {
+				background: var(--st-teal-dark);
+				color: var(--st-white);
 			}
 
 			.site-footer {
@@ -1329,7 +1360,6 @@ const structuredData = {
 
 			.payfast-form button {
 				justify-self: start;
-				border: none;
 				cursor: pointer;
 				font: inherit;
 				font-weight: 700;
@@ -1368,7 +1398,6 @@ const structuredData = {
 
 			.contact-form .btn {
 				width: fit-content;
-				border: none;
 				cursor: pointer;
 			}
 

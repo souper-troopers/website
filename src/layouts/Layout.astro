@@ -285,7 +285,10 @@ const structuredData = {
 		<header class:list={["site-header", { "site-header-overlay": heroOverlay }]}>
 			<div class="wrap header-inner">
 				<a href="/" class="brand">
-					<Image src={logoReversed} alt="Souper Troopers" width={44} height={44} densities={[1, 2, 3]} />
+					{/* In the initial viewport on every page there is, so Astro's lazy default only ever
+					    delays it. ~2KB, so eager costs nothing; it is deliberately NOT fetchpriority="high",
+					    which is reserved for each page's LCP image. */}
+					<Image src={logoReversed} alt="Souper Troopers" width={44} height={44} densities={[1, 2, 3]} loading="eager" />
 					<span>Souper Troopers</span>
 				</a>
 				{/* data-astro-prefetch="load" overrides the site-wide `viewport` default (astro.config.mjs)
@@ -483,12 +486,23 @@ const structuredData = {
 				border-bottom-color: rgba(255, 255, 255, calc(0.1 * var(--header-fade, 0)));
 			}
 
+			/* min-height, not height: the row must still be free to grow when it wraps (the nav drops
+			   onto its own line below ~1085px), but it must never START shorter than its finished self.
+			   Without this the header renders at 66px as soon as the brand has parsed, then jumps to
+			   76px the moment .donate-cta - the tallest child at 52px - is parsed a beat later, moving
+			   the brand and the whole nav down by 4px. That is a layout shift on every page of the
+			   site, and Cloudflare RUM duly named #primary-nav as the top CLS source. It is the very
+			   same bug the <=760px rule below already fixes with a fixed height, for the very same
+			   reason (see its comment) - it was simply never applied to the desktop row.
+			   The value tracks the tallest child rather than being a second magic number: 52px button
+			   + the two var(--space-3) paddings on this rule. */
 			.header-inner {
 				display: flex;
 				align-items: center;
 				gap: var(--space-8);
 				padding-top: var(--space-3);
 				padding-bottom: var(--space-3);
+				min-height: calc(52px + var(--space-3) * 2);
 				flex-wrap: wrap;
 			}
 
@@ -628,6 +642,11 @@ const structuredData = {
 					   the bottom"). Zeroing it hands the full 64px to align-items:center to work with. */
 					padding-top: 0;
 					padding-bottom: 0;
+					/* Same story as the padding above: the base rule's min-height (which reserves the
+					   desktop row's 76px so parsing cannot grow it) is still in the cascade here, and
+					   min-height beats height - so without this reset the mobile bar renders 76px tall
+					   instead of the 64px this rule is choosing. */
+					min-height: 0;
 				}
 
 				.brand span {

@@ -46,6 +46,8 @@ const shopBrands = [
 				{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
 				    2400px source as the fallback — 272KB served to anything that ignores srcset,
 				    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
+				{/* Above the fold at both breakpoints (measured) and the largest thing on the page.
+				    Not lazy - see the note on the homepage hero in index.astro. */}
 				<Image
 					src={hubExterior}
 					alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
@@ -53,6 +55,8 @@ const shopBrands = [
 					height={533}
 					widths={[400, 800]}
 					sizes="(max-width: 900px) 100vw, 340px"
+					loading="eager"
+					fetchpriority="high"
 					class="visit-photo"
 				/>
 				<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>

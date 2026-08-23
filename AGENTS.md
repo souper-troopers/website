@@ -360,6 +360,35 @@ Prompted by the user finding the donate page's teal buttons "quite bold". The au
 
 **Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does. Promoting that one card back to `.btn-primary` is the one-word change that would make the page mean what it says.
 
+## Fonts: metrics-matched fallback, and `.fonts-pending` is gone (2026-08-23)
+`.fonts-pending` hid **all** text until Quicksand loaded (or a 2s timeout fired). That was a real choice — Stripe ships the same thing as `font-display: block` — but it had two costs, and they were the same root cause. On text-led pages the LCP element *is* text, so LCP could not happen until the font arrived (`/about/` measured **2,234ms**, against **1,034ms** with no custom font at all); and layout still ran on the *fallback's* metrics underneath, so the swap still reflowed, costing ~0.02 CLS.
+
+Now: a **metrics-matched fallback** (`"Quicksand Fallback"`, `src: local("Arial")` with `size-adjust`/`ascent-override`/`descent-override`), and `.fonts-pending` **deleted**. Text paints immediately in an Arial re-metricked to occupy exactly Quicksand's space, then the real font swaps in without moving anything. This is what Figma ships in production as `figmaSans Fallback`, and what `next/font` and Astro's own fonts API generate.
+
+- **Verified directly, not inferred**: forcing the fallback and re-measuring 14 headings/paragraphs/buttons gives **0px** max height delta and **0px** max top delta, against **24px** for unadjusted Arial. Vertical layout is identical, which is what CLS is made of.
+- **Values are baked, not computed at build time.** `@capsizecss/unpack` is *Astro's* dependency, not ours, so building on it would mean depending on a transitive package. The frontmatter comment carries the exact recompute one-liner; rerun it only if the font files change.
+- **One fallback face per weight**, not the single face most tools emit: only `xWidthAvg` differs across weights (465/481/489), so a lone 400-derived fallback leaves bold text mismatched.
+- ⚠ **Exact on Windows and macOS only.** Android has no Arial, aliases `local("Arial")` to Roboto, so that `@font-face` fails to match and those visitors fall through to the unadjusted stack. Better than before, but not shift-free.
+- **`USE_CUSTOM_FONT` is kept as a working switch** (production wants `true`). Flipping it to `false` drops the `@font-face` rules and Quicksand's place in the stack in one move — that is how the font's cost was measured, and it is how to measure it again.
+
+**The fonts are deliberately NOT preloaded any more, and that inversion is the non-obvious part.** Preloading was right while text waited for the font. Now nothing waits, so `<link rel=preload>` only competes with the HTML, CSS and hero image for a narrow pipe. Measured at 700kbps, 3 runs each: preloading costs **~470ms of FCP site-wide** (1,570ms vs 1,100ms) and up to **46% of LCP on `/shop/`** (3,507ms vs 1,896ms), buying only a ~600ms earlier swap. **`fetchpriority="low"` was tried and changes nothing** — FCP stayed at ~1,570ms, so it is the request existing at all, not its priority. Restoring them is putting three `<link>` tags back where the comment says.
+
+**Net effect** (700kbps/300ms, cold cache, 3 runs, median):
+
+| | before | after |
+|---|---|---|
+| `/about/` LCP (390px) | 2,234ms | **1,080ms** |
+| `/about/` LCP (1280px) | 2,306ms | **1,052ms** |
+| `/shop/` LCP (390px) | 3,746ms | **1,896ms** |
+| `/shop/` LCP (1280px) | 6,882ms | **5,232ms** |
+| FCP (site-wide) | ~1,570ms | **~1,100ms** |
+| `/about/` CLS (1280px) | 0.0177 | **0.0036** |
+
+⚠ **One page got worse, and it is the homepage: CLS 0.026 → 0.045 at 1280px.** Both are inside the "good" band (<0.1), and the shift is not new — it was always there, but `.fonts-pending` made the text transparent while it happened, so it was masked rather than prevented. Now it is visible and counted.
+- **The cause is exact: `.hero h1 { max-width: 20ch }` sits precisely on a wrap boundary.** The headline is 3 lines in Quicksand and **4** in the fallback, so the hero grows 60px and everything below it moves. `ch` is a font-relative unit (the width of "0"), and `size-adjust` matches *average* character width, not that glyph — so `ch` is **not** preserved by a metrics-matched fallback. The hero paragraph is unaffected (79px in both); it is the `<h1>` alone.
+- **`21ch` fixes it completely** — 3 lines in both fonts at every width from 390px to 1440px, verified. **Not applied, because it changes where the headline breaks**: `20ch` gives "…Together, / we are the change." while `21ch` gives "…Together, we / are the change.", splitting the payoff phrase. That is a typographic decision on Kerry's visible copy, not a perf fix. **This is the one open item from this work.**
+- **Any `ch`-based `max-width` on large display text has this bug**; there are ~20 across the site, but only the homepage `<h1>` is near enough to a boundary to flip.
+
 ## Above-the-fold images were all `loading="lazy"` (fixed 2026-08-22)
 Found by reading the Cloudflare Web Analytics **Core Web Vitals** export for 21–22 Aug (`Analytics _ Web analytics _ …Cloudflare.pdf`, kept outside the repo). It reported **LCP P90/P99 = 3,636ms** and named the element outright: `html>body>main>section.hero.hero-photo>div.blur-up.hero-bg>img.is-loaded`, i.e. the homepage mural. **Astro's `<Image>` defaults to `loading="lazy"` and nothing in `src/` had ever overridden it**, so every image on the site was lazy — including each page's hero and the header logo, which is in the viewport on all 27 pages.
 

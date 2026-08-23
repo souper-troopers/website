@@ -16,10 +16,11 @@
  * packed. See the note on the script below for why it's inline rather than a bundled module - the
  * whole point is that the packed layout is what gets painted first, not a shift into it.
  *
- * Known remaining shift: this site hides text until Quicksand loads (`.fonts-pending`), and the
- * fallback font's metrics differ, so card heights can change when the real font lands. The
- * ResizeObserver re-packs when that happens. That reflow is site-wide, not specific to masonry, but
- * masonry makes it slightly more visible because cards move vertically rather than just re-wrapping.
+ * Formerly a known shift source: the site used to hide text until Quicksand loaded (`.fonts-pending`)
+ * and the fallback's metrics differed, so card heights changed when the real font landed. Both halves
+ * are gone as of 2026-08-23 — the fallback is now metrics-matched, so the swap changes glyph shapes
+ * without changing any box's height. The ResizeObserver below still earns its place for breakpoint
+ * changes and late-arriving images; it just no longer has a font reflow to catch.
  *
  * Native `grid-template-rows: masonry` would replace all of this, but as of 2026 it is still behind
  * a flag in Firefox and unshipped elsewhere, and the CSS WG is still deciding on the final syntax.
@@ -101,8 +102,8 @@ const { min = "280px", gap = "1.5rem", class: className } = Astro.props;
 		window.__stMasonry(grid);
 
 		// Re-measure whenever anything changes height: the column count changing at a breakpoint, text
-		// reflowing, an image arriving, or - the big one on this site - Quicksand swapping in for the
-		// fallback font, which changes line counts and therefore card heights.
+		// reflowing, or an image arriving. Quicksand swapping in used to be the big one here; since the
+		// fallback became metrics-matched it no longer changes any card's height.
 		if ("ResizeObserver" in window) {
 			var observer = new ResizeObserver(function () {
 				window.__stMasonry(grid);

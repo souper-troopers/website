@@ -1,0 +1,20 @@
+# Netlify serves everything with `Cache-Control: public, max-age=0, must-revalidate` by default,
+# and there was no header config in this repo at all until now. That meant every fingerprinted
+# asset — fonts, JS, CSS, images — made a revalidation round-trip on *every* navigation, even
+# with a warm cache.
+#
+# It was most visible on the fonts, and it is what made Quicksand appear to swap in on every page
+# rather than only on a first visit: measured on production, a second navigation still spent 147ms
+# revalidating the woff2 (a 304, transferSize 300 bytes). `font-display: swap` has a ~100ms block
+# period during which text is invisible, so a font arriving inside it never shows the fallback at
+# all. 147ms misses that window, the fallback paints, and the swap becomes visible.
+#
+# Safe to cache forever because Astro content-hashes every filename in /_astro/ — any change to a
+# file produces a new name, so a stale copy can never be served. This is the standard treatment for
+# a build output directory and is what `immutable` exists for.
+#
+# ⚠ Deliberately scoped to /_astro/ only. The favicons live at stable paths (/favicon.ico,
+# /favicon-32.png) and rely on a `?v=` query bump to update — long-caching those would make an
+# un-bumped replacement permanently invisible, which is a worse failure than a revalidation.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

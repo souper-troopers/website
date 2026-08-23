@@ -406,7 +406,28 @@ Prompted by the user finding the donate page's teal buttons "quite bold". The au
 
 **Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does. Promoting that one card back to `.btn-primary` is the one-word change that would make the page mean what it says.
 
-## Fonts: metrics-matched fallback, and `.fonts-pending` is gone (2026-08-23)
+## Fonts — the custom font is currently OFF, and everything we learned getting there (2026-08-23)
+
+**Current state: `USE_CUSTOM_FONT = false` in `src/layouts/Layout.astro`.** The site runs on a system stack (San Francisco on Apple, Roboto on Android, Segoe UI on Windows). Turned off at the user's request after the visible swap was judged worse than not having the brand font at all. Verified: **zero font requests, CLS 0** on `/`, `/about/` and `/shop/` at 390px and 1280px, and Vite tree-shakes the woff2 files out of `dist` entirely, so nothing is even shipped.
+
+**This is expected to be revisited, not settled.** Quicksand is Souper Troopers' brand font, from their own brand document, so dropping it is a visible brand change. Flipping the flag back to `true` restores everything below in one move; it is all still here and still correct.
+
+### If the client asks for a custom font, this is the thing to tell them
+**On a static multi-page site there is no configuration that removes the first-visit font swap. There are only configurations that move the cost somewhere else.** Every option was measured; each one trades against a different thing:
+
+| Approach | Swap visible? | What it costs |
+|---|---|---|
+| `font-display: block` (`.fonts-pending`, the old setup) | No — but text is **invisible** up to 2s | `/about/` LCP **2,234ms** vs 1,034ms with no custom font. LCP *is* the text on text-led pages, so it waits on the font by construction. |
+| Metrics-matched fallback + `swap`, no preload | Yes, ~**930ms** first visit; ~**46–73ms** per navigation after | Nothing — this is the cheapest *with* a webfont |
+| ...without the asset caching fixed | Yes, **360–520ms on every navigation, forever** | This was the actual complaint. See below. |
+| Add `<link rel=preload>` | Shorter first-visit swap (~600ms earlier) | **~470ms of FCP site-wide**; up to **46% of LCP on `/shop/`** |
+| No custom font | Never | The brand typeface |
+
+**The pivotal discovery was that the swap-on-every-page symptom was not the font's fault at all** — it was a caching bug. This repo had no `netlify.toml` and no `public/_headers`, so Netlify's default `max-age=0, must-revalidate` applied to every content-hashed asset. Measured on production: a *second* navigation still spent **147ms** revalidating the woff2 (a 304, `transferSize` 300 bytes). `font-display: swap` blocks paint for ~100ms, so a font arriving inside that window never shows the fallback — 147ms misses it, the fallback paints, and the swap becomes visible on every single navigation however warm the cache. `public/_headers` now sets `immutable` on `/_astro/*`, which drops repeat-navigation `transferSize` to **0** and the swap window to 46–73ms. **That fix is worth having regardless of the font decision** — it applied to all JS, CSS and images too, and it partly undercut the link-prefetching work.
+- ⚠ **Measuring this needs a real HTTP server, not Playwright request interception.** A first attempt rewrote the `Cache-Control` header with `page.route`/`route.fulfill` and got full `transferSize` on every navigation in *both* conditions — fulfilled responses bypass the browser's HTTP cache, so the interception destroyed the thing being measured. What works: serve `dist/` twice from a tiny Node server differing only in that header, drive both with fresh browser contexts, and **throttle to ~150ms latency** — on unthrottled localhost a revalidation costs ~1ms and the two conditions look identical.
+
+### Everything below still applies whenever the flag goes back to `true`
+
 `.fonts-pending` hid **all** text until Quicksand loaded (or a 2s timeout fired). That was a real choice — Stripe ships the same thing as `font-display: block` — but it had two costs, and they were the same root cause. On text-led pages the LCP element *is* text, so LCP could not happen until the font arrived (`/about/` measured **2,234ms**, against **1,034ms** with no custom font at all); and layout still ran on the *fallback's* metrics underneath, so the swap still reflowed, costing ~0.02 CLS.
 
 Now: a **metrics-matched fallback** (`"Quicksand Fallback"`, `src: local("Arial")` with `size-adjust`/`ascent-override`/`descent-override`), and `.fonts-pending` **deleted**. Text paints immediately in an Arial re-metricked to occupy exactly Quicksand's space, then the real font swaps in without moving anything. This is what Figma ships in production as `figmaSans Fallback`, and what `next/font` and Astro's own fonts API generate.
@@ -415,11 +436,12 @@ Now: a **metrics-matched fallback** (`"Quicksand Fallback"`, `src: local("Arial"
 - **Values are baked, not computed at build time.** `@capsizecss/unpack` is *Astro's* dependency, not ours, so building on it would mean depending on a transitive package. The frontmatter comment carries the exact recompute one-liner; rerun it only if the font files change.
 - **One fallback face per weight**, not the single face most tools emit: only `xWidthAvg` differs across weights (465/481/489), so a lone 400-derived fallback leaves bold text mismatched.
 - ⚠ **Exact on Windows and macOS only.** Android has no Arial, aliases `local("Arial")` to Roboto, so that `@font-face` fails to match and those visitors fall through to the unadjusted stack. Better than before, but not shift-free.
-- **`USE_CUSTOM_FONT` is kept as a working switch** (production wants `true`). Flipping it to `false` drops the `@font-face` rules and Quicksand's place in the stack in one move — that is how the font's cost was measured, and it is how to measure it again.
+- **`USE_CUSTOM_FONT` is the switch**, and is currently `false` (see above). Flipping it drops or restores the `@font-face` rules, the metrics-matched fallback and Quicksand's place in the stack together — that is how the font's cost was measured, and it is how to measure it again.
+- **The system stack is now a real one**, not the two-name afterthought it was while it only ever showed for a moment: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`. It is the site's actual typeface while the flag is off, so it is worth keeping good.
 
 **The fonts are deliberately NOT preloaded any more, and that inversion is the non-obvious part.** Preloading was right while text waited for the font. Now nothing waits, so `<link rel=preload>` only competes with the HTML, CSS and hero image for a narrow pipe. Measured at 700kbps, 3 runs each: preloading costs **~470ms of FCP site-wide** (1,570ms vs 1,100ms) and up to **46% of LCP on `/shop/`** (3,507ms vs 1,896ms), buying only a ~600ms earlier swap. **`fetchpriority="low"` was tried and changes nothing** — FCP stayed at ~1,570ms, so it is the request existing at all, not its priority. Restoring them is putting three `<link>` tags back where the comment says.
 
-**Net effect** (700kbps/300ms, cold cache, 3 runs, median):
+**Net effect of the metrics-matched fallback** (700kbps/300ms, cold cache, 3 runs, median) — *these compare `.fonts-pending` against the metrics-matched fallback, both with the custom font on. They are the numbers to reach for when the flag goes back to `true`, not a description of the site as it stands:*
 
 | | before | after |
 |---|---|---|
@@ -432,7 +454,8 @@ Now: a **metrics-matched fallback** (`"Quicksand Fallback"`, `src: local("Arial"
 
 ⚠ **One page got worse, and it is the homepage: CLS 0.026 → 0.045 at 1280px.** Both are inside the "good" band (<0.1), and the shift is not new — it was always there, but `.fonts-pending` made the text transparent while it happened, so it was masked rather than prevented. Now it is visible and counted.
 - **The cause is exact: `.hero h1 { max-width: 20ch }` sits precisely on a wrap boundary.** The headline is 3 lines in Quicksand and **4** in the fallback, so the hero grows 60px and everything below it moves. `ch` is a font-relative unit (the width of "0"), and `size-adjust` matches *average* character width, not that glyph — so `ch` is **not** preserved by a metrics-matched fallback. The hero paragraph is unaffected (79px in both); it is the `<h1>` alone.
-- **`21ch` fixes it completely** — 3 lines in both fonts at every width from 390px to 1440px, verified. **Not applied, because it changes where the headline breaks**: `20ch` gives "…Together, / we are the change." while `21ch` gives "…Together, we / are the change.", splitting the payoff phrase. That is a typographic decision on Kerry's visible copy, not a perf fix. **This is the one open item from this work.**
+- **`21ch` fixes it completely** — 3 lines in both fonts at every width from 390px to 1440px, verified. **Not applied, because it changes where the headline breaks**: `20ch` gives "…Together, / we are the change." while `21ch` gives "…Together, we / are the change.", splitting the payoff phrase. That is a typographic decision on Kerry's visible copy, not a perf fix.
+  - **Dormant while `USE_CUSTOM_FONT` is `false`** — with no swap there is nothing to shift, and measured CLS is 0. It comes straight back the moment the custom font does, so re-read this before flipping the flag rather than after.
 - **Any `ch`-based `max-width` on large display text has this bug**; there are ~20 across the site, but only the homepage `<h1>` is near enough to a boundary to flip.
 
 ## Above-the-fold images were all `loading="lazy"` (fixed 2026-08-22)

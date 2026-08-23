@@ -69,17 +69,37 @@ const quicksandWeights = [
 	{ weight: 700, url: quicksand700, sizeAdjust: "109.6903%", ascent: "91.1658%", descent: "22.7915%" },
 ];
 
-// Kept as a switch rather than deleted: flipping it to false drops the @font-face rules, the
-// preloads and Quicksand's place in the stack in one move, which is how the cost of the custom font
-// was measured in the first place (see the CLAUDE.md section). Production wants `true`.
-const USE_CUSTOM_FONT = true;
+/**
+ * ⚠ **Off since 2026-08-23, at the user's request** — see "Fonts" in AGENTS.md for the full
+ * reasoning and the measurements behind it. The short version: a webfont on a static MPA swaps
+ * visibly on a cold cache and there is no configuration that removes that, only ones that move the
+ * cost somewhere else. Quicksand is Souper Troopers' brand font, so this is expected to be
+ * revisited before launch rather than being a settled decision.
+ *
+ * Everything needed to turn it back on is still here and still correct — flipping this to `true`
+ * restores the @font-face rules, the metrics-matched fallback and Quicksand's place in the stack in
+ * one move. That is also how the cost of the custom font was measured in the first place.
+ */
+const USE_CUSTOM_FONT = false;
 
-// "Quicksand Fallback" must sit immediately after Quicksand and before the generic families, so the
-// re-metricked Arial is what gets used while the real font is in flight. The plain families remain
-// behind it for Android and anywhere Arial is absent.
+/**
+ * With the custom font off, this stack *is* the site's typeface rather than a momentary fallback,
+ * so it is a real system stack rather than the two-name afterthought it used to be. Resolves to San
+ * Francisco on Apple, Roboto on Android, Segoe UI on Windows — the typeface each reader already
+ * reads everything else in, which is why a system stack never looks broken even though it looks
+ * different on every device.
+ *
+ * `-apple-system`/`BlinkMacSystemFont` sit behind `system-ui` for older Safari and Chrome, which
+ * shipped those before `system-ui` was supported. Arial is the last named stop for anything that
+ * has none of the above.
+ *
+ * "Quicksand Fallback" must sit immediately after Quicksand when the custom font is on, so the
+ * re-metricked Arial is what gets used while the real font is in flight.
+ */
+const systemStack = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
 const fontStack = USE_CUSTOM_FONT
-	? `"Quicksand", "Quicksand Fallback", "Segoe UI", system-ui, sans-serif`
-	: `"Segoe UI", system-ui, sans-serif`;
+	? `"Quicksand", "Quicksand Fallback", ${systemStack}`
+	: systemStack;
 
 const fontFaceCSS =
 	(USE_CUSTOM_FONT ? quicksandWeights : [])

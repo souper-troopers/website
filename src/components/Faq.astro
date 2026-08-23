@@ -1,0 +1,84 @@
+---
+import EmailLink from "./EmailLink.svelte";
+import type { FaqItem } from "../lib/faq";
+
+/**
+ * The visible half of an FAQ. Pair it with `faqPageJsonLd()` from `src/lib/faq.ts`, passed to
+ * `Layout`'s `jsonLd` prop, so the questions a reader sees and the ones a machine reads come from
+ * one array and cannot drift apart.
+ *
+ * Deliberately **not** a `<details>` accordion, unlike the collapsible sections on the internal RFC
+ * page. Collapsing is right there because that page is 7,900 words being read once; here the answers
+ * are two sentences each and hiding them would cost the thing they exist for — an assistant
+ * extracting a chunk, and a visitor scanning for the one line that applies to them, both want the
+ * answer present rather than one interaction away.
+ */
+interface Props {
+	items: FaqItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="faq">
+	{items.map((item) => (
+		<div class="faq-item">
+			<dt>{item.question}</dt>
+			<dd>
+				<p>{item.answer}</p>
+				{item.email && <p class="faq-email"><EmailLink client:visible address={item.email} /></p>}
+				{item.link && <p class="faq-link"><a href={item.link.href}>{item.link.label} &rarr;</a></p>}
+			</dd>
+		</div>
+	))}
+</dl>
+
+<style>
+	/* Left-aligned and unmargined on purpose: `.section-intro` is left-aligned by default, so a
+	   centred list would sit off-axis from its own heading. A page that centres its headings
+	   (contact) centres this with a wrapper instead — alignment is the page's call, not the
+	   component's. */
+	.faq {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		max-width: 46rem;
+	}
+
+	/* Hairline-separated rows rather than cards, matching `.email-directory` on the contact page:
+	   a run of questions reads as one list to scan, where six bordered boxes read as six things. */
+	.faq-item {
+		padding-bottom: var(--space-4);
+		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.faq-item:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	/* A question is a heading in everything but element name — `<dl>` is the right structure for
+	   term-and-definition, and the visual weight has to say so. */
+	.faq dt {
+		font-size: 1.05rem;
+		font-weight: 700;
+		margin-bottom: var(--space-2);
+	}
+
+	.faq dd {
+		margin: 0;
+	}
+
+	.faq dd p {
+		margin: 0;
+	}
+
+	.faq dd p + p {
+		margin-top: var(--space-2);
+	}
+
+	.faq-email,
+	.faq-link {
+		font-size: 0.95rem;
+	}
+</style>

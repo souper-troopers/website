@@ -104,6 +104,12 @@ const goodsCategories = [
 				</div>
 			))}
 		</div>
+		{/* The grid stays here as the visual answer to "what can I bring". The page below is the
+		    practical one - where, when, how it is arranged - and is what a search for "donate
+		    clothes Cape Town" should land on. */}
+		<p class="section-more">
+			<a href="/get-involved/donate-goods">Where to bring it and how to arrange a drop-off &rarr;</a>
+		</p>
 	</section>
 
 	<section id="businesses" class="section wrap">
@@ -125,6 +131,9 @@ const goodsCategories = [
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
 		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" />.</p>
+		<p class="section-more">
+			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
+		</p>
 	</section>
 
 	<section class="section wrap">
@@ -231,6 +240,14 @@ const goodsCategories = [
 </Layout>
 
 <style>
+	/* The route from a summary section down to its own page. Deliberately a plain underlined link
+	   rather than a button: these navigate, and the button system on this site is reserved for
+	   controls that act (see "The button system" in AGENTS.md). */
+	.section-more {
+		margin-top: var(--space-4);
+		font-weight: 600;
+	}
+
 	/* Whole-card links with the CTA pinned to the bottom, so a row of six reads as six equal
 	   choices rather than six boxes whose links happen to sit at different heights. */
 	/* Exactly six items, so pin to three columns for a balanced 3+3 rather than letting auto-fit

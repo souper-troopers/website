@@ -7,6 +7,8 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
+import Faq from "../components/Faq.astro";
+import { faqPageJsonLd, type FaqItem } from "../lib/faq";
 
 // Was a hardcoded duplicate of the Sanity value until the postal code landed. Reading it from the
 // same place the footer does means the two can't drift, which matters more than usual here: this is
@@ -25,9 +27,50 @@ const shopBrands = [
 	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
 	{ handle: "@africanworrydolls", href: "https://instagram.com/africanworrydolls" },
 ];
+
+/**
+ * The four things people arrive at a contact page already wondering, asked in the words they would
+ * use. Every answer is already asserted elsewhere - the by-appointment note on the visit card above,
+ * the email-only fact Shan confirmed on 2026-08-11, and the "not a shelter, not an overnight
+ * facility" instruction that `src/pages/llms.txt.ts` already gives to answer engines.
+ *
+ * ⚠ That last one existed **only** in `llms.txt` until now, which meant the site was telling
+ * machines something no page told a human, and no page said it anywhere a search engine would
+ * index it. It is the single most likely thing for someone to get wrong about this organisation,
+ * so it belongs in visible copy first.
+ */
+const faqItems: FaqItem[] = [
+	{
+		question: "Is Souper Troopers a shelter?",
+		answer:
+			"No. Souper Troopers is not a shelter and the Humanity Hub is not an overnight facility. The Hub is a day-time base in Woodstock, Cape Town, where people experiencing homelessness meet social workers, share a meal, take part in skills training, and get help replacing identity documents and finding work.",
+		link: { href: "/our-work", label: "What happens at the Humanity Hub" },
+	},
+	{
+		question: "Can I visit the Humanity Hub without an appointment?",
+		answer:
+			"No - visits are by appointment rather than drop-in, and Moeshfieqah sets those up. Email us with a rough idea of when suits you and what you would like to see, and she will arrange a time.",
+		email: "manager@soupertroopers.org",
+	},
+	{
+		question: "Does Souper Troopers have a phone number?",
+		answer:
+			"No. There is no direct line - email is the only way to reach the team, and it is read every working day. That is a deliberate choice for a small team rather than an oversight, so email is not a second-best route here.",
+	},
+	{
+		question: "Where do I drop off donated goods?",
+		answer:
+			`At the Humanity Hub, ${displayAddress(settings.address)}. Email first to arrange a time, so somebody is expecting you and free to help you unload.`,
+		link: { href: "/get-involved/donate-goods", label: "What to bring and how to arrange it" },
+	},
+];
 ---
 
-<Layout title="Contact us in Woodstock, Cape Town" description="Get in touch with Souper Troopers - our address in Woodstock, Cape Town, our email, and a contact form that reaches the team directly.">
+<Layout
+	title="Contact us in Woodstock, Cape Town"
+	description="Get in touch with Souper Troopers - our address in Woodstock, Cape Town, our email, and a contact form that reaches the team directly."
+	jsonLd={[faqPageJsonLd(faqItems)]}
+>
 	<section class="page-hero">
 		<div class="wrap">
 			<h1>Contact Us</h1>
@@ -102,6 +145,17 @@ const shopBrands = [
 
 	<section class="section wrap">
 		<div class="section-intro">
+			<span class="badge">Common questions</span>
+			<h2>Before you get in touch</h2>
+		</div>
+		{/* This page centres its `.section-intro` (see the 480px rule below), so the list is centred
+		    to match. Alignment is the page's decision rather than the component's — every other
+		    page that uses it has left-aligned headings. */}
+		<div class="faq-centred"><Faq items={faqItems} /></div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
 			<span class="badge">Send a message</span>
 			<h2>Or just tell us what's up</h2>
 			<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
@@ -143,6 +197,11 @@ const shopBrands = [
 	.section-intro {
 		width: 100%;
 		max-width: 480px;
+		margin: 0 auto;
+	}
+
+	.faq-centred {
+		max-width: 46rem;
 		margin: 0 auto;
 	}
 

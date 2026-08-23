@@ -55,11 +55,16 @@ export const GET: APIRoute = async () => {
 		"- Donations are tax-deductible in South Africa (Section 18A certificates available). B-BBEE Level 1.",
 		"- Runs a social enterprise, Shmiley (Pty) Ltd, selling Troopers Coffee and handmade African Worry Dolls. Products are made by people the programme has supported, and income returns to the work.",
 		"",
+		// ⚠ The one hand-maintained list in this file, and therefore the only part that can go stale
+		// the way the whole file previously did. Add a line here whenever a route is added under
+		// src/pages/ — the shop below is generated from Sanity and looks after itself.
 		"## Pages",
 		"- [Home](/): mission overview and impact figures.",
 		"- [Who We Are](/about): origin story, team, supporters, and press coverage.",
 		"- [Our Work](/our-work): the CAST journey and Humanity Hub services in detail.",
 		"- [Get Involved](/get-involved): volunteering, goods donations, and corporate/CSI partnership including the B-BBEE benefits.",
+		"  - [Donate goods](/get-involved/donate-goods): what can be donated, where to bring it in Woodstock, and how a drop-off is arranged.",
+		"  - [Corporate partnership](/get-involved/corporate-partnership): CSI and corporate partnership, B-BBEE Level 1 scorecard benefits, Section 18A, team workshops and office coffee.",
 		"- [Donate](/donate): EFT, SnapScan, Zapper, PayPal, card, and monthly debit order.",
 		"- [Contact](/contact): address, opening hours, email directory, and a message form.",
 		"",

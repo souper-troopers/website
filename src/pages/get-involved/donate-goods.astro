@@ -1,0 +1,224 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Faq from "../../components/Faq.astro";
+import EmailLink from "../../components/EmailLink.svelte";
+import AddressLink from "../../components/AddressLink.svelte";
+import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
+import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
+import { displayHours } from "../../lib/opening-hours";
+import { displayAddress } from "../../lib/address";
+import { getSiteSettings } from "../../lib/sanity";
+
+/**
+ * "Where can I donate clothes in Cape Town" is one of the highest-volume asks this organisation
+ * could answer, and until now the answer was an anchor two thirds of the way down `/get-involved`.
+ *
+ * ⚠ Same rule as the corporate page: this **elaborates rather than duplicates**. The parent keeps
+ * the photo grid of the eight categories; this page carries the practical detail the parent has no
+ * room for - where, when, how it is arranged, what happens to it afterwards - and states the list
+ * as text rather than repeating the tiles. Two pages carrying the same block of copy is thin
+ * content, which is the reasoning already recorded in AGENTS.md for the Worry Dolls description.
+ */
+const settings = await getSiteSettings();
+
+const crumbs: Crumb[] = [
+	{ name: "Get Involved", path: "/get-involved/" },
+	{ name: "Donate goods", path: "/get-involved/donate-goods/" },
+];
+
+const goodsEmail = "manager@soupertroopers.org";
+
+/**
+ * The eight categories the parent page shows as photo tiles, with the extra line each one can carry
+ * here. Every detail below is already asserted elsewhere on the site - the doll materials come from
+ * the African Worry Dolls description in Sanity, which Shan wrote. Nothing here is inferred, and
+ * anything we could not source became a question on `/request-for-comment` instead.
+ */
+const goods = [
+	{ label: "Non-perishable food", note: "Tinned and dry goods that keep - the Hub serves meals daily." },
+	{ label: "Toiletries", note: "Soap, sanitary products, toothpaste." },
+	{ label: "Clothing", note: "All seasons, and interview clothing especially: a first interview often turns on having something to wear to it." },
+	{ label: "Linen and bedding", note: "Blankets, sheets and towels." },
+	{ label: "Household goods", note: "Kitchenware, crockery, small furniture - the everyday things a home is built from." },
+	{ label: "Materials for African Worry Dolls", note: "Shweshwe fabric offcuts, old stockings, paperclips, beads and pompoms - the Souper Squad makes the dolls from these, and every doll sold funds a wage." },
+	{ label: "Cleaning products", note: "Everyday cleaning supplies." },
+	{ label: "Electronics", note: "Including office electronics, furniture and supplies from a company refit." },
+];
+
+const hoursSummary = displayHours.map((entry) => `${entry.days} ${entry.hours}`).join(", ");
+
+const faqItems: FaqItem[] = [
+	{
+		question: "Where do I drop off donations in Cape Town?",
+		answer: `At the Humanity Hub, ${displayAddress(settings.address)}. Please email first to arrange a time rather than arriving unannounced - the Hub is a working day centre, not a drop-in donation point, and arranging it means somebody is expecting you and free to help you unload.`,
+		email: goodsEmail,
+	},
+	{
+		question: "When is the Humanity Hub open?",
+		answer: `${hoursSummary}. Closed at weekends. Drop-offs are arranged in advance by email rather than being a walk-in, so the hours are when a time can be arranged for, not an invitation to arrive.`,
+	},
+	{
+		question: "Can I get a tax certificate for donated goods?",
+		answer: "Yes. Souper Troopers is a registered Public Benefit Organisation and Section 18A certificates are available for donated goods as well as for money. Our accounts team issues them.",
+		email: "accounts@soupertroopers.org",
+	},
+	{
+		question: "What happens to what I donate?",
+		answer: "It goes into the work at the Humanity Hub in Woodstock - the meals served there, the people coming through the CAST programme, and, in the case of fabric and craft materials, the Souper Squad, who are paid to make the African Worry Dolls sold in the shop. If you would like to know where a particular donation ended up, ask us.",
+		link: { href: "/our-work", label: "What happens at the Humanity Hub" },
+	},
+	{
+		question: "Can I donate money instead, or as well?",
+		answer: "Yes. Money can be given by EFT, card, SnapScan, Zapper, PayPal or a monthly debit order, and Section 18A certificates apply there too.",
+		link: { href: "/donate", label: "Ways to give" },
+	},
+];
+
+const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
+---
+
+<Layout
+	title="Donate goods in Cape Town"
+	description="Donate clothing, food, toiletries, bedding and household goods to Souper Troopers in Woodstock, Cape Town - what we can use, where to bring it, and how to arrange a drop-off."
+	jsonLd={jsonLd}
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<Breadcrumbs crumbs={crumbs} />
+			<h1>Donate goods</h1>
+			<p>What we can use, where to bring it, and how to arrange it.</p>
+		</div>
+	</section>
+
+	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
+	    organisation, the city, the street and how a drop-off is arranged. */}
+	<section class="section wrap">
+		<div class="prose">
+			<p class="lede">
+				Souper Troopers takes donated goods at the Humanity Hub in Woodstock, Cape Town.
+				Clothing, non-perishable food, toiletries, bedding, household goods, cleaning products
+				and electronics are all useful, and Section 18A tax certificates are available for
+				donated goods as well as for money.
+			</p>
+			{/* On its own line, not mid-sentence: `AddressLink` renders a copy button after the text,
+			    so a sentence continuing past it reads as "…Cape Town, 7925 ⧉ . Clothing…". The
+			    contact page uses the same standalone-paragraph pattern for the same reason. */}
+			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+			<p>
+				Email <EmailLink client:visible address={goodsEmail} /> to arrange a time before you come.
+				The Hub is a working day centre rather than a drop-in donation point, so arranging it
+				means somebody is expecting you and free to help you carry things in.
+			</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">What we can use</span>
+			<h2>Eight things worth bringing</h2>
+		</div>
+		<dl class="goods-list">
+			{goods.map((item) => (
+				<div class="goods-row">
+					<dt>{item.label}</dt>
+					<dd>{item.note}</dd>
+				</div>
+			))}
+		</dl>
+		<p class="goods-aside">
+			Not sure whether something is useful? Ask - it is a quicker answer than a wasted trip.
+		</p>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Common questions</span>
+			<h2>Before you come</h2>
+		</div>
+		<Faq items={faqItems} />
+	</section>
+
+	<section class="section wrap">
+		<div class="cta-panel">
+			<h2>Arrange a drop-off</h2>
+			<p>
+				Send us a line saying roughly what you have and when suits you, and we will come back
+				with a time.
+			</p>
+			<p class="cta-links">
+				<a class="btn btn-primary" href={`mailto:${goodsEmail}?subject=Donation%20drop-off`}>Email to arrange a drop-off</a>
+				<a class="btn btn-outline" href="/get-involved">All ways to get involved</a>
+			</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.prose {
+		max-width: 46rem;
+	}
+
+	.prose p + p {
+		margin-top: var(--space-3);
+	}
+
+	.lede {
+		font-size: 1.15rem;
+	}
+
+	.lede-address {
+		margin-top: var(--space-2);
+		font-weight: 600;
+	}
+
+	/* Text rows rather than the parent page's photo tiles - deliberately a different shape, so the
+	   two pages complement each other instead of one being a copy of the other. */
+	.goods-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		max-width: 46rem;
+	}
+
+	.goods-row {
+		padding-bottom: var(--space-4);
+		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.goods-row:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.goods-list dt {
+		font-weight: 700;
+		margin-bottom: var(--space-1);
+	}
+
+	.goods-list dd {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.75);
+	}
+
+	.goods-aside {
+		max-width: 46rem;
+		margin: var(--space-5) 0 0;
+		font-size: 0.95rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.cta-panel {
+		max-width: 46rem;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.cta-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+		margin-top: var(--space-4);
+	}
+</style>

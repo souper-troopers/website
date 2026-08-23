@@ -1,0 +1,260 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Faq from "../../components/Faq.astro";
+import EmailLink from "../../components/EmailLink.svelte";
+import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
+import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
+import { getSiteSettings } from "../../lib/sanity";
+
+/**
+ * The practical half of `/get-involved`'s corporate section, split out so it has an address of its
+ * own — "B-BBEE Level 1 charity Cape Town" and "CSI partner Cape Town" are high-intent searches, and
+ * before this the answer to both was the ninth heading on a page titled "Get Involved".
+ *
+ * ⚠ **This page elaborates, it does not duplicate.** The parent keeps the four-card summary, the
+ * workshops, the coffee and the Sanity-driven scorecard grid; this one carries what the parent has
+ * no room for — what a partnership looks like in practice, and the questions a company actually
+ * asks before it commits. Identical text on both would be thin content, which is the same reasoning
+ * that keeps the African Worry Dolls description at category level rather than on all nine dolls
+ * (see "Shop discoverability" in AGENTS.md). If a fact needs to be on both, it goes in a different
+ * shape on each: the scorecard is a scannable grid there and a prose answer here.
+ */
+const settings = await getSiteSettings();
+
+const bbbeeVerified = settings?.bbbeeLastVerified
+	? new Date(settings.bbbeeLastVerified).toLocaleDateString("en-ZA", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		})
+	: null;
+
+const crumbs: Crumb[] = [
+	{ name: "Get Involved", path: "/get-involved/" },
+	{ name: "Corporate partnership", path: "/get-involved/corporate-partnership/" },
+];
+
+/**
+ * `manager@` rather than the `kerry@` that the contact page's directory routes "Programme &
+ * partnerships" to — matching the corporate section on the parent page, which has always said
+ * manager@, and `siteSettings.email`. ⚠ Those two disagree with each other and always have; this
+ * page follows the parent rather than quietly introducing a third answer. Flagged for the client to
+ * settle - it is a one-line change here once they do.
+ */
+const partnershipEmail = "manager@soupertroopers.org";
+
+const faqItems: FaqItem[] = [
+	{
+		question: "Does supporting Souper Troopers count towards our B-BBEE scorecard?",
+		answer:
+			`Yes. Souper Troopers is a B-BBEE ${settings.bbbeeLevel} contributor, so procurement spend with us - buying Troopers Coffee for your offices, for example - is recognised at 135% of its value against the preferential procurement element. Donations count as socio-economic development spend, and we provide an affidavit confirming 100% black beneficiaries.`,
+		link: { href: "/get-involved#businesses", label: "The full scorecard breakdown" },
+	},
+	{
+		question: "Are donations to Souper Troopers tax-deductible in South Africa?",
+		answer:
+			`Yes. Souper Troopers is a registered Public Benefit Organisation (PBO ${settings.pboNumber}), so donations are tax-deductible, and we issue a Section 18A certificate for the full value of the donation.`,
+		email: "accounts@soupertroopers.org",
+	},
+	{
+		question: "Is there a minimum to become a corporate partner?",
+		answer:
+			"No. Partnerships here have started from a single donated afternoon of professional services and from a standing coffee order, as well as from funded programmes. The useful first step is a conversation about what your business already does, rather than a figure.",
+	},
+	{
+		question: "Can we donate our services instead of money?",
+		answer:
+			"Yes, and it goes just as far. Our accountants, our lawyers and our web hosting are all donated. Marketing, IT, design, mentoring, training and delivery are all things we can put to use.",
+	},
+	{
+		question: "What does Souper Troopers do with corporate support?",
+		answer:
+			"It funds the CAST programme at the Humanity Hub in Woodstock, Cape Town - skills development and daily meals, transport to interviews, interview clothing, and healthcare as basic and as decisive as an eye test or a set of dentures.",
+		link: { href: "/our-work", label: "How the CAST programme works" },
+	},
+];
+
+const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
+---
+
+{/* ⚠ A literal `&` in the title, not `&amp;`. An Astro attribute value is a plain string, so an
+    entity written here is escaped a second time and reaches the browser tab as "&amp;" — which is
+    what happened on the first pass. Astro escapes the bare `&` correctly on its own. */}
+<Layout
+	title="Corporate partnership & CSI, Cape Town"
+	description="Partner with Souper Troopers, a B-BBEE Level 1 homelessness charity in Cape Town - CSI partnerships, socio-economic development spend, Section 18A certificates, team workshops, and office coffee."
+	jsonLd={jsonLd}
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<Breadcrumbs crumbs={crumbs} />
+			<h1>Corporate partnership</h1>
+			<p>
+				Work with a Cape Town charity where the outcomes are people, named and countable.
+			</p>
+		</div>
+	</section>
+
+	{/* Answer-first, and deliberately self-contained: retrieval hands an assistant a paragraph
+	    without the page around it, so this one has to name the organisation, the city and what is on
+	    offer without relying on the <h1> above it. See "Core-site discoverability" in AGENTS.md. */}
+	<section class="section wrap">
+		<div class="prose">
+			<p class="lede">
+				Souper Troopers is a South African non-profit working with people experiencing
+				homelessness in Cape Town, and a B-BBEE {settings.bbbeeLevel} contributor. Businesses partner with us
+				in four ways - funding a programme, buying something we make, donating professional
+				skills, or running a team workshop - and every one of them is measurable on both a
+				B-BBEE scorecard and a tax return.
+			</p>
+			<p>
+				There is no partnership tier list and no minimum. What follows is what these
+				relationships have actually looked like, so you can see which shape fits your business
+				before you get in touch.
+			</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">In practice</span>
+			<h2>Four shapes a partnership takes</h2>
+		</div>
+		<div class="grid grid-2 partner-grid">
+			<div class="card">
+				<h3>Fund a programme</h3>
+				<p>
+					A long-term collaboration on a shared outcome, rather than a donation into general
+					funds. The Woolworths Project is the clearest example: upskilling Troopers and
+					creating real job opportunities at the end of it, with the two organisations working
+					to the same target.
+				</p>
+				<p>
+					Sponsorship can also be pointed at one part of CAST or one part of the Humanity Hub,
+					which is what makes it reportable against the social pillar of an ESG commitment -
+					named programmes and actual results, rather than a figure donated.
+				</p>
+			</div>
+			<div class="card">
+				<h3>Give what your business already does</h3>
+				<p>
+					Skills and services go as far as cash, and often further, because they replace a cost
+					we would otherwise carry. Our accountants, our lawyers and our web hosting are all
+					donated.
+				</p>
+				<p>
+					Marketing, IT, design, mentoring, training and delivery are all useful. So are office
+					electronics, furniture and supplies when a company refits - equipment on its way out
+					of one office is frequently exactly what the Hub needs.
+				</p>
+			</div>
+			<div class="card">
+				<h3>Book a team workshop</h3>
+				<p>
+					Our Reconnection Workshops bring a team together around identity, reflection and
+					emotional wellbeing, facilitated by Jake Gluckman, a registered counsellor on our
+					staff. Voltalia recently hosted one for their team.
+				</p>
+				<p>
+					This is money a business was going to spend on a team day regardless. The difference
+					is where it goes afterwards: every workshop directly funds the programmes at the Hub.
+				</p>
+			</div>
+			<div class="card">
+				<h3>Put Troopers Coffee in your office</h3>
+				<p>
+					Our Dignity Blend is available as a standing order for offices, guesthouses and
+					Airbnbs, not only as a one-off gift. The Lab Blue in Franschhoek serves it to guests
+					at sunrise.
+				</p>
+				<p>
+					Every bag funds the jobs behind it - the Souper Squad members who pack and sell it -
+					and because we are a {settings.bbbeeLevel} contributor it counts as preferential procurement
+					spend on your scorecard rather than as a donation.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Common questions</span>
+			<h2>What businesses ask us first</h2>
+		</div>
+		<Faq items={faqItems} />
+		{settings?.bbbeeNote && (
+			<p class="scorecard-note">
+				{settings.bbbeeNote}
+				{bbbeeVerified && <span class="scorecard-verified">Last verified {bbbeeVerified}.</span>}
+			</p>
+		)}
+	</section>
+
+	<section class="section wrap">
+		<div class="cta-panel">
+			<h2>Start with a conversation</h2>
+			<p>
+				Tell us what your business does and we will tell you honestly whether we can use it.
+				Email <EmailLink client:visible address={partnershipEmail} />, or see the other ways
+				to get involved.
+			</p>
+			<p class="cta-links">
+				<a class="btn btn-primary" href={`mailto:${partnershipEmail}?subject=Corporate%20partnership%20enquiry`}>Email us about partnering</a>
+				<a class="btn btn-outline" href="/get-involved">All ways to get involved</a>
+			</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.prose {
+		max-width: 46rem;
+	}
+
+	/* Exactly four cards, and `.grid-2` is `auto-fit minmax(280px, 1fr)` — which fits *three*
+	   tracks at 1280px and leaves the fourth card stranded alone on a second row. Pinned to two
+	   columns so it reads as a 2x2 set, the same fix `.action-grid` uses on the parent page. */
+	@media (min-width: 901px) {
+		.partner-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	.prose p + p {
+		margin-top: var(--space-3);
+	}
+
+	.lede {
+		font-size: 1.15rem;
+	}
+
+	/* Same treatment as `.benefit-note` on the parent page - regulated figures carry their caveat
+	   wherever they are quoted, and this page quotes them in prose rather than in the grid. */
+	.scorecard-note {
+		max-width: 46rem;
+		margin: var(--space-5) 0 0;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.scorecard-verified {
+		display: block;
+		margin-top: var(--space-1);
+		font-weight: 600;
+	}
+
+	.cta-panel {
+		max-width: 46rem;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.cta-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		justify-content: center;
+		margin-top: var(--space-4);
+	}
+</style>

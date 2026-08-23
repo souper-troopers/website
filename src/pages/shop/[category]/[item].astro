@@ -3,6 +3,8 @@ import Layout from "../../../layouts/Layout.astro";
 import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
 import ItemCard from "../../../components/ItemCard.svelte";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import { breadcrumbList, type Crumb } from "../../../lib/breadcrumbs";
 
 export async function getStaticPaths() {
 	const items = await getAllShopItems();
@@ -34,8 +36,6 @@ const photoUrl = item.photo
 
 // Trailing slashes deliberately match Astro's own canonical/sitemap URLs — structured data that
 // disagrees with the canonical tag on the same page reads as two URLs for one product.
-const shopUrl = new URL("/shop/", Astro.site).href;
-const categoryUrl = new URL(`/shop/${item.categorySlug}/`, Astro.site).href;
 const pageUrl = new URL(`/shop/${item.categorySlug}/${item.slug}/`, Astro.site).href;
 
 // The short card blurb is the fallback when nobody has written the longer page copy yet.
@@ -63,15 +63,13 @@ const productJsonLd = {
 	},
 };
 
-const breadcrumbJsonLd = {
-	"@context": "https://schema.org",
-	"@type": "BreadcrumbList",
-	itemListElement: [
-		{ "@type": "ListItem", position: 1, name: "Shop", item: shopUrl },
-		{ "@type": "ListItem", position: 2, name: item.categoryName, item: categoryUrl },
-		{ "@type": "ListItem", position: 3, name: item.name, item: pageUrl },
-	],
-};
+// One array feeds both the visible trail and the structured data — see src/lib/breadcrumbs.ts.
+const crumbs: Crumb[] = [
+	{ name: "Shop", path: "/shop/" },
+	{ name: item.categoryName, path: `/shop/${item.categorySlug}/` },
+	{ name: item.name, path: `/shop/${item.categorySlug}/${item.slug}/` },
+];
+const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 ---
 
 <Layout
@@ -83,13 +81,7 @@ const breadcrumbJsonLd = {
 >
 	<section class="page-hero">
 		<div class="wrap">
-			<nav class="breadcrumbs" aria-label="Breadcrumb">
-				<ol>
-					<li><a href="/shop">Shop</a></li>
-					<li><a href={`/shop/${item.categorySlug}`}>{item.categoryName}</a></li>
-					<li aria-current="page">{item.name}</li>
-				</ol>
-			</nav>
+			<Breadcrumbs crumbs={crumbs} />
 			<h1>{item.name}</h1>
 		</div>
 	</section>
@@ -166,34 +158,6 @@ const breadcrumbJsonLd = {
 </Layout>
 
 <style>
-	.breadcrumbs ol {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem;
-		margin: 0 0 1rem;
-		padding: 0;
-		list-style: none;
-		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.7);
-	}
-
-	.breadcrumbs li + li::before {
-		content: "/";
-		margin-right: 0.4rem;
-		opacity: 0.5;
-	}
-
-	/* Underlined — same reason as .back-link in shop/[slug].astro. The "/" separators are not
-	   links and stay undecorated, which is what makes the trail readable. */
-	.breadcrumbs a {
-		color: rgba(255, 255, 255, 0.8);
-		font-weight: 600;
-	}
-
-	.breadcrumbs a:hover {
-		color: var(--st-teal);
-	}
-
 	.product {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

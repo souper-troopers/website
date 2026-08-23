@@ -2,37 +2,83 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Page not found" description="This page doesn't exist.">
-	<div class="notfound-center">
-		<section class="page-hero">
-			<div class="wrap">
-				<h1>Page not found</h1>
-				<p>This page has wandered off - but you haven't. Here's how to find your way back.</p>
-			</div>
-		</section>
+{/*
+  Deliberately does NOT use `.page-hero`, unlike every other page.
 
-		<section class="section wrap">
-			<div class="grid grid-3">
-				<div class="card"><h3>Home</h3><p>Start from the beginning.</p><a href="/">Back to Home &rarr;</a></div>
-				<div class="card"><h3>Get Involved</h3><p>Ways to donate, volunteer, or partner with us.</p><a href="/get-involved">Get Involved &rarr;</a></div>
-				<div class="card"><h3>Contact us</h3><p>Can't find what you're looking for? Just ask.</p><a href="/contact">Contact us &rarr;</a></div>
-			</div>
-		</section>
-	</div>
+  A hero band introduces a page that has substance under it. A 404 is a dead end with three
+  signposts, and the dark band gave an error message more visual weight than any real page's
+  heading — it read as something having gone wrong with the site rather than with the URL.
+
+  ⚠ The previous version wrapped everything in an absolutely positioned `.notfound-center` to
+  centre it vertically. That caused all three of the problems it looked like it had:
+    1. `main` is `position: relative`, so `top: 50%` pushed the hero ~160px below the header.
+       Everywhere else `.page-hero` sits flush under the dark header and reads as one continuous
+       dark area; detached, it was a black rectangle floating in the page.
+    2. `main` spaces its children with `gap: var(--space-16)`. A wrapper div makes main's child
+       count one, so the gap applied to nothing and the cards butted straight against the band.
+    3. Absolutely positioned content contributes no height, so on a short viewport it would have
+       run under the footer.
+  None of it was needed: `body` is already `display: flex; min-height: 100vh` with `main` at
+  `flex: 1 0 auto`, so the footer is already held down. Centring is done here by letting this
+  section grow into the space main gives it, which keeps the content in normal flow.
+*/}
+<Layout title="Page not found" description="This page doesn't exist.">
+	<section class="section wrap notfound">
+		<div class="notfound-message">
+			<span class="badge">Error 404</span>
+			<h1>Page not found</h1>
+			<p>This page has wandered off - but you haven't. Here's how to find your way back.</p>
+		</div>
+
+		<div class="grid grid-3 notfound-links">
+			<div class="card"><h3>Home</h3><p>Start from the beginning.</p><a href="/">Back to Home &rarr;</a></div>
+			<div class="card"><h3>Get Involved</h3><p>Ways to donate, volunteer, or partner with us.</p><a href="/get-involved">Get Involved &rarr;</a></div>
+			<div class="card"><h3>Contact us</h3><p>Can't find what you're looking for? Just ask.</p><a href="/contact">Contact us &rarr;</a></div>
+		</div>
+	</section>
 </Layout>
 
 <style>
-	.notfound-center {
-		position: absolute;
-		top: 50%;
-		left: 0;
-		width: 100%;
-		transform: translateY(-50%);
+	/* Grows into whatever height `main` has spare and centres its two children in it — the same
+	   vertical centring the old absolute positioning was reaching for, but in flow, so tall content
+	   pushes the page down instead of overlapping the footer. `.section` is already a flex column. */
+	.notfound {
+		flex: 1;
+		justify-content: center;
+		/* `main` has only a `padding-bottom`; every other page gets its top breathing room from
+		   `.page-hero`'s own 48px, which this page no longer has. Without this the badge sits
+		   flush under the header at any viewport too short to leave spare space to centre in —
+		   which is every phone. `--space-12` (3rem) rather than matching the hero exactly, since
+		   there is no dark band here for the text to sit inside. */
+		padding-block: var(--space-12);
 	}
 
-	.card {
+	.notfound-message {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		align-items: center;
+		gap: var(--space-3);
+		text-align: center;
+	}
+
+	/* `.badge` sets `align-self: flex-start`, which beats the parent's `align-items: center` — so
+	   without this the pill sits hard left under a centred heading. Layout.astro already carries the
+	   identical override for `.section-intro.statement .badge`. */
+	.notfound-message .badge {
+		align-self: center;
+	}
+
+	.notfound-message p {
+		max-width: 44ch;
+		/* 0.65 is the site-wide floor for muted ink — below it the contrast fails AA on every
+		   background this site uses. See "Colour is an affordance" in AGENTS.md. */
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	/* Same trick as `.giving-grid a` on the donate page: `.card` is already a flex column and grid
+	   rows stretch to equal height, so pushing the link down aligns all three regardless of how many
+	   lines each body wraps to. */
+	.notfound-links a {
+		margin-top: auto;
 	}
 </style>

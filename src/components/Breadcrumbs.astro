@@ -1,0 +1,60 @@
+---
+import type { Crumb } from "../lib/breadcrumbs";
+
+/**
+ * The visible half of a breadcrumb trail. Pair it with `breadcrumbList()` from the same module,
+ * passed to `Layout`'s `jsonLd` prop, so the trail a reader sees and the one a search engine reads
+ * are built from one array.
+ *
+ * Designed to sit inside `.page-hero`, which is dark — hence the white-on-dark colours. It has no
+ * other home today; if one is ever needed on a light background this needs a variant rather than a
+ * global colour change.
+ */
+interface Props {
+	crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+	<ol>
+		{crumbs.map((crumb, index) =>
+			index === crumbs.length - 1 ? (
+				<li aria-current="page">{crumb.name}</li>
+			) : (
+				<li><a href={crumb.path}>{crumb.name}</a></li>
+			)
+		)}
+	</ol>
+</nav>
+
+<style>
+	.breadcrumbs ol {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0 0 1rem;
+		padding: 0;
+		list-style: none;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.breadcrumbs li + li::before {
+		content: "/";
+		margin-right: 0.4rem;
+		opacity: 0.5;
+	}
+
+	/* Underlined, inheriting the global link decoration — the non-colour cue that this is a link.
+	   The "/" separators are not links and stay undecorated, which is what makes the trail readable. */
+	.breadcrumbs a {
+		color: rgba(255, 255, 255, 0.8);
+		font-weight: 600;
+	}
+
+	.breadcrumbs a:hover {
+		color: var(--st-teal);
+	}
+</style>

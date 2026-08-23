@@ -4,7 +4,9 @@ import CountUp from "../components/CountUp.svelte";
 import EmailLink from "../components/EmailLink.svelte";
 import CopyButton from "../components/CopyButton.svelte";
 import { Image } from "astro:assets";
-import { getImpactStats } from "../lib/sanity";
+import Faq from "../components/Faq.astro";
+import { getImpactStats, getSiteSettings } from "../lib/sanity";
+import { faqPageJsonLd, type FaqItem } from "../lib/faq";
 import transportPhoto from "../assets/images/donation-funds/transport.jpg";
 import trainingPhoto from "../assets/images/donation-funds/training.jpg";
 import idDocumentsPhoto from "../assets/images/donation-funds/id-documents.jpg";
@@ -13,6 +15,7 @@ import snapscanQr from "../assets/images/pay/snapscan-qr.png";
 import zapperQr from "../assets/images/pay/zapper-qr.png";
 
 const impactStats = await getImpactStats("donate");
+const settings = await getSiteSettings();
 
 // The old site's PayFast "Pay Now" form pointed return_url/cancel_url at soupertroopers.org
 // (itself) - copying that as-is would send a donor on this site back to the old one after paying.
@@ -48,9 +51,56 @@ const fundedItems = [
 	{ label: "ID document costs", photo: idDocumentsPhoto },
 	{ label: "Care packs for essential needs", photo: carePacksPhoto },
 ];
+
+/**
+ * Every answer restates something this page already says - the EFT card's "no card fees", the
+ * Section 18A routing, the PaySoftImpact redirect, the four funded items above. Nothing new is
+ * asserted here; see the note at the top of `src/lib/faq.ts`.
+ *
+ * ⚠ Deliberately no rand amounts against specific outcomes ("R150 buys transport"). Whether
+ * donations are earmarked per item or pooled is still an open question with the client, so a
+ * costed claim would be a guess presented as a fact - see the shelved suggested-amounts item in
+ * AGENTS.md.
+ */
+const faqItems: FaqItem[] = [
+	{
+		question: "Is my donation to Souper Troopers tax-deductible?",
+		answer: `Yes. Souper Troopers is a registered Public Benefit Organisation (PBO ${settings.pboNumber}) in South Africa, and we issue a Section 18A certificate for the full value of your donation.`,
+	},
+	{
+		question: "How do I get my Section 18A certificate?",
+		// No bare address in the text: an unlinked email sitting next to a linked one reads as a
+		// mistake, and this question is about the certificate rather than about where proof of
+		// payment goes - the EFT card above already says that.
+		answer: "Email your proof of payment to our accounts team and they will issue a certificate for the full value of your donation. If you paid by EFT, the bank details above also carry the address to send proof of payment to.",
+		email: "accounts@soupertroopers.org",
+	},
+	{
+		question: "Which way of giving helps the most?",
+		answer: "A direct EFT is our preferred method, because there are no card fees and more of the gift reaches the work. A monthly debit order is the most useful kind of gift over time, because a predictable amount is something we can plan around.",
+	},
+	{
+		question: "Can I donate from outside South Africa?",
+		answer: "Yes. PayPal handles non-South African cards and PayPal balances, so international donations go through there rather than through the South African card option.",
+	},
+	{
+		question: "What does my donation pay for?",
+		answer: "Transport to appointments and training, course and skills training fees, the cost of replacing ID documents, and care packs for essential needs - the practical costs that decide whether somebody can take up an opportunity or not.",
+		link: { href: "/our-work", label: "How the CAST programme works" },
+	},
+	{
+		question: "Can I donate goods instead of money?",
+		answer: "Yes. Clothing, non-perishable food, toiletries, bedding, household goods and electronics are all useful at the Humanity Hub in Woodstock, and Section 18A certificates are available for donated goods too.",
+		link: { href: "/get-involved/donate-goods", label: "What to bring and how to arrange it" },
+	},
+];
 ---
 
-<Layout title="Donate to support our work in Cape Town" description="Donate to Souper Troopers by EFT, SnapScan, Zapper, PayPal or monthly debit order, and help people experiencing homelessness in Cape Town.">
+<Layout
+	title="Donate to support our work in Cape Town"
+	description="Donate to Souper Troopers by EFT, SnapScan, Zapper, PayPal or monthly debit order, and help people experiencing homelessness in Cape Town."
+	jsonLd={[faqPageJsonLd(faqItems)]}
+>
 	<section class="page-hero">
 		<div class="wrap">
 			<h1>Donate</h1>
@@ -197,9 +247,17 @@ const fundedItems = [
 			<h2>Goods and products also help</h2>
 		</div>
 		<div class="grid grid-2 giving-grid">
-			<div class="card"><h3>Donate goods</h3><p>Food, clothing, household items, and materials for African Worry Dolls.</p><a href="/get-involved">See the full list &rarr;</a></div>
+			<div class="card"><h3>Donate goods</h3><p>Food, clothing, household items, and materials for African Worry Dolls.</p><a href="/get-involved/donate-goods">See the full list &rarr;</a></div>
 			<div class="card"><h3>Shop with purpose</h3><p>Troopers Coffee and African Worry Dolls&trade; fund jobs directly.</p><a href="/shop">Shop &rarr;</a></div>
 		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Common questions</span>
+			<h2>Questions donors ask</h2>
+		</div>
+		<Faq items={faqItems} />
 	</section>
 </Layout>
 

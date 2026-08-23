@@ -23,12 +23,21 @@ const heroLqip =
 <Layout title="Souper Troopers - homelessness charity in Cape Town" rawTitle description="A Cape Town charity working with people experiencing homelessness - food, dignity, skills training and a route back into work. Donate, volunteer or shop with us." heroOverlay>
 	<section class="hero hero-photo">
 		<div class="hero-bg blur-up" style={`background-image:url(${heroLqip})`}>
+			{/* eager + high, against Astro's lazy default. This is the page's LCP element, and a
+			    lazy LCP image is self-defeating: the browser will not even queue it until layout has
+			    proved it is in the viewport, and it then arrives behind every eagerly-fetched asset.
+			    Cloudflare RUM measured LCP P90/P99 at 3,636ms attributed to exactly this <img>, while
+			    the same page's H1 painted at ~2.2s - i.e. the hero was arriving last and dragging the
+			    metric out behind it. fetchpriority="high" additionally lifts it above the three font
+			    preloads, which are only ~47KB total and were otherwise winning the whole pipe first. */}
 			<Image
 				src={heroPhoto}
 				alt=""
 				role="presentation"
 				width={2400} widths={[800, 1600, 2400]}
 				sizes="100vw"
+				loading="eager"
+				fetchpriority="high"
 				onload="this.classList.add('is-loaded')"
 			/>
 		</div>

@@ -30,11 +30,15 @@ const categories = await getProductCategories();
 
 	<section class="section wrap">
 		<div class="figure shimmer-up">
+			{/* Above the fold at 390px and 1280px alike (measured), and the largest element on the
+			    page - so same reasoning as the homepage hero: never lazy. See index.astro. */}
 			<Image
 				src={shopPhoto}
 				alt="Troopers Coffee bags and African Worry Dolls on display"
 				width={1000} widths={[500, 1000]}
 				sizes="(min-width: 900px) 900px, 100vw"
+				loading="eager"
+				fetchpriority="high"
 				onload="this.classList.add('is-loaded')"
 			/>
 		</div>

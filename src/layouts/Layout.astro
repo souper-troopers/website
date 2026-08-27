@@ -609,7 +609,49 @@ const structuredData = {
 				font-size: 1.1rem;
 				color: var(--st-white);
 				text-decoration: none;
+				/**
+				 * Below 761px this is load-bearing and must stay: the nav is `position: absolute` there
+				 * (it slides down from behind the header), so it is out of the row entirely and this
+				 * auto margin is the only thing pushing Donate, the cart and the hamburger to the right
+				 * edge. Zeroing it collapses all three against the logo. It is overridden above 760px
+				 * only - see the block below.
+				 */
 				margin-right: auto;
+			}
+
+			/**
+			 * Where the header's free space goes, and why it is not on the brand above 760px.
+			 *
+			 * ⚠ `.brand { margin-right: auto }` absorbs *all* the row's slack, which makes the nav's
+			 * horizontal position a function of everything else in that row - including two siblings
+			 * that the parser has not reached yet. Astro injects its island bootstrap (an inline
+			 * `<style>` and two inline `<script>` blocks, ~1.8KB) at the first island on the page,
+			 * which is `<CartWidget>`, sitting between the nav and the Donate button. Inline scripts
+			 * block the HTML parser, so the browser lays out and paints brand + nav *before* the cart
+			 * and Donate exist - and at that moment the auto margin has 206px more slack to eat.
+			 * Measured: the Status link paints at x=593.5 and settles at x=387.1.
+			 *
+			 * That reflow has always happened. It only became visible when `@view-transition` landed
+			 * (2026-08-27), because the cross-fade holds the outgoing frame on screen and animates
+			 * across it, turning a pre-paint flicker into a ~200px slide. **It is not network-bound** -
+			 * the whole header is in the first chunk of HTML - so throttling the connection does
+			 * nothing and only CPU throttling reproduces it. Don't go looking for a slow request.
+			 *
+			 * The fix is to put the slack *after* the nav instead of before it, so the nav's position
+			 * depends only on the brand, which parses first and cannot be late. Cost: the nav sits
+			 * 60.3px further left than it used to, and that figure is constant at any viewport ≥1100px
+			 * because `.wrap` caps the row at 1100px - so this is a fixed small shift, not one that
+			 * grows on wide screens.
+			 */
+			@media (min-width: 761px) {
+				.brand {
+					margin-right: 0;
+				}
+
+				/* The first of the trailing pair, so the slack opens up between the nav and the cart. */
+				.header-inner .cart-toggle {
+					margin-left: auto;
+				}
 			}
 
 			.brand img {

@@ -9,6 +9,7 @@
     "predev": "node scripts/free-dev-ports.mjs",
     "dev": "concurrently -n astro,sanity,functions,check -c blue,magenta,green,yellow \"astro dev\" \"npm --prefix studio run dev\" \"netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open\" \"node scripts/check-dev-assets.mjs\"",
     "dev:check": "node scripts/check-dev-assets.mjs",
+    "dev:comments": "node scripts/sync-comments.mjs",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",

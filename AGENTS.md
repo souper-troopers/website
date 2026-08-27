@@ -484,7 +484,80 @@ Now `prefetch: { prefetchAll: true, defaultStrategy: 'viewport' }`. Two things w
 - **`viewport`, not the `hover` default.** `hover` is pointer-only; on a touch device it can at best fire on the tap that is already navigating, which is why this was noticed on a phone.
 - **The six nav links in `Layout.astro` additionally carry `data-astro-prefetch="load"`, and need it.** Under 760px the nav is `translateY(-100%)` behind the hamburger, so an IntersectionObserver never sees it — measured at 390px it sits at `top: -379px`, `visibility: hidden`. `viewport` alone would therefore have skipped the primary nav on exactly the device the complaint came from. `load` ignores position and fetches at idle. Affordable because it is the *fixed* nav: ~10KB gzipped × 5–6 docs, less than one hero photo, and the same six on every page so they are cache hits after the first.
 
-Astro skips prefetch entirely when the browser reports Save-Data or a 2g connection, so this stays polite on poor connections; Netlify bandwidth (20 credits/GB) stays noise at this traffic. **This is still a static MPA with no `ClientRouter`** — prefetch removes the blocking HTML round-trip, it does not make navigation SPA-instant. View transitions are the next lever and are a per-page behavioural change, so they need the user's sign-off, not a quiet add.
+Astro skips prefetch entirely when the browser reports Save-Data or a 2g connection, so this stays polite on poor connections; Netlify bandwidth (20 credits/GB) stays noise at this traffic. **This is still a static MPA with no `ClientRouter`** — prefetch removes the blocking HTML round-trip, it does not make navigation SPA-instant. ~~View transitions are the next lever and are a per-page behavioural change, so they need the user's sign-off, not a quiet add.~~ **Done 2026-08-27, and the premise was half wrong** — they turned out to need no per-page change at all, because the *cross-document* form is two lines of CSS rather than `ClientRouter`. See the section below.
+
+## The page-switch flash — two causes, only one of them a bug (fixed 2026-08-27)
+Reported as: with DevTools open and the CPU throttled, elements appear in sequence from the header
+downwards and the content arrives after a delay, which "doesn't feel very server-rendered". Measured
+before changing anything — `/` → `/about/` at 6× CPU throttle, 150ms latency, warm assets:
+
+```
+376ms  first contentful paint    ← text is up
+408ms  <h1> becomes the LCP candidate
+540ms  first image's onload fires
+824ms  image finishes fading in, becomes LCP
+```
+
+**The top-down reveal is not a bug and was deliberately not "fixed".** That is the browser painting
+HTML as it parses it, which is what server-rendered *is*; a throttled CPU only stretches it into
+something you can watch. Two other things were real, and they are independent — fixing either alone
+leaves half the symptom.
+
+### 1. The blank frame between documents — `@view-transition`
+No `ClientRouter`, so every navigation tears down one document and builds another. Chrome holds the
+outgoing page's last painted frame, but only briefly; at 376ms-to-FCP this site sits right on that
+budget, and past it the browser shows blank before the parse-time reveal begins. That blank frame is
+what reads as a flash.
+
+`@view-transition { navigation: auto; }` in `Layout.astro`'s global block makes the browser snapshot
+the old page, hold it, and cross-fade into the new one — so the reveal happens *behind* the
+transition. **No JavaScript, no `ClientRouter`, no per-page changes**, and both documents opt in
+automatically since every page renders through this layout.
+- **Deliberately not Astro's `<ClientRouter />`.** That swaps documents in JS and would need every
+  inline script on the site re-examined for re-run semantics — `Masonry.astro` resolves its grid
+  through `document.currentScript.previousElementSibling` at parse time, `index.astro` attaches
+  scroll handlers, `our-work.astro` arms the CAST animation once per load. The CSS at-rule gets most
+  of the effect and touches none of it.
+- **Suppressed under `prefers-reduced-motion`** via a nested `@view-transition { navigation: none }`.
+  Verified both ways: `pagereveal` fires with `viewTransition` **ACTIVE** normally and **null** under
+  reduced motion. Confirm it that way rather than by eye — the at-rule is silently ignored by
+  browsers without support, so "looks the same" tells you nothing about whether it is on.
+- **It hides the seam; it does not make anything faster**, and it does nothing for (2) below.
+- The default is a **full-page** cross-fade, so the fixed header fades along with everything else. A
+  `view-transition-name` on the header would hold it steady — that is a design decision, not applied.
+
+### 2. Above-the-fold images were gated behind a JS `load` event
+`.blur-up img`, `.figure img` and `.goods-tile-img` all start at `opacity: 0` and wait for an inline
+`onload="this.classList.add('is-loaded')"` before fading in over 400ms. For a hero that is the LCP
+element this is self-defeating twice: an element at opacity 0 has not been painted, so **the LCP
+cannot be recorded until the fade finishes**, and the reader sees copy sitting above empty image
+wells for the whole gap — the ~450ms visible in the trace above.
+
+```css
+.blur-up img[loading="eager"],
+.figure img[loading="eager"],
+.goods-tile-img[loading="eager"] { opacity: 1; transition: none; }
+```
+
+- **Keyed on `loading="eager"`, not on per-page classes.** That attribute already marks the four
+  images this site treats as in the initial viewport (see "Above-the-fold images" above), so one
+  attribute does both jobs and a newly-added hero cannot quietly miss this. `.goods-tile-img` has no
+  eager member today and is included anyway, so the rule reads as a policy rather than two one-offs.
+- ⚠ **The `onload` attributes must stay**, even though the class no longer changes any opacity:
+  `.shimmer-up:has(img.is-loaded)` is what stops the shimmer animation. Removing them as now-dead
+  code would leave it animating forever behind a fully loaded image.
+- **What replaces the fade was already being drawn underneath** — `.blur-up` carries the Sanity LQIP
+  as a `background-image`, `.shimmer-up` the placeholder shimmer for local images that have none. The
+  honest trade: the real image now arrives as a cut rather than a fade. Below the fold the fade is
+  unobtrusive and **stays** — do not "make it consistent".
+- **Measured: `/` LCP 2,600ms → 1,832ms (−30%)** at 6× CPU / 1.5Mbps / 150ms, median of 3.
+  ⚠ **`/shop/` is NOT measured.** The same run reported 1,308ms → 1,896ms, which contradicts the
+  mechanism, and the baseline server's FCP was ~240ms slower on *both* pages — pointing at server
+  warm-up, not at the CSS. The interleaved re-run that would have settled it was not completed.
+  Treat that figure as unknown rather than as a regression, and if it is ever re-run: **interleave
+  A/B/A/B, warm both servers first, and use a ≥15s window** — the same trap already documented for
+  the lazy-image work, where a short window let the `<h1>` stand in as LCP.
+
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

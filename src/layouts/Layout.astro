@@ -412,6 +412,41 @@ const structuredData = {
 		</footer>
 
 		<style is:global>
+			/* Cross-document view transitions — the fix for "switching pages doesn't feel server-rendered".
+			   This is a static MPA with no ClientRouter, so every navigation tears down one document and
+			   builds another. Chrome holds the old page's last painted frame while the new one loads, but
+			   only briefly; measured at 6x CPU throttle with 150ms latency, /about/ takes 376ms to first
+			   paint, which is right on the edge of that budget. Past it the browser gives up, shows blank,
+			   and then paints the new document top-down as it parses — the header first, then each section
+			   below it. That reveal is *correct* progressive rendering and is not worth removing; what is
+			   worth removing is the blank frame in front of it, which is what reads as a flash.
+			
+			   These two lines make the browser snapshot the outgoing page, hold it, and cross-fade into
+			   the incoming one — so the parse-time reveal happens behind the transition instead of in
+			   front of the reader. No JavaScript, no ClientRouter, no per-page changes.
+			
+			   Deliberately NOT Astro's <ClientRouter />, which is the heavier lever: it swaps documents in
+			   JS and would need every inline script on the site re-examined for re-run semantics —
+			   Masonry.astro resolves its own grid through `document.currentScript.previousElementSibling`
+			   at parse time, index.astro attaches scroll handlers, our-work.astro arms the CAST animation
+			   once per load. This gets most of the effect and touches none of that.
+			
+			   Both documents must opt in, which they do — every page renders through this layout. Browsers
+			   without support ignore the at-rule entirely and simply navigate the way they do today, so
+			   there is no fallback to write. It hides the seam; it does not make anything faster, and it
+			   is not what fixes images arriving late (see the `[loading="eager"]` rule further down). */
+			@view-transition {
+				navigation: auto;
+			}
+
+			/* A full-page cross-fade is motion, and someone who has asked for less of it should get the
+			   plain navigation instead. `@view-transition` is valid inside a conditional group rule. */
+			@media (prefers-reduced-motion: reduce) {
+				@view-transition {
+					navigation: none;
+				}
+			}
+
 			:root {
 				/* Official brand palette (souper-troopers-logo-document-06-11-2018.pdf) */
 				--st-teal: #1babbe;
@@ -1310,6 +1345,38 @@ const structuredData = {
 
 			.blur-up img.is-loaded {
 				opacity: 1;
+			}
+
+			/* Above-the-fold images are never gated behind JavaScript. `loading="eager"` is the attribute
+			   that already marks an image as in the initial viewport on this site (see the note on the
+			   homepage hero in index.astro), so keying off it means a new hero cannot be added and quietly
+			   miss this — the same attribute does both jobs and they cannot drift apart.
+			
+			   Why it matters: the three fade-in families above start their <img> at opacity 0 and wait for
+			   an inline onload="this.classList.add('is-loaded')" before revealing it, then take a further
+			   400ms to do so. For a hero that is the page's LCP element, which means the LCP cannot be
+			   recorded until the fade finishes — an element at opacity 0 has not been painted. Measured on
+			   /about/ at 6x CPU throttle with 150ms latency: text painted at 376ms and the <h1> was the LCP
+			   candidate at 408ms, but the image's load event only fired at 540ms and it did not finish
+			   fading until 824ms. That ~450ms with the copy up and the image wells still empty is the
+			   "content arrives late" half of the flash, and unlike the navigation gap it is entirely
+			   self-inflicted.
+			
+			   What replaces the fade is what the wrapper was already drawing underneath: .blur-up carries
+			   the Sanity LQIP as a background-image, so the blurred preview shows until the real image
+			   decodes over it, and .shimmer-up carries the placeholder shimmer for local images that have
+			   no LQIP. The trade is honest and worth stating: the real image now arrives as a cut rather
+			   than a fade. On a hero that is the standard progressive-image behaviour and it makes the LCP
+			   measurement truthful; below the fold the fade is unobtrusive and stays.
+			
+			   ⚠ The onload attributes on those images must STAY even though the class no longer changes
+			   their opacity: `.shimmer-up:has(img.is-loaded)` is what stops the shimmer animation, so
+			   removing onload as now-dead code would leave it animating forever behind a loaded image. */
+			.blur-up img[loading="eager"],
+			.figure img[loading="eager"],
+			.goods-tile-img[loading="eager"] {
+				opacity: 1;
+				transition: none;
 			}
 
 			/* Generic loading placeholder for local (non-Sanity) images, which have no LQIP data —

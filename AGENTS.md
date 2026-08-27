@@ -533,6 +533,20 @@ automatically since every page renders through this layout.
   reduced motion. Confirm it that way rather than by eye — the at-rule is silently ignored by
   browsers without support, so "looks the same" tells you nothing about whether it is on.
 - **It hides the seam; it does not make anything faster**, and it does nothing for (2) below.
+- ⚠ **It also made an existing header reflow visible, which is worth knowing before blaming the
+  at-rule.** Reported as the nav jumping ~200px right and settling. Cause: `.brand` carried
+  `margin-right: auto`, absorbing *all* the header row's slack, so the nav's x depended on siblings
+  the parser had not reached — Astro injects its island bootstrap (inline `<style>` + two inline
+  `<script>`, ~1.8KB) at the page's first island, `<CartWidget>`, which sits between the nav and the
+  Donate button, and **inline scripts block the parser**. So brand + nav painted before the cart and
+  Donate existed. Measured: Status paints at x=593.5, settles at x=387.1. Fixed 2026-08-27 by moving
+  the slack *after* the nav (`.brand{margin-right:0}` + `.cart-toggle{margin-left:auto}`), scoped to
+  `min-width: 761px` — **below that the nav is `position: absolute` and the brand's auto margin is
+  the only thing holding Donate/cart/hamburger at the right edge.** Verified at nine widths from 390
+  to 1440: jump 0 everywhere, header height identical, no new overflow. Cost is a constant 60.3px
+  leftward shift of the nav at ≥1100px.
+  - **The tell that this class of bug is not network-bound**: the whole header is in the first chunk
+    of HTML, so throttling the connection changes nothing and only CPU throttling reproduces it.
 - The default is a **full-page** cross-fade, so the fixed header fades along with everything else. A
   `view-transition-name` on the header would hold it steady — that is a design decision, not applied.
 

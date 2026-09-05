@@ -1,0 +1,409 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * Internal page, same family as `shmiley-decision.astro` and `google-listing.astro` — written for
+ * Kerry, Shan and Brad, not for the public. Passes `noindex` and is excluded from the sitemap in
+ * `astro.config.mjs`; both are needed, since the sitemap only controls what's advertised.
+ *
+ * Exists because the 2 September 2026 review agreed a hero video, and the constraints on it are a
+ * spec rather than a paragraph — the wrong shape for the RFC's per-question body. Linked from the
+ * video question (`q14`) on `/request-for-comment` in place of a longer body.
+ *
+ * ⚠ The load-time figures below are measured off the built site, not estimated. If the homepage
+ * hero image is ever replaced, re-measure rather than leaving the numbers to drift:
+ *   ls -l dist/_astro/mandela-mural.*  →  the 2400w webp is the laptop figure, the 800w the phone one.
+ */
+
+const updated = new Date().toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
+
+/** Measured from `dist/_astro/` on 2026-09-05 — see the note above before changing these. */
+const heroLaptopKb = 196;
+const heroPhoneKb = 55;
+/** The ceiling we'd want a background loop to come in under. */
+const loopBudgetMb = 2.5;
+const timesBigger = Math.round((loopBudgetMb * 1024) / heroLaptopKb);
+
+type Spec = { label: string; value: string };
+
+const loopSpec: Spec[] = [
+	{ label: "Length", value: "8 to 15 seconds. Ideally it can cut back to the start without a jump, so it loops quietly." },
+	{ label: "Sound", value: "None at all. The audio track comes out entirely — that is what lets it start on its own." },
+	{ label: "Orientation", value: "Landscape only. Upright phone footage cannot be used in this spot." },
+	{ label: "Resolution", value: "1920×1080 or larger. Wider than 16:9 is even better if the camera allows it." },
+	{ label: "Frame rate", value: "24 or 25 frames a second is plenty." },
+	{ label: "What to send", value: "The best quality file you have, straight off the camera. Please don't compress it first — that part is ours, and starting from a squeezed copy only loses detail." },
+];
+
+const storySpec: Spec[] = [
+	{ label: "Length", value: "30 to 90 seconds. Length costs nothing here, because nothing loads until somebody presses play." },
+	{ label: "Orientation", value: "Landscape, 16:9, 1080p." },
+	{ label: "Sound", value: "Yes, and as clean as you can get it. We'll add subtitles." },
+	{ label: "Where it lives", value: "We'll put it on YouTube or Vimeo as an unlisted video and embed it, so it never slows the page down." },
+	{ label: "Also send", value: "One good still frame from the film, to sit there as the picture before it's played." },
+];
+
+const shooting = [
+	{
+		head: "A camera on a tripod beats one in the hand",
+		body: "This is the single biggest thing, and it's free. Movement is what makes a video file large, so a locked-off shot stays crisp at a small size while a handheld pan at the same size goes soft and smeary. If the camera must move, make it slow and steady.",
+	},
+	{
+		head: "Things to avoid",
+		body: "Fast pans and whip movements, busy crowds, rain or confetti, running water, and anything shot in low light with visible grain. Grain looks like dirt once a video is compressed, and it's expensive to keep.",
+	},
+	{
+		head: "Things that work well",
+		body: "A slow push towards the Hub entrance. A wide, still shot of the space with people working in it. Hands making a worry doll. Coffee being poured. A face in soft light.",
+	},
+	{
+		head: "Shoot it brighter than feels right",
+		body: "White text sits over this footage, so we darken it slightly to keep the words readable. Something already dark on the day ends up murky on the page.",
+	},
+	{
+		head: "Keep the left and middle of the frame clear",
+		body: "That's where the headline goes. Try not to put the most important face exactly where the words will land.",
+	},
+	{
+		head: "The first frame is the one people see",
+		body: "It's held as a still while the video loads, so make sure frame one works on its own as a photograph.",
+	},
+];
+---
+
+<Layout
+	title="Filming the homepage video"
+	description="What we need from a shoot for the video at the top of the homepage, and why the constraints exist."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry, Shan &amp; Brad &mdash; {updated}</span>
+			<h1>Filming the homepage video</h1>
+			<p>The 2 September review agreed on a video at the top of the homepage. This is what we need from the shoot, and the reasoning behind each constraint, so nothing here has to be taken on trust.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="vb-frame">
+			<h2>There are two different videos here</h2>
+			<p>This is the one thing worth reading before the camera comes out, because it changes what gets filmed.</p>
+			<ol class="vb-split">
+				<li>
+					<strong>A short silent clip that plays by itself</strong>
+					<span>Scenery and movement, no talking. It sits behind the headline at the top of the page and starts on its own, quietly, the moment somebody arrives.</span>
+				</li>
+				<li>
+					<strong>Brad's story film, with Kerry and someone from the programme</strong>
+					<span>This has people speaking in it, so it is something you sit and watch rather than something playing in the background.</span>
+				</li>
+			</ol>
+			<p class="vb-frame-close"><strong>These cannot be the same video.</strong> Every web browser blocks video that starts playing with sound on its own &mdash; it's a rule they all share, to stop pages making noise at people unexpectedly. So a film with talking in it can never start by itself; somebody has to press play. That isn't something we can code around.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">What we'd suggest</span>
+			<h2>Both, doing different jobs</h2>
+			<p>The two together give you what was described on the call &mdash; something alive the moment the page opens, and the real story one click away.</p>
+		</div>
+		<div class="vb-plan">
+			<div class="vb-plan-item">
+				<span class="vb-step">1</span>
+				<div>
+					<h3>The silent clip runs at the top</h3>
+					<p>Behind the headline, looping gently. It gives the page life without asking anything of the visitor.</p>
+				</div>
+			</div>
+			<div class="vb-plan-item">
+				<span class="vb-step">2</span>
+				<div>
+					<h3>The story film sits just below it</h3>
+					<p>With a still picture and a play button, so it starts when somebody chooses. Because nothing loads until they click, its length costs us nothing.</p>
+				</div>
+			</div>
+		</div>
+		<p class="vb-alt">If only one shoot is practical, the story film alone works too &mdash; it just means the top of the page stays still until somebody presses play.</p>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">The load-time question</span>
+			<h2>Why this won't slow the site down</h2>
+		</div>
+		<div class="vb-prose">
+			<p>The site is built to appear almost instantly, and a video is far heavier than a photograph, so this is a fair thing to worry about. The answer is in <em>what the page draws first</em>.</p>
+			<p>A still picture goes up first, exactly as it does today. The video loads quietly behind it and takes over once it's ready. Google measures how quickly that first picture appears &mdash; not the video &mdash; so the speed it judges us on doesn't change at all. Done the other way round, with the page waiting for the video, it would roughly double the time before anyone sees anything.</p>
+			<p>For a sense of scale: the photograph at the top of the homepage today is <strong>{heroLaptopKb}KB on a laptop</strong> and <strong>{heroPhoneKb}KB on a phone</strong>. A {loopBudgetMb}MB video is about <strong>{timesBigger} times</strong> the laptop picture. That's perfectly affordable once, in the background, after the page is already usable. It would not be affordable as the thing everybody waits for.</p>
+			<p class="vb-note"><strong>On phones, we won't load the video at all.</strong> Just the still picture. Most phone visits are on mobile data, and it isn't right for a charity's homepage to spend someone's data on decoration.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Spec</span>
+			<h2>What we need from the shoot</h2>
+			<p>Short version for whoever is holding the camera. Everything here is easy to get right on the day and impossible to fix afterwards.</p>
+		</div>
+
+		<h3 class="vb-spec-head">The silent clip</h3>
+		<dl class="vb-spec">
+			{loopSpec.map((s) => (
+				<div class="vb-spec-row">
+					<dt>{s.label}</dt>
+					<dd>{s.value}</dd>
+				</div>
+			))}
+		</dl>
+
+		<h3 class="vb-spec-head">The story film</h3>
+		<dl class="vb-spec">
+			{storySpec.map((s) => (
+				<div class="vb-spec-row">
+					<dt>{s.label}</dt>
+					<dd>{s.value}</dd>
+				</div>
+			))}
+		</dl>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">On the day</span>
+			<h2>Six things that change the result</h2>
+			<p>These are the ones that actually make a visible difference, rather than general filming advice.</p>
+		</div>
+		<div class="vb-tips">
+			{shooting.map((t) => (
+				<div class="vb-tip">
+					<h3>{t.head}</h3>
+					<p>{t.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Search</span>
+			<h2>What this does to being found on Google</h2>
+		</div>
+		<div class="vb-prose">
+			<p>A video neither helps nor harms where the site ranks, in itself. What harms it is a page that takes a long time to show anything &mdash; which is exactly what the still-picture-first approach above avoids.</p>
+			<p><strong>The headline stays as real text on the page, sitting over the video.</strong> It never gets built into the footage itself. Words inside a video are invisible to Google, and to anyone using a screen reader.</p>
+			<p>If the story film happens, it's worth giving it a proper title, a description and a written transcript. That makes it eligible to appear with a little video thumbnail in search results, and the transcript becomes text about the work that Google can actually read. That part is a genuine gain rather than simply not being a loss.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="vb-end">
+			<h2>In one line</h2>
+			<p>Film two or three slow, steady, silent landscape shots of ten seconds each while you're already there with a camera &mdash; and shoot Brad's story film separately, at whatever length it needs.</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.vb-frame,
+	.vb-end {
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: clamp(1.4rem, 3vw, 2.2rem);
+	}
+
+	.vb-frame h2,
+	.vb-end h2 {
+		margin: 0 0 0.5rem;
+	}
+
+	.vb-split {
+		list-style: none;
+		margin: 1.4rem 0 1.2rem;
+		padding: 0;
+		display: grid;
+		gap: 1rem;
+		counter-reset: vb;
+	}
+
+	.vb-split li {
+		counter-increment: vb;
+		position: relative;
+		padding-left: 2.6rem;
+	}
+
+	.vb-split li::before {
+		content: counter(vb);
+		position: absolute;
+		left: 0;
+		top: 0.1rem;
+		width: 1.75rem;
+		height: 1.75rem;
+		border-radius: 50%;
+		/* Ordinal marker, not a control - ink on a tint rather than a saturated teal fill. */
+		background: rgba(36, 35, 43, 0.08);
+		color: var(--st-ink);
+		font-weight: 700;
+		font-size: 0.85rem;
+		display: grid;
+		place-items: center;
+	}
+
+	.vb-split strong {
+		display: block;
+		margin-bottom: 0.2rem;
+	}
+
+	.vb-split span {
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.vb-frame-close {
+		margin-bottom: 0;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(36, 35, 43, 0.1);
+	}
+
+	.vb-plan {
+		display: grid;
+		gap: 1rem;
+		margin-bottom: 1.2rem;
+	}
+
+	.vb-plan-item {
+		display: flex;
+		gap: 1rem;
+		align-items: flex-start;
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: 1.2rem 1.4rem;
+	}
+
+	.vb-plan-item h3 {
+		margin: 0 0 0.3rem;
+		font-size: 1.05rem;
+	}
+
+	.vb-plan-item p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.vb-step {
+		flex: 0 0 auto;
+		width: 1.9rem;
+		height: 1.9rem;
+		border-radius: 50%;
+		background: rgba(36, 35, 43, 0.08);
+		color: var(--st-ink);
+		font-weight: 700;
+		font-size: 0.9rem;
+		display: grid;
+		place-items: center;
+	}
+
+	.vb-alt,
+	.vb-note {
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	/* The site resets `p { margin: 0 }` globally, so prose blocks set their own rhythm. */
+	.vb-prose p {
+		max-width: 68ch;
+		margin: 0 0 1rem;
+	}
+
+	.vb-prose p:last-child {
+		margin-bottom: 0;
+	}
+
+	.vb-frame > p {
+		margin: 0 0 1rem;
+	}
+
+	.vb-end p {
+		margin: 0;
+	}
+
+	.vb-alt {
+		margin: 0;
+	}
+
+	.vb-note {
+		margin-top: 1.2rem;
+		padding: 1rem 1.2rem;
+		background: rgba(27, 171, 190, 0.06);
+		border-left: 3px solid var(--st-teal);
+		border-radius: 2px;
+	}
+
+	.vb-spec-head {
+		margin: 1.8rem 0 0.6rem;
+		font-size: 1.05rem;
+	}
+
+	.vb-spec {
+		margin: 0;
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		overflow: hidden;
+	}
+
+	.vb-spec-row {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.15rem;
+		padding: 0.9rem 1.2rem;
+		border-top: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.vb-spec-row:first-child {
+		border-top: 0;
+	}
+
+	.vb-spec dt {
+		font-weight: 700;
+	}
+
+	.vb-spec dd {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.vb-tips {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.vb-tip {
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: 1.2rem 1.4rem;
+	}
+
+	.vb-tip h3 {
+		margin: 0 0 0.35rem;
+		font-size: 1.02rem;
+	}
+
+	.vb-tip p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	@media (min-width: 780px) {
+		.vb-spec-row {
+			grid-template-columns: 12rem 1fr;
+			gap: 1.5rem;
+			align-items: baseline;
+		}
+
+		.vb-tips {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

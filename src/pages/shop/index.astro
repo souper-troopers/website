@@ -16,14 +16,24 @@ const categories = await getProductCategories();
 	</section>
 
 	<section class="section wrap">
-		<div class="card">
-			<span class="badge">Who makes this possible</span>
-			<h2>Products by Shmiley</h2>
+		{/* Was "Products by Shmiley", explaining the trading company. Adrian's point on the
+		    2 September call was that this is exactly the wrong thing to open with: the homepage
+		    never mentions Shmiley, so a visitor arrives here and meets a brand they have no reason
+		    to recognise - "shopping with purpose, I understand, because you're supporting Souper
+		    Troopers. What is Shmiley?" The call decided Shmiley stays in the background and this
+		    space says plainly where the money goes instead. Brad asked for it as boldly as we can
+		    put it, which is why it is the first thing on the page and why it is one sentence.
+
+		    ⚠ Don't reintroduce Shmiley here without checking `/shmiley-decision` - the decision is
+		    recorded there, on the RFC's Shmiley question, and in AGENTS.md, and all three have to
+		    move together. */}
+		<div class="card shop-promise">
+			<span class="badge">Where the money goes</span>
+			<h2>Every purchase pays a wage</h2>
 			<p>
-				Shmiley (Pty) Ltd is Souper Troopers' own social enterprise - a private company owned by
-				the non-profit, built to generate income and reduce our reliance on donor funding. Every
-				sale directly funds skills development and job creation for the people we support, and
-				profits are reinvested straight back into CAST.
+				These products are made by people the CAST programme has supported, here in Cape Town.
+				All proceeds go straight back into the work - the wages of the people who made them,
+				the skills training behind that, and the Humanity Hub in Woodstock where it happens.
 			</p>
 		</div>
 	</section>

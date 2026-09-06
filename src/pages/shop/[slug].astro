@@ -38,7 +38,7 @@ const attributeProductJsonLd =
 				url: categoryUrl,
 				description: category.blurb,
 				...(categoryPhotoUrl && { image: [categoryPhotoUrl] }),
-				brand: { "@type": "Brand", name: "Shmiley" },
+				brand: { "@type": "Brand", name: "Souper Troopers" },
 				offers: category.attributeVariants!.map((variant) => ({
 					"@type": "Offer",
 					name: variant.label,

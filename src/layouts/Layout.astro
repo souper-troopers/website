@@ -400,7 +400,32 @@ const structuredData = {
 					))}
 				</nav>
 				<CartWidget client:load />
-				<a class="btn btn-primary donate-cta" href="/donate">Donate</a>
+				{/* Adrian's point on the 2 September call: the homepage never mentions the shop, so a
+				    visitor meets it for the first time on a page branded Shmiley. His fix was to put
+				    both destinations behind the one contrast-coloured control people already look at.
+
+				    ⚠ The label keeps the word "Shop" visible rather than reading "Support", because
+				    seeing it was the actual goal - "people will immediately [think] oh, shop for what?"
+				    A menu labelled "Support" hides the very word it was meant to surface.
+
+				    `<details>` rather than a scripted menu: it toggles on click, is keyboard operable,
+				    and works with no JavaScript at all. The script below only adds outside-click and
+				    Escape, which are enhancements rather than the mechanism. */}
+				<details class="support-menu">
+					<summary class="btn btn-primary donate-cta">
+						<span class="support-menu-label">Donate <span aria-hidden="true">/</span> Shop</span>
+					</summary>
+					<div class="support-menu-panel">
+						<a href="/donate" data-astro-prefetch="load">
+							<strong>Donate</strong>
+							<span>Support the work directly</span>
+						</a>
+						<a href="/shop" data-astro-prefetch="load">
+							<strong>Shop</strong>
+							<span>Coffee and worry dolls - every purchase pays a wage</span>
+						</a>
+					</div>
+				</details>
 				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu">
 					<span class="nav-toggle-bar"></span>
 					<span class="nav-toggle-bar"></span>
@@ -607,13 +632,85 @@ const structuredData = {
 			/* min-height, not height: the row must still be free to grow when it wraps (the nav drops
 			   onto its own line below ~1085px), but it must never START shorter than its finished self.
 			   Without this the header renders at 66px as soon as the brand has parsed, then jumps to
-			   76px the moment .donate-cta - the tallest child at 52px - is parsed a beat later, moving
+			   76px the moment the Donate control - the tallest child at 52px - is parsed a beat later, moving
 			   the brand and the whole nav down by 4px. That is a layout shift on every page of the
 			   site, and Cloudflare RUM duly named #primary-nav as the top CLS source. It is the very
 			   same bug the <=760px rule below already fixes with a fixed height, for the very same
 			   reason (see its comment) - it was simply never applied to the desktop row.
 			   The value tracks the tallest child rather than being a second magic number: 52px button
 			   + the two var(--space-3) paddings on this rule. */
+			/* The Donate/Shop menu. `<details>` gives click-toggle and keyboard operation for free;
+			   the marker has to be removed in two ways because Safari still needs the WebKit
+			   pseudo-element. `.donate-cta` keeps every `.btn` class, including the 2px transparent
+			   border that keeps filled and outlined buttons the same height — do not set it to none
+			   (see the note on `.btn` in AGENTS.md). */
+			.support-menu {
+				position: relative;
+			}
+
+			.support-menu > summary {
+				list-style: none;
+				cursor: pointer;
+				user-select: none;
+			}
+
+			.support-menu > summary::-webkit-details-marker {
+				display: none;
+			}
+
+			.support-menu-label {
+				display: inline-flex;
+				align-items: baseline;
+				gap: 0.35em;
+			}
+
+			/* The slash is a separator, not a word — muted so the two labels read as two choices
+			   rather than as one four-word phrase. Ink at 0.55 on the teal fill, which is decorative
+			   punctuation rather than text carrying meaning. */
+			.support-menu-label span {
+				opacity: 0.55;
+				font-weight: 400;
+			}
+
+			.support-menu-panel {
+				position: absolute;
+				top: calc(100% + 8px);
+				right: 0;
+				z-index: 60;
+				min-width: 15rem;
+				display: grid;
+				gap: 2px;
+				padding: 6px;
+				background: #fff;
+				border: 1px solid rgba(36, 35, 43, 0.12);
+				border-radius: 12px;
+				box-shadow: 0 12px 32px rgba(36, 35, 43, 0.16);
+			}
+
+			.support-menu-panel a {
+				display: block;
+				padding: 0.6rem 0.75rem;
+				border-radius: 8px;
+				color: var(--st-ink);
+				text-decoration: none;
+			}
+
+			.support-menu-panel a strong {
+				display: block;
+				font-size: 0.95rem;
+			}
+
+			.support-menu-panel a span {
+				display: block;
+				font-size: 0.8rem;
+				color: rgba(36, 35, 43, 0.65);
+			}
+
+			.support-menu-panel a:hover,
+			.support-menu-panel a:focus-visible {
+				background: var(--st-bg);
+			}
+
 			.header-inner {
 				display: flex;
 				align-items: center;
@@ -816,7 +913,11 @@ const structuredData = {
 				/* Visual order only (order: doesn't affect DOM/tab order) — Donate reads before the
 				   cart icon instead of the two crowding together in DOM order (brand, cart, Donate,
 				   toggle). brand is left at its default order (0). */
-				.donate-cta {
+				/* The flex child is `.support-menu` now, not the button inside it — these three rules
+				   ordered and hid a *direct child* of .header-inner, so they move up a level with it.
+				   Left on `.donate-cta` they fail silently: the menu keeps DOM order and the homepage
+				   never hides it. */
+				.support-menu {
 					order: 1;
 				}
 
@@ -835,11 +936,11 @@ const structuredData = {
 				   fading, which leaves a dead gap between the cart and hamburger icons; display:none
 				   removes it from the flex row entirely so its share of the `gap` closes up too. Toggled
 				   by index.astro's scroll script once the hero's own button has scrolled out of view. */
-				.site-header-overlay .donate-cta {
+				.site-header-overlay .support-menu {
 					display: none;
 				}
 
-				.site-header-overlay.show-header-donate .donate-cta {
+				.site-header-overlay.show-header-donate .support-menu {
 					display: inline-block;
 				}
 
@@ -2435,6 +2536,25 @@ const structuredData = {
 			primaryNav?.addEventListener("click", (event) => {
 				if ((event.target as HTMLElement).tagName === "A") {
 					closeNav();
+				}
+			});
+
+			// Donate/Shop menu. The <details> element already does the toggling and the keyboard
+			// handling, so this only adds the two things it has no opinion about: dismissing on a
+			// click elsewhere, and on Escape. Both are enhancements — with this script absent the
+			// menu still opens, still closes on a second click, and is still keyboard operable.
+			const supportMenu = document.querySelector<HTMLDetailsElement>(".support-menu");
+
+			document.addEventListener("click", (event) => {
+				if (supportMenu?.open && !supportMenu.contains(event.target as Node)) {
+					supportMenu.open = false;
+				}
+			});
+
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape" && supportMenu?.open) {
+					supportMenu.open = false;
+					supportMenu.querySelector("summary")?.focus();
 				}
 			});
 

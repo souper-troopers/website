@@ -100,25 +100,32 @@ const forB = rows.filter((r) => r.edge === "b").length;
 		<div class="wrap">
 			<span class="badge badge-on-dark">For Kerry &amp; Shan - {updated}</span>
 			<h1>Shmiley: one site, or two?</h1>
-			<p>Shan asked for Shmiley to have its own look. That's very doable - but it could mean two quite different things, and only one of them costs anything ongoing. Here's the honest version of both.</p>
+			<p>Settled on the 2 September review: the shop stays inside this site, products are branded Souper Troopers, and Shmiley stays in the background. This page is kept as the reasoning behind that, and as the record of what was weighed - including the two things a separate site would genuinely have done better.</p>
 		</div>
 	</section>
 
 	<section class="section wrap">
+		<div class="sd-decided">
+			<h2>What was decided, and when</h2>
+			<p><strong>2 September 2026, on the review call</strong> - Kerry, Shan, Adrian, Brad and Hilton. The shop stays inside this site. Products carry the Souper Troopers name: Souper Troopers Coffee, the African Worry Dolls. Shmiley is not introduced to visitors; instead the shop says plainly that proceeds go back into the work. <code>shmiley.org</code> is kept, kept paid for, and continues to point here.</p>
+			<p>Two positions were put the other way, and are worth recording rather than smoothing over. Shan argued on the call that Shmiley reads as a brand in its own right and is “more than the African worry dolls and the coffee”. Kerry had written the day before asking for a Shmiley page with its own look and feel and its own about. The call went further than either, on Adrian's argument that Shmiley is the vehicle that lets the trading happen and is of no significance to a supporter, and Brad's that it is easier to build one brand than two. Hilton's summary carried it: hold the name, don't push it, revisit as the business grows.</p>
+			<p class="sd-decided-note">Nothing here is hard to undo. Giving the shop its own Shmiley look is design time once and no ongoing cost; a separate site remains available later, and the product pages, photography and descriptions travel with the content either way. If the decision should be the other one, it is a conversation rather than a rebuild.</p>
+		</div>
+
 		<div class="sd-frame">
-			<h2>These are two separate questions, and they get muddled</h2>
-			<p>Almost every conversation about this treats them as one. They aren't, and separating them makes the decision much easier.</p>
+			<h2>Why it was two questions, not one</h2>
+			<p>Almost every conversation about this treated them as one. They aren't, and separating them is what made the decision tractable.</p>
 			<ol class="sd-split">
 				<li>
 					<strong>Should Shmiley look like its own brand?</strong>
-					<span>Our answer: yes, and there's no argument against it. Its own colours, its own feel, its own personality in the shop. This costs a bit of design time once, and nothing after that.</span>
+					<span>Its own colours, its own feel, its own personality in the shop - design time once, and nothing after that. Our advice was yes. <strong>The call decided otherwise for now</strong>, preferring Souper Troopers throughout while the shop is two products, and leaving this open to revisit.</span>
 				</li>
 				<li>
 					<strong>Should Shmiley live at its own web address?</strong>
 					<span>This is the real decision, and it's the one with a permanent cost attached. Everything below is about this question only.</span>
 				</li>
 			</ol>
-			<p class="sd-frame-close">You can have the first without the second. That combination - Shmiley looking like itself, at soupertroopers.org/shop, with the Shmiley domain pointing at it - is what we'd suggest, and it's what most of the table below supports.</p>
+			<p class="sd-frame-close">You can have the first without the second, and that distinction is what the call turned on: it said no to the first <em>for now</em>, and no to the second outright. The Shmiley domain still points at the shop, which is what most of the table below supports.</p>
 		</div>
 	</section>
 
@@ -197,6 +204,32 @@ const forB = rows.filter((r) => r.edge === "b").length;
 	/* Tinted panel rather than a card, matching `/google-listing`'s opener: this reframes the question
 	   before any comparison happens, so it should read as a lead-in rather than the first item in a
 	   set. Teal here is an ambient surface, not an affordance — see AGENTS.md. */
+	/* The decision panel. Tinted rather than white so it reads as the page's conclusion before
+	   the comparison that produced it — a reader arriving now needs the outcome first. */
+	.sd-decided {
+		background: rgba(27, 171, 190, 0.06);
+		border: 1px solid var(--st-teal-light);
+		border-radius: 14px;
+		padding: clamp(1.4rem, 3vw, 2.2rem);
+		margin-bottom: 1.5rem;
+	}
+
+	.sd-decided h2 {
+		margin: 0 0 0.6rem;
+	}
+
+	.sd-decided p {
+		margin: 0 0 0.9rem;
+		max-width: 68ch;
+	}
+
+	.sd-decided-note {
+		margin-bottom: 0;
+		padding-top: 0.9rem;
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+		color: rgba(36, 35, 43, 0.72);
+	}
+
 	.sd-frame {
 		border-left: 3px solid var(--st-teal);
 		border-radius: 0 var(--radius) var(--radius) 0;
@@ -227,7 +260,9 @@ const forB = rows.filter((r) => r.edge === "b").length;
 		max-width: 62ch;
 	}
 
-	.sd-split strong {
+	/* Direct child only: the block treatment is for the question title, and a nested <strong>
+	   used for emphasis inside the answer must stay inline. */
+	.sd-split > li > strong {
 		display: block;
 	}
 

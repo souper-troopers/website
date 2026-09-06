@@ -260,7 +260,7 @@ const structuredData = {
 	url: Astro.site?.href,
 	logo: new URL(logoReversed.src, Astro.site).href,
 	description:
-		"Souper Troopers is a Cape Town non-profit working with people experiencing homelessness, offering food, dignity, skills training and a route back into work through its CAST programme.",
+		"Souper Troopers is a Cape Town non-profit working with people experiencing homelessness. It runs the Humanity Hub, a service centre in Woodstock, and the CAST programme - offering dignity, skills training, help with identity documents and a route back into work.",
 	email: settings.email,
 	address: {
 		"@type": "PostalAddress",
@@ -273,6 +273,29 @@ const structuredData = {
 	areaServed: {
 		"@type": "City",
 		name: addressLocality,
+	},
+	/**
+	 * The premises are named, and the name is load-bearing. Searches and AI scans were reading the
+	 * organisation as a food scheme rather than as the service centre it is (Shan, 2 September) —
+	 * a hangover from the name and from soup being where it started. Nothing in the structured data
+	 * said otherwise, because "Humanity Hub" appeared only in body copy.
+	 *
+	 * ⚠ Deliberately `location`, NOT `alternateName`. The Hub is what the *place* is called, which is
+	 * simply true; claiming it as another name for the organisation would quietly take a side on the
+	 * "should we lead with Souper Troopers or the Humanity Hub" question, which is the board's to
+	 * settle. If they decide the Hub becomes the primary identity, `alternateName` is the line to add.
+	 */
+	location: {
+		"@type": "Place",
+		name: "The Humanity Hub",
+		address: {
+			"@type": "PostalAddress",
+			streetAddress: streetAddressFrom(settings.address),
+			addressLocality,
+			addressRegion,
+			postalCode,
+			addressCountry,
+		},
 	},
 	// Shared with the visible list on the contact page — see `src/lib/opening-hours.ts` for why these
 	// are derived rather than written twice, and for the by-appointment caveat.

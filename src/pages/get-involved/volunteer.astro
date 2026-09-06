@@ -1,0 +1,231 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Faq from "../../components/Faq.astro";
+import EmailLink from "../../components/EmailLink.svelte";
+import AddressLink from "../../components/AddressLink.svelte";
+import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
+import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
+import { displayAddress } from "../../lib/address";
+import { getSiteSettings } from "../../lib/sanity";
+
+/**
+ * Deliberately not built until now. The whole of the site's volunteering content was "give time or
+ * share a skill", and a thin page indexed as the answer to "volunteer Cape Town homeless" is worse
+ * than no page: it gets found, it disappoints, and then it is the answer that keeps being shown.
+ *
+ * Unblocked by Shan's reply to `q22` (2026-08-27), which is the source for everything factual below.
+ * Kerry's list of the questions people actually send (`q6`, 2026-09-01) is where the FAQ wording
+ * comes from - "How can we volunteer", "How do we get involved", and "we would like to spend our day
+ * of service and be of value to the organisation" are hers, near enough verbatim.
+ *
+ * ⚠ Same rule as the other two children: this **elaborates rather than duplicates** the parent. The
+ * parent keeps its one-line Volunteer card; this carries what that card has no room for.
+ *
+ * ⚠ Four things are deliberately NOT claimed here, because nothing on the site asserts them and an
+ * FAQ that invents its answers is worse than a short one: any minimum age, any vetting or induction,
+ * whether Souper Troopers runs anything specific for Mandela Day or Heritage Day, and whether anyone
+ * will come and speak to a company or school. The last two are in Kerry's list of what people ask,
+ * which makes them worth answering - but they need her answer first, not our guess.
+ */
+const settings = await getSiteSettings();
+
+const crumbs: Crumb[] = [
+	{ name: "Get Involved", path: "/get-involved/" },
+	{ name: "Volunteer", path: "/get-involved/volunteer/" },
+];
+
+/** Follows the parent page and Sanity rather than inventing a third answer — see the note in
+ *  AGENTS.md about `manager@` and `kerry@` being an existing, unresolved contradiction. */
+const volunteerEmail = "manager@soupertroopers.org";
+
+/** Shan's four, in her order. Nothing added. */
+const ways = [
+	{
+		title: "Sorting and packing donations",
+		body: "Everything that arrives has to be gone through, checked and packed before it reaches anybody. It is the least glamorous job here and the one that most directly decides whether a donation is any use.",
+	},
+	{
+		title: "Organising the Hub itself",
+		body: "Helping rearrange and organise the Humanity Hub - the space is a working day centre, and keeping it in order is continuous rather than occasional.",
+	},
+	{
+		title: "Teaching a skill, or running a workshop",
+		body: "Volunteers teach the Souper Squad and the team something they know, or run a workshop. If you have a trade, a craft or a professional skill, this is the one that tends to be worth the most.",
+	},
+	{
+		title: "Helping on whatever is running",
+		body: "There is usually a project on. Practical help with the current one is always useful, and it is the easiest thing to slot into at short notice.",
+	},
+];
+
+const faqItems: FaqItem[] = [
+	{
+		question: "How can I volunteer with Souper Troopers?",
+		answer: "Email us and say roughly what you would like to do and when you are free. Volunteering happens at the Humanity Hub in Woodstock, Cape Town, and it is arranged in advance rather than being a walk-in - the Hub is a working day centre, so somebody needs to be expecting you.",
+		email: volunteerEmail,
+	},
+	{
+		question: "How much time do I need to give?",
+		answer: "As much or as little as you have. It can be a one-off few hours helping sort donations, or a regular commitment - coming in often enough to teach a skill or see a project through. Both are useful and neither is treated as the proper version.",
+	},
+	{
+		question: "Can a group volunteer, or a company team?",
+		answer: "Yes. Groups are welcome as well as individuals. If you are a company looking to spend a day of service somewhere it will be of real use, sorting and packing donations or helping reorganise the Hub absorbs a group well. Tell us how many people and when, and we will say what would help most that week.",
+		email: volunteerEmail,
+	},
+	{
+		question: "Can I share a skill instead of giving time?",
+		answer: "That is one of the four things volunteers here actually do. Teaching the squad or the team a skill, or running a workshop, is a standing way to help, and it does not require you to be available regularly.",
+		email: volunteerEmail,
+	},
+	{
+		question: "What if I cannot get to Woodstock?",
+		answer: "Donated goods and money both go straight into the same work. Goods are dropped at the Hub by arrangement, and money can be given by EFT, card, SnapScan, PayPal or a monthly debit order, with Section 18A tax certificates available for both.",
+		link: { href: "/get-involved/donate-goods", label: "What to bring, and how to arrange it" },
+	},
+];
+
+const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
+---
+
+<Layout
+	title="Volunteer in Cape Town"
+	description="Volunteer with Souper Troopers at the Humanity Hub in Woodstock, Cape Town - sorting donations, organising the Hub, or teaching a skill. Individuals and groups, one-off or regular."
+	jsonLd={jsonLd}
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<Breadcrumbs crumbs={crumbs} />
+			<h1>Volunteer</h1>
+			<p>What volunteers actually do here, how much time it takes, and how to arrange it.</p>
+		</div>
+	</section>
+
+	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
+	    organisation, the city, the street, and what a volunteer would be doing. */}
+	<section class="section wrap">
+		<div class="prose">
+			<p class="lede">
+				Souper Troopers takes volunteers at the Humanity Hub in Woodstock, Cape Town. Volunteers
+				sort and pack donated goods, help keep the Hub organised, teach the Souper Squad a skill
+				or run a workshop, and help with whatever project is running. Individuals and groups are
+				both welcome, and it can be a single morning or a regular arrangement.
+			</p>
+			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+			<p>
+				Email <EmailLink client:visible address={volunteerEmail} /> with roughly what you would
+				like to do and when you are free. It is arranged in advance rather than being a walk-in,
+				so that somebody is expecting you and there is work ready for you to do.
+			</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">What volunteers do</span>
+			<h2>Four ways people help</h2>
+			<p>All four are things volunteers do here now, rather than a wish list.</p>
+		</div>
+		<div class="ways">
+			{ways.map((way) => (
+				<div class="way">
+					<h3>{way.title}</h3>
+					<p>{way.body}</p>
+				</div>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<span class="badge">Common questions</span>
+			<h2>Before you get in touch</h2>
+		</div>
+		<Faq items={faqItems} />
+	</section>
+
+	<section class="section wrap">
+		<div class="volunteer-cta">
+			<h2>Ready when you are</h2>
+			<p>
+				Tell us what you would like to do and roughly when. If you are not sure what would be
+				most useful, say so - that is an easier question for us to answer than for you to guess.
+			</p>
+			<p class="volunteer-cta-email"><EmailLink client:visible address={volunteerEmail} /></p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* The site resets `p { margin: 0 }` globally, so every block sets its own rhythm. */
+	.prose p {
+		margin: 0 0 var(--space-3);
+		max-width: 68ch;
+	}
+
+	.prose p:last-child {
+		margin-bottom: 0;
+	}
+
+	.lede {
+		font-size: 1.1rem;
+	}
+
+	.lede-address {
+		font-weight: 600;
+	}
+
+	.ways {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.way {
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: var(--space-4);
+	}
+
+	.way h3 {
+		margin: 0 0 var(--space-2);
+		font-size: 1.05rem;
+	}
+
+	.way p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.volunteer-cta {
+		background: var(--st-bg);
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: var(--space-5);
+		text-align: center;
+	}
+
+	.volunteer-cta h2 {
+		margin: 0 0 var(--space-2);
+	}
+
+	.volunteer-cta p {
+		margin: 0 auto;
+		max-width: 58ch;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.volunteer-cta-email {
+		margin-top: var(--space-3);
+		font-weight: 600;
+	}
+
+	/* Exactly four items, so pinned to two columns rather than left to `auto-fit`, which fits three
+	   tracks at 1280px and strands the fourth on its own row. Same fix `.action-grid` already uses. */
+	@media (min-width: 901px) {
+		.ways {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

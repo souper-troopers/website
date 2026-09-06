@@ -64,6 +64,7 @@ export const GET: APIRoute = async () => {
 		"- [Our Work](/our-work): the CAST journey and Humanity Hub services in detail.",
 		"- [Get Involved](/get-involved): volunteering, goods donations, and corporate/CSI partnership including the B-BBEE benefits.",
 		"  - [Donate goods](/get-involved/donate-goods): what can be donated, where to bring it in Woodstock, and how a drop-off is arranged.",
+		"  - [Volunteer](/get-involved/volunteer): what volunteers actually do - sorting donations, organising the Hub, teaching a skill or running a workshop - time commitment, and that groups are welcome as well as individuals.",
 		"  - [Corporate partnership](/get-involved/corporate-partnership): CSI and corporate partnership, B-BBEE Level 1 scorecard benefits, Section 18A, team workshops and office coffee.",
 		"- [Donate](/donate): EFT, SnapScan, Zapper, PayPal, card, and monthly debit order.",
 		"- [Contact](/contact): address, opening hours, email directory, and a message form.",

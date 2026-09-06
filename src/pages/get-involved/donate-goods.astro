@@ -41,7 +41,8 @@ const goods = [
 	{ label: "Clothing", note: "All seasons, and interview clothing especially: a first interview often turns on having something to wear to it." },
 	{ label: "Linen and bedding", note: "Blankets, sheets and towels." },
 	{ label: "Household goods", note: "Kitchenware, crockery, small furniture - the everyday things a home is built from." },
-	{ label: "Materials for African Worry Dolls", note: "Shweshwe fabric offcuts, old stockings, paperclips, beads and pompoms - the Souper Squad makes the dolls from these, and every doll sold funds a wage." },
+	{ label: "Materials for African Worry Dolls", note: "Shweshwe fabric offcuts especially, plus wool, stuffing, beads, cotton, thread, needles, scissors, old stockings, paperclips and pompoms - the Souper Squad makes the dolls from these, and every doll sold funds a wage." },
+	{ label: "Stationery", note: "Used at the Hub and by people going through training." },
 	{ label: "Cleaning products", note: "Everyday cleaning supplies." },
 	{ label: "Electronics", note: "Including office electronics, furniture and supplies from a company refit." },
 ];
@@ -57,6 +58,11 @@ const faqItems: FaqItem[] = [
 	{
 		question: "When is the Humanity Hub open?",
 		answer: `${hoursSummary}. Closed at weekends. Drop-offs are arranged in advance by email rather than being a walk-in, so the hours are when a time can be arranged for, not an invitation to arrive.`,
+	},
+	{
+		question: "Can you collect, or do I have to bring it?",
+		answer: "For something large that you cannot move, ask - collection can sometimes be arranged, depending on what it is. Dropping it at the Hub is always preferred though, and not only for the logistics: it is how we get to meet the people who support us, and how you get to see the work your donation is going into.",
+		email: goodsEmail,
 	},
 	{
 		question: "Can I get a tax certificate for donated goods?",
@@ -108,7 +114,10 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			<p>
 				Email <EmailLink client:visible address={goodsEmail} /> to arrange a time before you come.
 				The Hub is a working day centre rather than a drop-in donation point, so arranging it
-				means somebody is expecting you and free to help you carry things in.
+				means somebody is expecting you and free to help you carry things in. Bringing things
+				yourself is genuinely preferred - it is how we get to meet the people who support the
+				work, and how you get to see what it goes into. If something is too large to move, ask
+				and we will see whether we can collect it.
 			</p>
 		</div>
 	</section>
@@ -116,7 +125,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	<section class="section wrap">
 		<div class="section-intro">
 			<span class="badge">What we can use</span>
-			<h2>Eight things worth bringing</h2>
+			<h2>Nine things worth bringing</h2>
 		</div>
 		<dl class="goods-list">
 			{goods.map((item) => (
@@ -126,6 +135,17 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 				</div>
 			))}
 		</dl>
+		<div class="goods-condition">
+			<h3>One thing we would ask</h3>
+			{/* Shan's own framing (q24, 2026-08-27), kept close to her words. It explains the standard
+			    far better than a list of rules would, and it is the reason rather than the rule that
+			    makes it land - so don't compress this to "good condition only". */}
+			<p>
+				It needs to be in good condition. Remember that it goes to the people we work with, and
+				we don't like giving out things that are dirty or broken - it needs to be dignified. If
+				you would not hand it to someone you knew, it is better not to send it.
+			</p>
+		</div>
 		<p class="goods-aside">
 			Not sure whether something is useful? Ask - it is a quicker answer than a wasted trip.
 		</p>
@@ -199,6 +219,24 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	.goods-list dd {
 		margin: 0;
 		color: rgba(36, 35, 43, 0.75);
+	}
+
+	.goods-condition {
+		margin-top: var(--space-4);
+		padding: var(--space-4);
+		background: rgba(27, 171, 190, 0.06);
+		border-left: 3px solid var(--st-teal);
+		border-radius: 2px;
+	}
+
+	.goods-condition h3 {
+		margin: 0 0 var(--space-2);
+		font-size: 1.02rem;
+	}
+
+	.goods-condition p {
+		margin: 0;
+		max-width: 68ch;
 	}
 
 	.goods-aside {

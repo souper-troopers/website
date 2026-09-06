@@ -1,0 +1,145 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * The index of the pages that are for Kerry, Shan and the board rather than for visitors. Same
+ * family as the write-ups it lists: `noindex`, excluded from the sitemap in `astro.config.mjs`, and
+ * outside the password, since it carries no discussion of its own - only links.
+ *
+ * It exists because three of the four write-ups were reachable *only* from inside the one question
+ * on `/request-for-comment` that raised them. That is right for the link in the question and wrong
+ * as the only route in: nobody browsing the site would ever find them.
+ *
+ * ⚠ Listing them here does NOT mean taking them off their questions. A "Guides" section doing
+ * exactly that was built and removed in August, because a write-up with two entry points ends up
+ * with the discussion happening in two places at once - the Shmiley argument in particular. The
+ * question keeps its link; this is navigation, not a second home.
+ *
+ * ⚠ The header link to this page only renders while `PRE_LAUNCH_NOINDEX` is true (see Layout.astro),
+ * so the whole internal section disappears at launch without anything else being changed.
+ */
+
+type Entry = {
+	href: string;
+	name: string;
+	blurb: string;
+	note?: string;
+};
+
+const entries: Entry[] = [
+	{
+		href: "/request-for-comment",
+		name: "Status",
+		blurb: "Every open question, every reply, and what was decided - with the reasoning kept next to it. This is the main one, and the place to answer rather than by email.",
+		note: "Needs your login",
+	},
+	{
+		href: "/changelog",
+		name: "Changelog",
+		blurb: "What has actually changed on the site, newest first, and what prompted each change.",
+	},
+	{
+		href: "/video-brief",
+		name: "Filming the homepage video",
+		blurb: "What we need from the shoot, why each constraint exists, and the one thing worth knowing before the camera comes out.",
+	},
+	{
+		href: "/google-listing",
+		name: "Your Google listing",
+		blurb: "Everything that goes in the Google Business Profile, written out and ready to paste - address, hours, categories and description.",
+	},
+	{
+		href: "/shmiley-decision",
+		name: "The Shmiley decision",
+		blurb: "One site or two, compared honestly - and what the 2 September review decided.",
+	},
+];
+---
+
+<Layout
+	title="Internal pages"
+	description="Index of the internal pages for Kerry, Shan and the board."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry, Shan &amp; the board</span>
+			<h1>Internal pages</h1>
+			<p>Everything written for you rather than for visitors. None of it is linked from the public site or visible to search engines, and it all disappears when the site goes live.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<ul class="internal-list">
+			{entries.map((entry) => (
+				<li>
+					<a href={entry.href}>
+						<span class="internal-name">
+							{entry.name}
+							{entry.note && <span class="internal-note">{entry.note}</span>}
+						</span>
+						<span class="internal-blurb">{entry.blurb}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+</Layout>
+
+<style>
+	.internal-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.internal-list a {
+		display: block;
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 14px;
+		padding: var(--space-4);
+		text-decoration: none;
+		color: var(--st-ink);
+	}
+
+	.internal-list a:hover,
+	.internal-list a:focus-visible {
+		border-color: var(--st-teal-light);
+		background: var(--st-bg);
+	}
+
+	.internal-name {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		flex-wrap: wrap;
+		font-size: 1.05rem;
+		font-weight: 700;
+		/* Underlined because it is the link text - the site has no global underline reset, and hover
+		   must not be what reveals that a thing is a link. See the affordance note in AGENTS.md. */
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.internal-note {
+		font-size: 0.72rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 0.15rem 0.5rem;
+		border-radius: 999px;
+		background: rgba(36, 35, 43, 0.08);
+		color: rgba(36, 35, 43, 0.72);
+		text-decoration: none;
+	}
+
+	.internal-blurb {
+		display: block;
+		margin-top: var(--space-2);
+		color: rgba(36, 35, 43, 0.72);
+		text-decoration: none;
+	}
+</style>

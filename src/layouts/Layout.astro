@@ -178,7 +178,9 @@ const {
  * Styled apart from the real nav (see `.nav-internal`) for the same reason: it should never read as
  * part of the site's own structure.
  */
-const internalLink = PRE_LAUNCH_NOINDEX ? { href: "/request-for-comment", label: "Status" } : null;
+// Points at the index rather than straight at Status: there are five internal pages now, and
+// three of them were reachable only from inside the one question that raised them.
+const internalLink = PRE_LAUNCH_NOINDEX ? { href: "/internal", label: "Internal" } : null;
 
 const navLinks = [
 	{ href: "/", label: "Home" },
@@ -714,7 +716,15 @@ const structuredData = {
 			.header-inner {
 				display: flex;
 				align-items: center;
-				gap: var(--space-8);
+				/* var(--space-6), not --space-8. `.wrap` caps this row at 1100px and the row was sitting
+				   about 4px inside that - so adding two characters to the internal link's label
+				   ("Status" -> "Internal") pushed every page's header from one row to three, at every
+				   viewport width, because the cap means the wrap is not viewport-dependent.
+				   Measured: at a 32px gap "Internal" wraps and "Notes" does not; at 24px there is real
+				   headroom again. Anything added to this row from here - a nav item, a longer label -
+				   should be re-measured at 1440px rather than eyeballed, since a wrap here is invisible
+				   on a wide screen right up until it happens. */
+				gap: var(--space-6);
 				padding-top: var(--space-3);
 				padding-bottom: var(--space-3);
 				min-height: calc(52px + var(--space-3) * 2);

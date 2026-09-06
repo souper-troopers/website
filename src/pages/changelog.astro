@@ -1,0 +1,218 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * A client-readable record of what has changed, and why. Same family as the other internal pages:
+ * `noindex`, out of the sitemap, outside the password.
+ *
+ * ⚠ Curated, deliberately, and NOT generated from the git history. The commit log is the accurate
+ * record and it is unreadable for this audience - 140-odd entries, most of them about caching,
+ * typechecking or CI. This says what changed for Souper Troopers, at a level Kerry or a board member
+ * can read in two minutes.
+ *
+ * The honest cost of that is staleness: nothing generates this, so it goes out of date exactly the
+ * way `llms.txt` did before it was made dynamic. Add to it when shipping, not as a separate chore.
+ *
+ * `from` is the part worth keeping. Where a change came out of one of their answers or a meeting,
+ * say so - it is the clearest argument for replying to the next question, and this page is the only
+ * place they can see their own input landing.
+ */
+
+type Change = { text: string; from?: string };
+type Release = { date: string; heading: string; changes: Change[] };
+
+const releases: Release[] = [
+	{
+		date: "6 September 2026",
+		heading: "Volunteering, goods, and the shop",
+		changes: [
+			{ text: "A volunteer page, saying what volunteers actually do here - sorting donations, keeping the Hub organised, teaching the squad a skill or running a workshop. It had been left unbuilt on purpose, because the only thing we could have said was \"give time\".", from: "Shan's answer about volunteering" },
+			{ text: "The goods page now says what condition things need to be in, and why, in Shan's own words. It also says that collection can sometimes be arranged for something large, and lists the craft materials the Souper Squad needs.", from: "Shan's answer about donations" },
+			{ text: "The shop leads with where the money goes rather than with an explanation of Shmiley.", from: "the 2 September review" },
+			{ text: "The Donate button in the header is now a Donate / Shop menu, so the shop is visible from every page.", from: "Adrian, on the 2 September review" },
+			{ text: "The Humanity Hub is now named in page titles, descriptions and the data Google reads. It appeared only in body text before, which is why searches were reading the organisation as a food scheme rather than a service centre.", from: "Shan's finding about AI scans" },
+		],
+	},
+	{
+		date: "5 September 2026",
+		heading: "The review, written up",
+		changes: [
+			{ text: "Minutes of the 2 September review: ten decisions with the reasoning kept, what is still open, and what each person owes." },
+			{ text: "A page setting out what we need from the video shoot - including that a film with talking in it cannot start on its own, so the plan needs a silent clip as well." },
+			{ text: "Kerry's replies and Shan's second and third rounds recorded on the Status page. Every question now has a reply against it for the first time." },
+		],
+	},
+	{
+		date: "23 - 27 August 2026",
+		heading: "Speed, and the pages people were looking for",
+		changes: [
+			{ text: "Two new pages for the things people most often ask about: donating goods, and corporate partnership." },
+			{ text: "Questions on the contact and donate pages are now answered in the words people actually use to ask them." },
+			{ text: "Pages now fade into each other instead of flashing white between clicks." },
+			{ text: "Photographs appear as soon as they arrive rather than waiting for the page's scripts, and the header no longer shifts as it loads." },
+			{ text: "The custom font is off for now. Measured properly, it was costing about a second on some pages and causing the text to jump as it swapped in - a worse trade than it looked. Easy to turn back on." },
+			{ text: "The MySchool card was wrong: Woolworths merged MySchool into MyDifference and stopped accepting the cards on 30 June. Corrected.", from: "Shan's reply" },
+		],
+	},
+	{
+		date: "19 - 22 August 2026",
+		heading: "Legibility and load time",
+		changes: [
+			{ text: "The homepage photograph was loading last instead of first, which was making the site feel slow. Fixed, and measured: pages load between a fifth and a half faster." },
+			{ text: "The donate page's six payment buttons were all shouting equally. Quietened, and the button text darkened so it is actually readable on the brand teal." },
+		],
+	},
+	{
+		date: "15 August 2026",
+		heading: "The Status page becomes a conversation",
+		changes: [
+			{ text: "You can now reply underneath any question on the Status page instead of writing an email, and each item reads as one dated thread." },
+			{ text: "The internal pages are behind a password, with a login each, so a reply is signed by whoever wrote it." },
+			{ text: "The Status page was too long to read; it is now about half the length on opening, with a contents bar." },
+			{ text: "A page comparing the Shmiley options side by side." },
+			{ text: "The tab icon was an unreadable smudge at small sizes. Rebuilt from the logo's own lettering and brush ring." },
+			{ text: "Product photographs and press links from the Drive, and the photograph of the building - which turned out to have been on the old site all along.", from: "the Drive folder Shan shared" },
+		],
+	},
+	{
+		date: "11 - 13 August 2026",
+		heading: "Being found",
+		changes: [
+			{ text: "Every shop product now has its own page, so an individual doll or coffee can be found, linked and shared. Before this, eleven products shared three pages." },
+			{ text: "Page titles and descriptions rewritten around what people actually search for. They had been the menu labels, which nobody searches." },
+			{ text: "A sitemap, so search engines can see the whole site." },
+			{ text: "The picture that shows when a link is shared was a crop of somebody's chin. It is now the Mandela mural." },
+			{ text: "Teal is now reserved for things you can click. Prices and statistics had been styled like links, and links like plain text." },
+			{ text: "A Publish button in the content tool, so a batch of edits can be put live without needing us or a Netlify account." },
+		],
+	},
+	{
+		date: "8 - 10 August 2026",
+		heading: "The site itself",
+		changes: [
+			{ text: "The new site built across all pages, with the content moved into a tool you can edit yourself." },
+			{ text: "A working shop with a real basket and card checkout through PayFast, tested with real transactions." },
+			{ text: "The real product catalogue, prices and photographs brought across from the old site." },
+			{ text: "Automatic weekly backups of all the content, to a private repository, with an alert if a backup ever fails to arrive." },
+			{ text: "Contact and enquiry forms that actually send, and privacy-respecting visitor statistics." },
+		],
+	},
+];
+
+const totalChanges = releases.reduce((sum, release) => sum + release.changes.length, 0);
+---
+
+<Layout
+	title="What has changed"
+	description="A running record of changes to the Souper Troopers site."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry, Shan &amp; the board</span>
+			<h1>What has changed</h1>
+			<p>The {totalChanges} changes worth knowing about, newest first. Where something came out of one of your answers or a meeting, it says so.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="cl-intro">
+			<p>This is the short version. Everything here is on the live preview now - nothing is waiting to be switched on. If something looks wrong, the Status page is the place to say so.</p>
+		</div>
+
+		{releases.map((release) => (
+			<div class="cl-release">
+				<div class="cl-when">
+					<h2>{release.heading}</h2>
+					<p class="cl-date">{release.date}</p>
+				</div>
+				<ul class="cl-changes">
+					{release.changes.map((change) => (
+						<li>
+							<span>{change.text}</span>
+							{change.from && <span class="cl-from">From {change.from}</span>}
+						</li>
+					))}
+				</ul>
+			</div>
+		))}
+	</section>
+</Layout>
+
+<style>
+	.cl-intro {
+		max-width: 68ch;
+		margin-bottom: var(--space-6);
+	}
+
+	.cl-intro p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.cl-release {
+		padding-top: var(--space-5);
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+	}
+
+	.cl-release + .cl-release {
+		margin-top: var(--space-5);
+	}
+
+	.cl-when h2 {
+		margin: 0 0 var(--space-1);
+		font-size: 1.2rem;
+	}
+
+	.cl-date {
+		margin: 0 0 var(--space-3);
+		font-size: 0.85rem;
+		font-weight: 600;
+		/* Ink, not teal: a date is static content, and teal on text means you can act on it. */
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.cl-changes {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+		max-width: 74ch;
+	}
+
+	.cl-changes li {
+		padding-left: var(--space-4);
+		position: relative;
+	}
+
+	.cl-changes li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.55em;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--st-teal-light);
+	}
+
+	.cl-from {
+		display: block;
+		margin-top: var(--space-1);
+		font-size: 0.83rem;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	@media (min-width: 900px) {
+		.cl-release {
+			display: grid;
+			grid-template-columns: 15rem 1fr;
+			gap: var(--space-6);
+		}
+
+		.cl-date {
+			margin-bottom: 0;
+		}
+	}
+</style>

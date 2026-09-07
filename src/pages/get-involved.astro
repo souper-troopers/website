@@ -114,7 +114,7 @@ const goodsCategories = [
 	<section id="goods" class="section wrap">
 					<div class="section-intro gi-sub-head">
 						<h3>What you can donate</h3>
-						<a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it, and how to arrange a drop-off &rarr;</a>
+						<a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a>
 					</div>
 			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
@@ -200,7 +200,7 @@ const goodsCategories = [
 	<section id="businesses" class="section wrap">
 					<div class="section-intro gi-sub-head">
 						<h3>Corporate partnership</h3>
-						<a class="gi-sub-link" href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
+						<a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a>
 					</div>
 		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
 		    every other sub-section here now leads with its prose. */}
@@ -473,11 +473,14 @@ const goodsCategories = [
 
 	/* Heading and its onward link on one line. The link used to trail the section as a lone
 	   paragraph after the grid, where it read as a stranded footer rather than as the way on. */
+	/* Sits directly after the heading rather than being pushed to the far edge. Right-aligned put
+	   roughly 600px of empty space between a heading and its own link on a wide screen, which reads
+	   as two unrelated things instead of one. */
 	.gi-group-body :global(.gi-sub-head) {
 		flex-direction: row;
 		align-items: baseline;
-		justify-content: space-between;
-		gap: var(--space-3);
+		justify-content: flex-start;
+		gap: var(--space-4);
 		flex-wrap: wrap;
 	}
 

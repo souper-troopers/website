@@ -54,8 +54,9 @@ const goodsCategories = [
 		<a href="#businesses-band">a company</a>
 	</nav>
 
-	<section class="gi-band" id="individuals-band">
+	<section class="gi-group" id="individuals-band">
 		<div class="wrap">
+			<div class="gi-group-box">
 			<div class="gi-band-media shimmer-up">
 				<Image
 					src={individualsPhoto}
@@ -71,8 +72,7 @@ const goodsCategories = [
 					<p>Give time, goods or money - and every route starts with something you already have.</p>
 				</div>
 			</div>
-		</div>
-	</section>
+				<div class="gi-group-body">
 
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
@@ -190,8 +190,14 @@ const goodsCategories = [
 		</details>
 	</section>
 
-	<section class="gi-band" id="businesses-band">
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="gi-group" id="businesses-band">
 		<div class="wrap">
+			<div class="gi-group-box">
 			<div class="gi-band-media shimmer-up">
 				<Image
 					src={businessesPhoto}
@@ -207,8 +213,7 @@ const goodsCategories = [
 					<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
 				</div>
 			</div>
-		</div>
-	</section>
+				<div class="gi-group-body">
 
 	<section id="businesses" class="section wrap">
 		<details class="gi-fold">
@@ -315,6 +320,11 @@ const goodsCategories = [
 		</section>
 	)}
 
+				</div>
+			</div>
+		</div>
+	</section>
+
 </Layout>
 <script>
 	/**
@@ -378,7 +388,41 @@ const goodsCategories = [
 		font-weight: 600;
 	}
 
+	/* Each audience is one box: banner across the top, its sections inside. Before this the two
+	   groups were only separated by whitespace, so on a long page it was easy to lose track of which
+	   audience you were reading - the fold headings all look alike once the chips are gone. */
+	.gi-group-box {
+		/* ⚠ Not white. The cards inside are white, and on a white box they vanished into it - only
+		   their shadow gave them an edge. Tinted to the page ground instead, so the box is defined by
+		   its border and banner while the cards keep reading as cards. */
+		background: var(--st-bg);
+		border: 1px solid rgba(36, 35, 43, 0.12);
+		border-radius: 20px;
+		overflow: hidden;
+	}
+
+	.gi-group-body {
+		padding: var(--space-4) var(--space-5) var(--space-6);
+	}
+
+	/* The sections inside still carry `.wrap`, which would apply a second max-width and a second set
+	   of side padding within a container that already has both. Neutralised rather than stripped off
+	   the markup, so the sections stay usable on their own if they are ever moved back out. */
+	.gi-group-body :global(.section.wrap) {
+		max-width: none;
+		margin-left: 0;
+		margin-right: 0;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	/* The banner sits flush inside the box, so it loses its own rounding to the box's. */
+	.gi-group-box .gi-band-media {
+		border-radius: 0;
+	}
+
 	.gi-band {
+
 		padding-top: var(--space-6);
 	}
 
@@ -450,6 +494,13 @@ const goodsCategories = [
 	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
 	   is the clearest instance of the "less copy" decision: nothing is deleted, it is simply not all
 	   shown. It also keeps every word in the page for search engines, which a deletion would not. */
+	/* A hairline above each fold inside a box: without it the collapsed headings sat directly under
+	   the card grid and read as stray lines rather than as sections you can open. */
+	.gi-group-body :global(.section) + :global(.section) .gi-fold {
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+		padding-top: var(--space-2);
+	}
+
 	.gi-fold > summary {
 		list-style: none;
 		cursor: pointer;

@@ -69,7 +69,7 @@ const goodsCategories = [
 
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
-			<h2>Ways to help, person to person</h2>
+			<h3>Ways to help, person to person</h3>
 		</div>
 		<div class="grid grid-3 action-grid">
 			<a class="card action-card" href="/donate">
@@ -113,7 +113,7 @@ const goodsCategories = [
 
 	<section id="goods" class="section wrap">
 					<div class="section-intro">
-						<h2>What you can donate</h2>
+						<h3>What you can donate</h3>
 					</div>
 			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
@@ -143,7 +143,7 @@ const goodsCategories = [
 
 	<section id="fundraise" class="section wrap">
 					<div class="section-intro">
-						<h2>Run your own fundraiser</h2>
+						<h3>Run your own fundraiser</h3>
 					</div>
 			<p>
 				A birthday, a race, a workplace challenge, a school drive - anything can become a
@@ -203,7 +203,7 @@ const goodsCategories = [
 
 	<section id="businesses" class="section wrap">
 					<div class="section-intro">
-						<h2>Corporate partnership</h2>
+						<h3>Corporate partnership</h3>
 					</div>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
@@ -218,7 +218,10 @@ const goodsCategories = [
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
-		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" />.</p>
+		{/* No full stop after the link: `EmailLink` renders a copy button after the address, so a
+		    sentence continuing past it reads "…soupertroopers.org ⧉ ." with the punctuation
+		    stranded. Same reason `AddressLink` is given its own paragraph elsewhere. */}
+		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
 		<p class="section-more">
 			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
 		</p>
@@ -226,7 +229,7 @@ const goodsCategories = [
 
 	<section class="section wrap">
 					<div class="section-intro">
-						<h2>Two things you can book that fund the work</h2>
+						<h3>Two things you can book that fund the work</h3>
 					</div>
 			<p>
 				Not everything here is a donation. These are things your business would spend money on
@@ -267,7 +270,7 @@ const goodsCategories = [
 	{bbbeeBenefits.length > 0 && (
 		<section class="section wrap">
 					<div class="section-intro">
-						<h2>Supporting us counts on your scorecard</h2>
+						<h3>Supporting us counts on your scorecard</h3>
 					</div>
 				<p>
 					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
@@ -450,6 +453,27 @@ const goodsCategories = [
 	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
 	   is the clearest instance of the "less copy" decision: nothing is deleted, it is simply not all
 	   shown. It also keeps every word in the page for search engines, which a deletion would not. */
+	/* Separation between the sub-sections inside a box. They are three different asks - how to help,
+	   what to bring, how to fundraise - and with nothing between them they ran together as one
+	   column of cards. A rule rather than nested boxes: the cards are already boxes, and boxing their
+	   sections too would be a third level of containment inside a box that is itself a disclosure. */
+	.gi-group-body :global(.section) + :global(.section) {
+		margin-top: var(--space-6);
+		padding-top: var(--space-6);
+		border-top: 1px solid rgba(36, 35, 43, 0.14);
+	}
+
+	/* Subordinate to the banner's own heading - it is the parent here, which is why these are h3.
+	   Sized down so the hierarchy reads without depending on the rule alone. */
+	.gi-group-body :global(.section-intro h3) {
+		margin: 0;
+		font-size: clamp(1.15rem, 2vw, 1.45rem);
+		line-height: 1.2;
+	}
+
+	/* `.section` is a flex column with a var(--space-8) gap, so the space under a heading is already
+	   handled - an extra margin here doubled it to 48px. */
+
 	/* The box is the one place this page collapses — one level, at the audience level. The inner
 	   folds are gone with it: two levels meant two clicks to reach any content, and the reader
 	   choosing an audience has already said what they want to see. */

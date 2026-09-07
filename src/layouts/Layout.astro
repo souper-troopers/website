@@ -512,7 +512,16 @@ const structuredData = {
 				--st-bg: #faf9f6;
 				--st-white: #ffffff;
 				--radius: 18px;
-				--header-height: 71px;
+				/* The real height of the header row, derived rather than written down: the tallest child
+				   is the 52px Donate control, plus this rule's own var(--space-3) padding top and
+				   bottom. It was 71px against an actual 76px, so everything keyed off it - the hero
+				   paddings, and the sticky contents bar on the update page - sat 5px too high, which
+				   on that sticky bar meant page content showing through the gap behind it.
+				   `.header-inner`'s min-height now uses this same value, so the two cannot drift.
+				   ⚠ Still a single number, and the header wraps to two or three rows between 761 and
+				   ~1085px, where no single value can be right. That is a pre-existing responsive gap,
+				   not something this fixes. */
+				--header-height: calc(52px + var(--space-3) * 2);
 
 				/* Spacing scale — the only padding/margin/gap values used across the site (mobile
 				   included). Keeps every gap/padding drawing from the same finite, standard 4px-based
@@ -727,7 +736,7 @@ const structuredData = {
 				gap: var(--space-6);
 				padding-top: var(--space-3);
 				padding-bottom: var(--space-3);
-				min-height: calc(52px + var(--space-3) * 2);
+				min-height: var(--header-height);
 				flex-wrap: wrap;
 			}
 

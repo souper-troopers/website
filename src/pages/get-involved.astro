@@ -42,6 +42,28 @@ const goodsCategories = [
 		</div>
 	</section>
 
+	{/* Adrian's point on the 2 September call: the page should ask who you are before it asks what
+	    you want to do, because "you speak differently according to the audience" (Kerry). These two
+	    are the top of the hierarchy; everything below is grouped under one or the other. */}
+	<section class="section wrap">
+		<div class="gi-chooser">
+			<a class="gi-choice" href="#individuals">
+				<span class="gi-choice-eyebrow">For individuals</span>
+				<span class="gi-choice-title">Give time, goods or money</span>
+				<span class="gi-choice-body">Donate, drop off goods, volunteer at the Hub, shop, or raise money your own way.</span>
+			</a>
+			<a class="gi-choice" href="#businesses">
+				<span class="gi-choice-eyebrow">For companies</span>
+				<span class="gi-choice-title">Partner, sponsor or book us</span>
+				<span class="gi-choice-body">CSI partnership, sponsoring part of the programme, team workshops and office coffee - and what it counts for on your scorecard.</span>
+			</a>
+		</div>
+	</section>
+
+	<div class="gi-band" id="individuals-band">
+		<div class="wrap"><h2 class="gi-band-title">For individuals</h2></div>
+	</div>
+
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
 			<span class="badge">Individuals</span>
@@ -88,11 +110,14 @@ const goodsCategories = [
 	</section>
 
 	<section id="goods" class="section wrap">
-		<div class="section-intro">
+		<details class="gi-fold">
+			<summary>
 			<span class="badge">Goods donation list</span>
 			<h2>What you can donate</h2>
+				<span class="gi-fold-hint" aria-hidden="true"></span>
+			</summary>
+			<div class="gi-fold-body">
 			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
-		</div>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">
@@ -116,13 +141,60 @@ const goodsCategories = [
 		<p class="section-more">
 			<a href="/get-involved/donate-goods">Where to bring it and how to arrange a drop-off &rarr;</a>
 		</p>
+			</div>
+		</details>
 	</section>
 
+	<section id="fundraise" class="section wrap">
+		<details class="gi-fold">
+			<summary>
+			<span class="badge">Fundraise for us</span>
+			<h2>Run your own fundraiser</h2>
+				<span class="gi-fold-hint" aria-hidden="true"></span>
+			</summary>
+			<div class="gi-fold-body">
+			<p>
+				A birthday, a race, a workplace challenge, a school drive - anything can become a
+				fundraiser. Three steps, and you don't need anything from us to start.
+			</p>
+		<div class="grid grid-3">
+			<div class="card">
+				<span class="step-number">1</span>
+				<h3>Pick a platform</h3>
+				<p>
+					<a href="https://www.backabuddy.co.za" target="_blank" rel="noopener">BackaBuddy</a> and
+					<a href="https://www.givengain.com" target="_blank" rel="noopener">GivenGain</a> both host
+					South African fundraising campaigns and handle the payments for you.
+				</p>
+			</div>
+			<div class="card">
+				<span class="step-number">2</span>
+				<h3>Set up your campaign</h3>
+				<p>Register your event or milestone, choose Souper Troopers as the cause, and set a target.</p>
+			</div>
+			<div class="card">
+				<span class="step-number">3</span>
+				<h3>Share it</h3>
+				<p>Send it to your people. Tag us and we'll share it too.</p>
+			</div>
+		</div>
+		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> - we'll help however we can.</p>
+			</div>
+		</details>
+	</section>
+
+	<div class="gi-band" id="businesses-band">
+		<div class="wrap"><h2 class="gi-band-title">For companies</h2></div>
+	</div>
+
 	<section id="businesses" class="section wrap">
-		<div class="section-intro">
+		<details class="gi-fold">
+			<summary>
 			<span class="badge">Businesses</span>
 			<h2>Corporate partnership</h2>
-		</div>
+				<span class="gi-fold-hint" aria-hidden="true"></span>
+			</summary>
+			<div class="gi-fold-body">
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -140,17 +212,22 @@ const goodsCategories = [
 		<p class="section-more">
 			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
 		</p>
+			</div>
+		</details>
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro">
+		<details class="gi-fold">
+			<summary>
 			<span class="badge">Work with us</span>
 			<h2>Two things you can book that fund the work</h2>
+				<span class="gi-fold-hint" aria-hidden="true"></span>
+			</summary>
+			<div class="gi-fold-body">
 			<p>
 				Not everything here is a donation. These are things your business would spend money on
 				anyway - the difference is where the money goes afterwards.
 			</p>
-		</div>
 		<div class="grid grid-2">
 			<a class="card action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
 				<h3>Corporate workshops</h3>
@@ -181,6 +258,8 @@ const goodsCategories = [
 				<span class="action-cta">See the coffee &rarr;</span>
 			</a>
 		</div>
+			</div>
+		</details>
 	</section>
 
 	{bbbeeBenefits.length > 0 && (
@@ -211,41 +290,160 @@ const goodsCategories = [
 		</section>
 	)}
 
-	<section id="fundraise" class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Fundraise for us</span>
-			<h2>Run your own fundraiser</h2>
-			<p>
-				A birthday, a race, a workplace challenge, a school drive - anything can become a
-				fundraiser. Three steps, and you don't need anything from us to start.
-			</p>
-		</div>
-		<div class="grid grid-3">
-			<div class="card">
-				<span class="step-number">1</span>
-				<h3>Pick a platform</h3>
-				<p>
-					<a href="https://www.backabuddy.co.za" target="_blank" rel="noopener">BackaBuddy</a> and
-					<a href="https://www.givengain.com" target="_blank" rel="noopener">GivenGain</a> both host
-					South African fundraising campaigns and handle the payments for you.
-				</p>
-			</div>
-			<div class="card">
-				<span class="step-number">2</span>
-				<h3>Set up your campaign</h3>
-				<p>Register your event or milestone, choose Souper Troopers as the cause, and set a target.</p>
-			</div>
-			<div class="card">
-				<span class="step-number">3</span>
-				<h3>Share it</h3>
-				<p>Send it to your people. Tag us and we'll share it too.</p>
-			</div>
-		</div>
-		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> - we'll help however we can.</p>
-	</section>
 </Layout>
+<script>
+	/**
+	 * The detail sections collapse, and several links point straight at them - the action cards at
+	 * the top use #goods and #fundraise, and the header/footer may too. A closed <details> would
+	 * scroll into view showing only its heading, which reads as a dead link rather than as a
+	 * section that needs opening.
+	 *
+	 * Chrome opens a <details> when the hash targets something *inside* it, but here the id sits on
+	 * the <section> wrapping it, and Safari and Firefox are less consistent - so this is done
+	 * explicitly rather than relied upon.
+	 */
+	function openTarget() {
+		if (!location.hash) return;
+		const target = document.querySelector(location.hash);
+		if (!target) return;
+		const fold = (target.querySelector("details.gi-fold") ??
+			target.closest("details.gi-fold")) as HTMLDetailsElement | null;
+		if (fold && !fold.open) {
+			fold.open = true;
+			// Re-run the jump: the anchor was resolved against the collapsed height.
+			requestAnimationFrame(() => target.scrollIntoView());
+		}
+	}
+
+	openTarget();
+	window.addEventListener("hashchange", openTarget);
+</script>
+
 
 <style>
+	/* --- Audience chooser and bands (2026-09-07) -------------------------------------------------
+	   The page used to open with six action cards and let the reader work out which applied to them.
+	   It now asks who they are first, which is what Adrian argued for on the 2 September call and
+	   what Kerry meant by speaking differently to each audience. */
+	.gi-chooser {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.gi-choice {
+		display: block;
+		padding: var(--space-5);
+		background: #fff;
+		border: 1px solid rgba(36, 35, 43, 0.1);
+		border-radius: 16px;
+		text-decoration: none;
+		color: var(--st-ink);
+	}
+
+	.gi-choice:hover,
+	.gi-choice:focus-visible {
+		border-color: var(--st-teal-light);
+		background: var(--st-bg);
+	}
+
+	.gi-choice-eyebrow {
+		display: block;
+		font-size: 0.78rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	.gi-choice-title {
+		display: block;
+		margin-top: var(--space-2);
+		font-size: 1.25rem;
+		font-weight: 700;
+		/* Underlined: it is the link text, and hover must not be what reveals that. */
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+
+	.gi-choice-body {
+		display: block;
+		margin-top: var(--space-2);
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.gi-band {
+		margin-top: var(--space-8);
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+		padding-top: var(--space-5);
+	}
+
+	.gi-band-title {
+		margin: 0;
+		font-size: 1.05rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgba(36, 35, 43, 0.65);
+	}
+
+	/* --- Folds ---------------------------------------------------------------------------------
+	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
+	   is the clearest instance of the "less copy" decision: nothing is deleted, it is simply not all
+	   shown. It also keeps every word in the page for search engines, which a deletion would not. */
+	.gi-fold > summary {
+		list-style: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-3);
+		padding: var(--space-3) 0;
+	}
+
+	.gi-fold > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.gi-fold > summary h2 {
+		margin: 0;
+		flex: 1 1 auto;
+	}
+
+	.gi-fold > summary:hover h2 {
+		text-decoration: underline;
+		text-underline-offset: 4px;
+	}
+
+	/* Chevron drawn in CSS so it needs no icon and rotates with the state. */
+	.gi-fold-hint {
+		flex: 0 0 auto;
+		width: 12px;
+		height: 12px;
+		border-right: 2px solid rgba(36, 35, 43, 0.55);
+		border-bottom: 2px solid rgba(36, 35, 43, 0.55);
+		transform: rotate(45deg) translate(-2px, -2px);
+		transition: transform 120ms ease;
+	}
+
+	.gi-fold[open] > summary .gi-fold-hint {
+		transform: rotate(-135deg) translate(-2px, -2px);
+	}
+
+	.gi-fold-body {
+		padding-top: var(--space-3);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.gi-fold-hint {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 780px) {
+		.gi-chooser {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
 	/* The route from a summary section down to its own page. Deliberately a plain underlined link
 	   rather than a button: these navigate, and the button system on this site is reserved for
 	   controls that act (see "The button system" in AGENTS.md). */

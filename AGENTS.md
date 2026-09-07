@@ -298,7 +298,7 @@ Reasoning: if these accounts are created under the user's personal logins, the c
   - **Link prefetching** (fixed 2026-08-13, verified in Chromium only). Safari doesn't support `<link rel="prefetch">`, so Astro falls back to a low-priority `fetch()`. Confirm in the Network panel that navigations actually come from cache. This exact feature was already silently doing nothing once (see "Link prefetching" below) — the same "config looks right, nothing happens" failure applies to the fallback path.
   - **The scroll handlers in `index.astro`** (hero parallax + the continuous header fade), both driven straight off `window.scrollY`. iOS Safari's momentum scrolling and rubber-band overscroll — which yields a *negative* `scrollY` — are the classic divergence. **Test on a real iPhone, not just desktop Safari**; the two aren't equivalent, and the last mobile-only bug (prefetch) was invisible on desktop.
   - **Both masonry mechanisms** — `Masonry.astro`'s JS measurement pass, and the CSS multi-column `.story-masonry`/`.pay-masonry`. See "Masonry layouts" below for why there are two.
-  - **One asymmetry already spotted in passing, not a confirmed bug:** in `src/lib/cart.svelte.ts` the localStorage *read* is wrapped in try/catch (lines 16–21) but the *write* at line 35 is not, and it runs inside a Svelte `$effect`. Safari's storage behaviour under private browsing is the likeliest place for that to throw, and a throw there breaks cart reactivity rather than merely failing to persist. Exercise the full shop → cart → PayFast flow in a Safari private window.
+  - ~~**One asymmetry already spotted in passing, not a confirmed bug:** the localStorage write in `src/lib/cart.svelte.ts` is unguarded.~~ **Confirmed and fixed 2026-09-07.** `typeof localStorage !== "undefined"` proves the API *exists*, not that it *works* — Safari in private browsing, and any browser set to block site data, expose it and then throw on `setItem`. The throw escaped the `$effect`, so the cart stopped updating rather than merely failing to persist. Verified in WebKit with `setItem` stubbed to throw: before, an uncaught `QuotaExceededError`; after, the count goes empty → 1 on Add to cart and nothing escapes. **Not persisting is the accepted outcome** — the cart works for the session and does not survive a reload.
 - [x] **Netlify Forms notification email — moved off a personal address 2026-08-15.** It *was* configured (to the user's personal inbox), so contact submissions were being received rather than lost — the 2026-08-09 worry that it "may never have been set up at all" turned out to be the wrong half of the problem. Now changed to an organisation address, which is the same ownership principle as the rest of the account checklist: a notification going to a volunteer's inbox means the charity stops hearing from its own contact form the day that volunteer steps away. **Worth one live test submission after launch** to confirm the new address actually receives.
 - [ ] ~~**Netlify Forms notification email — one form now, and it's ours to set.**~~ Only `contact` remains a Netlify Form. It's a dashboard setting (Site configuration → Forms → Form notifications), not anything in code or Sanity, so nothing in the repo shows its current value — which is why it needs checking rather than reading.
   - **Point it at `info@soupertroopers.org`.** Chosen rather than asked: the contact page's own directory already routes "Anything else" there, and a general contact form is exactly that. Kerry can redirect it in seconds later, so putting it to her would spend her attention on something reversible and obvious. **Don't add it to the RFC page** — it never was there, and that page is for decisions only she can make.
@@ -483,9 +483,40 @@ A lazy LCP image is self-defeating twice over: the browser will not queue it unt
 - **The remaining CLS contributor is the font swap, and it is not fixed.** ~0.019 on `/` and ~0.016 on `/about/` land at 2.2–2.4s, exactly when `.fonts-pending` is removed, as body text reflows by about one line. The standard fix is a metrics-matched fallback `@font-face` (`size-adjust`/`ascent-override`) so the fallback occupies Quicksand's space and the swap costs no reflow — it would *not* change the `.fonts-pending` design, only stop it shifting. Left undone deliberately: it affects every glyph on the site and wants its own before/after pass.
 - **Don't read the before/after CLS numbers as a regression.** The baseline measures 0 on several pages only because the lazy image arrived so late that everything else had already settled — calm bought by the LCP failure. Post-fix values are all still inside the "good" band (worst 0.026 against a 0.1 threshold).
 
-**Unrelated thing the width sweep turned up, not fixed:** between 761px and ~1085px the header wraps to **152px, and to 219px below ~850px** — the nav drops onto its own line, then the row splits again. It renders acceptably (screenshotted at 820px and 1000px), but `--header-height: 71px` is keyed to none of these (the real single-row height is **76px**), and every hero/section offset calc()s off it. A responsive-design question rather than a perf one, so it is flagged, not changed.
+**Unrelated thing the width sweep turned up, not fixed:** between 761px and ~1085px the header wraps to **152px, and to 219px below ~850px** — the nav drops onto its own line, then the row splits again. It renders acceptably (screenshotted at 820px and 1000px), but `--header-height` is keyed to none of these, and every hero/section offset calc()s off it. A responsive-design question rather than a perf one, so it is flagged, not changed.
+- **Half of that is fixed (2026-09-07): the variable no longer lies about the single-row height.** It said `71px` against an actual **76px**, so everything keyed off it sat 5px too high — visibly, the update page's sticky contents bar parked 5px below the header with content scrolling through the gap. It is now `calc(52px + var(--space-3) * 2)`, derived from the same parts as the row (the 52px Donate control plus the header's own padding), and `.header-inner`'s `min-height` uses the variable rather than repeating the sum, so the two cannot drift apart again. Verified by resolving the variable in a browser: 64px against a 64px header at 390px, 76px against 76px at 1280. **The wrap band between 761 and ~1085px is still unaddressed** — no single value can be right there.
 
-## Link prefetching — `prefetch: true` on its own prefetches nothing (fixed 2026-08-13)
+## ⚠ Link prefetching is OFF — it was blanking pages in Safari (2026-09-07)
+
+**Do not turn `prefetch` back on without reading this.** It caused pages to arrive **blank in Safari
+with a download bar offering `document.txt`** — on macOS, on iOS, and in iOS Chrome, which is WebKit
+too. Reproduced on `/contact/` against a live deploy; gone after prefetch was removed, and not seen
+since.
+
+**The mechanism, and why it is Safari-only.** Astro's prefetch has two paths. Where
+`link.relList.supports("prefetch")` is true — Chrome, Firefox — it injects `<link rel="prefetch">`.
+Where it is false, which is **exactly Safari**, it falls back to a bare
+`fetch(url, {priority:"low"})` (see `prefetch()` in `node_modules/astro/dist/prefetch/index.js`; on a
+static build `internalFetchHeaders` is `{}`, so no headers are added). That populates the HTTP cache,
+and Safari reusing such an entry for a *navigation* produces the blank page.
+
+**Every symptom fits, and each one is a diagnostic:**
+- Safari only. Chrome and Firefox take the other branch and were never affected.
+- Only on **clicked links**, never a typed URL — typing does not consume the prefetched entry.
+- Only **some** pages: only the ones actually prefetched.
+- Server headers are correct. Checked against production: every page returns `text/html; charset=UTF-8`.
+- **A reload cures it permanently for that URL**, which is why it stops reproducing. The reload
+  replaces the poisoned entry with a real navigation response.
+- **A deploy also cures it**, because new content hashes discard the cached entries. This is what made
+  it so hard to reproduce, and it is why the A/B has to be *reproduce right after a deploy, then fail
+  to reproduce right after the next one*.
+- **Playwright's WebKit does not reproduce it**, against production or locally. Only real Safari does.
+
+**What it cost to remove:** very little. The `immutable` asset caching added in August had already
+undercut most of prefetch's benefit, and this is a small static site. Blank pages on every Apple
+device was never a fair trade.
+
+### Historical: `prefetch: true` on its own prefetches nothing (fixed 2026-08-13, now moot)
 Reported as "other pages still load lazily when I tap through from home on my phone", against a config that already said `prefetch: true` and a commit titled "Enable hover prefetch". **It had never prefetched a single link, on any device** — the flag only ships the prefetch *runtime*; it opts no links in. In Astro's `elMatchesStrategy` (`node_modules/astro/dist/prefetch/index.js`) a link matches only if it carries `data-astro-prefetch` **or** `prefetchAll` is on, and `prefetchAll` defaults to `false`. There were no such attributes anywhere in `src/`, so every link failed every strategy. Confirmed in the built bundle: the injected constants were `undefined`, falling through to `prefetchAll = false` / `defaultStrategy = "hover"`.
 
 **The tell that this is the failure mode, not a slow network: nothing changes on desktop either.** Verify at the bundle, never at the config line — `grep -o "prefetchAll??[^,]*" dist/_astro/page.*.js` shows only the unchanged *fallback* expression and looks identical either way; the real values are the bare initialisers near the top of that module (``r=!0,i=`viewport` `` when set, `undefined` when not).
@@ -582,6 +613,75 @@ wells for the whole gap — the ~450ms visible in the trace above.
   A/B/A/B, warm both servers first, and use a ≥15s window** — the same trap already documented for
   the lazy-image work, where a short window let the `<h1>` stand in as LCP.
 
+
+## The 2 September 2026 review, and where its decisions live
+Minutes: `docs/meeting-notes/2026-09-02-website-review-shmiley.md` (speaker mapping and transcript
+caveats are kept separately in `2026-09-02-transcript-notes.md`, since they are working notes rather
+than something the client should read).
+
+**Ten decisions.** The ones that changed the site: Shmiley stays in the background and the shop is
+branded Souper Troopers; the homepage and the site generally carry too much copy; Get Involved is
+organised by audience; the header CTA becomes Donate/Shop; the shop says where the money goes.
+
+⚠ **Two things not to re-litigate from the transcript alone:**
+- **Adrian and Brad were not asking for the same thing.** Adrian wants less text ("people don't like
+  to read"). Brad said the opposite of deletion — *"I don't know if you need to remove. I'm not saying
+  remove"* — his fix is sequencing. The drop-downs and the hero video satisfy both, which is why they
+  landed fastest.
+- **Kerry's written answer on Shmiley (1 September) differs from the call's conclusion the next day.**
+  She asked for a Shmiley page with its own look and its own about; the call decided Shmiley should
+  not be surfaced at all. The call is later and supersedes, and `q11` carries a note asking her to
+  confirm. `/shmiley-decision` was updated to record the outcome — it had been arguing *for* what the
+  call decided against.
+
+**A larger question opened and is unresolved:** whether the site should lead with *Souper Troopers* or
+*the Humanity Hub*, prompted by Shan finding that research and AI scans read the organisation as a
+**food scheme** rather than the service centre it is. Hilton's condition: no change without unanimous
+board agreement. The copy-side half was actioned immediately — "Humanity Hub" and "service centre" now
+appear in titles, descriptions, the NGO structured data (as `location`, deliberately **not**
+`alternateName`, which would take a side on the naming question) and `llms.txt`. It had previously
+appeared 19 times in body copy and **zero times** in any of those places.
+
+## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
+From the 2 September review — Adrian's point, and the one the room liked most: the page opened with
+six action cards and left the reader to work out which applied to them. It now asks **who you are**
+before it asks what you want to do, because "you speak differently according to the audience" (Kerry).
+
+- **Two boxes, one per audience**, each a `<details>` whose `<summary>` is a photo banner with a
+  "See how" cue. Both start closed, so the page arrives as two banners.
+- **One level of disclosure, deliberately.** An earlier pass had folds *inside* the boxes; nesting
+  meant two clicks to reach any content, and someone who has just chosen an audience has already said
+  what they want. The inner folds were removed when the boxes became collapsible.
+- ⚠ **The trade is real and was accepted knowingly:** the page arrives showing nothing but two
+  banners, which costs a click for the visitor who lands knowing what they want — and Kerry's list of
+  the questions people actually send (`q6`) says many do. Worth watching once she sees it.
+- ⚠ **Anchors must open every ancestor `<details>`, not the nearest.** `#goods` sits two levels down;
+  opening one level scrolls to a section still hidden inside a closed box, which looks like a dead
+  link. The inline script at the bottom of the page walks all ancestors, on load and on `hashchange`.
+- **Sub-sections are `h3` under the banner's `h2`**, sized down to match, separated by a rule. Each
+  reads heading → prose → content, with the way on closing the prose rather than trailing the
+  section as a stranded footer.
+- ⚠ **`width: 100%` on `.gi-band-media` is load-bearing.** With `aspect-ratio` set and no explicit
+  width, a `min-height` makes the browser derive *width* from height — at 390px that rendered a 570px
+  banner and pushed the page 200px sideways.
+- The `.gi-group-box` is tinted to the page ground, **not white**: the cards inside are white and
+  vanished into a white box.
+
+## `/internal` and `/changelog` (built 2026-09-06)
+Same family as the other write-ups: `noindex`, out of the sitemap, outside the password. The header's
+pre-launch link points at `/internal` rather than straight at Status, because three of the write-ups
+were reachable **only** from inside the one question that raised them.
+- ⚠ **Listing them there does not take them off their questions.** A "Guides" section doing exactly
+  that was built and removed in August — a write-up with two entry points ends up with the discussion
+  happening in two places at once.
+- **The changelog is curated, not generated from git.** The commit log is accurate and unreadable for
+  this audience. Where a change came from one of their answers, it says so — that is the clearest
+  argument for replying to the next question, and the only place they see their own input landing.
+  **Update it as part of shipping**; nothing keeps it current, which is how `llms.txt` went stale.
+- ⚠ **Renaming that header link is not free.** `.wrap` caps the header row at 1100px and it sat ~4px
+  inside the cap, so "Status" → "Internal" — two characters — pushed every page's header from one row
+  to three, at every viewport width. The gap is now `--space-6` rather than `--space-8`. Re-measure at
+  1440px before adding anything to that row.
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

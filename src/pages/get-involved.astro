@@ -112,11 +112,10 @@ const goodsCategories = [
 	</section>
 
 	<section id="goods" class="section wrap">
-					<div class="section-intro gi-sub-head">
+					<div class="section-intro">
 						<h3>What you can donate</h3>
-						<a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a>
 					</div>
-			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
+			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a></p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">
@@ -198,13 +197,12 @@ const goodsCategories = [
 				<div class="gi-group-body">
 
 	<section id="businesses" class="section wrap">
-					<div class="section-intro gi-sub-head">
+					<div class="section-intro">
 						<h3>Corporate partnership</h3>
-						<a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a>
 					</div>
 		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
 		    every other sub-section here now leads with its prose. */}
-		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
+		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /> <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a></p>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -473,28 +471,12 @@ const goodsCategories = [
 
 	/* Heading and its onward link on one line. The link used to trail the section as a lone
 	   paragraph after the grid, where it read as a stranded footer rather than as the way on. */
-	/* Sits directly after the heading rather than being pushed to the far edge. Right-aligned put
-	   roughly 600px of empty space between a heading and its own link on a wide screen, which reads
-	   as two unrelated things instead of one. */
-	.gi-group-body :global(.gi-sub-head) {
-		flex-direction: row;
-		align-items: baseline;
-		justify-content: flex-start;
-		gap: var(--space-4);
-		flex-wrap: wrap;
-	}
-
+	/* The way on now closes the section's own description rather than sitting beside the heading:
+	   it reads as the end of the sentence that set the section up, which is where someone finishes
+	   reading before deciding whether they want more. `nowrap` keeps the arrow with its last word. */
 	.gi-group-body :global(.gi-sub-link) {
 		font-weight: 600;
-		font-size: 0.95rem;
 		white-space: nowrap;
-	}
-
-	@media (max-width: 620px) {
-		/* Nowrap would push the row past the box on a phone. */
-		.gi-group-body :global(.gi-sub-link) {
-			white-space: normal;
-		}
 	}
 
 	/* The box is the one place this page collapses — one level, at the audience level. The inner
@@ -666,7 +648,9 @@ const goodsCategories = [
 		font-size: 0.85rem;
 		line-height: 1.7;
 		color: rgba(36, 35, 43, 0.65);
-		max-width: 78ch;
+		/* 78ch at this size is about 660px, so inside a ~1000px box the note wrapped early and left
+		   a ragged third of the row empty. The box already constrains the measure. */
+		max-width: none;
 	}
 
 	.benefit-verified {

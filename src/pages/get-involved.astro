@@ -11,6 +11,8 @@ import craftPhoto from "../assets/images/goods/craft.jpg";
 import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
 import electronicsPhoto from "../assets/images/goods/electronics.jpg";
 import { getBbbeeBenefits, getSiteSettings } from "../lib/sanity";
+import individualsPhoto from "../assets/images/support-one-to-one.jpg";
+import businessesPhoto from "../assets/images/partner-visit.jpg";
 
 const bbbeeBenefits = await getBbbeeBenefits();
 const settings = await getSiteSettings();
@@ -42,31 +44,38 @@ const goodsCategories = [
 		</div>
 	</section>
 
-	{/* Adrian's point on the 2 September call: the page should ask who you are before it asks what
-	    you want to do, because "you speak differently according to the audience" (Kerry). These two
-	    are the top of the hierarchy; everything below is grouped under one or the other. */}
-	<section class="section wrap">
-		<div class="gi-chooser">
-			<a class="gi-choice" href="#individuals">
-				<span class="gi-choice-eyebrow">For individuals</span>
-				<span class="gi-choice-title">Give time, goods or money</span>
-				<span class="gi-choice-body">Donate, drop off goods, volunteer at the Hub, shop, or raise money your own way.</span>
-			</a>
-			<a class="gi-choice" href="#businesses">
-				<span class="gi-choice-eyebrow">For companies</span>
-				<span class="gi-choice-title">Partner, sponsor or book us</span>
-				<span class="gi-choice-body">CSI partnership, sponsoring part of the programme, team workshops and office coffee - and what it counts for on your scorecard.</span>
-			</a>
+	{/* Adrian's point on the 2 September call: ask who you are before asking what you want to do,
+	    because "you speak differently according to the audience" (Kerry). Deliberately a slim jump
+	    bar rather than two large cards - the cards repeated the band headings below word for word,
+	    which is the duplication this page already had too much of. The bands carry the weight. */}
+	<nav class="gi-jump" aria-label="Choose your audience">
+		<span>I'm here as</span>
+		<a href="#individuals-band">an individual</a>
+		<a href="#businesses-band">a company</a>
+	</nav>
+
+	<section class="gi-band" id="individuals-band">
+		<div class="wrap">
+			<div class="gi-band-media shimmer-up">
+				<Image
+					src={individualsPhoto}
+					alt="A volunteer showing a Souper Squad member a technique, one to one"
+					class="gi-band-img"
+					width={1200} widths={[700, 1200]}
+					sizes="(min-width: 1100px) 1060px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
+				<div class="gi-band-scrim"></div>
+				<div class="gi-band-text">
+					<h2>For individuals</h2>
+					<p>Give time, goods or money - and every route starts with something you already have.</p>
+				</div>
+			</div>
 		</div>
 	</section>
 
-	<div class="gi-band" id="individuals-band">
-		<div class="wrap"><h2 class="gi-band-title">For individuals</h2></div>
-	</div>
-
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Individuals</span>
 			<h2>Ways to help, person to person</h2>
 		</div>
 		<div class="grid grid-3 action-grid">
@@ -112,7 +121,6 @@ const goodsCategories = [
 	<section id="goods" class="section wrap">
 		<details class="gi-fold">
 			<summary>
-			<span class="badge">Goods donation list</span>
 			<h2>What you can donate</h2>
 				<span class="gi-fold-hint" aria-hidden="true"></span>
 			</summary>
@@ -148,7 +156,6 @@ const goodsCategories = [
 	<section id="fundraise" class="section wrap">
 		<details class="gi-fold">
 			<summary>
-			<span class="badge">Fundraise for us</span>
 			<h2>Run your own fundraiser</h2>
 				<span class="gi-fold-hint" aria-hidden="true"></span>
 			</summary>
@@ -183,14 +190,29 @@ const goodsCategories = [
 		</details>
 	</section>
 
-	<div class="gi-band" id="businesses-band">
-		<div class="wrap"><h2 class="gi-band-title">For companies</h2></div>
-	</div>
+	<section class="gi-band" id="businesses-band">
+		<div class="wrap">
+			<div class="gi-band-media shimmer-up">
+				<Image
+					src={businessesPhoto}
+					alt="Kerry meeting a corporate partner at a Souper Troopers event"
+					class="gi-band-img"
+					width={1200} widths={[700, 1200]}
+					sizes="(min-width: 1100px) 1060px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
+				<div class="gi-band-scrim"></div>
+				<div class="gi-band-text">
+					<h2>For companies</h2>
+					<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
+				</div>
+			</div>
+		</div>
+	</section>
 
 	<section id="businesses" class="section wrap">
 		<details class="gi-fold">
 			<summary>
-			<span class="badge">Businesses</span>
 			<h2>Corporate partnership</h2>
 				<span class="gi-fold-hint" aria-hidden="true"></span>
 			</summary>
@@ -219,7 +241,6 @@ const goodsCategories = [
 	<section class="section wrap">
 		<details class="gi-fold">
 			<summary>
-			<span class="badge">Work with us</span>
 			<h2>Two things you can book that fund the work</h2>
 				<span class="gi-fold-hint" aria-hidden="true"></span>
 			</summary>
@@ -264,14 +285,16 @@ const goodsCategories = [
 
 	{bbbeeBenefits.length > 0 && (
 		<section class="section wrap">
-			<div class="section-intro">
-				<span class="badge">What your business gets back</span>
+			<details class="gi-fold">
+				<summary>
 				<h2>Supporting us counts on your scorecard</h2>
+					<span class="gi-fold-hint" aria-hidden="true"></span>
+				</summary>
+				<div class="gi-fold-body">
 				<p>
 					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
 					is measurable on both your scorecard and your tax return.
 				</p>
-			</div>
 			<div class="grid grid-4">
 				{bbbeeBenefits.map((benefit) => (
 					<div class="card">
@@ -287,6 +310,8 @@ const goodsCategories = [
 					{bbbeeVerified && <span class="benefit-verified">Last verified {bbbeeVerified}.</span>}
 				</p>
 			)}
+				</div>
+			</details>
 		</section>
 	)}
 
@@ -321,68 +346,104 @@ const goodsCategories = [
 
 
 <style>
-	/* --- Audience chooser and bands (2026-09-07) -------------------------------------------------
-	   The page used to open with six action cards and let the reader work out which applied to them.
-	   It now asks who they are first, which is what Adrian argued for on the 2 September call and
-	   what Kerry meant by speaking differently to each audience. */
-	.gi-chooser {
-		display: grid;
-		gap: var(--space-3);
+	/* --- Audience jump bar and bands (2026-09-07) -----------------------------------------------
+	   The page opened with six action cards and left the reader to work out which applied to them.
+	   It now names the two audiences, which is what Adrian argued for and what Kerry meant by
+	   speaking differently to each one.
+
+	   ⚠ The bands are the hierarchy here, so they are the only thing at this level that carries
+	   weight. An earlier pass put two large cards at the top *and* headings below, which repeated
+	   both labels word for word - and the section chips ("Individuals", "Businesses") repeated them
+	   a third time. The chips are gone and the chooser is now a slim bar; the band is the heading. */
+	.gi-jump {
+		display: flex;
+		align-items: center;
+		/* Explicit: a parent centres text, and a lone centred line above a left-aligned banner reads
+		   as an orphan rather than as a choice. */
+		justify-content: flex-start;
+		text-align: left;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-3);
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0 var(--space-4);
+		font-size: 0.95rem;
 	}
 
-	.gi-choice {
-		display: block;
-		padding: var(--space-5);
-		background: #fff;
-		border: 1px solid rgba(36, 35, 43, 0.1);
-		border-radius: 16px;
-		text-decoration: none;
-		color: var(--st-ink);
-	}
-
-	.gi-choice:hover,
-	.gi-choice:focus-visible {
-		border-color: var(--st-teal-light);
-		background: var(--st-bg);
-	}
-
-	.gi-choice-eyebrow {
-		display: block;
-		font-size: 0.78rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
+	.gi-jump span {
 		color: rgba(36, 35, 43, 0.65);
 	}
 
-	.gi-choice-title {
-		display: block;
-		margin-top: var(--space-2);
-		font-size: 1.25rem;
-		font-weight: 700;
-		/* Underlined: it is the link text, and hover must not be what reveals that. */
-		text-decoration: underline;
-		text-underline-offset: 4px;
-	}
-
-	.gi-choice-body {
-		display: block;
-		margin-top: var(--space-2);
-		color: rgba(36, 35, 43, 0.72);
+	.gi-jump a {
+		font-weight: 600;
 	}
 
 	.gi-band {
-		margin-top: var(--space-8);
-		border-top: 1px solid rgba(36, 35, 43, 0.12);
-		padding-top: var(--space-5);
+		padding-top: var(--space-6);
 	}
 
-	.gi-band-title {
+	.gi-band-media {
+		position: relative;
+		border-radius: 18px;
+		overflow: hidden;
+		/* ⚠ `width: 100%` is load-bearing, not tidiness. With `aspect-ratio` set and no explicit
+		   width, a `min-height` makes the browser derive the *width* from the height instead - at
+		   390px this rendered a 570px-wide banner and pushed the whole page 200px sideways. The
+		   ratio changes at the breakpoint rather than a minimum height being imposed. */
+		width: 100%;
+		aspect-ratio: 16 / 9;
+	}
+
+	@media (min-width: 700px) {
+		/* Short and wide once there is room: this is a banner, not a photograph to study, and a tall
+		   one would push the content it introduces off the screen. */
+		.gi-band-media {
+			aspect-ratio: 3 / 1;
+		}
+	}
+
+	.gi-band-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	/* Left-weighted so the text sits on the darkest part and the photograph survives on the right. */
+	.gi-band-scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			100deg,
+			rgba(24, 23, 30, 0.82) 0%,
+			rgba(24, 23, 30, 0.62) 40%,
+			rgba(24, 23, 30, 0.12) 74%,
+			rgba(24, 23, 30, 0) 100%
+		);
+	}
+
+	.gi-band-text {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: var(--space-2);
+		padding: var(--space-5);
+		max-width: 34rem;
+	}
+
+	.gi-band-text h2 {
 		margin: 0;
-		font-size: 1.05rem;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: rgba(36, 35, 43, 0.65);
+		color: #fff;
+		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+		line-height: 1.1;
+	}
+
+	.gi-band-text p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.86);
+		max-width: 32ch;
 	}
 
 	/* --- Folds ---------------------------------------------------------------------------------

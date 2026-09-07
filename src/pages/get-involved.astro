@@ -202,7 +202,7 @@ const goodsCategories = [
 					</div>
 		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
 		    every other sub-section here now leads with its prose. */}
-		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /> <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a></p>
+		<p>Interested in partnering? <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -279,7 +279,9 @@ const goodsCategories = [
 			{(settings?.bbbeeNote || bbbeeVerified) && (
 				<p class="benefit-note">
 					{settings?.bbbeeNote}
-					{bbbeeVerified && <span class="benefit-verified">Last verified {bbbeeVerified}.</span>}
+					{/* Explicit: the newline between these two expressions is trimmed, so without it the
+					    note ran straight into the bracket - "practitioner.(last verified". */}
+					{bbbeeVerified && <>{" "}<span class="benefit-verified">(last verified {bbbeeVerified})</span></>}
 				</p>
 			)}
 		</section>
@@ -352,7 +354,9 @@ const goodsCategories = [
 	}
 
 	.gi-group-body {
-		padding: var(--space-4) var(--space-5) var(--space-6);
+		/* Deliberately more on top than the sides: the banner is a hard edge running the full width
+		   of the box, and 16px under it read as the content being pressed against the photograph. */
+		padding: var(--space-8) var(--space-5) var(--space-6);
 	}
 
 	/* The sections inside still carry `.wrap`, which would apply a second max-width and a second set
@@ -653,9 +657,9 @@ const goodsCategories = [
 		max-width: none;
 	}
 
+	/* Inline and bracketed: it is a qualifier on the note it follows, not a statement of its own,
+	   and a whole line to itself gave it more weight than a date deserves. */
 	.benefit-verified {
-		display: block;
-		margin-top: 0.35rem;
-		font-weight: 600;
+		white-space: nowrap;
 	}
 </style>

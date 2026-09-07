@@ -11,6 +11,8 @@ import craftPhoto from "../assets/images/goods/craft.jpg";
 import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
 import electronicsPhoto from "../assets/images/goods/electronics.jpg";
 import { getBbbeeBenefits, getSiteSettings } from "../lib/sanity";
+import individualsPhoto from "../assets/images/support-one-to-one.jpg";
+import businessesPhoto from "../assets/images/partner-visit.jpg";
 
 const bbbeeBenefits = await getBbbeeBenefits();
 const settings = await getSiteSettings();
@@ -42,10 +44,32 @@ const goodsCategories = [
 		</div>
 	</section>
 
+	<section class="gi-group" id="individuals-band">
+		<div class="wrap">
+			<details class="gi-group-box">
+				<summary class="gi-group-summary">
+			<div class="gi-band-media shimmer-up">
+				<Image
+					src={individualsPhoto}
+					alt="A volunteer showing a Souper Squad member a technique, one to one"
+					class="gi-band-img"
+					width={1200} widths={[700, 1200]}
+					sizes="(min-width: 1100px) 1060px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
+				<div class="gi-band-scrim"></div>
+				<div class="gi-band-text">
+					<h2>For individuals</h2>
+					<p>Give time, goods or money - and every route starts with something you already have.</p>
+				</div>
+			</div>
+					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+				</summary>
+				<div class="gi-group-body">
+
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Individuals</span>
-			<h2>Ways to help, person to person</h2>
+			<h3>Ways to help, person to person</h3>
 		</div>
 		<div class="grid grid-3 action-grid">
 			<a class="card action-card" href="/donate">
@@ -88,11 +112,12 @@ const goodsCategories = [
 	</section>
 
 	<section id="goods" class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Goods donation list</span>
-			<h2>What you can donate</h2>
-			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
-		</div>
+					<div class="section-intro">
+						<h3>What you can donate</h3>
+					</div>
+			{/* Same order as the partnership line below: context, then the way on, then the address to
+			    write to. The link is the low-commitment step and belongs before the email. */}
+			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town, and Section 18A certificates are available for donated goods. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">
@@ -110,19 +135,76 @@ const goodsCategories = [
 				</div>
 			))}
 		</div>
-		{/* The grid stays here as the visual answer to "what can I bring". The page below is the
-		    practical one - where, when, how it is arranged - and is what a search for "donate
-		    clothes Cape Town" should land on. */}
-		<p class="section-more">
-			<a href="/get-involved/donate-goods">Where to bring it and how to arrange a drop-off &rarr;</a>
-		</p>
 	</section>
 
-	<section id="businesses" class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Businesses</span>
-			<h2>Corporate partnership</h2>
+	<section id="fundraise" class="section wrap">
+					<div class="section-intro">
+						<h3>Run your own fundraiser</h3>
+					</div>
+			<p>
+				A birthday, a race, a workplace challenge, a school drive - anything can become a
+				fundraiser. Three steps, and you don't need anything from us to start. Planning
+				something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> and
+				we'll help however we can.
+			</p>
+		<div class="grid grid-3">
+			<div class="card">
+				<span class="step-number">1</span>
+				<h3>Pick a platform</h3>
+				<p>
+					<a href="https://www.backabuddy.co.za" target="_blank" rel="noopener">BackaBuddy</a> and
+					<a href="https://www.givengain.com" target="_blank" rel="noopener">GivenGain</a> both host
+					South African fundraising campaigns and handle the payments for you.
+				</p>
+			</div>
+			<div class="card">
+				<span class="step-number">2</span>
+				<h3>Set up your campaign</h3>
+				<p>Register your event or milestone, choose Souper Troopers as the cause, and set a target.</p>
+			</div>
+			<div class="card">
+				<span class="step-number">3</span>
+				<h3>Share it</h3>
+				<p>Send it to your people. Tag us and we'll share it too.</p>
+			</div>
 		</div>
+	</section>
+
+				</div>
+			</details>
+		</div>
+	</section>
+
+	<section class="gi-group" id="businesses-band">
+		<div class="wrap">
+			<details class="gi-group-box">
+				<summary class="gi-group-summary">
+			<div class="gi-band-media shimmer-up">
+				<Image
+					src={businessesPhoto}
+					alt="Kerry meeting a corporate partner at a Souper Troopers event"
+					class="gi-band-img"
+					width={1200} widths={[700, 1200]}
+					sizes="(min-width: 1100px) 1060px, 100vw"
+					onload="this.classList.add('is-loaded')"
+				/>
+				<div class="gi-band-scrim"></div>
+				<div class="gi-band-text">
+					<h2>For companies</h2>
+					<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
+				</div>
+			</div>
+					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+				</summary>
+				<div class="gi-group-body">
+
+	<section id="businesses" class="section wrap">
+					<div class="section-intro">
+						<h3>Corporate partnership</h3>
+					</div>
+		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
+		    every other sub-section here now leads with its prose. */}
+		<p>Interested in partnering? <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -136,21 +218,16 @@ const goodsCategories = [
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
-		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" />.</p>
-		<p class="section-more">
-			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
-		</p>
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Work with us</span>
-			<h2>Two things you can book that fund the work</h2>
+					<div class="section-intro">
+						<h3>Two things you can book that fund the work</h3>
+					</div>
 			<p>
 				Not everything here is a donation. These are things your business would spend money on
 				anyway - the difference is where the money goes afterwards.
 			</p>
-		</div>
 		<div class="grid grid-2">
 			<a class="card action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
 				<h3>Corporate workshops</h3>
@@ -185,14 +262,13 @@ const goodsCategories = [
 
 	{bbbeeBenefits.length > 0 && (
 		<section class="section wrap">
-			<div class="section-intro">
-				<span class="badge">What your business gets back</span>
-				<h2>Supporting us counts on your scorecard</h2>
+					<div class="section-intro">
+						<h3>Supporting us counts on your scorecard</h3>
+					</div>
 				<p>
 					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
 					is measurable on both your scorecard and your tax return.
 				</p>
-			</div>
 			<div class="grid grid-4">
 				{bbbeeBenefits.map((benefit) => (
 					<div class="card">
@@ -205,47 +281,302 @@ const goodsCategories = [
 			{(settings?.bbbeeNote || bbbeeVerified) && (
 				<p class="benefit-note">
 					{settings?.bbbeeNote}
-					{bbbeeVerified && <span class="benefit-verified">Last verified {bbbeeVerified}.</span>}
+					{/* Explicit: the newline between these two expressions is trimmed, so without it the
+					    note ran straight into the bracket - "practitioner.(last verified". */}
+					{bbbeeVerified && <>{" "}<span class="benefit-verified">(last verified {bbbeeVerified})</span></>}
 				</p>
 			)}
 		</section>
 	)}
 
-	<section id="fundraise" class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Fundraise for us</span>
-			<h2>Run your own fundraiser</h2>
-			<p>
-				A birthday, a race, a workplace challenge, a school drive - anything can become a
-				fundraiser. Three steps, and you don't need anything from us to start.
-			</p>
+				</div>
+			</details>
 		</div>
-		<div class="grid grid-3">
-			<div class="card">
-				<span class="step-number">1</span>
-				<h3>Pick a platform</h3>
-				<p>
-					<a href="https://www.backabuddy.co.za" target="_blank" rel="noopener">BackaBuddy</a> and
-					<a href="https://www.givengain.com" target="_blank" rel="noopener">GivenGain</a> both host
-					South African fundraising campaigns and handle the payments for you.
-				</p>
-			</div>
-			<div class="card">
-				<span class="step-number">2</span>
-				<h3>Set up your campaign</h3>
-				<p>Register your event or milestone, choose Souper Troopers as the cause, and set a target.</p>
-			</div>
-			<div class="card">
-				<span class="step-number">3</span>
-				<h3>Share it</h3>
-				<p>Send it to your people. Tag us and we'll share it too.</p>
-			</div>
-		</div>
-		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> - we'll help however we can.</p>
 	</section>
+
 </Layout>
+<script>
+	/**
+	 * The detail sections collapse, and several links point straight at them - the action cards at
+	 * the top use #goods and #fundraise, and the header/footer may too. A closed <details> would
+	 * scroll into view showing only its heading, which reads as a dead link rather than as a
+	 * section that needs opening.
+	 *
+	 * Chrome opens a <details> when the hash targets something *inside* it, but here the id sits on
+	 * the <section> wrapping it, and Safari and Firefox are less consistent - so this is done
+	 * explicitly rather than relied upon.
+	 */
+	function openTarget() {
+		if (!location.hash) return;
+		const target = document.querySelector(location.hash);
+		if (!target) return;
+		// Every ancestor, not just the nearest: a link to #goods now sits inside a collapsed
+		// audience box, so opening one level would still leave it hidden.
+		let opened = false;
+		let el: Element | null = target;
+		while (el) {
+			if (el instanceof HTMLDetailsElement && !el.open) {
+				el.open = true;
+				opened = true;
+			}
+			el = el.parentElement;
+		}
+		if (opened) {
+			// Re-run the jump: the anchor was resolved against the collapsed height.
+			requestAnimationFrame(() => target.scrollIntoView());
+		}
+	}
+
+	openTarget();
+	window.addEventListener("hashchange", openTarget);
+</script>
+
 
 <style>
+	/* --- Audience jump bar and bands (2026-09-07) -----------------------------------------------
+	   The page opened with six action cards and left the reader to work out which applied to them.
+	   It now names the two audiences, which is what Adrian argued for and what Kerry meant by
+	   speaking differently to each one.
+
+	   ⚠ The bands are the hierarchy here, so they are the only thing at this level that carries
+	   weight. An earlier pass put two large cards at the top *and* headings below, which repeated
+	   both labels word for word - and the section chips ("Individuals", "Businesses") repeated them
+	   a third time. The chips are gone and the chooser is now a slim bar; the band is the heading. */
+	/* Each audience is one box: banner across the top, its sections inside. Before this the two
+	   groups were only separated by whitespace, so on a long page it was easy to lose track of which
+	   audience you were reading - the fold headings all look alike once the chips are gone. */
+	.gi-group-box {
+		/* ⚠ Not white. The cards inside are white, and on a white box they vanished into it - only
+		   their shadow gave them an edge. Tinted to the page ground instead, so the box is defined by
+		   its border and banner while the cards keep reading as cards. */
+		background: var(--st-bg);
+		border: 1px solid rgba(36, 35, 43, 0.12);
+		border-radius: 20px;
+		overflow: hidden;
+	}
+
+	.gi-group-body {
+		/* Deliberately more on top than the sides: the banner is a hard edge running the full width
+		   of the box, and 16px under it read as the content being pressed against the photograph. */
+		padding: var(--space-8) var(--space-5) var(--space-6);
+	}
+
+	/* The sections inside still carry `.wrap`, which would apply a second max-width and a second set
+	   of side padding within a container that already has both. Neutralised rather than stripped off
+	   the markup, so the sections stay usable on their own if they are ever moved back out. */
+	.gi-group-body :global(.section.wrap) {
+		max-width: none;
+		margin-left: 0;
+		margin-right: 0;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	/* The banner sits flush inside the box, so it loses its own rounding to the box's. */
+	.gi-group-box .gi-band-media {
+		border-radius: 0;
+	}
+
+	.gi-band {
+
+		padding-top: var(--space-6);
+	}
+
+	.gi-band-media {
+		position: relative;
+		border-radius: 18px;
+		overflow: hidden;
+		/* ⚠ `width: 100%` is load-bearing, not tidiness. With `aspect-ratio` set and no explicit
+		   width, a `min-height` makes the browser derive the *width* from the height instead - at
+		   390px this rendered a 570px-wide banner and pushed the whole page 200px sideways. The
+		   ratio changes at the breakpoint rather than a minimum height being imposed. */
+		width: 100%;
+		aspect-ratio: 16 / 9;
+	}
+
+	@media (min-width: 700px) {
+		/* Short and wide once there is room: this is a banner, not a photograph to study, and a tall
+		   one would push the content it introduces off the screen. */
+		.gi-band-media {
+			aspect-ratio: 3 / 1;
+		}
+	}
+
+	.gi-band-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	/* Left-weighted so the text sits on the darkest part and the photograph survives on the right. */
+	.gi-band-scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			100deg,
+			rgba(24, 23, 30, 0.82) 0%,
+			rgba(24, 23, 30, 0.62) 40%,
+			rgba(24, 23, 30, 0.12) 74%,
+			rgba(24, 23, 30, 0) 100%
+		);
+	}
+
+	.gi-band-text {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: var(--space-2);
+		padding: var(--space-5);
+		max-width: 34rem;
+	}
+
+	.gi-band-text h2 {
+		margin: 0;
+		color: #fff;
+		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+		line-height: 1.1;
+	}
+
+	.gi-band-text p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.86);
+		max-width: 32ch;
+	}
+
+	/* --- Folds ---------------------------------------------------------------------------------
+	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
+	   is the clearest instance of the "less copy" decision: nothing is deleted, it is simply not all
+	   shown. It also keeps every word in the page for search engines, which a deletion would not. */
+	/* Separation between the sub-sections inside a box. They are three different asks - how to help,
+	   what to bring, how to fundraise - and with nothing between them they ran together as one
+	   column of cards. A rule rather than nested boxes: the cards are already boxes, and boxing their
+	   sections too would be a third level of containment inside a box that is itself a disclosure. */
+	.gi-group-body :global(.section) + :global(.section) {
+		margin-top: var(--space-6);
+		padding-top: var(--space-6);
+		border-top: 1px solid rgba(36, 35, 43, 0.14);
+	}
+
+	/* Subordinate to the banner's own heading - it is the parent here, which is why these are h3.
+	   Sized down so the hierarchy reads without depending on the rule alone. */
+	.gi-group-body :global(.section-intro h3) {
+		margin: 0;
+		font-size: clamp(1.15rem, 2vw, 1.45rem);
+		line-height: 1.2;
+	}
+
+	/* `.section` is a flex column with a var(--space-8) gap site-wide, which is right for full-width
+	   sections and too airy inside a box - it put 32px under every heading and between every block.
+	   Tightened here only. */
+	.gi-group-body :global(.section) {
+		gap: var(--space-5);
+	}
+
+	/* Heading and its onward link on one line. The link used to trail the section as a lone
+	   paragraph after the grid, where it read as a stranded footer rather than as the way on. */
+	/* The way on now closes the section's own description rather than sitting beside the heading:
+	   it reads as the end of the sentence that set the section up, which is where someone finishes
+	   reading before deciding whether they want more. `nowrap` keeps the arrow with its last word. */
+	.gi-group-body :global(.gi-sub-link) {
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	/* The box is the one place this page collapses — one level, at the audience level. The inner
+	   folds are gone with it: two levels meant two clicks to reach any content, and the reader
+	   choosing an audience has already said what they want to see. */
+	.gi-group-summary {
+		display: block;
+		position: relative;
+		list-style: none;
+		cursor: pointer;
+	}
+
+	.gi-group-summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.gi-group-cue {
+		position: absolute;
+		right: var(--space-5);
+		bottom: var(--space-5);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: 0.6rem 1rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.16);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		color: #fff;
+		font-weight: 600;
+		font-size: 0.9rem;
+		backdrop-filter: blur(4px);
+	}
+
+	.gi-group-summary:hover .gi-group-cue,
+	.gi-group-summary:focus-visible .gi-group-cue {
+		background: rgba(255, 255, 255, 0.28);
+	}
+
+	.gi-group-cue-mark {
+		width: 9px;
+		height: 9px;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(45deg) translate(-1px, -1px);
+		transition: transform 140ms ease;
+	}
+
+	.gi-group-box[open] .gi-group-cue-mark {
+		transform: rotate(-135deg) translate(-1px, -1px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.gi-group-cue-mark {
+			transition: none;
+		}
+	}
+
+	@media (max-width: 700px) {
+		/* The banner is only ~350px wide here, so the copy spans it and the cue would land on the
+		   words. The text moves to the top and reserves the strip the cue sits in, rather than the
+		   two being left to collide. */
+		.gi-band-text {
+			justify-content: flex-start;
+			padding-bottom: 4.5rem;
+		}
+
+		.gi-group-cue {
+			right: var(--space-4);
+			bottom: var(--space-4);
+			padding: 0.45rem 0.8rem;
+			font-size: 0.82rem;
+		}
+	}
+
+	@media (max-width: 430px) {
+		/* On the narrowest phones the banner is about 180px tall, and the title, three lines of copy
+		   and the cue do not all fit - measured, they overlap by a pixel at 360 and by 24 at 320.
+		   The blurb goes rather than the banner growing: it is the least load-bearing thing here, and
+		   the same words are in the content directly below it. */
+		.gi-band-text p {
+			display: none;
+		}
+
+		.gi-band-text {
+			padding-bottom: 3.4rem;
+		}
+	}
+
+	@media (min-width: 780px) {
+		.gi-chooser {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
 	/* The route from a summary section down to its own page. Deliberately a plain underlined link
 	   rather than a button: these navigate, and the button system on this site is reserved for
 	   controls that act (see "The button system" in AGENTS.md). */
@@ -323,12 +654,14 @@ const goodsCategories = [
 		font-size: 0.85rem;
 		line-height: 1.7;
 		color: rgba(36, 35, 43, 0.65);
-		max-width: 78ch;
+		/* 78ch at this size is about 660px, so inside a ~1000px box the note wrapped early and left
+		   a ragged third of the row empty. The box already constrains the measure. */
+		max-width: none;
 	}
 
+	/* Inline and bracketed: it is a qualifier on the note it follows, not a statement of its own,
+	   and a whole line to itself gave it more weight than a date deserves. */
 	.benefit-verified {
-		display: block;
-		margin-top: 0.35rem;
-		font-weight: 600;
+		white-space: nowrap;
 	}
 </style>

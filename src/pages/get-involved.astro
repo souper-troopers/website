@@ -44,16 +44,6 @@ const goodsCategories = [
 		</div>
 	</section>
 
-	{/* Adrian's point on the 2 September call: ask who you are before asking what you want to do,
-	    because "you speak differently according to the audience" (Kerry). Deliberately a slim jump
-	    bar rather than two large cards - the cards repeated the band headings below word for word,
-	    which is the duplication this page already had too much of. The bands carry the weight. */}
-	<nav class="gi-jump" aria-label="Choose your audience">
-		<span>I'm here as</span>
-		<a href="#individuals-band">an individual</a>
-		<a href="#businesses-band">a company</a>
-	</nav>
-
 	<section class="gi-group" id="individuals-band">
 		<div class="wrap">
 			<div class="gi-group-box">
@@ -365,29 +355,6 @@ const goodsCategories = [
 	   weight. An earlier pass put two large cards at the top *and* headings below, which repeated
 	   both labels word for word - and the section chips ("Individuals", "Businesses") repeated them
 	   a third time. The chips are gone and the chooser is now a slim bar; the band is the heading. */
-	.gi-jump {
-		display: flex;
-		align-items: center;
-		/* Explicit: a parent centres text, and a lone centred line above a left-aligned banner reads
-		   as an orphan rather than as a choice. */
-		justify-content: flex-start;
-		text-align: left;
-		flex-wrap: wrap;
-		gap: var(--space-2) var(--space-3);
-		max-width: 1100px;
-		margin: 0 auto;
-		padding: 0 var(--space-4);
-		font-size: 0.95rem;
-	}
-
-	.gi-jump span {
-		color: rgba(36, 35, 43, 0.65);
-	}
-
-	.gi-jump a {
-		font-weight: 600;
-	}
-
 	/* Each audience is one box: banner across the top, its sections inside. Before this the two
 	   groups were only separated by whitespace, so on a long page it was easy to lose track of which
 	   audience you were reading - the fold headings all look alike once the chips are gone. */

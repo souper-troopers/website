@@ -31,8 +31,23 @@ class CartStore {
 	constructor() {
 		$effect.root(() => {
 			$effect(() => {
-				if (typeof localStorage !== "undefined") {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
+				/**
+				 * ⚠ The write must not be allowed to throw. `typeof localStorage !== "undefined"` only
+				 * proves the API exists, not that it works: Safari in private browsing, and any browser
+				 * set to block site data, expose `localStorage` and then throw on `setItem`. Verified
+				 * against WebKit with `setItem` stubbed to throw - the page still rendered, but the
+				 * error escaped this effect and broke the cart's reactivity, so adding an item stopped
+				 * updating the count.
+				 *
+				 * Failing to persist is the acceptable outcome: the cart still works for the session,
+				 * it just does not survive a reload. The read at `loadInitial` has been guarded since
+				 * it was written; this is the other half.
+				 */
+				const snapshot = JSON.stringify(this.items);
+				try {
+					localStorage.setItem(STORAGE_KEY, snapshot);
+				} catch {
+					// Storage unavailable or full - the cart stays in memory for this session.
 				}
 			});
 		});

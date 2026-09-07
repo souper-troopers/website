@@ -115,7 +115,9 @@ const goodsCategories = [
 					<div class="section-intro">
 						<h3>What you can donate</h3>
 					</div>
-			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a></p>
+			{/* Same order as the partnership line below: context, then the way on, then the address to
+			    write to. The link is the low-commitment step and belongs before the email. */}
+			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town, and Section 18A certificates are available for donated goods. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">

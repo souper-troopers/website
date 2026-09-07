@@ -112,8 +112,9 @@ const goodsCategories = [
 	</section>
 
 	<section id="goods" class="section wrap">
-					<div class="section-intro">
+					<div class="section-intro gi-sub-head">
 						<h3>What you can donate</h3>
+						<a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it, and how to arrange a drop-off &rarr;</a>
 					</div>
 			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
@@ -133,12 +134,6 @@ const goodsCategories = [
 				</div>
 			))}
 		</div>
-		{/* The grid stays here as the visual answer to "what can I bring". The page below is the
-		    practical one - where, when, how it is arranged - and is what a search for "donate
-		    clothes Cape Town" should land on. */}
-		<p class="section-more">
-			<a href="/get-involved/donate-goods">Where to bring it and how to arrange a drop-off &rarr;</a>
-		</p>
 	</section>
 
 	<section id="fundraise" class="section wrap">
@@ -147,7 +142,9 @@ const goodsCategories = [
 					</div>
 			<p>
 				A birthday, a race, a workplace challenge, a school drive - anything can become a
-				fundraiser. Three steps, and you don't need anything from us to start.
+				fundraiser. Three steps, and you don't need anything from us to start. Planning
+				something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> and
+				we'll help however we can.
 			</p>
 		<div class="grid grid-3">
 			<div class="card">
@@ -170,7 +167,6 @@ const goodsCategories = [
 				<p>Send it to your people. Tag us and we'll share it too.</p>
 			</div>
 		</div>
-		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> - we'll help however we can.</p>
 	</section>
 
 				</div>
@@ -202,9 +198,13 @@ const goodsCategories = [
 				<div class="gi-group-body">
 
 	<section id="businesses" class="section wrap">
-					<div class="section-intro">
+					<div class="section-intro gi-sub-head">
 						<h3>Corporate partnership</h3>
+						<a class="gi-sub-link" href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
 					</div>
+		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
+		    every other sub-section here now leads with its prose. */}
+		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -218,13 +218,6 @@ const goodsCategories = [
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
 		</div>
-		{/* No full stop after the link: `EmailLink` renders a copy button after the address, so a
-		    sentence continuing past it reads "…soupertroopers.org ⧉ ." with the punctuation
-		    stranded. Same reason `AddressLink` is given its own paragraph elsewhere. */}
-		<p>Interested in partnering? Email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
-		<p class="section-more">
-			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
-		</p>
 	</section>
 
 	<section class="section wrap">
@@ -471,8 +464,35 @@ const goodsCategories = [
 		line-height: 1.2;
 	}
 
-	/* `.section` is a flex column with a var(--space-8) gap, so the space under a heading is already
-	   handled - an extra margin here doubled it to 48px. */
+	/* `.section` is a flex column with a var(--space-8) gap site-wide, which is right for full-width
+	   sections and too airy inside a box - it put 32px under every heading and between every block.
+	   Tightened here only. */
+	.gi-group-body :global(.section) {
+		gap: var(--space-5);
+	}
+
+	/* Heading and its onward link on one line. The link used to trail the section as a lone
+	   paragraph after the grid, where it read as a stranded footer rather than as the way on. */
+	.gi-group-body :global(.gi-sub-head) {
+		flex-direction: row;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-3);
+		flex-wrap: wrap;
+	}
+
+	.gi-group-body :global(.gi-sub-link) {
+		font-weight: 600;
+		font-size: 0.95rem;
+		white-space: nowrap;
+	}
+
+	@media (max-width: 620px) {
+		/* Nowrap would push the row past the box on a phone. */
+		.gi-group-body :global(.gi-sub-link) {
+			white-space: normal;
+		}
+	}
 
 	/* The box is the one place this page collapses — one level, at the audience level. The inner
 	   folds are gone with it: two levels meant two clicks to reach any content, and the reader

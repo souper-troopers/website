@@ -46,7 +46,8 @@ const goodsCategories = [
 
 	<section class="gi-group" id="individuals-band">
 		<div class="wrap">
-			<div class="gi-group-box">
+			<details class="gi-group-box">
+				<summary class="gi-group-summary">
 			<div class="gi-band-media shimmer-up">
 				<Image
 					src={individualsPhoto}
@@ -62,6 +63,8 @@ const goodsCategories = [
 					<p>Give time, goods or money - and every route starts with something you already have.</p>
 				</div>
 			</div>
+					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+				</summary>
 				<div class="gi-group-body">
 
 	<section id="individuals" class="section wrap">
@@ -109,12 +112,9 @@ const goodsCategories = [
 	</section>
 
 	<section id="goods" class="section wrap">
-		<details class="gi-fold">
-			<summary>
-			<h2>What you can donate</h2>
-				<span class="gi-fold-hint" aria-hidden="true"></span>
-			</summary>
-			<div class="gi-fold-body">
+					<div class="section-intro">
+						<h2>What you can donate</h2>
+					</div>
 			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town. Section 18A certificates are available for donated goods. Email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
@@ -139,17 +139,12 @@ const goodsCategories = [
 		<p class="section-more">
 			<a href="/get-involved/donate-goods">Where to bring it and how to arrange a drop-off &rarr;</a>
 		</p>
-			</div>
-		</details>
 	</section>
 
 	<section id="fundraise" class="section wrap">
-		<details class="gi-fold">
-			<summary>
-			<h2>Run your own fundraiser</h2>
-				<span class="gi-fold-hint" aria-hidden="true"></span>
-			</summary>
-			<div class="gi-fold-body">
+					<div class="section-intro">
+						<h2>Run your own fundraiser</h2>
+					</div>
 			<p>
 				A birthday, a race, a workplace challenge, a school drive - anything can become a
 				fundraiser. Three steps, and you don't need anything from us to start.
@@ -176,18 +171,17 @@ const goodsCategories = [
 			</div>
 		</div>
 		<p>Planning something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> - we'll help however we can.</p>
-			</div>
-		</details>
 	</section>
 
 				</div>
-			</div>
+			</details>
 		</div>
 	</section>
 
 	<section class="gi-group" id="businesses-band">
 		<div class="wrap">
-			<div class="gi-group-box">
+			<details class="gi-group-box">
+				<summary class="gi-group-summary">
 			<div class="gi-band-media shimmer-up">
 				<Image
 					src={businessesPhoto}
@@ -203,15 +197,14 @@ const goodsCategories = [
 					<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
 				</div>
 			</div>
+					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+				</summary>
 				<div class="gi-group-body">
 
 	<section id="businesses" class="section wrap">
-		<details class="gi-fold">
-			<summary>
-			<h2>Corporate partnership</h2>
-				<span class="gi-fold-hint" aria-hidden="true"></span>
-			</summary>
-			<div class="gi-fold-body">
+					<div class="section-intro">
+						<h2>Corporate partnership</h2>
+					</div>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -229,17 +222,12 @@ const goodsCategories = [
 		<p class="section-more">
 			<a href="/get-involved/corporate-partnership">What a partnership looks like in practice &rarr;</a>
 		</p>
-			</div>
-		</details>
 	</section>
 
 	<section class="section wrap">
-		<details class="gi-fold">
-			<summary>
-			<h2>Two things you can book that fund the work</h2>
-				<span class="gi-fold-hint" aria-hidden="true"></span>
-			</summary>
-			<div class="gi-fold-body">
+					<div class="section-intro">
+						<h2>Two things you can book that fund the work</h2>
+					</div>
 			<p>
 				Not everything here is a donation. These are things your business would spend money on
 				anyway - the difference is where the money goes afterwards.
@@ -274,18 +262,13 @@ const goodsCategories = [
 				<span class="action-cta">See the coffee &rarr;</span>
 			</a>
 		</div>
-			</div>
-		</details>
 	</section>
 
 	{bbbeeBenefits.length > 0 && (
 		<section class="section wrap">
-			<details class="gi-fold">
-				<summary>
-				<h2>Supporting us counts on your scorecard</h2>
-					<span class="gi-fold-hint" aria-hidden="true"></span>
-				</summary>
-				<div class="gi-fold-body">
+					<div class="section-intro">
+						<h2>Supporting us counts on your scorecard</h2>
+					</div>
 				<p>
 					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
 					is measurable on both your scorecard and your tax return.
@@ -305,13 +288,11 @@ const goodsCategories = [
 					{bbbeeVerified && <span class="benefit-verified">Last verified {bbbeeVerified}.</span>}
 				</p>
 			)}
-				</div>
-			</details>
 		</section>
 	)}
 
 				</div>
-			</div>
+			</details>
 		</div>
 	</section>
 
@@ -331,10 +312,18 @@ const goodsCategories = [
 		if (!location.hash) return;
 		const target = document.querySelector(location.hash);
 		if (!target) return;
-		const fold = (target.querySelector("details.gi-fold") ??
-			target.closest("details.gi-fold")) as HTMLDetailsElement | null;
-		if (fold && !fold.open) {
-			fold.open = true;
+		// Every ancestor, not just the nearest: a link to #goods now sits inside a collapsed
+		// audience box, so opening one level would still leave it hidden.
+		let opened = false;
+		let el: Element | null = target;
+		while (el) {
+			if (el instanceof HTMLDetailsElement && !el.open) {
+				el.open = true;
+				opened = true;
+			}
+			el = el.parentElement;
+		}
+		if (opened) {
 			// Re-run the jump: the anchor was resolved against the collapsed height.
 			requestAnimationFrame(() => target.scrollIntoView());
 		}
@@ -461,59 +450,89 @@ const goodsCategories = [
 	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
 	   is the clearest instance of the "less copy" decision: nothing is deleted, it is simply not all
 	   shown. It also keeps every word in the page for search engines, which a deletion would not. */
-	/* A hairline above each fold inside a box: without it the collapsed headings sat directly under
-	   the card grid and read as stray lines rather than as sections you can open. */
-	.gi-group-body :global(.section) + :global(.section) .gi-fold {
-		border-top: 1px solid rgba(36, 35, 43, 0.12);
-		padding-top: var(--space-2);
-	}
-
-	.gi-fold > summary {
+	/* The box is the one place this page collapses — one level, at the audience level. The inner
+	   folds are gone with it: two levels meant two clicks to reach any content, and the reader
+	   choosing an audience has already said what they want to see. */
+	.gi-group-summary {
+		display: block;
+		position: relative;
 		list-style: none;
 		cursor: pointer;
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: var(--space-2) var(--space-3);
-		padding: var(--space-3) 0;
 	}
 
-	.gi-fold > summary::-webkit-details-marker {
+	.gi-group-summary::-webkit-details-marker {
 		display: none;
 	}
 
-	.gi-fold > summary h2 {
-		margin: 0;
-		flex: 1 1 auto;
+	.gi-group-cue {
+		position: absolute;
+		right: var(--space-5);
+		bottom: var(--space-5);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: 0.6rem 1rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.16);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		color: #fff;
+		font-weight: 600;
+		font-size: 0.9rem;
+		backdrop-filter: blur(4px);
 	}
 
-	.gi-fold > summary:hover h2 {
-		text-decoration: underline;
-		text-underline-offset: 4px;
+	.gi-group-summary:hover .gi-group-cue,
+	.gi-group-summary:focus-visible .gi-group-cue {
+		background: rgba(255, 255, 255, 0.28);
 	}
 
-	/* Chevron drawn in CSS so it needs no icon and rotates with the state. */
-	.gi-fold-hint {
-		flex: 0 0 auto;
-		width: 12px;
-		height: 12px;
-		border-right: 2px solid rgba(36, 35, 43, 0.55);
-		border-bottom: 2px solid rgba(36, 35, 43, 0.55);
-		transform: rotate(45deg) translate(-2px, -2px);
-		transition: transform 120ms ease;
+	.gi-group-cue-mark {
+		width: 9px;
+		height: 9px;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(45deg) translate(-1px, -1px);
+		transition: transform 140ms ease;
 	}
 
-	.gi-fold[open] > summary .gi-fold-hint {
-		transform: rotate(-135deg) translate(-2px, -2px);
-	}
-
-	.gi-fold-body {
-		padding-top: var(--space-3);
+	.gi-group-box[open] .gi-group-cue-mark {
+		transform: rotate(-135deg) translate(-1px, -1px);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.gi-fold-hint {
+		.gi-group-cue-mark {
 			transition: none;
+		}
+	}
+
+	@media (max-width: 700px) {
+		/* The banner is only ~350px wide here, so the copy spans it and the cue would land on the
+		   words. The text moves to the top and reserves the strip the cue sits in, rather than the
+		   two being left to collide. */
+		.gi-band-text {
+			justify-content: flex-start;
+			padding-bottom: 4.5rem;
+		}
+
+		.gi-group-cue {
+			right: var(--space-4);
+			bottom: var(--space-4);
+			padding: 0.45rem 0.8rem;
+			font-size: 0.82rem;
+		}
+	}
+
+	@media (max-width: 430px) {
+		/* On the narrowest phones the banner is about 180px tall, and the title, three lines of copy
+		   and the cue do not all fit - measured, they overlap by a pixel at 360 and by 24 at 320.
+		   The blurb goes rather than the banner growing: it is the least load-bearing thing here, and
+		   the same words are in the content directly below it. */
+		.gi-band-text p {
+			display: none;
+		}
+
+		.gi-band-text {
+			padding-bottom: 3.4rem;
 		}
 	}
 

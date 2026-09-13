@@ -129,7 +129,7 @@ Four rules follow, and they drove everything below:
   - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate and the three Get Involved child pages still render every answer.
     - **The question stays ink; the chevron is teal-dark.** Four teal underlined questions would read as four links elsewhere. The chevron carries the colour affordance and is visible without hover.
     - A `<details>` cannot live inside a `<dl>`, so collapsible mode renders a `<div>` of `<details>` rather than wrapping the existing markup.
-  - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. `/contact` centres its headings, so it centres the block with its own `.faq-centred` wrapper. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught.
+  - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught. (`/contact` used to centre its intros in a 480px box with a `.faq-centred` wrapper; both went on 2026-09-13 when the FAQ moved into a column beside the form — see the Contact section below. The old arrangement had the FAQ heading starting 124px right of its own list.)
 
 ### Gotchas found doing this
 - ⚠ **A literal `&` in an Astro attribute, never `&amp;`.** An attribute value is a plain string, so an entity written there is escaped a second time and reaches the browser tab as `&amp;`. Shipped and caught only by reading the rendered `<title>`.
@@ -736,8 +736,10 @@ What makes it work, all measured rather than eyeballed:
   the sides.
 - ⚠ **All of that crop comes off the RIGHT** (`object-position: left center`). The 66 is at the very
   left edge of the frame (~2–9% across), so a centred crop takes the first 6 off. The right is street
-  and parked cars. Measured crop: 0% single-column, 15% at 1280px, **41% at 701px** — large, but it is
-  all street, and the 66 is fully in frame at every width tested.
+  and parked cars. Measured crop: 0% single-column, **41% at 701px** falling to 17% at 1024, and
+  ~0.3% from 1099px up, where the one-line email rows (below) make the right column shorter than the
+  photo's own 3:2. Large at 701, but it is all street, and the 66 is fully in frame at every width
+  tested.
 - ⚠ **Contrast was checked against the real sky pixels under the text**: each pixel composited with the
   gradient in a canvas, then WCAG contrast against white, at 15 widths. The first stops
   (0.78 / 0.55) left the subtitle at **4.16:1 at 768px**. Now 0.84 / 0.64, and the worst pixel at any
@@ -748,7 +750,27 @@ What makes it work, all measured rather than eyeballed:
   the fade in relative terms, and it now measures **8.07:1** across that whole band.
 - The card is `padding: 0; overflow: hidden` so the banner runs flush, and `.visit-body` restores the
   padding the global `.card` rule would have given — including its ≤700px value. Columns still balance
-  (576px each) because `.brand-card` absorbs the slack, exactly as before.
+  because `.brand-card` absorbs the slack. From 1099px up that means ~50px of empty white under the
+  two shop handles (card 186px against 137px) — the accepted cost of the one-line email rows.
+
+### The rest of the Contact page (2026-09-13, the user's proposal)
+- **"Email us", not "Who to email"**, to pair with "Visit us"; the form section is **"Send us a
+  message"** for the same reason, which is what let its "Send a message" chip go — the heading now
+  says what the section is. "Or just tell us what's up" was the old heading. **"Follow the shop
+  brands" deliberately stays**: those are the product accounts, and "Follow us" is the footer's label
+  for the organisation's own.
+- **Email rows: label left, address right, via a container query on `.email-card`**, only when every
+  row fits on one line. The widest row needs **447px** including the gap; the threshold is 450. So it
+  is stacked everywhere below ~1099px — including 701–1024px, where the card is narrowest — and one
+  line above. ⚠ **Measure the flex items, not the text.** A text-range measurement read 404px because
+  it missed the copy button, and the first threshold built on it gave a directory that was half
+  one-line, half wrapped at 1024px — the exact failure the all-or-nothing rule exists to prevent.
+- **The questions and the form sit side by side from 901px** (`.contact-columns`, the point `.grid-2`
+  pins to two columns), with the same gap as the cards above so the columns line up under Visit us
+  and Email us. **Top-aligned and unboxed on purpose**: the FAQ changes height as answers open, and a
+  card stretched to match the form would carry empty white whenever they are closed — the same
+  problem the top grid was arranged to avoid. Questions come first in the DOM, so they also come
+  first when stacked. Page height at 1280px: 2,064 → 1,593px.
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

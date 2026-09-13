@@ -132,8 +132,8 @@ const faqItems: FaqItem[] = [
 			    are about one place — and because the photo makes the visit card much the taller of
 			    the two, so the shorter cards belong on the other side of the grid to balance it. */}
 			<div class="contact-reach">
-				<div class="card">
-					<h3>Who to email</h3>
+				<div class="card email-card">
+					<h3>Email us</h3>
 					<dl class="email-directory">
 						{emailDirectory.map((entry) => (
 							<div>
@@ -157,71 +157,100 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
+	{/* The questions and the form side by side: see whether yours is already answered, or send it.
+	    Questions first, so they also come first when the two stack on a phone. */}
 	<section class="section wrap">
-		{/* No "Common questions" chip: the questions announce themselves, and a chip restating the
-		    heading is the duplication removed from Get Involved. */}
-		<div class="section-intro">
-			<h2>Before you get in touch</h2>
+		{/* Same grid gap as the cards above, so these two columns line up under Visit us and Email us. */}
+		<div class="contact-columns">
+			<div class="contact-column">
+				{/* No "Common questions" chip: the questions announce themselves, and a chip restating
+				    the heading is the duplication removed from Get Involved. */}
+				<div class="section-intro">
+					<h2>Before you get in touch</h2>
+				</div>
+				<Faq items={faqItems} collapsible />
+			</div>
+			<div class="contact-column">
+				{/* Named to match "Visit us" and "Email us" above, which is also what lets the "Send a
+				    message" chip go: the heading now says what the section is. */}
+				<div class="section-intro">
+					<h2>Send us a message</h2>
+					<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
+				</div>
+				<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+					<input type="hidden" name="form-name" value="contact" />
+					<label class="honeypot-field" aria-hidden="true">
+						Leave this field blank
+						<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+					</label>
+
+					<label>
+						Your name
+						<input type="text" name="name" required />
+					</label>
+
+					<label>
+						Your email
+						<input type="email" name="email" required />
+					</label>
+
+					<label>
+						Message
+						<textarea name="message" rows="4" required></textarea>
+					</label>
+
+					<button class="btn btn-primary" type="submit">Send message</button>
+					<p id="contact-form-error" class="form-note form-error" hidden>
+						Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
+					</p>
+				</form>
+			</div>
 		</div>
-		{/* This page centres its `.section-intro` (see the 480px rule below), so the list is centred
-		    to match. Alignment is the page's decision rather than the component's — every other
-		    page that uses it has left-aligned headings. */}
-		<div class="faq-centred"><Faq items={faqItems} collapsible /></div>
-	</section>
-
-	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">Send a message</span>
-			<h2>Or just tell us what's up</h2>
-			<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
-		</div>
-
-		<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-			<input type="hidden" name="form-name" value="contact" />
-			<label class="honeypot-field" aria-hidden="true">
-				Leave this field blank
-				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
-			</label>
-
-			<label>
-				Your name
-				<input type="text" name="name" required />
-			</label>
-
-			<label>
-				Your email
-				<input type="email" name="email" required />
-			</label>
-
-			<label>
-				Message
-				<textarea name="message" rows="4" required></textarea>
-			</label>
-
-			<button class="btn btn-primary" type="submit">Send message</button>
-			<p id="contact-form-error" class="form-note form-error" hidden>
-				Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
-			</p>
-		</form>
 	</section>
 
 	<div id="contact-toast" class="toast" role="status" aria-live="polite"></div>
 </Layout>
 
 <style>
-	.section-intro {
-		width: 100%;
-		max-width: 480px;
-		margin: 0 auto;
+	/* The questions and the form, side by side from 901px - the point `.grid-2` pins to two columns
+	   site-wide. Top-aligned rather than stretched: the FAQ changes height as answers open, and
+	   stretching would only move the empty space around. */
+	.contact-columns {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+		gap: var(--space-6);
+	}
+	
+	.contact-column {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		min-width: 0;
+	}
+	
+	/* The global form is a centred 480px block. In a column it fills the column instead, so its left
+	   edge lines up with its own heading. */
+	.contact-column .contact-form {
+		max-width: none;
+		margin: 0;
 	}
 
-	/* `width: 100%` is load-bearing now the FAQ collapses. Without it the wrapper sizes to its
-	   content, which closed is only the questions - so the list sat ~460px wide at 1280 and jumped
-	   to the full 46rem the moment an answer opened. */
-	.faq-centred {
-		width: 100%;
-		max-width: 46rem;
-		margin: 0 auto;
+	/* No lone last word under the heading. */
+	.contact-column .section-intro p {
+		text-wrap: pretty;
+	}
+	
+	@media (max-width: 900px) {
+		.contact-columns {
+			grid-template-columns: 1fr;
+			gap: var(--space-8);
+		}
+	
+		/* Stacked, the form goes back to a comfortable width rather than running the full page. */
+		.contact-column .contact-form {
+			max-width: 480px;
+		}
 	}
 
 	/* Visit us on the left, the two contact channels stacked on the right.
@@ -420,6 +449,28 @@ const faqItems: FaqItem[] = [
 
 	.email-directory dd {
 		margin: 0;
+	}
+
+	/* Label left, address right - but only once the card can fit the widest row on one line: measured
+	   at 447px including the gap (the widest pairing, an address plus its copy button beside its
+	   label). Measure the flex items, not the text: a text range misses the copy button and read 404.
+	   Narrower, every row stays stacked. Letting some rows fit and others wrap would give a directory
+	   that changes shape halfway down, which reads as broken.
+	   A container query rather than a media query because the card's width is what decides it, and
+	   the card is narrowest at 701-900px, where the grid first splits - not on the smallest window.
+	   `flex-wrap` is only a safety net for a system font wider than the one measured. */
+	.email-card {
+		container-type: inline-size;
+	}
+	
+	@container (min-width: 450px) {
+		.email-directory > div {
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: baseline;
+			column-gap: var(--space-4);
+		}
 	}
 
 	.brand-list {

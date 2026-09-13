@@ -759,10 +759,25 @@ the form's usual 480px.
   "Follow us" is the footer's label for the organisation's own.
 
 ### The shop landing page — one lead card, edge-to-edge tiles (2026-09-13)
-- **The banner photo and "Every purchase pays a wage" are one card** (`.shop-promise`): photo on top,
-  flush to the card's edges, then the heading and text — the Contact page's Visit us pattern. The
-  photo keeps `loading="eager"` + `fetchpriority="high"`: it is still the page's LCP. 23:10 above
-  700px (the shape the old separate banner had), 4:3 on a phone.
+- **The banner photo and "Every purchase pays a wage" are one card** (`.shop-promise`), drawn like
+  Get Involved's audience banners at the user's request: the photo fills the card, a tint darkens it,
+  and the heading and paragraph sit on it in white. The photo keeps `loading="eager"` +
+  `fetchpriority="high"`: it is still the page's LCP.
+  - **Shape is a floor, not fixed**: 3:1 from 701px, 16:9 on a phone, as `aspect-ratio` on a box whose
+    text is in normal flow — so the card grows when the words need more room and the photo (cover)
+    follows. Get Involved hides its banner blurb on small phones; this paragraph cannot go, because it
+    is the page's trust statement and is said nowhere else.
+  - ⚠ **Get Involved's tint does not work on this photo** — measured, not assumed, by compositing the
+    real pixels with the tint under every line of text: paragraph worst 1.5–3.4:1. The photo is a
+    white wall and pale wood exactly where the words sit, and white text needs roughly 0.6 of tint
+    under every glyph on those pixels. So: from 701px the words are held to the left 56% and the tint
+    stays at 0.66 or more until past them (0.86 → 0.78 at 45% → 0.66 at 62% → 0.14 at 86% → 0);
+    on a phone the words span the photo, so the tint is near-even (0.74 → 0.68). The paragraph is
+    fully white, not Get Involved's 86%. Result: paragraph worst 6.55:1 or better at every width.
+    Change the stops and re-run that check.
+  - ⚠ **Don't put a `max-width` on `.shop-promise-text`'s base rule.** It sits later in the sheet than
+    the 701px media block and silently overrode the 56% limit, running the text onto the pale half —
+    that was the whole 701px failure, not the tint.
 - **No chips on the page.** "Where the money goes" and "Collection & delivery" each restated the
   heading directly beneath them — the same duplication removed from Get Involved and Contact.
 - **Less text, nothing lost** (~138 → ~112 visible words). The hero line had said "made by people the

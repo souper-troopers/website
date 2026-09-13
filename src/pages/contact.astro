@@ -4,6 +4,8 @@ import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import { Image } from "astro:assets";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
+import supportPhoto from "../assets/images/support-conversation.jpg";
+import shopPhoto from "../assets/images/shop-products.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
@@ -22,6 +24,11 @@ const emailDirectory = [
 	{ label: "Programme & partnerships", address: "kerry@soupertroopers.org" },
 	{ label: "Anything else", address: "info@soupertroopers.org" },
 ];
+
+// All three card photos render at the same width, so they share one `sizes`. In two columns the
+// card is half the row; a photo stretched taller than 3:2 renders wider than the card, hence the cap
+// above the column width.
+const photoSizes = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px";
 
 const shopBrands = [
 	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
@@ -78,43 +85,42 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
+	{/* Four ways to reach us as four cards in two rows, with the questions between them: visiting and
+	    email first, since those are what most people came for; then whether your question is already
+	    answered; then the form, and the shop's own accounts.
+	    Every card reads photo, title, content. Titles sit below the photos rather than over them: the
+	    three photos have their subjects in different places (sky over the Hub, faces near the top of
+	    the conversation, a white wall behind the shop display), so no one overlay position suits all
+	    three without darkening a face or the painted 66 - and titles in different places, at different
+	    sizes, was the inconsistency this replaced. */}
 	<section class="section wrap">
-		<div class="contact-grid">
-			<div class="card visit-card">
-				{/* The photo is the card's banner, the way the audience boxes on Get Involved are, with
-				    the title over it. The practical details deliberately stay OFF the photo: an address
-				    with a copy button and a five-line table would need a tint dark enough to bury the
-				    painted 66 - the one thing the picture is here to show. The title sits top-left over
-				    the sky, and the tint fades out above the 66, which is on the left wall at roughly
-				    55-73% of the frame's height. */}
-				<div class="visit-banner">
+		<div class="contact-cards">
+			<div class="card photo-card visit-card" data-name="visit">
+				<div class="photo-card-media">
 					{/* The building, from the pavement opposite. Not decoration: visits here are by
-					    appointment, so everyone arriving has arranged it in advance and the only real
-					    question on the day is "is this the right door" — which a street number painted
-					    a metre high answers better than any address line. */}
-					{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
-					    2400px source as the fallback — 272KB served to anything that ignores srcset,
-					    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
-					{/* Above the fold at both breakpoints (measured) and the largest thing on the page.
-					    Not lazy - see the note on the homepage hero in index.astro. */}
+					    appointment, so everyone arriving has arranged it in advance and the only real question on
+					    the day is "is this the right door" - which a street number painted a metre high answers
+					    better than any address line. */}
+					{/* Above the fold at both breakpoints (measured) and the largest thing on the page, so not
+					    lazy - see the note on the homepage hero in index.astro. `width` is set as well as
+					    `widths`, or Astro points the plain `src` at the full 2400px source as the fallback. */}
 					<Image
 						src={hubExterior}
 						alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
-						width={800}
-						height={533}
-						widths={[400, 800]}
-						sizes="(max-width: 900px) 100vw, 340px"
+						width={1200}
+						height={800}
+						widths={[480, 800, 1200]}
+						sizes={photoSizes}
 						loading="eager"
 						fetchpriority="high"
-						class="visit-photo"
+						class="photo-card-img visit-photo"
 					/>
-					<div class="visit-scrim" aria-hidden="true"></div>
-					<div class="visit-banner-text">
-						<h3>Visit us</h3>
+				</div>
+				<div class="photo-card-body">
+					<div class="card-heading">
+						<h2 class="contact-title">Visit us</h2>
 						<p>The Humanity Hub, Woodstock</p>
 					</div>
-				</div>
-				<div class="visit-body">
 					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
 					<dl class="visit-hours">
 						{displayHours.map((entry) => (
@@ -127,13 +133,22 @@ const faqItems: FaqItem[] = [
 					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
 				</div>
 			</div>
-			{/* The two ways of getting hold of us, stacked: the email directory, then the shop's own
-			    accounts. Grouped this way because both are channels, where the photo and the hours
-			    are about one place — and because the photo makes the visit card much the taller of
-			    the two, so the shorter cards belong on the other side of the grid to balance it. */}
-			<div class="contact-reach">
-				<div class="card email-card">
-					<h3>Email us</h3>
+			<div class="card photo-card email-card" data-name="email">
+				<div class="photo-card-media">
+					{/* Reused from the homepage, where it already carries this description. Not eager: below
+					    the fold on a phone, and `fetchpriority` belongs to the one LCP image, the Hub. */}
+					<Image
+						src={supportPhoto}
+						alt="A Souper Troopers social worker in conversation with a CAST participant"
+						width={1200}
+						height={800}
+						widths={[480, 800, 1200]}
+						sizes={photoSizes}
+						class="photo-card-img"
+					/>
+				</div>
+				<div class="photo-card-body">
+					<h2 class="contact-title">Email us</h2>
 					<dl class="email-directory">
 						{emailDirectory.map((entry) => (
 							<div>
@@ -143,8 +158,71 @@ const faqItems: FaqItem[] = [
 						))}
 					</dl>
 				</div>
-				<div class="card brand-card">
-					<h3>Follow the shop brands</h3>
+			</div>
+		</div>
+	</section>
+	
+	{/* One centred column. Not beside the form: two different jobs side by side read as one dense
+	    block (tried 2026-09-13), and "before you get in touch" is a step, not an alternative. */}
+	<section class="section wrap">
+		<div class="faq-column">
+			{/* No "Common questions" chip: the questions announce themselves. */}
+			<h2 class="contact-title">Before you get in touch</h2>
+			<Faq items={faqItems} collapsible />
+		</div>
+	</section>
+	
+	{/* The form gets no photo: it is the one card you fill in rather than read, and a photo above it
+	    pushes the fields down. The shop photo beside it takes the slack instead. */}
+	<section class="section wrap">
+		<div class="contact-cards">
+			<div class="card message-card" data-name="message">
+				<div class="card-heading">
+					<h2 class="contact-title">Send us a message</h2>
+					<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
+				</div>
+				<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+				<input type="hidden" name="form-name" value="contact" />
+				<label class="honeypot-field" aria-hidden="true">
+					Leave this field blank
+					<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+				</label>
+
+				<label>
+					Your name
+					<input type="text" name="name" required />
+				</label>
+
+				<label>
+					Your email
+					<input type="email" name="email" required />
+				</label>
+
+				<label>
+					Message
+					<textarea name="message" rows="4" required></textarea>
+				</label>
+
+				<button class="btn btn-primary" type="submit">Send message</button>
+				<p id="contact-form-error" class="form-note form-error" hidden>
+					Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
+				</p>
+			</form>
+			</div>
+			<div class="card photo-card brand-card" data-name="shop">
+				<div class="photo-card-media">
+					<Image
+						src={shopPhoto}
+						alt="Troopers Coffee bags and African Worry Dolls on display"
+						width={1200}
+						height={800}
+						widths={[480, 800, 1200]}
+						sizes={photoSizes}
+						class="photo-card-img"
+					/>
+				</div>
+				<div class="photo-card-body">
+					<h2 class="contact-title">Follow the shop brands</h2>
 					<ul class="brand-list">
 						{shopBrands.map((brand) => (
 							<li>
@@ -157,236 +235,109 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
-	{/* The questions and the form side by side: see whether yours is already answered, or send it.
-	    Questions first, so they also come first when the two stack on a phone. */}
-	<section class="section wrap">
-		{/* Same grid gap as the cards above, so these two columns line up under Visit us and Email us. */}
-		<div class="contact-columns">
-			<div class="contact-column">
-				{/* No "Common questions" chip: the questions announce themselves, and a chip restating
-				    the heading is the duplication removed from Get Involved. */}
-				<div class="section-intro">
-					<h2>Before you get in touch</h2>
-				</div>
-				<Faq items={faqItems} collapsible />
-			</div>
-			<div class="contact-column">
-				{/* Named to match "Visit us" and "Email us" above, which is also what lets the "Send a
-				    message" chip go: the heading now says what the section is. */}
-				<div class="section-intro">
-					<h2>Send us a message</h2>
-					<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
-				</div>
-				<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-					<input type="hidden" name="form-name" value="contact" />
-					<label class="honeypot-field" aria-hidden="true">
-						Leave this field blank
-						<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
-					</label>
-
-					<label>
-						Your name
-						<input type="text" name="name" required />
-					</label>
-
-					<label>
-						Your email
-						<input type="email" name="email" required />
-					</label>
-
-					<label>
-						Message
-						<textarea name="message" rows="4" required></textarea>
-					</label>
-
-					<button class="btn btn-primary" type="submit">Send message</button>
-					<p id="contact-form-error" class="form-note form-error" hidden>
-						Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
-					</p>
-				</form>
-			</div>
-		</div>
-	</section>
-
 	<div id="contact-toast" class="toast" role="status" aria-live="polite"></div>
 </Layout>
 
 <style>
-	/* The questions and the form, side by side from 901px - the point `.grid-2` pins to two columns
-	   site-wide. Top-aligned rather than stretched: the FAQ changes height as answers open, and
-	   stretching would only move the empty space around. */
-	.contact-columns {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: start;
-		gap: var(--space-6);
-	}
-	
-	.contact-column {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-6);
-		min-width: 0;
-	}
-	
-	/* The global form is a centred 480px block. In a column it fills the column instead, so its left
-	   edge lines up with its own heading. */
-	.contact-column .contact-form {
-		max-width: none;
-		margin: 0;
-	}
-
-	/* No lone last word under the heading. */
-	.contact-column .section-intro p {
-		text-wrap: pretty;
-	}
-	
-	@media (max-width: 900px) {
-		.contact-columns {
-			grid-template-columns: 1fr;
-			gap: var(--space-8);
-		}
-	
-		/* Stacked, the form goes back to a comfortable width rather than running the full page. */
-		.contact-column .contact-form {
-			max-width: 480px;
-		}
-	}
-
-	/* Visit us on the left, the two contact channels stacked on the right.
-
-	   The photo is what decides this arrangement. It makes the visit card by far the tallest thing
-	   here (545px against the email directory's 392px), and `align-items: stretch` hands that height
-	   to whatever is beside it — so with the brand card on the left, the email card was stretched to
-	   705px with 314px of empty white below its last row, nearly half the card. Stacking both short
-	   cards opposite the tall one balances the two columns instead (545 against 561). */
-	.contact-grid {
+	/* Two cards per row from 701px, one below. Stretched, so the photo in the shorter card grows to meet
+	   its neighbour and both cards' text ends level (see .photo-card-media). */
+	.contact-cards {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		align-items: stretch;
 		gap: var(--space-6);
 	}
-
-	.contact-reach {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-6);
-		min-height: 0;
-	}
-
-	/* Grows to absorb whichever column ends up shorter, so the slack lands inside the last card
-	   rather than as a gap between the two. Which column that is depends on content: a longer
-	   address or a sixth email route would flip it. */
-	.brand-card {
-		flex: 1;
-	}
-
+	
 	@media (max-width: 700px) {
-		.contact-grid {
+		.contact-cards {
 			grid-template-columns: 1fr;
 			gap: var(--space-5);
 		}
-
-		.contact-reach {
-			gap: var(--space-5);
-		}
-
-		.brand-card {
-			flex: none;
-		}
 	}
-
-	/* The card becomes a frame: no padding of its own, so the banner runs flush to its edges, and
-	   the body below restores the padding the global .card rule would have given. */
-	.visit-card {
+	
+	/* One size for every title below the h1. The four cards and the questions are peers, and they had
+	   been three sizes at two heading levels (27, 19 and 35px; h3 before h2). This is Get Involved's
+	   sub-section size, which is the level these sit at. */
+	.contact-title {
+		margin: 0;
+		font-size: clamp(1.2rem, 2vw, 1.45rem);
+		line-height: 1.2;
+	}
+	
+	.card-heading {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	
+	.card-heading p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.7);
+		text-wrap: pretty;
+	}
+	
+	/* A photo card is a frame: no padding of its own, so the photo runs flush to its edges, and the
+	   body restores the padding the global .card rule would have given. */
+	.photo-card {
 		padding: 0;
 		gap: 0;
 		overflow: hidden;
 	}
-
-	/* Grows into whatever height the grid gives the card, so the details sit at its foot and the
-	   photo takes the slack. The card is stretched to match the column beside it, and before this
-	   the spare height landed as empty white under the opening hours. `aspect-ratio` is the floor,
-	   not the shape: it reserves the photo's natural 3:2 before it loads, so nothing shifts, and it
-	   is what the banner falls back to wherever there is no slack - the one-column layout. */
-	.visit-banner {
+	
+	/* Grows into whatever height the row gives the card, so the text ends at the card's foot and the
+	   photo takes the slack - otherwise it lands as empty white under the last line. `aspect-ratio`
+	   is the floor, not the shape: it reserves the photo's 3:2 before it loads, so nothing shifts,
+	   and it is what the photo falls back to wherever there is no slack (one column). */
+	.photo-card-media {
 		position: relative;
 		align-self: stretch;
 		flex: 1 0 auto;
 		aspect-ratio: 3 / 2;
 	}
-
-	/* Fills the banner, so a banner taller than 3:2 crops the sides.
-	   ⚠ All of that crop must come off the RIGHT. The 66 is at the very left edge of the frame
-	   (about 2-9% across), so a centred crop takes the first 6 off; `object-position: left` sends
-	   the whole crop to the right, which is street and parked cars. */
-	.visit-photo {
+	
+	.photo-card-img {
 		position: absolute;
 		inset: 0;
 		display: block;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+	
+	/* ⚠ The Hub photo crops from the RIGHT only. The 66 is at the very left edge of the frame (about
+	   2-9% across), so a centred crop takes the first 6 off; the right is street and parked cars. */
+	.visit-photo {
 		object-position: left center;
 	}
-
-	/* Fades from the top edge and is fully clear by 55% of the height, before the 66 begins.
-	   Measured against the real sky pixels under the text, not estimated: the first stops
-	   (0.78 / 0.55) left the subtitle at 4.16:1 at 768px, where the banner is narrow and the text
-	   sits lower down the fade. These give 4.5:1 or better at every width, and still leave the 66
-	   under ~2% tint. Change the stops and re-run that check together. */
-	.visit-scrim {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to bottom,
-			rgba(24, 23, 30, 0.84) 0%,
-			rgba(24, 23, 30, 0.64) 28%,
-			rgba(24, 23, 30, 0) 55%
-		);
-	}
-
-	.visit-banner-text {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		padding: var(--space-5) var(--space-6);
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-1);
-	}
-
-	.visit-banner-text h3 {
-		margin: 0;
-		color: #fff;
-		font-size: clamp(1.35rem, 2.4vw, 1.7rem);
-		line-height: 1.15;
-	}
-
-	.visit-banner-text p {
-		margin: 0;
-		color: rgba(255, 255, 255, 0.9);
-		font-weight: 600;
-	}
-
-	.visit-body {
+	
+	.photo-card-body {
 		align-self: stretch;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
 		padding: var(--space-6);
 	}
-
+	
 	@media (max-width: 700px) {
 		/* Mirrors the global .card padding at this width. */
-		.visit-body {
+		.photo-card-body {
 			padding: var(--space-4);
 		}
-
-		.visit-banner-text {
-			padding: var(--space-4);
-		}
+	}
+	
+	/* The global form is a centred 480px block; in its card it fills the card instead. */
+	.message-card .contact-form {
+		max-width: none;
+		margin: 0;
+	}
+	
+	.faq-column {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		width: 100%;
+		max-width: 46rem;
+		margin: 0 auto;
 	}
 
 	.visit-hours {
@@ -456,10 +407,11 @@ const faqItems: FaqItem[] = [
 	   label). Measure the flex items, not the text: a text range misses the copy button and read 404.
 	   Narrower, every row stays stacked. Letting some rows fit and others wrap would give a directory
 	   that changes shape halfway down, which reads as broken.
-	   A container query rather than a media query because the card's width is what decides it, and
+	   A container query on the card's body rather than a media query, because the body's width is what
+	   decides it, and
 	   the card is narrowest at 701-900px, where the grid first splits - not on the smallest window.
 	   `flex-wrap` is only a safety net for a system font wider than the one measured. */
-	.email-card {
+	.email-card .photo-card-body {
 		container-type: inline-size;
 	}
 	

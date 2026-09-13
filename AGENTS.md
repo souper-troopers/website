@@ -708,9 +708,10 @@ decide, and the supporting evidence opens on click.
   *are* the "find out more" — and the donate page's payment cards, where the text is the bank details
   themselves.
 - **The homepage stats band was removed**, because it repeated 1,700+ directly under the lead tile
-  that already shows it. ⚠ The three other `impactStat` documents with `page: "home"` (`…UTO`, `…UUT`,
-  `…UVY`) are **still published and now render nowhere** — unpublishing them was blocked by the
-  permission classifier. Unpublish in the Studio. The **donate page's stats were kept on purpose**:
+  that already shows it. The three other `impactStat` documents with `page: "home"` (`…UTO`, `…UUT`,
+  `…UVY`) were **unpublished** the same day — drafts, not deleted, so any can be republished from the
+  Studio. Only `home` #1 (1,700+) stays published, feeding the tile. (The first attempt was blocked by
+  Claude Code's permission check; it went through once the user explicitly asked for it.) The **donate page's stats were kept on purpose**:
   under the rule above, trust evidence matters most at the point of giving.
 
 ## Repo layout

@@ -800,6 +800,28 @@ the form's usual 480px.
   - Trade: across a row the titles do not line up when blurbs differ in length (the text ends level
     instead). At 1280px all three titles sit at the same height.
 
+### Who We Are: a lead partner slot, and partner links (2026-09-13)
+- **Decision 8 of the review: Woolworths at the top, with a larger banner.** Woolworths is **not yet a
+  partner in Sanity** — the minutes: "Kerry expects [them] to become the biggest partner yet". The
+  page can now show **one lead partner** (`featured` on `partner`, "Lead partner" in the Studio) first,
+  full width, logo 220x120 beside the words; with none set, the page is unchanged.
+- ⚠ **Partner logos come from the partner, never off the web.** A company Woolworths' size controls
+  its brand and would expect to approve it; asked for on the status page (`q30`) with the blurb and
+  web address. Kerry can also add it herself in the Studio.
+- **`url` on `partner`** (the review: "each partner logo should link to that partner's own site"):
+  a partner with a website becomes a link card with "Visit their site →". None have one yet — waiting
+  on Kerry's revised list.
+- The schema change reaches the hosted Studio by itself on the next push to `main` (the Studio
+  workflow runs when `studio/**` changes).
+
+### The Humanity Hub name — still the board's decision (checked 2026-09-13)
+The user remembered the review as having decided to move from "Souper Troopers" to "the Humanity Hub".
+It didn't: the minutes carry it as **not decided**, "a strategy question, not a website question", with
+Hilton's condition that "there's going to be no changes made unless there's a unanimous excitement
+about it"; Kerry to brief her board. ⚠ **Don't rewrite visible copy to lead with the Humanity Hub
+until that lands.** What doesn't pre-empt it was done on 2026-09-06 (titles, descriptions, NGO data).
+`q29` asks who would design a Humanity Hub logo if the name moves.
+
 ### Homepage: a shop band, one fewer Donate ask (2026-09-13)
 Two things from the 2 September transcript that the minutes' actions had not carried:
 - **Kerry asked for the homepage to "speak to our social enterprise"** (~42 min; Adrian made the same

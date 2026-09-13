@@ -24,6 +24,20 @@ export default defineType({
       initialValue: false,
     }),
     defineField({name: 'order', title: 'Display order', type: 'number'}),
+    defineField({
+      name: 'url',
+      title: 'Website',
+      description: 'Their own site. With this set, their card on Who We Are links to it.',
+      type: 'url',
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Lead partner',
+      description:
+        'Shows this partner first, as a larger entry at the top of Partners & supporters. One partner at a time - the review agreed this is for Woolworths once the partnership is confirmed.',
+      type: 'boolean',
+      initialValue: false,
+    }),
   ],
   preview: {
     select: {title: 'name', subtitle: 'blurb'},

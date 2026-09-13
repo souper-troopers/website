@@ -33,6 +33,8 @@ export interface TeamMember {
 }
 
 export interface Partner {
+	url?: string;
+	featured?: boolean;
 	name: string;
 	blurb: string;
 	logo?: SanityImageSource;

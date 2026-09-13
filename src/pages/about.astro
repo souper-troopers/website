@@ -7,6 +7,12 @@ import { getTeamMembers, getPartners, getSupporters, getPressMentions, urlFor } 
 
 const team = await getTeamMembers();
 const partners = await getPartners();
+// One lead partner, shown first and larger (the 2 September review: Woolworths at the top, with a
+// larger banner, once confirmed). Set with "Lead partner" in the Studio; with none set, nothing
+// changes. Partners with a website become link cards.
+const featuredPartner = partners.find((p) => p.featured);
+const otherPartners = featuredPartner ? partners.filter((p) => p !== featuredPartner) : partners;
+const FeaturedTag = featuredPartner?.url ? "a" : "div";
 const supporters = await getSupporters();
 const pressMentions = await getPressMentions();
 ---
@@ -179,25 +185,46 @@ const pressMentions = await getPressMentions();
 				<h2>We don't do this alone</h2>
 				<p>These businesses and organisations choose to partner with and support Souper Troopers.</p>
 			</div>
-			<div class="grid grid-4">
-				{partners.map((partner) => (
-					<div class="card">
-						{partner.logo && (
-							<div class:list={["partner-logo-frame", partner.logoOnDark && "on-dark"]}>
-								<img
-									class="partner-logo"
-									src={urlFor(partner.logo).width(300).url()}
-									alt={partner.name}
-									width="100"
-									height="100"
-									loading="lazy"
-								/>
-							</div>
-						)}
-						<h3>{partner.name}</h3>
-						<p>{partner.blurb}</p>
+			{featuredPartner && (
+				<FeaturedTag
+					class="card partner-featured"
+					{...(featuredPartner.url ? { href: featuredPartner.url, target: "_blank", rel: "noopener" } : {})}
+				>
+					{featuredPartner.logo && (
+						<div class:list={["partner-logo-frame", featuredPartner.logoOnDark && "on-dark"]}>
+							<img class="partner-logo" src={urlFor(featuredPartner.logo).width(600).url()} alt={featuredPartner.name} width="220" height="120" loading="lazy" />
+						</div>
+					)}
+					<div class="partner-featured-text">
+						<h3>{featuredPartner.name}</h3>
+						<p>{featuredPartner.blurb}</p>
+						{featuredPartner.url && <span class="partner-visit">Visit their site &rarr;</span>}
 					</div>
-				))}
+				</FeaturedTag>
+			)}
+			<div class="grid grid-4">
+				{otherPartners.map((partner) => {
+					const Tag = partner.url ? "a" : "div";
+					return (
+						<Tag class:list={["card", partner.url && "partner-card-link"]} {...(partner.url ? { href: partner.url, target: "_blank", rel: "noopener" } : {})}>
+							{partner.logo && (
+								<div class:list={["partner-logo-frame", partner.logoOnDark && "on-dark"]}>
+									<img
+										class="partner-logo"
+										src={urlFor(partner.logo).width(300).url()}
+										alt={partner.name}
+										width="100"
+										height="100"
+										loading="lazy"
+									/>
+								</div>
+							)}
+							<h3>{partner.name}</h3>
+							<p>{partner.blurb}</p>
+							{partner.url && <span class="partner-visit">Visit their site &rarr;</span>}
+						</Tag>
+					);
+				})}
 			</div>
 
 			{supporters.length > 0 && (
@@ -254,3 +281,55 @@ const pressMentions = await getPressMentions();
 		</div>
 	</section>
 </Layout>
+
+<style>
+	/* The lead partner: the same white card, full width, logo larger beside the words. */
+	.partner-featured {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: center;
+		gap: var(--space-8);
+		padding: var(--space-8);
+		color: var(--st-ink);
+		text-decoration: none;
+	}
+
+	.partner-featured .partner-logo-frame {
+		width: 220px;
+		height: 120px;
+	}
+
+	.partner-featured h3 {
+		margin: 0 0 var(--space-2);
+		font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+	}
+
+	.partner-featured p {
+		margin: 0;
+		font-size: 1.05rem;
+	}
+
+	.partner-card-link {
+		color: var(--st-ink);
+		text-decoration: none;
+	}
+
+	/* The link cue: teal-dark and underlined, the site's mark for "you can act on this". */
+	.partner-visit {
+		margin-top: auto;
+		padding-top: var(--space-2);
+		font-size: 0.9rem;
+		font-weight: 700;
+		color: var(--st-teal-dark);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	@media (max-width: 700px) {
+		.partner-featured {
+			grid-template-columns: 1fr;
+			gap: var(--space-4);
+			padding: var(--space-6);
+		}
+	}
+</style>

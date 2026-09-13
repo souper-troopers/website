@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { Image } from "astro:assets";
-import shopPhoto from "../../assets/images/shop-products.jpg";
+import ShopPromise from "../../components/ShopPromise.astro";
 import { getProductCategories, urlFor } from "../../lib/sanity";
 
 const categories = await getProductCategories();
@@ -29,37 +28,14 @@ const categories = await getProductCategories();
 		    ⚠ Don't reintroduce Shmiley here without checking `/shmiley-decision` - the decision is
 		    recorded there, on the RFC's Shmiley question, and in AGENTS.md, and all three have to
 		    move together. */}
-		{/* One card since 2026-09-13, drawn like the audience banners on Get Involved: the photo fills the
-		    card, a tint darkens its left side, and the promise sits on that in white. No "Where the money
-		    goes" chip - the heading says it.
-		    The text is in normal flow and the photo is laid behind it, so the card grows to fit the words
-		    instead of the words spilling off the photo. Get Involved hides its banner blurb on small phones;
-		    this one cannot go, because it is the page's trust statement and is not repeated anywhere. */}
-		<div class="card shop-promise">
-			<div class="shop-promise-media">
-				{/* Above the fold at 390px and 1280px alike (measured), and the largest element on the
-				    page - so same reasoning as the homepage hero: never lazy. See index.astro. */}
-				<Image
-					src={shopPhoto}
-					alt="Troopers Coffee bags and African Worry Dolls on display"
-					width={1600}
-					widths={[600, 1100, 1600]}
-					sizes="(min-width: 1100px) 1060px, 100vw"
-					loading="eager"
-					fetchpriority="high"
-					class="shop-promise-img"
-				/>
-				<div class="shop-promise-scrim" aria-hidden="true"></div>
-				<div class="shop-promise-text">
-					<h2>Every purchase pays a wage</h2>
-					<p>
-						Made in Cape Town by people the CAST programme has supported. All proceeds go straight
-						back into the work - their wages, the training behind them, and the Humanity Hub where it
-						happens.
-					</p>
-				</div>
-			</div>
-		</div>
+		{/* The promise on its photograph - see ShopPromise.astro, which the homepage shares. */}
+		<ShopPromise heading="Every purchase pays a wage" eager>
+			<p>
+				Made in Cape Town by people the CAST programme has supported. All proceeds go straight
+				back into the work - their wages, the training behind them, and the Humanity Hub where it
+				happens.
+			</p>
+		</ShopPromise>
 	</section>
 
 	<section class="section wrap">
@@ -114,93 +90,3 @@ const categories = await getProductCategories();
 		</div>
 	</section>
 </Layout>
-
-<style>
-	.shop-promise {
-		padding: 0;
-		gap: 0;
-		overflow: hidden;
-	}
-
-	/* Get Involved's banner shapes - 3:1 once there is room, 16:9 on a phone - but as a floor rather
-	   than a fixed shape: `aspect-ratio` lets an in-flow child grow the box, so if the words need more
-	   height than the ratio gives, the card gets taller and the photo (cover) follows. */
-	.shop-promise-media {
-		position: relative;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		aspect-ratio: 16 / 9;
-	}
-
-	@media (min-width: 701px) {
-		.shop-promise-media {
-			aspect-ratio: 3 / 1;
-		}
-	}
-
-	.shop-promise-img {
-		position: absolute;
-		inset: 0;
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	/* Measured against the real photo pixels under every line of text, not assumed. Get Involved's own
-	   tint (0.82 / 0.62 at 40% / 0.12 at 74%) failed here - paragraph worst 1.5-3.4:1 - because this
-	   photo is a white wall and pale wood exactly where the words sit. White text needs roughly 0.6 of
-	   tint under every glyph on those pixels, so on a phone, where the words span the whole photo, the
-	   tint is near-even. Change the stops and re-run that check. */
-	.shop-promise-scrim {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(180deg, rgba(24, 23, 30, 0.74) 0%, rgba(24, 23, 30, 0.68) 100%);
-	}
-
-	/* From 701px the words are held to the left 56% of the photo, and the tint stays at 0.66 or more
-	   until past them before it fades, so the dolls and the red curtain on the right stay clear. */
-	@media (min-width: 701px) {
-		.shop-promise-scrim {
-			background: linear-gradient(
-				100deg,
-				rgba(24, 23, 30, 0.86) 0%,
-				rgba(24, 23, 30, 0.78) 45%,
-				rgba(24, 23, 30, 0.66) 62%,
-				rgba(24, 23, 30, 0.14) 86%,
-				rgba(24, 23, 30, 0) 100%
-			);
-		}
-
-		.shop-promise-text {
-			max-width: min(34rem, 56%);
-		}
-	}
-
-	.shop-promise-text {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-2);
-		padding: var(--space-5);
-		/* No max-width here: on a phone the words span the photo (the tint is even there), and from
-		   701px the limit is set in the tint's media block above. A max-width here would come later
-		   in the sheet and override that one - which it did, running the text onto the pale half. */
-	}
-
-	.shop-promise-text h2 {
-		margin: 0;
-		color: #fff;
-		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
-		line-height: 1.1;
-	}
-
-	/* Fully white, not Get Involved's 86%: on this photo the difference is what gets the paragraph
-	   over 4.5:1 without darkening the tint further. */
-	.shop-promise-text p {
-		margin: 0;
-		color: #fff;
-	}
-</style>

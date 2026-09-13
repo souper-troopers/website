@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import BrushRing from "../components/BrushRing.astro";
+import ShopPromise from "../components/ShopPromise.astro";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
@@ -83,15 +84,6 @@ const heroLqip =
 					<span class="path-cta">Get involved &rarr;</span>
 				</div>
 			</a>
-			<a href="/shop" class="path-tile path-support">
-				<BrushRing id="shop" viewBox="0 0 300 240" cx={258} cy={48} r={98} strokeWidth={24} color="#ffffff" opacity={0.55} dash="290 105" seed={53} frequency={0.014} displace={17} />
-				<div class="path-tile-body">
-					<span class="path-mini-fact">Troopers Coffee &amp; Worry Dolls</span>
-					<h3>Buy something</h3>
-					<p>Every order funds the jobs behind them.</p>
-					<span class="path-cta">Visit the shop &rarr;</span>
-				</div>
-			</a>
 			<a href="/get-involved#businesses" class="path-tile path-support">
 				<BrushRing id="partner" viewBox="0 0 300 240" cx={250} cy={212} r={102} strokeWidth={26} color="var(--st-ink)" opacity={0.14} dash="340 120" seed={77} frequency={0.016} displace={20} />
 				<div class="path-tile-body">
@@ -102,6 +94,21 @@ const heroLqip =
 				</div>
 			</a>
 		</div>
+	</section>
+
+	{/* The social enterprise gets its own band rather than one small tile in the grid above - Kerry on
+	    the 2 September review: the homepage "needs to kind of speak to our social enterprise, and if
+	    you're interested in that, go to..." (Adrian made the same point). Branded Souper Troopers, not
+	    Shmiley, per the review's first decision. The shop's own card, in its own words: the headline is
+	    shared, the paragraph is not, so the two pages don't repeat each other. Every phrase in it is
+	    already on the site. */}
+	<section class="section wrap">
+		<ShopPromise heading="Every purchase pays a wage" href="/shop" linkLabel="Visit the shop">
+			<p>
+				Troopers Coffee and African Worry Dolls, made by people the CAST programme has supported.
+				Every order funds the jobs behind them.
+			</p>
+		</ShopPromise>
 	</section>
 
 	{/* The impact band was removed on 2026-09-13. It repeated 1,700+ from the lead "Donate" tile
@@ -154,15 +161,11 @@ const heroLqip =
 		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="card closing-cta" style="text-align:center; align-items:center;">
-			<h2>Every story here started with someone deciding to help</h2>
-			<div class="actions">
-				<a class="btn btn-primary" href="/donate">Donate now</a>
-				<a class="btn btn-outline" href="/get-involved">Other ways to help</a>
-			</div>
-		</div>
-	</section>
+	{/* The closing "Every story here started with someone deciding to help" band, with a third Donate
+	    button, was removed on 2026-09-13. The page asked for a donation three times (hero, lead tile,
+	    here) with Donate / Shop also always in the header - the repetition the 2 September review
+	    asked us to cut. The hero button stays: the mobile header's Donate appears only once it has
+	    scrolled away (see the script below). */}
 </Layout>
 
 <script>

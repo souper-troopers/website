@@ -800,6 +800,24 @@ the form's usual 480px.
   - Trade: across a row the titles do not line up when blurbs differ in length (the text ends level
     instead). At 1280px all three titles sit at the same height.
 
+### Homepage: a shop band, one fewer Donate ask (2026-09-13)
+Two things from the 2 September transcript that the minutes' actions had not carried:
+- **Kerry asked for the homepage to "speak to our social enterprise"** (~42 min; Adrian made the same
+  point). The small "Buy something" tile became a full-width band after "Choose your path":
+  "Every purchase pays a wage" on the shop photo, linking to `/shop`. Branded Souper Troopers, not
+  Shmiley (decision 1). The path grid went from three columns to two so Volunteer and Partner don't
+  leave an empty slot; `.path-grid` is used only on the homepage.
+- **The closing "Every story here started…" band was removed** — the third Donate ask on the page,
+  with Donate / Shop always in the header too. Stephen had flagged it himself on the call ("calls to
+  action to donate are kind of littered throughout"). ⚠ **The hero's Donate button must stay**: the
+  mobile header's Donate appears only once that button has scrolled away.
+- **`src/components/ShopPromise.astro` is shared by the shop and the homepage** — one component, so
+  the measured tint (see "The shop landing page") can't drift between copies. `eager` only on the
+  shop, where it is the LCP image; lazy on the homepage. ⚠ **Each page passes its own paragraph**
+  (the slot): the headline is shared, the words are not, per the parent/child rule. The homepage's
+  line is stitched only from phrases the site already uses. Contrast re-measured on both pages:
+  homepage paragraph worst 6.60:1, link 6.55:1; the shop unchanged.
+
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not
 the final design**. That brief is with Brad's designer friend (2 September minutes); Kerry asked for it

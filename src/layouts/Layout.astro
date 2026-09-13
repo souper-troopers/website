@@ -2226,12 +2226,14 @@ const structuredData = {
 
 			/* Choose your path — one lead tile over a supporting row.
 			   Donate gets the width and the headline number because it's the primary action; the
-			   other three are told apart by their brush ring, not by a background colour each. That
+			   other two are told apart by their brush ring, not by a background colour each. That
 			   keeps the section to two fills (teal, ink) and leaves --st-green/--st-red free to go on
 			   meaning success/error in the cart and copy components. */
+			/* Two columns since 2026-09-13, when the shop tile became its own band below the grid: with
+			   three columns the two remaining tiles left an empty slot beside them. */
 			.path-grid {
 				display: grid;
-				grid-template-columns: repeat(3, 1fr);
+				grid-template-columns: repeat(2, 1fr);
 				gap: var(--space-5);
 			}
 

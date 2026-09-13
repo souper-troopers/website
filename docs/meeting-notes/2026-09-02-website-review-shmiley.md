@@ -55,7 +55,8 @@ items marked **blocking** arrive.
 **Brad**
 - Write up and circulate the hero video concept.
 - Shoot stills alongside the video, to widen the media library.
-- Introduce the designer friend for the CAST infographic — **blocking** that piece of work.
+- Introduce the designer friend for the CAST infographic — **blocking** that piece of work. (A first
+  proposal is now on the Our Work page for them to react to.)
 - Take a briefing on the Humanity Hub discussion, which happened after he left.
 
 **Hilton**
@@ -75,12 +76,15 @@ items marked **blocking** arrive.
 - **Done, first pass** — Less text on the cards across the site. People don't read unless they're
   deciding something, or checking whether the organisation can be trusted — so each card now keeps
   visible what someone needs to decide, and the supporting detail opens on click. Done on Get
-  Involved and the shop; more to follow as other pages are revisited.
+  Involved, the shop (one lead card, and nothing said twice) and the contact page (one photograph,
+  and the common questions open one at a time); more to follow as other pages are revisited.
 - **Waiting on Kerry** — Slim the homepage down to landing-page content: needs her answer on which
   words stay (on the update page).
 - **Waiting on Kerry** — Remove Zapper from the donate page, once she confirms it's no longer used.
 - **Waiting on the revised partner list** — Partner site links, with Woolworths first and larger.
-- **Not started** — A better CAST infographic, or the brief handed to Brad's designer.
+- **In progress** — The CAST infographic. A first proposal is on the Our Work page — big letters that
+  fill in turn along a hand-drawn line — to give Brad's designer something to react to. It is a
+  starting point, not the final graphic.
 - **Not started** — Revisit the fonts (Montserrat / Patrick Hand) against the page-load cost.
 - **Also since the call** — a volunteer page and a fuller goods-donation page, built from Shan's
   answers; "Humanity Hub" and "service centre" added where search engines read, in response to
@@ -294,6 +298,9 @@ coherently with the rest of the site.
 
 Brad asked whether a single graphic hurts SEO. Stephen: only if it contains text that needs
 indexing — and text inside a graphic can be vectorised into real copy if needed.
+
+**Since the call:** a first proposal is on the Our Work page, to give the designer something to react
+to rather than a blank page. Its words are real text, so the search question doesn't arise.
 
 ### Smaller items raised and left open
 - **Sticky/auto-updating nav** as you scroll past sections (Brad asked; Stephen: possible, but not

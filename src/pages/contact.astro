@@ -4,7 +4,6 @@ import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import { Image } from "astro:assets";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
-import shopPhoto from "../assets/images/shop-products.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
@@ -24,9 +23,8 @@ const emailDirectory = [
 	{ label: "Anything else", address: "info@soupertroopers.org" },
 ];
 
-// Both card photos render at the same width, so they share one `sizes`. In two columns the
-// card is half the row; a photo stretched taller than 3:2 renders wider than the card, hence the cap
-// above the column width.
+// The Hub photo: half the row in two columns. A photo stretched taller than 3:2 renders wider than
+// its card, hence the cap above the column width.
 const photoSizes = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px";
 
 const shopBrands = [
@@ -85,10 +83,8 @@ const faqItems: FaqItem[] = [
 	</section>
 
 	{/* Visit us on the left; the two channels - email, and the shop's own accounts - stacked on the
-	    right. The Hub photo grows to meet the stacked column, and the shop photo, a short banner, takes
-	    whatever height is left over, so neither column ends in empty white.
-	    Titles sit below photos rather than over them, so every card reads the same way whether or not
-	    it has one: no single overlay position suits both photos without tinting the painted 66. */}
+	    right, plain cards. The Hub photo is the page's one image. Its title sits below it, so it reads
+	    like the cards beside it: title, then content. */}
 	<section class="section wrap">
 		<div class="contact-cards">
 			<div class="card photo-card visit-card" data-name="visit">
@@ -141,29 +137,15 @@ const faqItems: FaqItem[] = [
 						))}
 					</dl>
 				</div>
-				<div class="card photo-card brand-card" data-name="shop">
-					<div class="photo-card-media">
-						{/* Reused from /shop, with the description it already carries there. */}
-						<Image
-							src={shopPhoto}
-							alt="Troopers Coffee bags and African Worry Dolls on display"
-							width={1200}
-							height={800}
-							widths={[480, 800, 1200]}
-							sizes={photoSizes}
-							class="photo-card-img shop-photo"
-						/>
-					</div>
-					<div class="photo-card-body">
-						<h2 class="contact-title">Follow the shop brands</h2>
-						<ul class="brand-list">
-							{shopBrands.map((brand) => (
-								<li>
-									<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
-								</li>
-							))}
-						</ul>
-					</div>
+				<div class="card brand-card" data-name="shop">
+					<h2 class="contact-title">Follow the shop brands</h2>
+					<ul class="brand-list">
+						{shopBrands.map((brand) => (
+							<li>
+								<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -179,10 +161,10 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
-	{/* Centred on the same column as the questions above, so the two read as one sequence: see
-	    whether yours is already answered, then send it. */}
+	{/* A plain section, not a card, on the same column as the questions above: its heading shares
+	    their left edge, and the fields keep the form's comfortable 480px. */}
 	<section class="section wrap">
-		<div class="card message-card" data-name="message">
+		<div class="message-column">
 			<div class="card-heading">
 				<h2 class="contact-title">Send us a message</h2>
 				<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
@@ -315,27 +297,10 @@ const faqItems: FaqItem[] = [
 		min-width: 0;
 	}
 	
-	/* Takes the column's spare height, and inside it the photo takes it (see .photo-card-media), so the
-	   slack becomes picture rather than empty white under the two handles. */
+	/* Grows to absorb whichever column ends up shorter, so the slack lands inside the last card rather
+	   than as a gap between the two. */
 	.brand-card {
 		flex: 1;
-	}
-	
-	/* A banner, not a photograph: Get Involved's shapes - 16:9 on a phone, 3:1 once there are two
-	   columns. As a floor it keeps the photo from collapsing to a sliver when the stacked column is
-	   already as tall as the Hub card. Kept low in frame: the products sit in the lower half. */
-	.brand-card .photo-card-media {
-		aspect-ratio: 16 / 9;
-	}
-	
-	.shop-photo {
-		object-position: center 65%;
-	}
-	
-	@media (min-width: 701px) {
-		.brand-card .photo-card-media {
-			aspect-ratio: 3 / 1;
-		}
 	}
 	
 	@media (max-width: 700px) {
@@ -348,16 +313,18 @@ const faqItems: FaqItem[] = [
 		}
 	}
 	
-	/* The same centred column as the questions above it. */
-	.message-card {
+	/* The questions' column: same width, same left edge. */
+	.message-column {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
 		width: 100%;
 		max-width: 46rem;
 		margin: 0 auto;
 	}
 	
-	/* The global form is a centred 480px block; in its card it fills the card instead. */
-	.message-card .contact-form {
-		max-width: none;
+	/* The global form is a centred 480px block; here it keeps the width and starts at the column's edge. */
+	.message-column .contact-form {
 		margin: 0;
 	}
 	
@@ -430,28 +397,6 @@ const faqItems: FaqItem[] = [
 
 	.email-directory dd {
 		margin: 0;
-	}
-
-	/* Label left, address right - but only once the card can fit the widest row on one line: measured
-	   at 447px including the gap (the widest pairing, an address plus its copy button beside its
-	   label). Measure the flex items, not the text: a text range misses the copy button and read 404.
-	   Narrower, every row stays stacked. Letting some rows fit and others wrap would give a directory
-	   that changes shape halfway down, which reads as broken.
-	   A container query rather than a media query because the card's width is what decides it, and
-	   the card is narrowest at 701-900px, where the grid first splits - not on the smallest window.
-	   `flex-wrap` is only a safety net for a system font wider than the one measured. */
-	.email-card {
-		container-type: inline-size;
-	}
-	
-	@container (min-width: 450px) {
-		.email-directory > div {
-			flex-direction: row;
-			flex-wrap: wrap;
-			justify-content: space-between;
-			align-items: baseline;
-			column-gap: var(--space-4);
-		}
 	}
 
 	.brand-list {

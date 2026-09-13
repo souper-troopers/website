@@ -717,47 +717,46 @@ decide, and the supporting evidence opens on click.
   Claude Code's permission check; it went through once the user explicitly asked for it.) The **donate page's stats were kept on purpose**:
   under the rule above, trust evidence matters most at the point of giving.
 
-### The Contact page — photo cards, one title size, one reading path (2026-09-13)
-Several passes in one day, driven by the user. The final shape: **Visit us** (a photo card) on the
-left; **Email us** (a plain card) and **Follow the shop brands** (a short photo banner) stacked on the
-right; **"Before you get in touch"** in one centred 46rem column; and **"Send us a message"** as a
-card centred on that same column, so the questions and the form read as one sequence.
+### The Contact page — one photo, one title size, one reading path (2026-09-13)
+Many passes in one day, driven by the user, ending close to where it started. The final shape:
+**Visit us** (the page's one photo) on the left; **Email us** and **Follow the shop brands** as plain
+cards stacked on the right; **"Before you get in touch"** in a centred 46rem column; and **"Send us a
+message"** as a plain section on that same column — heading on the questions' left edge, fields at
+the form's usual 480px.
 - **Details stay visible.** Address, hours and "by appointment only" are decision information, so by
   the rule above none of it goes behind a "More".
-- **Titles sit below photos, not over them.** The first pass put "Visit us" over the Hub's sky with a
-  top-fading tint, contrast measured against real sky pixels. A second photo broke it: the shop photo
-  has a white wall top-left, and no single overlay position suits both without tinting the painted
-  66 — titles in different places at different sizes being what the user called confusing. The tint
-  and its contrast check are gone. If overlays come back, they need measuring per photo.
+- **The Visit us title sits below the photo, not over it**, so the card reads like the plain cards
+  beside it: title, then content. An overlay version (title over the sky, a top-fading tint with
+  contrast measured against the real sky pixels) came out when a second photo arrived and could not
+  share its position without tinting a face or the 66.
 - **One title size, one heading level.** They had been 27, 19 and 35px, at h3 then h2. All five are
-  now `h2.contact-title` at Get Involved's sub-section size, `clamp(1.2rem, 2vw, 1.45rem)`.
-- **Tried and reverted the same day — don't redo either without a new reason:**
-  - **FAQ and form side by side** (the user's suggestion, which I agreed to). It read as denser, not
-    lighter: two different jobs at one level, and "before you get in touch" is a step before the
-    form, not an alternative to it.
-  - **A photo on Email us** (`support-conversation`), with the shop card moved beside the form as a
-    fourth photo card. The user was unsure of it; the directory went back to a plain card and the
-    shop card back beneath it.
-- **The shop photo is a banner, not a photograph**: Get Involved's shapes, 16:9 on a phone and 3:1 in
-  two columns, as a floor. It takes the column's spare height, so neither column ends in empty
-  white. `object-position: center 65%` because the products sit in the lower half. At its tightest
-  (701px, the narrowest two-column width) it is **106px** tall; the checker fails below 100.
+  now `h2.contact-title` at Get Involved's sub-section size, `clamp(1.2rem, 2vw, 1.45rem)`. No chips.
+- **The columns balance exactly** with stacked email rows: at 1280, Visit us is 591px and Email us +
+  gap + shop is 591px. `.brand-card { flex: 1 }` absorbs any difference; measured spare space is 0 at
+  every two-column width.
 - ⚠ **The Hub photo crops from the RIGHT only** (`object-position: left center`) — the 66 is at ~2–9%
-  across, so a centred crop takes the first 6 off. Measured crop: 0% in one column, 35–48% at
-  701–1024px (where the email rows stack and the right column is tall), 17% from 1099px up. The 66
-  is in frame at all 12 widths checked.
-- **Photos are the Hub's own and `shop-products`** (reused from `/shop` with its alt text). The 32
-  unpublished photos in `../souper-troopers-media/Content/Images/{Events,Mix}` were **not** used —
-  many show participants, and consent (`q19`) is unsettled.
-- **Email rows: label left, address right**, via a container query on `.email-card`, and only when
-  every row fits: the widest row is **447px** including the gap, threshold 450 — so stacked below
-  ~1099px, one line above, never mixed. ⚠ **Measure the flex items, not the text**: a text range read
-  404px (it misses the copy button), and the threshold built on it gave a half-and-half directory at
-  1024px.
-- **Card names pair up**: Visit us, Email us, Send us a message — which is what let the "Send a
-  message" chip go. **"Follow the shop brands" deliberately stays**: those are the product accounts
-  (they appear nowhere else on the site), and "Follow us" is the footer's label for the
-  organisation's own.
+  across, so a centred crop takes the first 6 off. Measured crop: 30% at 701px, 17% at 820, 8% or
+  less from 901, 3% at 1280. The 66 is in frame at every width checked.
+- **Tried and reverted the same day — don't redo any of these without a new reason:**
+  - **FAQ and form side by side** (the user's suggestion, which I agreed to): denser, not lighter. Two
+    different jobs at one level, and "before you get in touch" is a step before the form.
+  - **More photos** — `support-conversation` on Email us and `shop-products` on the shop card, as
+    four photo cards and later as a short 3:1 banner. The user settled on one image for now. Both are
+    already published, so they are the ones to reach for if photos come back; the 32 unpublished
+    photos in `../souper-troopers-media/Content/Images/{Events,Mix}` are not, since many show
+    participants and consent (`q19`) is unsettled.
+  - **A zig-zag** — one block per row, alternating sides. Calm, but ~580px longer, with half of every
+    row empty.
+  - **The zig-zag interlocked** — each block starting partway down the one before, done in pure CSS
+    by having every block span two grid rows. Shorter, but these blocks range from 282 to 582px tall,
+    which left a 240px hole under Email us, and opening a question moved the form on the other side.
+  - **Label-left, address-right email rows** (a container query, only when every row fit). Reverted
+    with the original layout: beside the new Visit us card they left ~130px of empty white under the
+    shop handles. If they come back: the widest row is 447px including the gap, and ⚠ measure the
+    flex items, not the text — a text range reads 404px because it misses the copy button.
+- **Card names pair up**: Visit us, Email us, Send us a message. **"Follow the shop brands"
+  deliberately stays**: those are the product accounts (they appear nowhere else on the site), and
+  "Follow us" is the footer's label for the organisation's own.
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

@@ -47,8 +47,9 @@ items marked **blocking** arrive.
 **Shan**
 - Reshoot the shop product photography, to a consistent size and resolution across the set.
 - Shoot Hub content in the newly relit space.
-- Sort out Google Drive access — Shan believes full access was granted, but Stephen still can't see
-  the files. Worth a check from both sides; it is **blocking** every media handover.
+- Refresh the website folder on the Google Drive — access works, but the material there hasn't
+  been updated in a while, and the new photos from the shoots need to land there before they
+  can go on the site.
 - Share the Shmiley information carousel/document shown during the call.
 
 **Brad**

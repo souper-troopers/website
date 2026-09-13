@@ -7,31 +7,58 @@ import type { FaqItem } from "../lib/faq";
  * `Layout`'s `jsonLd` prop, so the questions a reader sees and the ones a machine reads come from
  * one array and cannot drift apart.
  *
- * Deliberately **not** a `<details>` accordion, unlike the collapsible sections on the internal RFC
- * page. Collapsing is right there because that page is 7,900 words being read once; here the answers
- * are two sentences each and hiding them would cost the thing they exist for — an assistant
- * extracting a chunk, and a visitor scanning for the one line that applies to them, both want the
- * answer present rather than one interaction away.
+ * Two modes. By default every answer is shown, as a `<dl>`. `collapsible` shows only the questions
+ * and opens each answer on click (added 2026-09-13, first on /contact). The trade, briefly:
+ *
+ * - **Nothing is lost to search or answer engines either way.** A closed `<details>` is still in
+ *   the HTML; Google indexes it at full weight and a retrieval step reads it like any other text.
+ *   The structured data is identical in both modes.
+ * - **What collapsing changes is the scan.** A visitor with a question looks for *their* question;
+ *   the questions alone make that a four-line scan instead of a page of answers to read past. That
+ *   is the site's card rule - keep what decides visible, open the rest - applied to an FAQ.
+ * - **What it costs** is the visitor who reads an FAQ top to bottom out of general interest. They
+ *   pay a click per answer.
+ *
+ * Opt-in rather than the new default so each page moves deliberately, not as a side effect.
  */
 interface Props {
 	items: FaqItem[];
+	collapsible?: boolean;
 }
 
-const { items } = Astro.props;
+const { items, collapsible = false } = Astro.props;
 ---
 
-<dl class="faq">
-	{items.map((item) => (
-		<div class="faq-item">
-			<dt>{item.question}</dt>
-			<dd>
-				<p>{item.answer}</p>
-				{item.email && <p class="faq-email"><EmailLink client:visible address={item.email} /></p>}
-				{item.link && <p class="faq-link"><a href={item.link.href}>{item.link.label} &rarr;</a></p>}
-			</dd>
-		</div>
-	))}
-</dl>
+{collapsible ? (
+	<div class="faq faq-collapsible">
+		{items.map((item) => (
+			<details class="faq-item">
+				<summary>
+					<span class="faq-question">{item.question}</span>
+					<span class="faq-mark" aria-hidden="true"></span>
+				</summary>
+				<div class="faq-answer">
+					<p>{item.answer}</p>
+					{item.email && <p class="faq-email"><EmailLink client:visible address={item.email} /></p>}
+					{item.link && <p class="faq-link"><a href={item.link.href}>{item.link.label} &rarr;</a></p>}
+				</div>
+			</details>
+		))}
+	</div>
+) : (
+	<dl class="faq">
+		{items.map((item) => (
+			<div class="faq-item">
+				<dt>{item.question}</dt>
+				<dd>
+					<p>{item.answer}</p>
+					{item.email && <p class="faq-email"><EmailLink client:visible address={item.email} /></p>}
+					{item.link && <p class="faq-link"><a href={item.link.href}>{item.link.label} &rarr;</a></p>}
+				</dd>
+			</div>
+		))}
+	</dl>
+)}
 
 <style>
 	/* Left-aligned and unmargined on purpose: `.section-intro` is left-aligned by default, so a
@@ -69,16 +96,99 @@ const { items } = Astro.props;
 		margin: 0;
 	}
 
-	.faq dd p {
+	.faq dd p,
+	.faq-answer p {
 		margin: 0;
 	}
 
-	.faq dd p + p {
+	.faq dd p + p,
+	.faq-answer p + p {
 		margin-top: var(--space-2);
 	}
 
 	.faq-email,
 	.faq-link {
 		font-size: 0.95rem;
+	}
+
+	/* Collapsible mode. The rows lose their gap and carry their own padding instead, so the whole
+	   row - not just the text - is the tap target, and the hairlines sit evenly between questions. */
+	.faq-collapsible {
+		gap: 0;
+	}
+
+	.faq-collapsible .faq-item,
+	.faq-collapsible .faq-item:last-child {
+		padding: 0;
+		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.faq-collapsible .faq-item:first-child {
+		border-top: 1px solid rgba(36, 35, 43, 0.08);
+	}
+
+	.faq-collapsible summary {
+		list-style: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-4);
+		padding: var(--space-4) 0;
+		font-size: 1.05rem;
+		font-weight: 700;
+		text-align: left;
+	}
+
+	.faq-collapsible summary::-webkit-details-marker {
+		display: none;
+	}
+
+	/* The row has no side padding (the text lines up with the heading), so the default ring sat
+	   hard against the first letter. */
+	.faq-collapsible summary:focus-visible {
+		outline-offset: 4px;
+		border-radius: 4px;
+	}
+
+	/* The question stays ink: a row of four teal underlined questions would read as four links
+	   to other pages. The control is marked by the chevron instead, in teal-dark - the colour this
+	   site reserves for things you can act on - and it is visible without hovering, so touch users
+	   get the same cue. */
+	.faq-mark {
+		flex: none;
+		width: 9px;
+		height: 9px;
+		margin-right: 4px;
+		border-right: 2px solid var(--st-teal-dark);
+		border-bottom: 2px solid var(--st-teal-dark);
+		transform: rotate(45deg) translate(-2px, -2px);
+		transition: transform 140ms ease;
+	}
+
+	.faq-collapsible details[open] .faq-mark {
+		transform: rotate(-135deg) translate(-1px, -1px);
+	}
+
+	.faq-collapsible summary:hover .faq-question {
+		color: var(--st-teal-dark);
+	}
+
+	.faq-answer {
+		padding-bottom: var(--space-4);
+		/* Keeps the answer's measure off the chevron column, so the text doesn't run under it. */
+		padding-right: var(--space-8);
+	}
+
+	@media (max-width: 480px) {
+		.faq-answer {
+			padding-right: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.faq-mark {
+			transition: none;
+		}
 	}
 </style>

@@ -158,14 +158,15 @@ const faqItems: FaqItem[] = [
 	</section>
 
 	<section class="section wrap">
+		{/* No "Common questions" chip: the questions announce themselves, and a chip restating the
+		    heading is the duplication removed from Get Involved. */}
 		<div class="section-intro">
-			<span class="badge">Common questions</span>
 			<h2>Before you get in touch</h2>
 		</div>
 		{/* This page centres its `.section-intro` (see the 480px rule below), so the list is centred
 		    to match. Alignment is the page's decision rather than the component's — every other
 		    page that uses it has left-aligned headings. */}
-		<div class="faq-centred"><Faq items={faqItems} /></div>
+		<div class="faq-centred"><Faq items={faqItems} collapsible /></div>
 	</section>
 
 	<section class="section wrap">
@@ -214,7 +215,11 @@ const faqItems: FaqItem[] = [
 		margin: 0 auto;
 	}
 
+	/* `width: 100%` is load-bearing now the FAQ collapses. Without it the wrapper sizes to its
+	   content, which closed is only the questions - so the list sat ~460px wide at 1280 and jumped
+	   to the full 46rem the moment an answer opened. */
 	.faq-centred {
+		width: 100%;
 		max-width: 46rem;
 		margin: 0 auto;
 	}
@@ -270,19 +275,30 @@ const faqItems: FaqItem[] = [
 		overflow: hidden;
 	}
 
+	/* Grows into whatever height the grid gives the card, so the details sit at its foot and the
+	   photo takes the slack. The card is stretched to match the column beside it, and before this
+	   the spare height landed as empty white under the opening hours. `aspect-ratio` is the floor,
+	   not the shape: it reserves the photo's natural 3:2 before it loads, so nothing shifts, and it
+	   is what the banner falls back to wherever there is no slack - the one-column layout. */
 	.visit-banner {
 		position: relative;
 		align-self: stretch;
+		flex: 1 0 auto;
+		aspect-ratio: 3 / 2;
 	}
 
-	/* 3:2 is the photo's own shape, so nothing is cropped - and nothing can be: the 66 is right at
-	   the left edge of the frame, and any crop in width would take it off first. */
+	/* Fills the banner, so a banner taller than 3:2 crops the sides.
+	   ⚠ All of that crop must come off the RIGHT. The 66 is at the very left edge of the frame
+	   (about 2-9% across), so a centred crop takes the first 6 off; `object-position: left` sends
+	   the whole crop to the right, which is street and parked cars. */
 	.visit-photo {
+		position: absolute;
+		inset: 0;
 		display: block;
 		width: 100%;
-		height: auto;
-		aspect-ratio: 3 / 2;
+		height: 100%;
 		object-fit: cover;
+		object-position: left center;
 	}
 
 	/* Fades from the top edge and is fully clear by 55% of the height, before the 66 begins.
@@ -331,17 +347,6 @@ const faqItems: FaqItem[] = [
 		flex-direction: column;
 		gap: var(--space-3);
 		padding: var(--space-6);
-	}
-
-	@media (min-width: 701px) and (max-width: 860px) {
-		/* Where the grid first splits into two columns the banner is at its narrowest and shortest,
-		   so the subtitle falls into the weakest part of the fade: measured at 4.16:1 against the
-		   sky at 701px, under the 4.5:1 floor. Darkening further would start to shade the 66. It
-		   goes instead - it repeats the address directly beneath - leaving "Visit us", which is
-		   large text (3:1) and sits where the fade is darkest. */
-		.visit-banner-text p {
-			display: none;
-		}
 	}
 
 	@media (max-width: 700px) {

@@ -126,7 +126,9 @@ Four rules follow, and they drove everything below:
 ### Components added
 - **`src/components/Breadcrumbs.astro` + `src/lib/breadcrumbs.ts`** — one `Crumb[]` feeds both the visible `<nav>` and the `BreadcrumbList` JSON-LD, so they cannot disagree. `path` **must carry a trailing slash** to match Astro's canonical/sitemap URLs. `shop/[category]/[item].astro` was refactored onto this (it had the only copy); a side effect is that its trail's hrefs now carry trailing slashes too, which removes a redirect hop.
 - **`src/components/Faq.astro` + `src/lib/faq.ts`** — one `FaqItem[]` feeds the visible `<dl>` and `FAQPage`. **The structured data buys nothing in a search listing** — Google retired FAQ rich results for most sites — so the value is entirely the visible question text; do not "optimise" by moving answers into the schema block only.
-  - **Not a `<details>` accordion**, unlike the RFC page's collapsibles: answers are two sentences, and hiding them costs both the extraction and the scan.
+  - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate and the three Get Involved child pages still render every answer.
+    - **The question stays ink; the chevron is teal-dark.** Four teal underlined questions would read as four links elsewhere. The chevron carries the colour affordance and is visible without hover.
+    - A `<details>` cannot live inside a `<dl>`, so collapsible mode renders a `<div>` of `<details>` rather than wrapping the existing markup.
   - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. `/contact` centres its headings, so it centres the block with its own `.faq-centred` wrapper. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught.
 
 ### Gotchas found doing this
@@ -727,17 +729,23 @@ below**, and both reasons are worth keeping:
 What makes it work, all measured rather than eyeballed:
 - **The title sits top-left over the sky**, and the fade runs from the top edge, fully clear by 55% of
   the banner's height. The 66 starts at ~54%, so it carries **~2.4% tint** at most.
-- **3:2 is the photo's own shape, and it must not be cropped in width** — the 66 is at the very left
-  edge of the frame, so any horizontal crop takes it off first.
+- **The photo fills the card down to the details, and the details sit at the foot** (user request,
+  same day). In two columns the grid stretches the card to match the stacked cards opposite, so the
+  banner is `flex: 1 0 auto` with `aspect-ratio: 3/2` as its floor: 3:2 where there's no slack
+  (single column), taller where there is. The photo is `object-fit: cover`, so a taller banner crops
+  the sides.
+- ⚠ **All of that crop comes off the RIGHT** (`object-position: left center`). The 66 is at the very
+  left edge of the frame (~2–9% across), so a centred crop takes the first 6 off. The right is street
+  and parked cars. Measured crop: 0% single-column, 15% at 1280px, **41% at 701px** — large, but it is
+  all street, and the 66 is fully in frame at every width tested.
 - ⚠ **Contrast was checked against the real sky pixels under the text**: each pixel composited with the
   gradient in a canvas, then WCAG contrast against white, at 15 widths. The first stops
   (0.78 / 0.55) left the subtitle at **4.16:1 at 768px**. Now 0.84 / 0.64, and the worst pixel at any
-  width is **4.73:1** (360px). Change the stops and you must re-run that check — the numbers in the
+  width is **4.69:1** (360px). Change the stops and you must re-run that check — the numbers in the
   CSS comment are the record.
-- **Between 701 and 860px the subtitle is hidden.** Where the grid first splits into two columns the
-  banner is at its narrowest and shortest, and the subtitle fell into the weakest part of the fade
-  (4.16:1 at 701px). Darkening further would start to shade the 66, and the subtitle repeats the
-  address directly below. "Visit us" alone is large text (3:1) and measures 8:1+ there.
+- **The subtitle was hidden between 701 and 860px, and no longer is.** With the old 3:2 banner it
+  fell into the weakest part of the fade there (4.16:1). The taller banner moves the text higher up
+  the fade in relative terms, and it now measures **8.07:1** across that whole band.
 - The card is `padding: 0; overflow: hidden` so the banner runs flush, and `.visit-body` restores the
   padding the global `.card` rule would have given — including its ≤700px value. Columns still balance
   (576px each) because `.brand-card` absorbs the slack, exactly as before.

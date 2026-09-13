@@ -6,8 +6,10 @@ Adrian Lichtman, Brad Stern, Hilton Stern
 **Note:** Brad left at around the 56-minute mark, before the Humanity Hub discussion.
 **Previous meeting:** 29 July 2026
 
-> Please read this against your own recollection and let me know if I have missed anything or got
-> anything wrong, before I start making changes. — Stephen
+> I've made a start on the changes agreed on the call — what's done is marked under my name below,
+> and the full list is on the site's Changelog page (the "Internal" link in the menu). Please read
+> the rest against your own recollection and tell me if I've missed or misremembered anything.
+> — Stephen
 
 ---
 
@@ -62,16 +64,26 @@ items marked **blocking** arrive.
 - Nothing outstanding. The homepage, navigation and Get Involved directions raised on the call are
   now Stephen's to build.
 
-**Stephen**
-- Video guidance — **done**, written up on the update page for Brad and Shan.
-- Slim the homepage down to landing-page content.
-- Restructure Get Involved by audience (personal / corporate) with expanding sections.
-- Add the Support → Donate / Shop nav drop-down.
-- Add partner site links; reorder with Woolworths first and a larger banner.
-- Remove Zapper from the donate page.
-- Add a prominent "proceeds go back into the work" statement to the shop.
-- Revisit fonts (Montserrat / Patrick Hand) against the page-load cost.
-- Propose a better CAST infographic, or hand the brief to Brad's designer.
+**Stephen** — status as at 13 September
+- **Done** — Video guidance, written up on the update page for Brad and Shan.
+- **Done** — Get Involved restructured by audience (individuals / companies), with the detail opening
+  on click.
+- **Done** — Donate / Shop menu in the header.
+- **Done** — A prominent "proceeds go back into the work" statement at the top of the shop.
+- **Done** — The repeated statistics cut from the homepage.
+- **Done, first pass** — Less text on the cards across the site. People don't read unless they're
+  deciding something, or checking whether the organisation can be trusted — so each card now keeps
+  visible what someone needs to decide, and the supporting detail opens on click. Done on Get
+  Involved and the shop; more to follow as other pages are revisited.
+- **Waiting on Kerry** — Slim the homepage down to landing-page content: needs her answer on which
+  words stay (on the update page).
+- **Waiting on Kerry** — Remove Zapper from the donate page, once she confirms it's no longer used.
+- **Waiting on the revised partner list** — Partner site links, with Woolworths first and larger.
+- **Not started** — A better CAST infographic, or the brief handed to Brad's designer.
+- **Not started** — Revisit the fonts (Montserrat / Patrick Hand) against the page-load cost.
+- **Also since the call** — a volunteer page and a fuller goods-donation page, built from Shan's
+  answers; "Humanity Hub" and "service centre" added where search engines read, in response to
+  Shan's finding; and a fix for pages sometimes loading blank in Safari.
 
 ---
 

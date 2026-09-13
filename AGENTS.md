@@ -16,7 +16,7 @@
     - **Retention policy** — every weekly for 8 weeks, then first-of-month for a year, then first-of-year forever. Every snapshot is a *full* copy (documents + assets), not a diff, so without this the folder grows by a complete copy of the site's content every week. Simulated over 3 years: settles at ~22 files instead of 157. Has an abort guard — a policy that would delete today's backup or all backups is treated as a bug, not a valid outcome. **`git rm` does not shrink a git repo**: pruned blobs stay in history, so this caps what you *see*, not what GitHub *stores*. Irrelevant at current sizes (all product images are ≤600px); becomes real if the high-resolution originals we're asking Kerry for ever land, at which point GitHub Releases (which delete cleanly) is the migration.
     - **Dead-man's-switch, not failure alerting.** Every likely failure here is *silent*: a disabled schedule doesn't run, so it doesn't fail, so nothing notifies anyone. The workflow pings an external monitor (`HEALTHCHECK_URL` repo secret) on success and `/fail` on failure; the monitor alerts when a weekly ping *doesn't arrive*. The job can therefore only ever prevent an alert by succeeding — it can never make silence look like success. **Deliberately external to GitHub**: a monitor must not share fate with the thing it monitors, and two of the three failure modes below are GitHub itself stopping.
   - **The two things that will silently kill this** (both unresolved as of 2026-08-11):
-    1. **`BACKUP_REPO_TOKEN` expires Tue 8 September 2026** (confirmed 2026-08-11). It's a fine-grained PAT and those carry a mandatory expiry. When it lapses the push step fails every week forever — with the heartbeat live this at least alerts, but it still needs a human to rotate it. Not reachable via API (`/orgs/{org}/personal-access-tokens` 404s unless the org enforces PAT-approval policies, and needs `admin:org`); read it manually from the creating account's Settings → Developer settings → Fine-grained tokens. **Note this falls *before* the 19 Oct checkpoint below, so it is the next thing due.** The permanent fix is a **deploy key** on `website-backups` instead of a PAT — deploy keys don't expire and are scoped to the single repo, which is both safer and less maintenance; it needs the clone/push switching from HTTPS to SSH.
+    1. ~~**`BACKUP_REPO_TOKEN` expires Tue 8 September 2026**~~ **Moot — checked 2026-09-13.** The workflow authenticates with a GitHub App (the PAT was retired 2026-08-11) and no longer references `BACKUP_REPO_TOKEN`; the weekly run succeeded on 13 September, after the expiry. The original note follows for history. (confirmed 2026-08-11). It's a fine-grained PAT and those carry a mandatory expiry. When it lapses the push step fails every week forever — with the heartbeat live this at least alerts, but it still needs a human to rotate it. Not reachable via API (`/orgs/{org}/personal-access-tokens` 404s unless the org enforces PAT-approval policies, and needs `admin:org`); read it manually from the creating account's Settings → Developer settings → Fine-grained tokens. **Note this falls *before* the 19 Oct checkpoint below, so it is the next thing due.** The permanent fix is a **deploy key** on `website-backups` instead of a PAT — deploy keys don't expire and are scoped to the single repo, which is both safer and less maintenance; it needs the clone/push switching from HTTPS to SSH.
     2. **GitHub disables scheduled workflows after 60 days of repo inactivity.** Invisible while the repo is busy; near-certain once the site launches and commits stop.
   - **Checkpoint — Mon 19 Oct 2026**: the first run that actually prunes anything is **Sunday 18 October 2026**, dropping `production-2026-08-16.tar.gz`. Open that run's "Apply retention policy" step and confirm the log reads `Retention: kept N, pruned 1: ...` rather than "nothing to prune". Note `production-2026-08-09.tar.gz` is the earliest backup, so it is both the first-of-month and first-of-year anchor and is **kept permanently** — don't read its survival as a bug.
 - **Git workflow (added 2026-08-09, cost-driven):** do day-to-day commits on the `dev` branch, not `main`. Netlify auto-deploys `main` on every push (a production deploy, 15 Netlify credits each on the Free plan — 300/month total) and pushing every small commit straight to `main` burns through that fast. Push to `dev` freely (no production-deploy cost), then merge `dev` → `main` only when actually ready to ship a batch of changes to the live preview.
@@ -682,6 +682,36 @@ were reachable **only** from inside the one question that raised them.
   inside the cap, so "Status" → "Internal" — two characters — pushed every page's header from one row
   to three, at every viewport width. The gap is now `--space-6` rather than `--space-8`. Re-measure at
   1440px before adding anything to that row.
+
+## Cards: keep what decides visible, open the rest on click (2026-09-13)
+From Adrian's point on the 2 September review ("people don't like to read"), refined by the user into
+the rule that actually drives the pattern: **people don't read unless they're deciding something, or
+checking whether the organisation can be trusted.** So a card keeps visible the claim someone needs to
+decide, and the supporting evidence opens on click.
+
+- **`.card-more`** (global, in `Layout.astro`): a `<details>` with a teal-dark underlined summary and
+  a chevron, plus `.card-more-show` / `.card-more-hide` spans so the label swaps to "Less" when open.
+  Add a `.visually-hidden` span to a generic label ("More") so a screen reader hears what it is more
+  *of*.
+- **Why `<details>` and not a line-clamp**: no JavaScript, keyboard operable, and the hidden text
+  **stays in the page**, so search engines and answer engines still read every word. Deleting the
+  detail instead would have undercut the discoverability work.
+- ⚠ **Never inside a card that is itself an `<a>`** — interactive content cannot nest in a link. Those
+  cards get trimmed, and the detail lives on the page they link to. That is what happened to Get
+  Involved's workshop and coffee cards, whose full versions were already duplicated on
+  `/get-involved/corporate-partnership/`.
+- **Which cards got it**: measured first — 92 cards across the site, 14 over 40 words, 52 already under
+  20. First pass: Get Involved (the skills card, the two bookable offers, the four scorecard cards) and
+  the shop (the fulfilment card; the "where the money goes" card was tightened instead, since it *is*
+  the trust statement).
+- **Deliberately left whole**: the detail pages (Corporate Partnership, Volunteer, Donate goods) — they
+  *are* the "find out more" — and the donate page's payment cards, where the text is the bank details
+  themselves.
+- **The homepage stats band was removed**, because it repeated 1,700+ directly under the lead tile
+  that already shows it. ⚠ The three other `impactStat` documents with `page: "home"` (`…UTO`, `…UUT`,
+  `…UVY`) are **still published and now render nowhere** — unpublishing them was blocked by the
+  permission classifier. Unpublish in the Studio. The **donate page's stats were kept on purpose**:
+  under the rule above, trust evidence matters most at the point of giving.
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

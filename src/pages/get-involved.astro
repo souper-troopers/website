@@ -209,11 +209,11 @@ const goodsCategories = [
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
 				<h3>Give what you already do</h3>
-				<p>
-					Skills and services go as far as cash: our accountants, lawyers, and web hosting are all
-					donated. Marketing, IT, design, mentoring, training, delivery - if it's what your business
-					does, we can probably use it.
-				</p>
+				<p>Skills and services go as far as cash - if it's what your business does, we can probably use it.</p>
+				<details class="card-more">
+					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about giving skills and services</span></summary>
+					<div><p>Our accountants, our lawyers and our web hosting are all donated already. Marketing, IT, design, mentoring, training and delivery are all things we can put to use.</p></div>
+				</details>
 			</div>
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
 			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
@@ -231,29 +231,21 @@ const goodsCategories = [
 		<div class="grid grid-2">
 			<a class="card action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
 				<h3>Corporate workshops</h3>
+				{/* Trimmed from 74 words on 2026-09-13. The full version - what a workshop covers and
+				    exactly what it funds - is on /get-involved/corporate-partnership/, linked from the
+				    section above. A whole-card link cannot hold a "More" toggle inside it. */}
 				<p>
-					Our Reconnection Workshops bring a team together around identity, reflection, and
-					emotional wellbeing - facilitated by Jake Gluckman, a registered counsellor on our staff.
-					Voltalia recently hosted one for their team.
-				</p>
-				<p>
-					Every workshop directly funds the programmes at the Humanity Hub: skills development and
-					daily meals, transport to interviews, interview clothing, and healthcare as basic and as
-					decisive as an eye test or a set of dentures.
+					Reconnection Workshops for your team, facilitated by Jake Gluckman, a registered
+					counsellor on our staff. Voltalia hosted one recently, and every workshop funds the work
+					at the Humanity Hub.
 				</p>
 				<span class="action-cta">Enquire about a workshop &rarr;</span>
 			</a>
 			<a class="card action-card" href="/shop">
 				<h3>Coffee for your workplace</h3>
 				<p>
-					Troopers Coffee - our Dignity Blend - is available as a standing order for offices,
-					guesthouses, and Airbnbs, not just as a one-off gift. The Lab Blue in Franschhoek serves
-					it to guests at sunrise.
-				</p>
-				<p>
-					Every bag funds the jobs behind it: the Souper Squad members who pack and sell it. And
-					because we're a B-BBEE Level 1 contributor, it counts as preferential procurement spend
-					on your scorecard.
+					Our Dignity Blend as a standing order for your office or guesthouse. It pays the Souper
+					Squad who pack it, and counts as preferential procurement on your B-BBEE scorecard.
 				</p>
 				<span class="action-cta">See the coffee &rarr;</span>
 			</a>
@@ -274,7 +266,12 @@ const goodsCategories = [
 					<div class="card">
 						{benefit.value && <span class="benefit-value">{benefit.value}</span>}
 						<h3>{benefit.title}</h3>
-						<p>{benefit.body}</p>
+						{benefit.body && (
+							<details class="card-more">
+								<summary><span class="card-more-show">How it counts</span><span class="card-more-hide">Less</span><span class="visually-hidden"> - {benefit.title}</span></summary>
+								<div><p>{benefit.body}</p></div>
+							</details>
+						)}
 					</div>
 				))}
 			</div>

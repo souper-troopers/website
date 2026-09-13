@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import BrushRing from "../components/BrushRing.astro";
-import CountUp from "../components/CountUp.svelte";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
@@ -105,27 +104,14 @@ const heroLqip =
 		</div>
 	</section>
 
-	<section class="impact-band">
-		<div class="wrap">
-			<div class="section-intro">
-				<span class="badge badge-on-dark">Impact</span>
-				<h2>Impact you can't miss</h2>
-				<p>Real outcomes from the CAST programme - the numbers behind every story.</p>
-			</div>
-			<div class="impact-stats">
-				{impactStats.map((stat) => (
-					<div class="impact-stat">
-						{stat.value != null ? (
-							<CountUp client:visible end={stat.value} suffix={stat.suffix ?? ""} />
-						) : (
-							<strong>{stat.displayValue}</strong>
-						)}
-						<span>{stat.label}</span>
-					</div>
-				))}
-			</div>
-		</div>
-	</section>
+	{/* The impact band was removed on 2026-09-13. It repeated 1,700+ from the lead "Donate" tile
+	    directly above it, plus three stats that also appear on Our Work - the repetition the
+	    2 September review asked us to cut. The homepage keeps its single strongest figure, in the
+	    tile, where it sits next to the action it argues for. Our Work keeps the full set.
+
+	    ⚠ The three other "home" impactStat documents are still PUBLISHED in Sanity and now render
+	    nowhere (UohOe…UTO, …UUT, …UVY). Unpublish them in the Studio so nobody edits a stat and
+	    wonders why the site never changes. Only "home" #1 (1,700+) is still used, by the tile. */}
 
 	<section class="section wrap">
 		<div class="grid grid-2" style="align-items: center;">

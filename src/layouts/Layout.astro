@@ -1272,6 +1272,79 @@ const structuredData = {
 				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 			}
 
+			/* --- "More" inside a card (2026-09-13) -------------------------------------------------
+			   The rule this serves, in the user's words: people don't read *unless* they are deciding
+			   something or checking whether the organisation can be trusted. So a card keeps visible
+			   what someone needs to decide, and the supporting detail - the evidence, the how - opens
+			   on click. `<details>` rather than a clamp and a button: no JavaScript, keyboard
+			   operable, and the hidden text stays in the page, so search engines and answer engines
+			   still read all of it. Cutting it instead would have been a real cost to discoverability.
+
+			   ⚠ Never inside a card that is itself an `<a>` - interactive content can't nest inside a
+			   link. Trim those instead, and leave the detail to the page the card links to. */
+			.card-more {
+				width: 100%;
+			}
+
+			.card-more > summary {
+				list-style: none;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.45em;
+				min-height: 24px;
+				font-weight: 600;
+				/* Teal-dark and underlined: it is a control, and the colour rule reserves this for
+				   things you can act on. 4.52:1 on the white cards it lives in. */
+				color: var(--st-teal-dark);
+				text-decoration: underline;
+				text-underline-offset: 3px;
+			}
+
+			.card-more > summary::-webkit-details-marker {
+				display: none;
+			}
+
+			.card-more > summary::after {
+				content: "";
+				width: 7px;
+				height: 7px;
+				border-right: 2px solid currentColor;
+				border-bottom: 2px solid currentColor;
+				transform: rotate(45deg) translate(-2px, -2px);
+				transition: transform 120ms ease;
+			}
+
+			.card-more[open] > summary::after {
+				transform: rotate(-135deg) translate(-1px, -1px);
+			}
+
+			.card-more-hide,
+			.card-more[open] .card-more-show {
+				display: none;
+			}
+
+			.card-more[open] .card-more-hide {
+				display: inline;
+			}
+
+			.card-more > div {
+				display: flex;
+				flex-direction: column;
+				gap: var(--space-3);
+				margin-top: var(--space-3);
+			}
+
+			.card-more p {
+				margin: 0;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.card-more > summary::after {
+					transition: none;
+				}
+			}
+
 			.card {
 				display: flex;
 				flex-direction: column;

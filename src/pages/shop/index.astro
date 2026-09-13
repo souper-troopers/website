@@ -31,9 +31,9 @@ const categories = await getProductCategories();
 			<span class="badge">Where the money goes</span>
 			<h2>Every purchase pays a wage</h2>
 			<p>
-				These products are made by people the CAST programme has supported, here in Cape Town.
-				All proceeds go straight back into the work - the wages of the people who made them,
-				the skills training behind that, and the Humanity Hub in Woodstock where it happens.
+				Made in Cape Town by people the CAST programme has supported. All proceeds go straight
+				back into the work - their wages, the training behind them, and the Humanity Hub where it
+				happens.
 			</p>
 		</div>
 	</section>
@@ -85,12 +85,15 @@ const categories = await getProductCategories();
 		<div class="card">
 			<span class="badge">Collection &amp; delivery</span>
 			<h2>How orders are fulfilled</h2>
-			<p>
-				All orders are collected in person from 66 Newmarket Street, Woodstock, Cape Town (Mon–Thu
-				mornings–afternoons, Fri mornings). Can't collect yourself? Arrange your own courier and
-				we'll hand your order over - just email the details after ordering. Bulk or corporate
-				orders: email us before ordering so we can plan ahead.
-			</p>
+			<p>All orders are collected in person from 66 Newmarket Street, Woodstock, Cape Town.</p>
+			<details class="card-more">
+				<summary><span class="card-more-show">Times, couriers and bulk orders</span><span class="card-more-hide">Less</span></summary>
+				<div>
+					<p>Collection is Monday to Thursday, mornings to afternoons, and Friday mornings.</p>
+					<p>Can't collect yourself? Arrange your own courier and we'll hand your order over - just email the details after ordering.</p>
+					<p>Bulk or corporate orders: email us before ordering so we can plan ahead.</p>
+				</div>
+			</details>
 		</div>
 	</section>
 </Layout>

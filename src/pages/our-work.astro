@@ -49,47 +49,103 @@ const hubServices = [
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro">
-			<span class="badge">The CAST journey</span>
-			<h2>They show up for themselves. We meet them halfway.</h2>
+		{/* PROTOTYPE (2026-09-13): a proposal for the CAST infographic, not the final
+		    design - that brief is with Brad's designer friend (2 September minutes). Kerry asked for it
+		    "more playful", with the feeling of the programme coming through; the constraint is that it
+		    sits coherently with the rest of the site and the words stay real text for search.
+		    - The letters are the graphic: outlined, filling in turn, brightening from deep teal to light
+		      teal - crisis to independence told as light, in the site's own palette.
+		    - On desktop the steps climb; a brush-stroke path hops letter to letter, roughened the way
+		      the homepage's BrushRing is, with a dot for the person travelling it.
+		    - At Transform a yellow brush ring draws itself around the T.
+		    The old `.cast-journey` styles in Layout.astro are untouched, so reverting is this file. */}
+		<div class="cast-stage">
+			<div class="section-intro">
+				<span class="badge badge-on-dark">The CAST journey</span>
+				<h2>They show up for themselves. We meet them halfway.</h2>
+			</div>
+			<div class="cast2-wrap">
+				<svg class="cast2-svg" aria-hidden="true" focusable="false">
+					<defs>
+						<filter id="cast2-rough" filterUnits="userSpaceOnUse" x="-100" y="-100" width="4000" height="4000">
+							<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="noise" />
+							<feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" />
+						</filter>
+					</defs>
+					<path id="cast2-trail" class="cast2-trail" d="" filter="url(#cast2-rough)" />
+					{/* Moved by a CSS transition started by the same class as the line's draw, so the two
+					    share one clock. It was an SVG <animateMotion> first, which runs on its own timer and
+					    trailed the line's leading edge by ~38px mid-run. */}
+					<circle class="cast2-dot" r="7" />
+				</svg>
+				<ol class="cast2">
+					{castSteps.map((step, i) => (
+						<li style={`--i: ${i}; --c: ${["var(--st-teal-dark)", "var(--st-teal)", "var(--st-teal-secondary)", "var(--st-teal-light)"][i]}`}>
+							<span class="cast2-letter" aria-hidden="true">
+								<span class="cast2-outline">{step.letter}</span>
+								<span class="cast2-fill">{step.letter}</span>
+							</span>
+							<h3>{step.title}</h3>
+							<p>{step.body}</p>
+						</li>
+					))}
+				</ol>
+			</div>
 		</div>
-		<ol class="cast-journey">
-			{castSteps.map((step, i) => (
-				<li class="cast-step" style={`--cast-delay: ${i * 260}ms`}>
-					<span class="cast-letter">{step.letter}</span>
-					<h3>{step.title}</h3>
-					<p>{step.body}</p>
-				</li>
-			))}
-		</ol>
-		{/* Inline (not a module script) so the steps are hidden before first paint rather than
-		    flashing in and then re-animating. Arming here rather than in the CSS means no-JS and
-		    reduced-motion visitors just get the finished layout. */}
+		{/* Inline so the armed state lands before first paint. The path is drawn through wherever the
+		    letters actually are, so one script serves the climbing row and the stacked phone layout.
+		    No JS: no path, everything else in its finished state. Reduced motion: path drawn, no play. */}
 		<script is:inline>
 			(() => {
-				const journey = document.querySelector(".cast-journey");
-				if (!journey || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+				const stage = document.querySelector(".cast-stage");
+				if (!stage) return;
+				const wrap = stage.querySelector(".cast2-wrap");
+				const path = stage.querySelector(".cast2-trail");
+				const letters = [...stage.querySelectorAll(".cast2-letter")];
+				const build = () => {
+					const r = wrap.getBoundingClientRect();
+					const boxes = letters.map((l) => {
+						const b = l.getBoundingClientRect();
+						return { l: b.left - r.left, r: b.right - r.left, t: b.top - r.top, b: b.bottom - r.top, cx: (b.left + b.right) / 2 - r.left, cy: (b.top + b.bottom) / 2 - r.top };
+					});
+					// Straight, and off the glyphs: through the letters' middles it showed through their
+					// counters (the C's gap, the A's triangle) and read as a strike-through. So it runs
+					// underneath the row, from the C's left edge to just past the T's right edge, or
+					// down the left of the phone stack. The hand-drawn feel is the roughness filter on the
+					// stroke. Hops between letters and a wobble down the stack were tried first, 2026-09-13.
+					const vertical = Math.abs(boxes[1].cx - boxes[0].cx) < 10;
+					let start, end;
+					if (vertical) {
+						const x = Math.min(...boxes.map((b) => b.l)) - 12;
+						start = [x, boxes[0].t];
+						end = [x, boxes[boxes.length - 1].b];
+					} else {
+						const y = Math.max(...boxes.map((b) => b.b)) + 12;
+						start = [boxes[0].l, y];
+						// Just past the T's right edge: stopping at its centre left half the last letter
+						// without a line under it.
+						end = [boxes[boxes.length - 1].r + 6, y];
+					}
+					path.setAttribute("d", `M${start[0].toFixed(1)},${start[1].toFixed(1)} L${end[0].toFixed(1)},${end[1].toFixed(1)}`);
+					stage.style.setProperty("--trail", path.getTotalLength().toFixed(1));
+					// The dot starts at the line's start and slides to its end - see .cast2-dot.
+					const dot = stage.querySelector(".cast2-dot");
+					dot.setAttribute("cx", start[0].toFixed(1));
+					dot.setAttribute("cy", start[1].toFixed(1));
+					stage.style.setProperty("--dot-dx", `${(end[0] - start[0]).toFixed(1)}px`);
+					stage.style.setProperty("--dot-dy", `${(end[1] - start[1]).toFixed(1)}px`);
+				};
+				build();
+				if ("ResizeObserver" in window) new ResizeObserver(build).observe(wrap);
+				if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-				journey.classList.add("cast-armed");
-				const play = () => journey.classList.add("cast-playing");
-
-				if (!("IntersectionObserver" in window)) {
-					play();
-					return;
-				}
-
-				// The journey usually sits just below the fold, so waiting until it's actually on
-				// screen means the animation is seen instead of finishing unwatched.
-				const observer = new IntersectionObserver(
-					(entries) => {
-						if (entries.some((entry) => entry.isIntersecting)) {
-							play();
-							observer.disconnect();
-						}
-					},
-					{ threshold: 0.2 },
-				);
-				observer.observe(journey);
+				stage.classList.add("armed");
+				const play = () => stage.classList.add("playing");
+				if (!("IntersectionObserver" in window)) return play();
+				const io = new IntersectionObserver((entries) => {
+					if (entries.some((e) => e.isIntersecting)) { play(); io.disconnect(); }
+				}, { threshold: 0.3 });
+				io.observe(stage);
 			})();
 		</script>
 	</section>
@@ -152,3 +208,204 @@ const hubServices = [
 		</div>
 	</section>
 </Layout>
+
+<style>
+	/* PROTOTYPE - see the comment on the section. */
+	.cast-stage {
+		--step: 650ms;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-8);
+		padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+		border-radius: var(--radius);
+		background: var(--st-ink);
+		color: var(--st-white);
+		overflow: hidden;
+	}
+
+	.cast-stage .section-intro h2 {
+		color: var(--st-white);
+	}
+
+	.cast2-wrap {
+		position: relative;
+	}
+
+	/* No viewBox: user units are CSS pixels of the wrap, which is what the script draws in. */
+	.cast2-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		pointer-events: none;
+	}
+
+	.cast2-trail {
+		fill: none;
+		stroke: var(--st-teal-light);
+		stroke-width: 5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		opacity: 0.5;
+		stroke-dasharray: var(--trail, 0);
+	}
+
+	.cast2-dot {
+		fill: #fff;
+		opacity: 0;
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+	}
+
+	.cast2 {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: var(--space-6);
+		align-items: start;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* The climb: each step starts a little higher than the one before. 0 = the letters level
+	   (2026-09-13); 44px was the climbing version. */
+	.cast2 > li {
+		--rise: 0px;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		margin-top: calc((3 - var(--i)) * var(--rise));
+	}
+
+	/* Room under every letter so the titles line up and the underline clears them. */
+	.cast2-letter {
+		position: relative;
+		align-self: flex-start;
+		margin-bottom: 0.24em;
+		/* ~15% smaller than first built (clamp(4.5rem, 8vw, 7.5rem)). */
+		font-size: clamp(3.75rem, 6.75vw, 6.25rem);
+		font-weight: 800;
+		line-height: 0.9;
+		letter-spacing: -0.02em;
+	}
+
+	.cast2-outline {
+		display: block;
+		color: transparent;
+		-webkit-text-stroke: 2px var(--c);
+		transform-origin: 50% 60%;
+	}
+
+	.cast2-fill {
+		position: absolute;
+		inset: 0;
+		color: var(--c);
+	}
+
+	.cast2 h3 {
+		margin: 0;
+		color: var(--st-white);
+		font-size: 1.15rem;
+	}
+
+	.cast2 p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.78);
+	}
+
+	@media (max-width: 900px) {
+		.cast2 {
+			grid-template-columns: 1fr;
+			gap: var(--space-8);
+		}
+
+		.cast2 > li {
+			display: grid;
+			grid-template-columns: 5.5rem 1fr;
+			column-gap: var(--space-4);
+			row-gap: var(--space-2);
+			margin-top: 0;
+		}
+
+		.cast2-letter {
+			grid-row: 1 / span 2;
+			justify-self: center;
+			font-size: 3.75rem;
+		}
+	}
+
+	/* --- The play: armed by the inline script, so no-JS and reduced motion get the finished state. */
+	.cast-stage.armed .cast2-outline {
+		opacity: 0.35;
+		transform: scale(0.86);
+	}
+
+	.cast-stage.armed .cast2-fill {
+		clip-path: inset(100% 0 0 0);
+	}
+
+	.cast-stage.armed .cast2 h3,
+	.cast-stage.armed .cast2 p {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+
+	.cast-stage.armed .cast2-trail {
+		stroke-dashoffset: var(--trail, 0);
+	}
+
+	/* Each letter pops as the dot reaches it, then fills from the bottom up. */
+	.cast-stage.armed.playing .cast2-outline {
+		animation: cast2-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+		animation-delay: calc(var(--i) * var(--step));
+	}
+
+	.cast-stage.armed.playing .cast2-fill {
+		animation: cast2-fill 560ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+		animation-delay: calc(var(--i) * var(--step) + 120ms);
+	}
+
+	.cast-stage.armed.playing .cast2 h3,
+	.cast-stage.armed.playing .cast2 p {
+		animation: cast2-text 480ms ease-out forwards;
+		animation-delay: calc(var(--i) * var(--step) + 260ms);
+	}
+
+	/* Linear, so the line reaches each letter on that letter's beat. */
+	.cast-stage.armed.playing .cast2-trail {
+		stroke-dashoffset: 0;
+		transition: stroke-dashoffset calc(3 * var(--step)) linear;
+	}
+
+	/* Same trigger, duration and timing as the line's draw above, so the dot sits on its leading end
+	   the whole way. */
+	.cast-stage.armed.playing .cast2-dot {
+		transform: translate(var(--dot-dx, 0px), var(--dot-dy, 0px));
+		transition: transform calc(3 * var(--step)) linear;
+		animation: cast2-dot calc(3 * var(--step) + 200ms) linear forwards;
+	}
+
+	@keyframes cast2-pop {
+		from { opacity: 0.35; transform: scale(0.86); }
+		60% { opacity: 1; transform: scale(1.06); }
+		to { opacity: 1; transform: scale(1); }
+	}
+
+	@keyframes cast2-fill {
+		to { clip-path: inset(0 0 0 0); }
+	}
+
+	@keyframes cast2-text {
+		to { opacity: 1; transform: none; }
+	}
+
+	@keyframes cast2-dot {
+		0% { opacity: 0; }
+		8% { opacity: 1; }
+		90% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+</style>

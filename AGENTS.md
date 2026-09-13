@@ -800,6 +800,30 @@ the form's usual 480px.
   - Trade: across a row the titles do not line up when blurbs differ in length (the text ends level
     instead). At 1280px all three titles sit at the same height.
 
+### Our Work: the CAST prototype (2026-09-13)
+A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not
+the final design**. That brief is with Brad's designer friend (2 September minutes); Kerry asked for it
+"more playful", with the feeling of the programme coming through. Everything is in `our-work.astro`.
+- **A dark stage; four big outlined letters** that pop and fill in sequence, brightening from deep
+  teal to light teal (crisis to independence as light, in the site's palette); a straight hand-drawn
+  underline drawn left to right with a travelling dot. The roughness is the same
+  `feTurbulence`/`feDisplacementMap` technique as `BrushRing.astro`. Words stay real text.
+- ⚠ **The line runs under the letters, never through them.** Straight through their middles it showed
+  through the letters' counters (the C's gap, the A's triangle) and read as a strike-through. The path
+  is computed at runtime from where the letters actually are, so one script serves the row and the
+  phone stack; a `ResizeObserver` rebuilds it.
+- ⚠ **The dot moves by a CSS transition sharing the line's trigger, duration and timing** — not SVG
+  `<animateMotion>`, which runs on its own timer: it trailed the line's leading end by ~50px in WebKit
+  (0 in Chromium, which is why a Chromium-only check missed it). Measured 0px in both engines after.
+- Reduced motion and no-JS get the finished state. The old `.cast-journey` styles in `Layout.astro`
+  are unused while this is in place; delete them if it is kept.
+- **Tried and dropped the same day**, so they aren't rebuilt blind: a climbing staircase (still there
+  as `--rise`, set to 0), hops and wobbles in the line, outline rings round each letter (then four
+  distinct hand-drawn flash rings), and paint splashes behind the letters (fading fully, then faintly
+  persistent).
+- **Found nearby, not fixed:** `.impact-stats` in the impact band overflows the page by ~30px at
+  901–1100px, on the committed version too.
+
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.
 - `scripts/` — dev-environment guards run by `npm run dev` (see "Development" above).

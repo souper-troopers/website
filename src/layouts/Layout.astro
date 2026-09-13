@@ -1572,13 +1572,23 @@ const structuredData = {
 				font-size: 1.3rem;
 			}
 
+			/* A frame: no padding of its own, so the photo runs flush to the card's edges, and the body
+			   restores the padding the global .card rule would have given. */
 			.category-tile {
 				text-decoration: none;
 				color: inherit;
 				display: flex;
 				flex-direction: column;
 				gap: 0;
+				overflow: hidden;
 				transition: transform 0.15s ease, color 0.3s ease;
+			}
+
+			/* Doubled class on purpose: the ≤700px `.card { padding }` rule sits later in this sheet at
+			   the same specificity, so a plain `.category-tile { padding: 0 }` loses on phones and the
+			   photo stops being flush. */
+			.card.category-tile {
+				padding: 0;
 			}
 
 			.category-tile:hover {
@@ -1654,11 +1664,34 @@ const structuredData = {
 				animation: none;
 			}
 
+			/* Edge to edge, and it takes the card's spare height: the grid stretches the three tiles to
+			   the tallest, so a tile with less text grows its photo rather than leaving white under the
+			   link, and the text ends level across the row. `aspect-ratio` is the floor, not the shape -
+			   it reserves 4:3 before the image loads. The image is absolute so it follows that grown
+			   height. Same pattern as the Contact page's Visit us card. */
 			.category-tile-img {
+				position: relative;
 				width: 100%;
+				flex: 1 0 auto;
 				aspect-ratio: 4 / 3;
-				border-radius: calc(var(--radius) - 6px);
-				margin-bottom: var(--space-4);
+			}
+
+			.category-tile-img img {
+				position: absolute;
+				inset: 0;
+			}
+
+			.category-tile-body {
+				display: flex;
+				flex-direction: column;
+				padding: var(--space-6);
+			}
+
+			@media (max-width: 700px) {
+				/* Mirrors the global .card padding at this width. */
+				.category-tile-body {
+					padding: var(--space-4);
+				}
 			}
 
 			.category-tile h2 {

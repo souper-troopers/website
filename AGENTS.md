@@ -758,6 +758,27 @@ the form's usual 480px.
   deliberately stays**: those are the product accounts (they appear nowhere else on the site), and
   "Follow us" is the footer's label for the organisation's own.
 
+### The shop landing page — one lead card, edge-to-edge tiles (2026-09-13)
+- **The banner photo and "Every purchase pays a wage" are one card** (`.shop-promise`): photo on top,
+  flush to the card's edges, then the heading and text — the Contact page's Visit us pattern. The
+  photo keeps `loading="eager"` + `fetchpriority="high"`: it is still the page's LCP. 23:10 above
+  700px (the shape the old separate banner had), 4:3 on a phone.
+- **No chips on the page.** "Where the money goes" and "Collection & delivery" each restated the
+  heading directly beneath them — the same duplication removed from Get Involved and Contact.
+- **Category tiles: the photo runs edge to edge and takes the card's spare height**, so the text ends
+  level along the bottom of the row. `.category-tile-img` is `flex: 1 0 auto` with `aspect-ratio: 4/3`
+  as the floor, and the image is absolute so it follows the grown height. The tile photos are now
+  requested from Sanity **uncropped, by width only** (400w/800w srcset), since the tile decides the
+  crop — the old `.width(500).height(375).fit("crop")` would have been cropped twice.
+  - ⚠ **`.card.category-tile { padding: 0 }` is a doubled class on purpose.** The ≤700px
+    `.card { padding }` rule sits later in `Layout.astro` at the same specificity, so a plain
+    `.category-tile` rule loses on phones and the photo is inset again.
+  - **The Gift Tags photo in Sanity is 600x166**, so filling a tile scales it up ~1.5x (about 3x on a
+    retina screen) and it looks soft. It was already upscaled before this change; the fix is a better
+    photo, which is the open item under "Shop discoverability" above.
+  - Trade: across a row the titles do not line up when blurbs differ in length (the text ends level
+    instead). At 1280px all three titles sit at the same height.
+
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.
 - `scripts/` — dev-environment guards run by `npm run dev` (see "Development" above).

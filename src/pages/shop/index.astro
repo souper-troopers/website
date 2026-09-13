@@ -27,30 +27,32 @@ const categories = await getProductCategories();
 		    ⚠ Don't reintroduce Shmiley here without checking `/shmiley-decision` - the decision is
 		    recorded there, on the RFC's Shmiley question, and in AGENTS.md, and all three have to
 		    move together. */}
+		{/* One card since 2026-09-13: the photograph and the promise were a banner and a separate
+		    card, and the photo is what the sentence is about. No "Where the money goes" chip - the
+		    heading says it. */}
 		<div class="card shop-promise">
-			<span class="badge">Where the money goes</span>
-			<h2>Every purchase pays a wage</h2>
-			<p>
-				Made in Cape Town by people the CAST programme has supported. All proceeds go straight
-				back into the work - their wages, the training behind them, and the Humanity Hub where it
-				happens.
-			</p>
-		</div>
-	</section>
-
-	<section class="section wrap">
-		<div class="figure shimmer-up">
-			{/* Above the fold at 390px and 1280px alike (measured), and the largest element on the
-			    page - so same reasoning as the homepage hero: never lazy. See index.astro. */}
-			<Image
-				src={shopPhoto}
-				alt="Troopers Coffee bags and African Worry Dolls on display"
-				width={1000} widths={[500, 1000]}
-				sizes="(min-width: 900px) 900px, 100vw"
-				loading="eager"
-				fetchpriority="high"
-				onload="this.classList.add('is-loaded')"
-			/>
+			<div class="shop-promise-media">
+				{/* Above the fold at 390px and 1280px alike (measured), and the largest element on the
+				    page - so same reasoning as the homepage hero: never lazy. See index.astro. */}
+				<Image
+					src={shopPhoto}
+					alt="Troopers Coffee bags and African Worry Dolls on display"
+					width={1600}
+					widths={[600, 1100, 1600]}
+					sizes="(min-width: 1100px) 1060px, 100vw"
+					loading="eager"
+					fetchpriority="high"
+					class="shop-promise-img"
+				/>
+			</div>
+			<div class="shop-promise-body">
+				<h2>Every purchase pays a wage</h2>
+				<p>
+					Made in Cape Town by people the CAST programme has supported. All proceeds go straight
+					back into the work - their wages, the training behind them, and the Humanity Hub where it
+					happens.
+				</p>
+			</div>
 		</div>
 	</section>
 
@@ -63,27 +65,35 @@ const categories = await getProductCategories();
 							class="category-tile-img blur-up"
 							style={category.photoLqip ? `background-image:url(${category.photoLqip})` : undefined}
 						>
+							{/* Requested uncropped, by width only: the tile decides the crop now, since the
+							    photo grows to fill the card's spare height (see .category-tile-img).
+							    ⚠ The gift-tags source is 600x166, so it is upscaled at any tile size - a
+							    better photo is the fix, not a setting. */}
 							<img
-								src={urlFor(category.photo).width(500).height(375).fit("crop").auto("format").url()}
+								src={urlFor(category.photo).width(800).auto("format").url()}
+								srcset={`${urlFor(category.photo).width(400).auto("format").url()} 400w, ${urlFor(category.photo).width(800).auto("format").url()} 800w`}
+								sizes="(max-width: 700px) 100vw, 360px"
 								alt={category.name}
-								width="500"
-								height="375"
+								width="800"
+								height="600"
 								loading="lazy"
 								onload="this.classList.add('is-loaded')"
 							/>
 						</div>
 					)}
-					<h2>{category.name}</h2>
-					<p>{category.blurb}</p>
-					<span class="category-tile-cta">Shop {category.name} &rarr;</span>
+					<div class="category-tile-body">
+						<h2>{category.name}</h2>
+						<p>{category.blurb}</p>
+						<span class="category-tile-cta">Shop {category.name} &rarr;</span>
+					</div>
 				</a>
 			))}
 		</div>
 	</section>
 
 	<section class="section wrap">
+		{/* No "Collection & delivery" chip - the heading says it. */}
 		<div class="card">
-			<span class="badge">Collection &amp; delivery</span>
 			<h2>How orders are fulfilled</h2>
 			<p>All orders are collected in person from 66 Newmarket Street, Woodstock, Cape Town.</p>
 			<details class="card-more">
@@ -97,3 +107,51 @@ const categories = await getProductCategories();
 		</div>
 	</section>
 </Layout>
+
+<style>
+	/* A frame, like the Contact page's Visit us card: no padding of its own, so the photo runs flush
+	   to the card's edges, and the body restores the padding the global .card rule would have given. */
+	.shop-promise {
+		padding: 0;
+		gap: 0;
+		overflow: hidden;
+	}
+
+	/* 23:10 on wider screens is the shape the separate banner had (1060x460 at 1280px). On a phone
+	   that shape is a sliver, so it drops to 4:3 there. */
+	.shop-promise-media {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+	}
+
+	@media (min-width: 701px) {
+		.shop-promise-media {
+			aspect-ratio: 23 / 10;
+		}
+	}
+
+	.shop-promise-img {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.shop-promise-body {
+		align-self: stretch;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		padding: var(--space-6);
+	}
+
+	@media (max-width: 700px) {
+		/* Mirrors the global .card padding at this width. */
+		.shop-promise-body {
+			padding: var(--space-4);
+		}
+	}
+</style>

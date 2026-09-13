@@ -81,37 +81,51 @@ const faqItems: FaqItem[] = [
 	<section class="section wrap">
 		<div class="contact-grid">
 			<div class="card visit-card">
-				<h3>Visit us</h3>
-				{/* The building, from the pavement opposite. Not decoration: visits here are by
-				    appointment, so everyone arriving has arranged it in advance and the only real
-				    question on the day is "is this the right door" — which a street number painted
-				    a metre high answers better than any address line. */}
-				{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
-				    2400px source as the fallback — 272KB served to anything that ignores srcset,
-				    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
-				{/* Above the fold at both breakpoints (measured) and the largest thing on the page.
-				    Not lazy - see the note on the homepage hero in index.astro. */}
-				<Image
-					src={hubExterior}
-					alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
-					width={800}
-					height={533}
-					widths={[400, 800]}
-					sizes="(max-width: 900px) 100vw, 340px"
-					loading="eager"
-					fetchpriority="high"
-					class="visit-photo"
-				/>
-				<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
-				<dl class="visit-hours">
-					{displayHours.map((entry) => (
-						<div>
-							<dt>{entry.days}</dt>
-							<dd>{entry.hours}</dd>
-						</div>
-					))}
-				</dl>
-				<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
+				{/* The photo is the card's banner, the way the audience boxes on Get Involved are, with
+				    the title over it. The practical details deliberately stay OFF the photo: an address
+				    with a copy button and a five-line table would need a tint dark enough to bury the
+				    painted 66 - the one thing the picture is here to show. The title sits top-left over
+				    the sky, and the tint fades out above the 66, which is on the left wall at roughly
+				    55-73% of the frame's height. */}
+				<div class="visit-banner">
+					{/* The building, from the pavement opposite. Not decoration: visits here are by
+					    appointment, so everyone arriving has arranged it in advance and the only real
+					    question on the day is "is this the right door" — which a street number painted
+					    a metre high answers better than any address line. */}
+					{/* `width` is set as well as `widths`, or Astro points the plain `src` at the full
+					    2400px source as the fallback — 272KB served to anything that ignores srcset,
+					    for a card that is 340px wide. With it, the largest variant is the 800px one. */}
+					{/* Above the fold at both breakpoints (measured) and the largest thing on the page.
+					    Not lazy - see the note on the homepage hero in index.astro. */}
+					<Image
+						src={hubExterior}
+						alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
+						width={800}
+						height={533}
+						widths={[400, 800]}
+						sizes="(max-width: 900px) 100vw, 340px"
+						loading="eager"
+						fetchpriority="high"
+						class="visit-photo"
+					/>
+					<div class="visit-scrim" aria-hidden="true"></div>
+					<div class="visit-banner-text">
+						<h3>Visit us</h3>
+						<p>The Humanity Hub, Woodstock</p>
+					</div>
+				</div>
+				<div class="visit-body">
+					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+					<dl class="visit-hours">
+						{displayHours.map((entry) => (
+							<div>
+								<dt>{entry.days}</dt>
+								<dd>{entry.hours}</dd>
+							</div>
+						))}
+					</dl>
+					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
+				</div>
 			</div>
 			{/* The two ways of getting hold of us, stacked: the email directory, then the shop's own
 			    accounts. Grouped this way because both are channels, where the photo and the hours
@@ -248,14 +262,97 @@ const faqItems: FaqItem[] = [
 		}
 	}
 
-	/* 3:2, the photo's own shape — no crop, so the whole corner and the painted 66 stay in frame. */
+	/* The card becomes a frame: no padding of its own, so the banner runs flush to its edges, and
+	   the body below restores the padding the global .card rule would have given. */
+	.visit-card {
+		padding: 0;
+		gap: 0;
+		overflow: hidden;
+	}
+
+	.visit-banner {
+		position: relative;
+		align-self: stretch;
+	}
+
+	/* 3:2 is the photo's own shape, so nothing is cropped - and nothing can be: the 66 is right at
+	   the left edge of the frame, and any crop in width would take it off first. */
 	.visit-photo {
+		display: block;
 		width: 100%;
 		height: auto;
 		aspect-ratio: 3 / 2;
 		object-fit: cover;
-		border-radius: var(--radius);
-		margin-bottom: var(--space-4);
+	}
+
+	/* Fades from the top edge and is fully clear by 55% of the height, before the 66 begins.
+	   Measured against the real sky pixels under the text, not estimated: the first stops
+	   (0.78 / 0.55) left the subtitle at 4.16:1 at 768px, where the banner is narrow and the text
+	   sits lower down the fade. These give 4.5:1 or better at every width, and still leave the 66
+	   under ~2% tint. Change the stops and re-run that check together. */
+	.visit-scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to bottom,
+			rgba(24, 23, 30, 0.84) 0%,
+			rgba(24, 23, 30, 0.64) 28%,
+			rgba(24, 23, 30, 0) 55%
+		);
+	}
+
+	.visit-banner-text {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		padding: var(--space-5) var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.visit-banner-text h3 {
+		margin: 0;
+		color: #fff;
+		font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+		line-height: 1.15;
+	}
+
+	.visit-banner-text p {
+		margin: 0;
+		color: rgba(255, 255, 255, 0.9);
+		font-weight: 600;
+	}
+
+	.visit-body {
+		align-self: stretch;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		padding: var(--space-6);
+	}
+
+	@media (min-width: 701px) and (max-width: 860px) {
+		/* Where the grid first splits into two columns the banner is at its narrowest and shortest,
+		   so the subtitle falls into the weakest part of the fade: measured at 4.16:1 against the
+		   sky at 701px, under the 4.5:1 floor. Darkening further would start to shade the 66. It
+		   goes instead - it repeats the address directly beneath - leaving "Visit us", which is
+		   large text (3:1) and sits where the fade is darkest. */
+		.visit-banner-text p {
+			display: none;
+		}
+	}
+
+	@media (max-width: 700px) {
+		/* Mirrors the global .card padding at this width. */
+		.visit-body {
+			padding: var(--space-4);
+		}
+
+		.visit-banner-text {
+			padding: var(--space-4);
+		}
 	}
 
 	.visit-hours {

@@ -286,6 +286,7 @@ Reasoning: if these accounts are created under the user's personal logins, the c
 
 ## Before real launch (pointing soupertroopers.org at this site)
 - [ ] Set `PRE_LAUNCH_NOINDEX = false` in `src/layouts/Layout.astro` — added 2026-08-08 so search engines don't index the pre-launch preview URL under the wrong domain. **It's a flag rather than a line to delete (changed 2026-08-12):** `Layout` also takes a per-page `noindex` prop, used by the internal `/request-for-comment` and `/google-listing` pages, and both feed the *same* meta tag so no page emits two. Deleting the blanket instead of flipping the flag would have published both internal pages.
+- [ ] **Remove the standing `mcp__Sanity` allow rule from `.claude/settings.local.json`** (added 2026-09-13 at the user's request). While the site is pre-launch it lets Claude write to the production Sanity dataset without pausing, which the user judged low-risk; after launch the same write changes the public site, so it should go back to asking. The file is gitignored, so nothing in the repo will show it is still there.
 - [ ] Point the real domain at Netlify and update DNS.
 - [ ] Transfer the Sanity project from the user's personal account to a Sanity Organization.
 - [ ] Update `site:` in `astro.config.mjs` from `souper-troopers.netlify.app` to the real domain (used for canonical/Open Graph URLs — see "SEO/AEO basics" below). Also remove the `Disallow: /` rule in `public/robots.txt` at the same time as the noindex meta tag above.
@@ -713,6 +714,33 @@ decide, and the supporting evidence opens on click.
   Studio. Only `home` #1 (1,700+) stays published, feeding the tile. (The first attempt was blocked by
   Claude Code's permission check; it went through once the user explicitly asked for it.) The **donate page's stats were kept on purpose**:
   under the rule above, trust evidence matters most at the point of giving.
+
+### The Contact page's Visit us card — a photo banner, details kept off it (2026-09-13)
+The first page brought into the image-led style of Get Involved. The user proposed the photo covering
+the whole card with every line overlaid; it was pushed back to **title over the photo, details
+below**, and both reasons are worth keeping:
+- **The details are decision information** — address, hours, "by appointment only" — so by the rule
+  above none of it goes behind a "More", and none of it should fight a photo for legibility.
+- **The photo has a job: the painted 66** on the left wall, so a visitor recognises the door. A tint
+  dark enough to carry an address, a copy button and a five-line table would bury it.
+
+What makes it work, all measured rather than eyeballed:
+- **The title sits top-left over the sky**, and the fade runs from the top edge, fully clear by 55% of
+  the banner's height. The 66 starts at ~54%, so it carries **~2.4% tint** at most.
+- **3:2 is the photo's own shape, and it must not be cropped in width** — the 66 is at the very left
+  edge of the frame, so any horizontal crop takes it off first.
+- ⚠ **Contrast was checked against the real sky pixels under the text**: each pixel composited with the
+  gradient in a canvas, then WCAG contrast against white, at 15 widths. The first stops
+  (0.78 / 0.55) left the subtitle at **4.16:1 at 768px**. Now 0.84 / 0.64, and the worst pixel at any
+  width is **4.73:1** (360px). Change the stops and you must re-run that check — the numbers in the
+  CSS comment are the record.
+- **Between 701 and 860px the subtitle is hidden.** Where the grid first splits into two columns the
+  banner is at its narrowest and shortest, and the subtitle fell into the weakest part of the fade
+  (4.16:1 at 701px). Darkening further would start to shade the 66, and the subtitle repeats the
+  address directly below. "Visit us" alone is large text (3:1) and measures 8:1+ there.
+- The card is `padding: 0; overflow: hidden` so the banner runs flush, and `.visit-body` restores the
+  padding the global `.card` rule would have given — including its ≤700px value. Columns still balance
+  (576px each) because `.brand-card` absorbs the slack, exactly as before.
 
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.

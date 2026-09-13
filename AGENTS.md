@@ -718,40 +718,39 @@ decide, and the supporting evidence opens on click.
   under the rule above, trust evidence matters most at the point of giving.
 
 ### The Contact page — photo cards, one title size, one reading path (2026-09-13)
-Three passes in one day, driven by the user; the final shape is **four cards in two rows with the
-questions between them**: [Visit us | Email us], "Before you get in touch" in one centred column,
-[Send us a message | Follow the shop brands]. Every card reads photo, title, content — except the
-form, which is the one card you fill in rather than read.
+Several passes in one day, driven by the user. The final shape: **Visit us** (a photo card) on the
+left; **Email us** (a plain card) and **Follow the shop brands** (a short photo banner) stacked on the
+right; **"Before you get in touch"** in one centred 46rem column; and **"Send us a message"** as a
+card centred on that same column, so the questions and the form read as one sequence.
 - **Details stay visible.** Address, hours and "by appointment only" are decision information, so by
   the rule above none of it goes behind a "More".
-- **Titles sit below the photos, not over them.** The first pass put "Visit us" over the Hub's sky
-  with a top-fading tint, contrast measured against real sky pixels. It worked for one photo and
-  cannot for three: the conversation photo has faces near the top, the shop photo a white wall
-  top-left, the Hub its 66 on the left edge. No one overlay position suits all three without tinting
-  a face or the 66, and titles in different places at different sizes is exactly what the user
-  called confusing. The tint and its contrast check went with it. If overlays ever come back,
-  bottom-left is the only position that could work across all three, and it needs measuring per
-  photo.
+- **Titles sit below photos, not over them.** The first pass put "Visit us" over the Hub's sky with a
+  top-fading tint, contrast measured against real sky pixels. A second photo broke it: the shop photo
+  has a white wall top-left, and no single overlay position suits both without tinting the painted
+  66 — titles in different places at different sizes being what the user called confusing. The tint
+  and its contrast check are gone. If overlays come back, they need measuring per photo.
 - **One title size, one heading level.** They had been 27, 19 and 35px, at h3 then h2. All five are
   now `h2.contact-title` at Get Involved's sub-section size, `clamp(1.2rem, 2vw, 1.45rem)`.
-- **FAQ and form side by side was tried and reverted** (the user's suggestion, which I agreed to).
-  It read as denser, not lighter: two different jobs at one level, and "before you get in touch" is
-  a step before the form, not an alternative to it.
-- **Photos: the Hub exterior** (eager, `fetchpriority="high"` — it is the LCP), **`support-conversation`**
-  (from the homepage) and **`shop-products`** (from `/shop`), both reused with the alt text they
-  already carry. Reused deliberately: they are already published. The 32 unpublished photos in
-  `../souper-troopers-media/Content/Images/{Events,Mix}` were **not** used — many show participants,
-  and consent (`q19`) is unsettled.
-- **Photo cards fill their row** (`.photo-card-media`: `flex: 1 0 auto` with `aspect-ratio: 3/2` as the
-  floor), so the shorter card's photo grows and both cards end level with no empty white. **The
-  trade: titles don't line up across the top row** at desktop — the email card's text is taller, so
-  its photo is shorter (~70px apart at 1280).
+- **Tried and reverted the same day — don't redo either without a new reason:**
+  - **FAQ and form side by side** (the user's suggestion, which I agreed to). It read as denser, not
+    lighter: two different jobs at one level, and "before you get in touch" is a step before the
+    form, not an alternative to it.
+  - **A photo on Email us** (`support-conversation`), with the shop card moved beside the form as a
+    fourth photo card. The user was unsure of it; the directory went back to a plain card and the
+    shop card back beneath it.
+- **The shop photo is a banner, not a photograph**: Get Involved's shapes, 16:9 on a phone and 3:1 in
+  two columns, as a floor. It takes the column's spare height, so neither column ends in empty
+  white. `object-position: center 65%` because the products sit in the lower half. At its tightest
+  (701px, the narrowest two-column width) it is **106px** tall; the checker fails below 100.
 - ⚠ **The Hub photo crops from the RIGHT only** (`object-position: left center`) — the 66 is at ~2–9%
-  across, so a centred crop takes the first 6 off. Measured crop: 0% in one column, 34–40% at
-  701–1024px (where the email rows stack and that card is tall), 18% from 1099px up. The 66 is in
-  frame at all 12 widths checked.
-- **Email rows: label left, address right**, via a container query on the email card's body, and only
-  when every row fits: the widest row is **447px** including the gap, threshold 450 — so stacked below
+  across, so a centred crop takes the first 6 off. Measured crop: 0% in one column, 35–48% at
+  701–1024px (where the email rows stack and the right column is tall), 17% from 1099px up. The 66
+  is in frame at all 12 widths checked.
+- **Photos are the Hub's own and `shop-products`** (reused from `/shop` with its alt text). The 32
+  unpublished photos in `../souper-troopers-media/Content/Images/{Events,Mix}` were **not** used —
+  many show participants, and consent (`q19`) is unsettled.
+- **Email rows: label left, address right**, via a container query on `.email-card`, and only when
+  every row fits: the widest row is **447px** including the gap, threshold 450 — so stacked below
   ~1099px, one line above, never mixed. ⚠ **Measure the flex items, not the text**: a text range read
   404px (it misses the copy button), and the threshold built on it gave a half-and-half directory at
   1024px.

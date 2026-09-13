@@ -4,7 +4,6 @@ import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import { Image } from "astro:assets";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
-import supportPhoto from "../assets/images/support-conversation.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
@@ -25,7 +24,7 @@ const emailDirectory = [
 	{ label: "Anything else", address: "info@soupertroopers.org" },
 ];
 
-// All three card photos render at the same width, so they share one `sizes`. In two columns the
+// Both card photos render at the same width, so they share one `sizes`. In two columns the
 // card is half the row; a photo stretched taller than 3:2 renders wider than the card, hence the cap
 // above the column width.
 const photoSizes = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px";
@@ -85,14 +84,11 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
-	{/* Four ways to reach us as four cards in two rows, with the questions between them: visiting and
-	    email first, since those are what most people came for; then whether your question is already
-	    answered; then the form, and the shop's own accounts.
-	    Every card reads photo, title, content. Titles sit below the photos rather than over them: the
-	    three photos have their subjects in different places (sky over the Hub, faces near the top of
-	    the conversation, a white wall behind the shop display), so no one overlay position suits all
-	    three without darkening a face or the painted 66 - and titles in different places, at different
-	    sizes, was the inconsistency this replaced. */}
+	{/* Visit us on the left; the two channels - email, and the shop's own accounts - stacked on the
+	    right. The Hub photo grows to meet the stacked column, and the shop photo, a short banner, takes
+	    whatever height is left over, so neither column ends in empty white.
+	    Titles sit below photos rather than over them, so every card reads the same way whether or not
+	    it has one: no single overlay position suits both photos without tinting the painted 66. */}
 	<section class="section wrap">
 		<div class="contact-cards">
 			<div class="card photo-card visit-card" data-name="visit">
@@ -133,21 +129,8 @@ const faqItems: FaqItem[] = [
 					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
 				</div>
 			</div>
-			<div class="card photo-card email-card" data-name="email">
-				<div class="photo-card-media">
-					{/* Reused from the homepage, where it already carries this description. Not eager: below
-					    the fold on a phone, and `fetchpriority` belongs to the one LCP image, the Hub. */}
-					<Image
-						src={supportPhoto}
-						alt="A Souper Troopers social worker in conversation with a CAST participant"
-						width={1200}
-						height={800}
-						widths={[480, 800, 1200]}
-						sizes={photoSizes}
-						class="photo-card-img"
-					/>
-				</div>
-				<div class="photo-card-body">
+			<div class="contact-reach">
+				<div class="card email-card" data-name="email">
 					<h2 class="contact-title">Email us</h2>
 					<dl class="email-directory">
 						{emailDirectory.map((entry) => (
@@ -157,6 +140,30 @@ const faqItems: FaqItem[] = [
 							</div>
 						))}
 					</dl>
+				</div>
+				<div class="card photo-card brand-card" data-name="shop">
+					<div class="photo-card-media">
+						{/* Reused from /shop, with the description it already carries there. */}
+						<Image
+							src={shopPhoto}
+							alt="Troopers Coffee bags and African Worry Dolls on display"
+							width={1200}
+							height={800}
+							widths={[480, 800, 1200]}
+							sizes={photoSizes}
+							class="photo-card-img shop-photo"
+						/>
+					</div>
+					<div class="photo-card-body">
+						<h2 class="contact-title">Follow the shop brands</h2>
+						<ul class="brand-list">
+							{shopBrands.map((brand) => (
+								<li>
+									<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
+								</li>
+							))}
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -171,67 +178,42 @@ const faqItems: FaqItem[] = [
 			<Faq items={faqItems} collapsible />
 		</div>
 	</section>
-	
-	{/* The form gets no photo: it is the one card you fill in rather than read, and a photo above it
-	    pushes the fields down. The shop photo beside it takes the slack instead. */}
+
+	{/* Centred on the same column as the questions above, so the two read as one sequence: see
+	    whether yours is already answered, then send it. */}
 	<section class="section wrap">
-		<div class="contact-cards">
-			<div class="card message-card" data-name="message">
-				<div class="card-heading">
-					<h2 class="contact-title">Send us a message</h2>
-					<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
-				</div>
-				<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-				<input type="hidden" name="form-name" value="contact" />
-				<label class="honeypot-field" aria-hidden="true">
-					Leave this field blank
-					<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
-				</label>
-
-				<label>
-					Your name
-					<input type="text" name="name" required />
-				</label>
-
-				<label>
-					Your email
-					<input type="email" name="email" required />
-				</label>
-
-				<label>
-					Message
-					<textarea name="message" rows="4" required></textarea>
-				</label>
-
-				<button class="btn btn-primary" type="submit">Send message</button>
-				<p id="contact-form-error" class="form-note form-error" hidden>
-					Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
-				</p>
-			</form>
+		<div class="card message-card" data-name="message">
+			<div class="card-heading">
+				<h2 class="contact-title">Send us a message</h2>
+				<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
 			</div>
-			<div class="card photo-card brand-card" data-name="shop">
-				<div class="photo-card-media">
-					<Image
-						src={shopPhoto}
-						alt="Troopers Coffee bags and African Worry Dolls on display"
-						width={1200}
-						height={800}
-						widths={[480, 800, 1200]}
-						sizes={photoSizes}
-						class="photo-card-img"
-					/>
-				</div>
-				<div class="photo-card-body">
-					<h2 class="contact-title">Follow the shop brands</h2>
-					<ul class="brand-list">
-						{shopBrands.map((brand) => (
-							<li>
-								<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			</div>
+			<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+			<input type="hidden" name="form-name" value="contact" />
+			<label class="honeypot-field" aria-hidden="true">
+				Leave this field blank
+				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+			</label>
+
+			<label>
+				Your name
+				<input type="text" name="name" required />
+			</label>
+
+			<label>
+				Your email
+				<input type="email" name="email" required />
+			</label>
+
+			<label>
+				Message
+				<textarea name="message" rows="4" required></textarea>
+			</label>
+
+			<button class="btn btn-primary" type="submit">Send message</button>
+			<p id="contact-form-error" class="form-note form-error" hidden>
+				Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
+			</p>
+		</form>
 		</div>
 	</section>
 
@@ -325,6 +307,54 @@ const faqItems: FaqItem[] = [
 		}
 	}
 	
+	/* The email directory and the shop card, stacked opposite the Hub. */
+	.contact-reach {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		min-width: 0;
+	}
+	
+	/* Takes the column's spare height, and inside it the photo takes it (see .photo-card-media), so the
+	   slack becomes picture rather than empty white under the two handles. */
+	.brand-card {
+		flex: 1;
+	}
+	
+	/* A banner, not a photograph: Get Involved's shapes - 16:9 on a phone, 3:1 once there are two
+	   columns. As a floor it keeps the photo from collapsing to a sliver when the stacked column is
+	   already as tall as the Hub card. Kept low in frame: the products sit in the lower half. */
+	.brand-card .photo-card-media {
+		aspect-ratio: 16 / 9;
+	}
+	
+	.shop-photo {
+		object-position: center 65%;
+	}
+	
+	@media (min-width: 701px) {
+		.brand-card .photo-card-media {
+			aspect-ratio: 3 / 1;
+		}
+	}
+	
+	@media (max-width: 700px) {
+		.contact-reach {
+			gap: var(--space-5);
+		}
+	
+		.brand-card {
+			flex: none;
+		}
+	}
+	
+	/* The same centred column as the questions above it. */
+	.message-card {
+		width: 100%;
+		max-width: 46rem;
+		margin: 0 auto;
+	}
+	
 	/* The global form is a centred 480px block; in its card it fills the card instead. */
 	.message-card .contact-form {
 		max-width: none;
@@ -407,11 +437,10 @@ const faqItems: FaqItem[] = [
 	   label). Measure the flex items, not the text: a text range misses the copy button and read 404.
 	   Narrower, every row stays stacked. Letting some rows fit and others wrap would give a directory
 	   that changes shape halfway down, which reads as broken.
-	   A container query on the card's body rather than a media query, because the body's width is what
-	   decides it, and
+	   A container query rather than a media query because the card's width is what decides it, and
 	   the card is narrowest at 701-900px, where the grid first splits - not on the smallest window.
 	   `flex-wrap` is only a safety net for a system font wider than the one measured. */
-	.email-card .photo-card-body {
+	.email-card {
 		container-type: inline-size;
 	}
 	

@@ -831,6 +831,28 @@ the final design**. That brief is with Brad's designer friend (2 September minut
 - **Found nearby, not fixed:** `.impact-stats` in the impact band overflows the page by ~30px at
   901–1100px, on the committed version too.
 
+### Our Work: the Humanity Hub services as photo cards (2026-09-13) — placeholders, not settled
+The user is **not fully sure about this yet**; it was committed so it isn't lost. Seven identical cards,
+each a full-bleed photo under a dark tint with the title and description in white.
+- **The photos are stock placeholders**, CC0 from Wikimedia Commons — sources, licences and authors in
+  `src/assets/images/services/SOURCES.md`. Chosen to show the *service*, never a person in hardship,
+  and marked decorative (`alt=""`) so nobody is presented as a Souper Troopers participant. **Replace
+  them when the shoot delivers real ones**; the client has said more images are coming.
+- ⚠ **Sourcing was harder than it should be.** Unsplash's site sits behind a bot challenge
+  (`/.within.website`, 401) — not something to work around — and its search API now needs a key;
+  Openverse search was down (504s). Commons worked, but only the files copied there from Unsplash or
+  Pixabay are stock-quality. With a free Unsplash or Pexels API key, sourcing is a script.
+- **Same size, bottom row centred, with no wrapper**: an 8-column grid, every card spanning two, and
+  the fifth starting one column in, so the last three sit centred; `grid-auto-rows: 1fr` makes every
+  row as tall as the tallest card (Souper Squad has the most words). Two per row below 1024px (a
+  4-column grid, the seventh card offset); one per row below 561px.
+- **Contrast is measured against the real photo pixels**, per card, under every line of text: worst
+  6.5:1 (Souper Squad at 1280), most 9–14:1. Change the tint and re-run that check.
+- ⚠ **When measuring, wait for the lazy images to decode.** A first run screenshotted cards at 820px
+  before their photos loaded and read the dark card behind them.
+- The old `.service-list` / `.service-row` styles in `Layout.astro` are unused while this is in place;
+  deliberately left, so reverting to the list is one file.
+
 ## Repo layout
 - `docs/` — planning docs: site structure & visitor journeys, client-facing proposal, design-inspiration notes.
 - `scripts/` — dev-environment guards run by `npm run dev` (see "Development" above).

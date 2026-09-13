@@ -1,6 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CountUp from "../components/CountUp.svelte";
+import { Image } from "astro:assets";
+import essentialsPhoto from "../assets/images/services/essential-needs.jpg";
+import recoveryPhoto from "../assets/images/services/recovery-support.jpg";
+import housingPhoto from "../assets/images/services/housing.jpg";
+import documentationPhoto from "../assets/images/services/documentation.jpg";
+import employmentPhoto from "../assets/images/services/employment.jpg";
+import socialPhoto from "../assets/images/services/social-enterprises.jpg";
+import squadPhoto from "../assets/images/services/souper-squad.jpg";
 import { getImpactStats, getSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("our-work");
@@ -29,14 +37,19 @@ const castSteps = [
 	},
 ];
 
+// PROTOTYPE (2026-09-13): the services as seven identical cards, each a full-bleed photo under a dark
+// tint with the words in white. The photos are CC0 stock placeholders (sources and licences in
+// src/assets/images/services/SOURCES.md) until the shoot provides real ones - decorative, alt="", so
+// nobody is presented as a Souper Troopers participant. Copy unchanged; Documentation sits with the
+// other basics.
 const hubServices = [
-	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts." },
-	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling." },
-	{ title: "Housing assistance", body: "Shelter placements and family reunification." },
-	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments." },
-	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting." },
-	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers." },
-	{ title: "Souper Squad", body: "A stipended employment initiative (via Khulisa Social Solutions). Members work the community garden, make Worry Dolls, sell coffee, and take on community projects - alongside workshops and skills training toward independent work." },
+	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts.", photo: essentialsPhoto },
+	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling.", photo: recoveryPhoto },
+	{ title: "Housing assistance", body: "Shelter placements and family reunification.", photo: housingPhoto },
+	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting.", photo: documentationPhoto },
+	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments.", photo: employmentPhoto },
+	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers.", photo: socialPhoto },
+	{ title: "Souper Squad", body: "A stipended employment initiative (via Khulisa Social Solutions). Members work the community garden, make Worry Dolls, sell coffee, and take on community projects - alongside workshops and skills training toward independent work.", photo: squadPhoto },
 ];
 ---
 
@@ -160,14 +173,19 @@ const hubServices = [
 			<span class="badge">What support looks like</span>
 			<h2>The Humanity Hub, in practice</h2>
 		</div>
-		<dl class="service-list">
+		{/* PROTOTYPE (2026-09-13) - see the note on `hubServices`. Cards are not links, so no hover lift. */}
+		<ul class="svc-cards" role="list">
 			{hubServices.map((item) => (
-				<div class="service-row">
-					<dt>{item.title}</dt>
-					<dd>{item.body}</dd>
-				</div>
+				<li class="svc-card">
+					<Image src={item.photo} alt="" width={800} widths={[400, 800]} sizes="(max-width: 560px) 100vw, (max-width: 1023px) 50vw, 270px" class="svc-card-img" />
+					<div class="svc-card-scrim" aria-hidden="true"></div>
+					<div class="svc-card-text">
+						<h3>{item.title}</h3>
+						<p>{item.body}</p>
+					</div>
+				</li>
 			))}
-		</dl>
+		</ul>
 	</section>
 
 	<section class="impact-band">
@@ -441,5 +459,110 @@ const hubServices = [
 		8% { opacity: 1; }
 		90% { opacity: 1; }
 		100% { opacity: 0; }
+	}
+
+	/* PROTOTYPE: the Humanity Hub services as identical photo cards - see the note on `hubServices`.
+	   An 8-column grid with every card two columns wide, so four sit on a row and the fifth can start
+	   one column in: the last three are then centred with no extra wrapper. `grid-auto-rows: 1fr`
+	   makes every row as tall as the tallest card (Souper Squad has the most words), so all seven
+	   are genuinely the same size. */
+	.svc-cards {
+		display: grid;
+		grid-template-columns: repeat(8, 1fr);
+		grid-auto-rows: 1fr;
+		gap: var(--space-5);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.svc-card {
+		grid-column: span 2;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		min-height: 20rem;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--st-ink);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
+	}
+
+	.svc-card:nth-child(5) {
+		grid-column: 2 / span 2;
+	}
+
+	.svc-card-img {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Darkest where the words sit (the foot of the card), lighter above so the photo still reads.
+	   Contrast is measured against the real photo pixels - change the stops and re-run that check. */
+	.svc-card-scrim {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to top,
+			rgba(24, 23, 30, 0.92) 0%,
+			rgba(24, 23, 30, 0.78) 45%,
+			rgba(24, 23, 30, 0.45) 100%
+		);
+	}
+
+	.svc-card-text {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		padding: var(--space-5);
+	}
+
+	.svc-card h3 {
+		margin: 0;
+		color: var(--st-white);
+		font-size: 1.1rem;
+	}
+
+	.svc-card p {
+		margin: 0;
+		color: var(--st-white);
+		font-size: 0.95rem;
+	}
+
+	/* Two per row: a 4-column grid, and the seventh card (alone on the last row) starts one column in. */
+	@media (max-width: 1023px) {
+		.svc-cards {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		.svc-card:nth-child(5) {
+			grid-column: span 2;
+		}
+
+		.svc-card:nth-child(7) {
+			grid-column: 2 / span 2;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.svc-cards {
+			grid-template-columns: 1fr;
+		}
+
+		.svc-card,
+		.svc-card:nth-child(5),
+		.svc-card:nth-child(7) {
+			grid-column: auto;
+		}
+
+		.svc-card {
+			min-height: 16rem;
+		}
 	}
 </style>

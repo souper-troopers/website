@@ -765,6 +765,12 @@ the form's usual 480px.
   700px (the shape the old separate banner had), 4:3 on a phone.
 - **No chips on the page.** "Where the money goes" and "Collection & delivery" each restated the
   heading directly beneath them — the same duplication removed from Get Involved and Contact.
+- **Less text, nothing lost** (~138 → ~112 visible words). The hero line had said "made by people the
+  CAST programme has supported... every purchase funds the next journey", one card above "Made in
+  Cape Town by people the CAST programme has supported" under "Every purchase pays a wage". The card
+  keeps it (it names the city, CAST and the Hub, and it is the trust statement); the hero now just
+  names the range. Not "handmade in Cape Town": the coffee is not handmade. Tile links read "Shop →"
+  rather than repeating the name one line above; the whole card is the link.
 - **Category tiles: the photo runs edge to edge and takes the card's spare height**, so the text ends
   level along the bottom of the row. `.category-tile-img` is `flex: 1 0 auto` with `aspect-ratio: 4/3`
   as the floor, and the image is absolute so it follows the grown height. The tile photos are now

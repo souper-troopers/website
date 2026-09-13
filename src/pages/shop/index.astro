@@ -11,7 +11,9 @@ const categories = await getProductCategories();
 	<section class="page-hero">
 		<div class="wrap">
 			<h1>Shop with purpose</h1>
-			<p>Every product is made by people the CAST programme has supported. Every purchase funds the next journey.</p>
+			{/* Says what is for sale, not why: the card below already says who makes it and where the money
+			    goes, and this line used to say it first, in nearly the same words. */}
+			<p>Troopers Coffee, African Worry Dolls and gift tags.</p>
 		</div>
 	</section>
 
@@ -84,7 +86,8 @@ const categories = await getProductCategories();
 					<div class="category-tile-body">
 						<h2>{category.name}</h2>
 						<p>{category.blurb}</p>
-						<span class="category-tile-cta">Shop {category.name} &rarr;</span>
+						{/* Not "Shop {name}": the whole card is the link and the name is its heading, one line up. */}
+						<span class="category-tile-cta">Shop &rarr;</span>
 					</div>
 				</a>
 			))}

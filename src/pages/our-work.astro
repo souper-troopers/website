@@ -53,8 +53,9 @@ const hubServices = [
 		    design - that brief is with Brad's designer friend (2 September minutes). Kerry asked for it
 		    "more playful", with the feeling of the programme coming through; the constraint is that it
 		    sits coherently with the rest of the site and the words stay real text for search.
-		    - The letters are the graphic: outlined, filling in turn, brightening from deep teal to light
-		      teal - crisis to independence told as light, in the site's own palette.
+		    - The letters are the graphic: outlined, filling in turn, each in its own brand colour - red,
+		      yellow, green, then the brand teal at Transform: warm to cool, crisis to independence.
+		      (A teal ramp, deep to light, came first.)
 		    - On desktop the steps climb; a brush-stroke path hops letter to letter, roughened the way
 		      the homepage's BrushRing is, with a dot for the person travelling it.
 		    - At Transform a yellow brush ring draws itself around the T.
@@ -80,12 +81,15 @@ const hubServices = [
 				</svg>
 				<ol class="cast2">
 					{castSteps.map((step, i) => (
-						<li style={`--i: ${i}; --c: ${["var(--st-teal-dark)", "var(--st-teal)", "var(--st-teal-secondary)", "var(--st-teal-light)"][i]}`}>
-							<span class="cast2-letter" aria-hidden="true">
-								<span class="cast2-outline">{step.letter}</span>
-								<span class="cast2-fill">{step.letter}</span>
-							</span>
-							<h3>{step.title}</h3>
+						<li style={`--i: ${i}; --c: ${["var(--st-red)", "var(--st-yellow)", "var(--st-green)", "var(--st-teal)"][i]}; --kern: ${["0.04em", "0.22em", "0.22em", "-0.19em"][i]}`}>
+							{/* The big letter starts the word and the rest follows on its baseline in small type,
+							    so the letter and the heading are one thing: C + "onnect". Screen readers get the
+							    plain word from the hidden copy - the letter's two layers (outline and fill) and
+							    the small tail are aria-hidden. No separate title under it any more. */}
+							<h3 class="cast2-word">
+								<span class="cast2-letter" aria-hidden="true"><span class="cast2-outline">{step.letter}</span><span class="cast2-fill">{step.letter}</span></span><span class="cast2-rest" aria-hidden="true">{step.title.slice(1)}</span>
+								<span class="visually-hidden">{step.title}</span>
+							</h3>
 							<p>{step.body}</p>
 						</li>
 					))}
@@ -110,10 +114,10 @@ const hubServices = [
 					});
 					// Straight, and off the glyphs: through the letters' middles it showed through their
 					// counters (the C's gap, the A's triangle) and read as a strike-through. So it runs
-					// underneath the row, from the C's left edge to just past the T's right edge, or
+					// underneath the row, from the C's left edge to just past the end of "Transform", or
 					// down the left of the phone stack. The hand-drawn feel is the roughness filter on the
 					// stroke. Hops between letters and a wobble down the stack were tried first, 2026-09-13.
-					const vertical = Math.abs(boxes[1].cx - boxes[0].cx) < 10;
+					const vertical = Math.abs(boxes[1].l - boxes[0].l) < 10;
 					let start, end;
 					if (vertical) {
 						const x = Math.min(...boxes.map((b) => b.l)) - 12;
@@ -122,9 +126,10 @@ const hubServices = [
 					} else {
 						const y = Math.max(...boxes.map((b) => b.b)) + 12;
 						start = [boxes[0].l, y];
-						// Just past the T's right edge: stopping at its centre left half the last letter
-						// without a line under it.
-						end = [boxes[boxes.length - 1].r + 6, y];
+						// Just past the end of the last word ("ransform"), so the whole of it is underlined.
+						const rests = stage.querySelectorAll(".cast2-rest");
+						const lastRest = rests[rests.length - 1].getBoundingClientRect();
+						end = [lastRest.right - r.left + 6, y];
 					}
 					path.setAttribute("d", `M${start[0].toFixed(1)},${start[1].toFixed(1)} L${end[0].toFixed(1)},${end[1].toFixed(1)}`);
 					stage.style.setProperty("--trail", path.getTotalLength().toFixed(1));
@@ -281,9 +286,15 @@ const hubServices = [
 	}
 
 	/* Room under every letter so the titles line up and the underline clears them. */
+	.cast2-word {
+		margin: 0;
+		white-space: nowrap;
+	}
+
+	/* Inline-block on the heading's baseline, so the small tail of the word sits on the same line. */
 	.cast2-letter {
 		position: relative;
-		align-self: flex-start;
+		display: inline-block;
 		margin-bottom: 0.24em;
 		/* ~15% smaller than first built (clamp(4.5rem, 8vw, 7.5rem)). */
 		font-size: clamp(3.75rem, 6.75vw, 6.25rem);
@@ -305,10 +316,27 @@ const hubServices = [
 		color: var(--c);
 	}
 
-	.cast2 h3 {
-		margin: 0;
+	/* Per-letter spacing before the tail, set on each step (`--kern`), in the tail's own ems so it
+	   scales with it: the A's slope and the S's curve needed a little more room (+4px each at
+	   1280), the T's crossbar left a gap (-5px). */
+	.cast2-rest {
+		margin-left: var(--kern, 0.04em);
 		color: var(--st-white);
-		font-size: 1.15rem;
+		font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+		font-weight: 700;
+		letter-spacing: 0.01em;
+	}
+
+	.cast2-word .visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+		border: 0;
 	}
 
 	.cast2 p {
@@ -322,17 +350,13 @@ const hubServices = [
 			gap: var(--space-8);
 		}
 
+		/* One column; the indent is the gutter the brush line runs down. */
 		.cast2 > li {
-			display: grid;
-			grid-template-columns: 5.5rem 1fr;
-			column-gap: var(--space-4);
-			row-gap: var(--space-2);
 			margin-top: 0;
+			padding-left: 1.25rem;
 		}
 
 		.cast2-letter {
-			grid-row: 1 / span 2;
-			justify-self: center;
 			font-size: 3.75rem;
 		}
 	}
@@ -347,10 +371,15 @@ const hubServices = [
 		clip-path: inset(100% 0 0 0);
 	}
 
-	.cast-stage.armed .cast2 h3,
 	.cast-stage.armed .cast2 p {
 		opacity: 0;
 		transform: translateY(10px);
+	}
+
+	.cast-stage.armed .cast2-rest {
+		display: inline-block;
+		opacity: 0;
+		transform: translateX(-6px);
 	}
 
 	.cast-stage.armed .cast2-trail {
@@ -368,10 +397,15 @@ const hubServices = [
 		animation-delay: calc(var(--i) * var(--step) + 120ms);
 	}
 
-	.cast-stage.armed.playing .cast2 h3,
 	.cast-stage.armed.playing .cast2 p {
 		animation: cast2-text 480ms ease-out forwards;
 		animation-delay: calc(var(--i) * var(--step) + 260ms);
+	}
+
+	/* The rest of the word follows its letter, just after the pop. */
+	.cast-stage.armed.playing .cast2-rest {
+		animation: cast2-text 380ms ease-out forwards;
+		animation-delay: calc(var(--i) * var(--step) + 200ms);
 	}
 
 	/* Linear, so the line reaches each letter on that letter's beat. */

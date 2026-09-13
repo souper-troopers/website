@@ -804,10 +804,17 @@ the form's usual 480px.
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not
 the final design**. That brief is with Brad's designer friend (2 September minutes); Kerry asked for it
 "more playful", with the feeling of the programme coming through. Everything is in `our-work.astro`.
-- **A dark stage; four big outlined letters** that pop and fill in sequence, brightening from deep
-  teal to light teal (crisis to independence as light, in the site's palette); a straight hand-drawn
-  underline drawn left to right with a travelling dot. The roughness is the same
-  `feTurbulence`/`feDisplacementMap` technique as `BrushRing.astro`. Words stay real text.
+- **A dark stage; four big letters that start each word** — a large C with "onnect" in small type on
+  its baseline, and so on — so the letter and the step's heading are one thing. Each pops and fills
+  in sequence in its own brand colour (red, yellow, green, then teal at Transform: warm to cool); a
+  straight hand-drawn underline is drawn left to right under the row with a travelling dot. The
+  roughness is the same `feTurbulence`/`feDisplacementMap` technique as `BrushRing.astro`.
+  - **Screen readers get the plain word**: the letter's two layers and the small tail are
+    `aria-hidden`, and a visually-hidden copy carries "Connect". Checked: each h3's accessible name is
+    exactly the word.
+  - **Per-letter spacing before the tail** is `--kern` on each step, in the tail's own ems so it
+    scales: the A and S need a little more room (+4px at 1280), the T's crossbar needs the tail tucked
+    under it (-4px).
 - ⚠ **The line runs under the letters, never through them.** Straight through their middles it showed
   through the letters' counters (the C's gap, the A's triangle) and read as a strike-through. The path
   is computed at runtime from where the letters actually are, so one script serves the row and the
@@ -817,8 +824,8 @@ the final design**. That brief is with Brad's designer friend (2 September minut
   (0 in Chromium, which is why a Chromium-only check missed it). Measured 0px in both engines after.
 - Reduced motion and no-JS get the finished state. The old `.cast-journey` styles in `Layout.astro`
   are unused while this is in place; delete them if it is kept.
-- **Tried and dropped the same day**, so they aren't rebuilt blind: a climbing staircase (still there
-  as `--rise`, set to 0), hops and wobbles in the line, outline rings round each letter (then four
+- **Tried and dropped the same day**, so they aren't rebuilt blind: a teal ramp for the letters (deep
+  to light), titles under the letters, a climbing staircase (still there as `--rise`, set to 0), hops and wobbles in the line, outline rings round each letter (then four
   distinct hand-drawn flash rings), and paint splashes behind the letters (fading fully, then faintly
   persistent).
 - **Found nearby, not fixed:** `.impact-stats` in the impact band overflows the page by ~30px at

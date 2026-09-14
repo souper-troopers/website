@@ -80,8 +80,11 @@ items marked **blocking** arrive.
   and the common questions open one at a time); more to follow as other pages are revisited.
 - **Waiting on Kerry** — Slim the homepage down to landing-page content: needs her answer on which
   words stay (on the update page).
-- **Waiting on Kerry** — Remove Zapper from the donate page, once she confirms it's no longer used.
-- **Waiting on the revised partner list** — Partner site links, with Woolworths first and larger.
+- **Done 14 September** — Zapper removed from the donate page (Kerry was 99.9% sure it's no longer
+  used; the rest of the page was shortened at the same time).
+- **Partly done 14 September** — Woolworths now appears first and larger on Who We Are, with their
+  public logo, pending their OK before launch. Other partners' site links still wait on the revised
+  list.
 - **In progress** — The CAST infographic. A first proposal is on the Our Work page — big letters that
   fill in turn along a hand-drawn line — to give Brad's designer something to react to. It is a
   starting point, not the final graphic.

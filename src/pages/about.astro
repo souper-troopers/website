@@ -8,8 +8,9 @@ import { getTeamMembers, getPartners, getSupporters, getPressMentions, urlFor } 
 const team = await getTeamMembers();
 const partners = await getPartners();
 // One lead partner, shown first and larger (the 2 September review: Woolworths at the top, with a
-// larger banner, once confirmed). Set with "Lead partner" in the Studio; with none set, nothing
-// changes. Partners with a website become link cards.
+// larger banner). Set with "Lead partner" in the Studio - currently Woolworths, using their public
+// wordmark pending their OK (q30 on the status page); with none set, nothing changes. Partners with
+// a website become link cards.
 const featuredPartner = partners.find((p) => p.featured);
 const otherPartners = featuredPartner ? partners.filter((p) => p !== featuredPartner) : partners;
 const FeaturedTag = featuredPartner?.url ? "a" : "div";
@@ -192,7 +193,7 @@ const pressMentions = await getPressMentions();
 				>
 					{featuredPartner.logo && (
 						<div class:list={["partner-logo-frame", featuredPartner.logoOnDark && "on-dark"]}>
-							<img class="partner-logo" src={urlFor(featuredPartner.logo).width(600).url()} alt={featuredPartner.name} width="220" height="120" loading="lazy" />
+							<img class="partner-logo" src={urlFor(featuredPartner.logo).width(600).url()} alt={featuredPartner.name} width="320" height="120" loading="lazy" />
 						</div>
 					)}
 					<div class="partner-featured-text">
@@ -294,8 +295,10 @@ const pressMentions = await getPressMentions();
 		text-decoration: none;
 	}
 
+	/* Wide enough for a wordmark: Woolworths' is 6.5:1, so a 220px frame left it 34px tall. */
 	.partner-featured .partner-logo-frame {
-		width: 220px;
+		width: 320px;
+		max-width: 100%;
 		height: 120px;
 	}
 

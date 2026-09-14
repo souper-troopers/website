@@ -33,6 +33,20 @@ export default defineType({
       options: {hotspot: true},
     }),
     defineField({
+      name: 'video',
+      title: 'Video link',
+      description:
+        'Optional. A YouTube or Vimeo link (unlisted is fine). It shows on the story card as a picture with a play button, and only loads when someone presses play. Leave it empty and the story looks exactly as it does now.',
+      type: 'url',
+      validation: (rule) =>
+        rule.uri({scheme: ['https']}).custom((value) => {
+          if (!value) return true
+          return /^https:\/\/((www|m)\.)?(youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com)\//.test(value)
+            ? true
+            : 'Use a YouTube or Vimeo link.'
+        }),
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured on homepage',
       description: 'Show this story on the homepage, not just the Our Work page.',

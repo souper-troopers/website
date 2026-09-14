@@ -9,6 +9,7 @@ import documentationPhoto from "../assets/images/services/documentation.jpg";
 import employmentPhoto from "../assets/images/services/employment.jpg";
 import socialPhoto from "../assets/images/services/social-enterprises.jpg";
 import squadPhoto from "../assets/images/services/souper-squad.jpg";
+import StoryVideo from "../components/StoryVideo.astro";
 import { getImpactStats, getSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("our-work");
@@ -217,6 +218,7 @@ const hubServices = [
 		<div class="story-masonry">
 			{stories.map((story) => (
 				<div class="card">
+					{story.video && <StoryVideo url={story.video} title={`${story.name}'s story`} />}
 					{story.quote ? (
 						<p class="quote">
 							"{story.quote}"

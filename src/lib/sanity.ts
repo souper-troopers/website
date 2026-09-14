@@ -22,6 +22,8 @@ export interface SuccessStory {
 	quote?: string;
 	body: string;
 	featured: boolean;
+	/** A YouTube or Vimeo link; rendered by StoryVideo.astro only when set. */
+	video?: string;
 }
 
 export interface TeamMember {

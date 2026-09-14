@@ -1500,33 +1500,6 @@ const structuredData = {
 				}
 			}
 
-			/* Six payment methods with genuinely different content shapes — a bank-details table, a
-			   form, a QR code, a redirect note — so a strict grid stretched the short cards (PayPal) to
-			   match the tall ones (EFT) for no reason. Three columns keeps the page shorter than two;
-			   below ~950px that gets tight (button labels and table rows start wrapping), so it steps
-			   down to two, then one. */
-			.pay-masonry {
-				columns: 3;
-				column-gap: var(--space-6);
-			}
-
-			.pay-masonry > .card {
-				break-inside: avoid;
-				margin-bottom: var(--space-6);
-			}
-
-			@media (max-width: 950px) {
-				.pay-masonry {
-					columns: 2;
-				}
-			}
-
-			@media (max-width: 700px) {
-				.pay-masonry {
-					columns: 1;
-				}
-			}
-
 			/* Services are a reference list, not a set of cards. Without the card chrome, rows of
 			   uneven length stop reading as boxes with dead space in them. */
 			.service-list {

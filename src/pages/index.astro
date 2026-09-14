@@ -5,6 +5,7 @@ import supportPhoto from "../assets/images/support-conversation.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import BrushRing from "../components/BrushRing.astro";
 import ShopPromise from "../components/ShopPromise.astro";
+import StoryVideo from "../components/StoryVideo.astro";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
@@ -153,6 +154,7 @@ const heroLqip =
 			<div class="stories-grid">
 				{stories.map((story) => (
 					<div class="story-card">
+						{story.video && <StoryVideo url={story.video} title={`${story.name}'s story`} />}
 						<p class="story-text">{story.quote ? `"${story.quote}"` : story.body}</p>
 						<p class="story-name">{story.name}</p>
 					</div>

@@ -126,7 +126,7 @@ Four rules follow, and they drove everything below:
 ### Components added
 - **`src/components/Breadcrumbs.astro` + `src/lib/breadcrumbs.ts`** — one `Crumb[]` feeds both the visible `<nav>` and the `BreadcrumbList` JSON-LD, so they cannot disagree. `path` **must carry a trailing slash** to match Astro's canonical/sitemap URLs. `shop/[category]/[item].astro` was refactored onto this (it had the only copy); a side effect is that its trail's hrefs now carry trailing slashes too, which removes a redirect hop.
 - **`src/components/Faq.astro` + `src/lib/faq.ts`** — one `FaqItem[]` feeds the visible `<dl>` and `FAQPage`. **The structured data buys nothing in a search listing** — Google retired FAQ rich results for most sites — so the value is entirely the visible question text; do not "optimise" by moving answers into the schema block only.
-  - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate and the three Get Involved child pages still render every answer.
+  - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate followed on 2026-09-14, and the three Get Involved child pages still render every answer.
     - **The question stays ink; the chevron is teal-dark.** Four teal underlined questions would read as four links elsewhere. The chevron carries the colour affordance and is visible without hover.
     - A `<details>` cannot live inside a `<dl>`, so collapsible mode renders a `<div>` of `<details>` rather than wrapping the existing markup.
   - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught. (`/contact` centres the FAQ in a `.faq-column` with its heading inside the same box, so the two share a left edge. The earlier 480px intro box plus a `.faq-centred` wrapper had the heading starting 124px right of its own list.)
@@ -300,7 +300,7 @@ Reasoning: if these accounts are created under the user's personal logins, the c
   - **`.fonts-pending` in `Layout.astro` is the highest-severity, because it's site-wide and fails silently.** An inline script hides *all* text until three `link[rel=preload][as=font]` elements have each fired `load` or `error`, with a 2s timeout as the backstop. In any engine that doesn't fire those events on preloaded fonts, every page renders blank text for a full two seconds until the timeout rescues it. That reads as slowness, not as a bug, so it won't announce itself — watch first paint specifically rather than just confirming the page eventually appears.
   - **Link prefetching** (fixed 2026-08-13, verified in Chromium only). Safari doesn't support `<link rel="prefetch">`, so Astro falls back to a low-priority `fetch()`. Confirm in the Network panel that navigations actually come from cache. This exact feature was already silently doing nothing once (see "Link prefetching" below) — the same "config looks right, nothing happens" failure applies to the fallback path.
   - **The scroll handlers in `index.astro`** (hero parallax + the continuous header fade), both driven straight off `window.scrollY`. iOS Safari's momentum scrolling and rubber-band overscroll — which yields a *negative* `scrollY` — are the classic divergence. **Test on a real iPhone, not just desktop Safari**; the two aren't equivalent, and the last mobile-only bug (prefetch) was invisible on desktop.
-  - **Both masonry mechanisms** — `Masonry.astro`'s JS measurement pass, and the CSS multi-column `.story-masonry`/`.pay-masonry`. See "Masonry layouts" below for why there are two.
+  - **Both masonry mechanisms** — `Masonry.astro`'s JS measurement pass, and the CSS multi-column `.story-masonry`. See "Masonry layouts" below for why there are two.
   - ~~**One asymmetry already spotted in passing, not a confirmed bug:** the localStorage write in `src/lib/cart.svelte.ts` is unguarded.~~ **Confirmed and fixed 2026-09-07.** `typeof localStorage !== "undefined"` proves the API *exists*, not that it *works* — Safari in private browsing, and any browser set to block site data, expose it and then throw on `setItem`. The throw escaped the `$effect`, so the cart stopped updating rather than merely failing to persist. Verified in WebKit with `setItem` stubbed to throw: before, an uncaught `QuotaExceededError`; after, the count goes empty → 1 on Add to cart and nothing escapes. **Not persisting is the accepted outcome** — the cart works for the session and does not survive a reload.
 - [x] **Netlify Forms notification email — moved off a personal address 2026-08-15.** It *was* configured (to the user's personal inbox), so contact submissions were being received rather than lost — the 2026-08-09 worry that it "may never have been set up at all" turned out to be the wrong half of the problem. Now changed to an organisation address, which is the same ownership principle as the rest of the account checklist: a notification going to a volunteer's inbox means the charity stops hearing from its own contact form the day that volunteer steps away. **Worth one live test submission after launch** to confirm the new address actually receives.
 - [ ] ~~**Netlify Forms notification email — one form now, and it's ours to set.**~~ Only `contact` remains a Netlify Form. It's a dashboard setting (Site configuration → Forms → Form notifications), not anything in code or Sanity, so nothing in the repo shows its current value — which is why it needs checking rather than reading.
@@ -360,7 +360,8 @@ Website scope/requirements come from the "🌐 Souper Troopers — Website Disco
 ## Masonry layouts — which of the two to use (added 2026-08-11)
 There are deliberately two mechanisms, and the choice is about **reading order**, not looks:
 - **`src/components/Masonry.astro`** — CSS Grid plus ~30 lines of vanilla JS that measures each item and sets `grid-row-end: span N`. Items flow **left-to-right in DOM order**. Use this by default, and always where sequence carries meaning. No dependency; degrades to a plain equal-height responsive grid if the script doesn't run. Accepts `min` (column width) and `gap` props.
-- **`.story-masonry` (`our-work.astro`) / `.pay-masonry` (`donate.astro`)** — plain CSS multi-column, global CSS in `Layout.astro`. Fills column 1 top-to-bottom *before* starting column 2, so item 2 sits below item 1, not beside it. Fine for these two, which are unordered sets; wrong for anything sequential.
+- **`.story-masonry` (`our-work.astro`)** — plain CSS multi-column, global CSS in `Layout.astro`. Fills column 1 top-to-bottom *before* starting column 2, so item 2 sits below item 1, not beside it. Fine for an unordered set; wrong for anything sequential.
+  - **`.pay-masonry` (`donate.astro`) was retired 2026-09-14**, on exactly the trigger predicted below: EFT became a lead card, so order started to matter. It did not move to `Masonry.astro` either — with five cards of known shape, a plain grid (EFT full width, the other four two by two) needs no measuring at all.
 
 **Migrating those two to `Masonry.astro` was considered and declined (2026-08-11).** Zero-JS CSS columns have no layout-shift risk at all, and both live on public pages where that matters — CLS is a ranking signal, which cuts directly against the discoverability work above. Neither page needs order today, and swapping is a one-line change on the day one does. **The likely trigger is the donate page**: if Kerry answers the open "which donation channel is most used?" question and the "Ways to give" cards get reordered by actual usage, column-wise fill would undermine it — with 6 cards in 3 columns the top row reads 1, 3, 5, not 1, 2, 3. Switch `pay-masonry` to `Masonry.astro` at that point, not before.
 
@@ -410,14 +411,14 @@ Prompted by the user finding the donate page's teal buttons "quite bold". The au
 - **`.btn-primary`** — saturated `--st-teal` fill with an **ink** label. The one persistent primary CTA (the header's Donate pill, the closing-CTA rows, Add to cart). **Ink, not white, and don't put white back**: white on `--st-teal` is 2.76:1 and was the site's single largest contrast failure, while ink on the *same* fill is 5.64:1 — so the brand teal survives untouched and only the label moved. It also reads calmer, which is most of what "bold" was describing.
   - **Hover brightens (`--st-teal-secondary`), it does not darken.** The old `--st-teal-dark` hover puts an ink label at **3.44:1**, so hovering would have failed the check the rest state had just passed. Any future hover state on a light-ink button has this trap.
 - **`.btn-outline`** — transparent fill, ink border and label. Secondary *beside* a filled primary; that is the whole job, and it is why it stayed ink when the donate page went teal. Two equal teals side by side would destroy the primary/secondary read on the homepage and about closing CTAs.
-- **`.btn-outline-teal`** — transparent fill, `--st-teal-dark` border and label, hovering to a filled teal-dark with a white label. **4.52:1 on a white card in both states** (it does *not* clear AA on `--st-bg`, so keep it on cards). For a group of **equal-weight controls that all act rather than navigate** — currently the donate page's six payment handoffs. Restores the colour affordance a bare ink outline lacks without a saturated fill competing with the header's one primary CTA.
+- **`.btn-outline-teal`** — transparent fill, `--st-teal-dark` border and label, hovering to a filled teal-dark with a white label. **4.52:1 on a white card in both states** (it does *not* clear AA on `--st-bg`, so keep it on cards). For a group of **equal-weight controls that all act rather than navigate** — currently the donate page's five payment handoffs (six until Zapper went, 2026-09-14). Restores the colour affordance a bare ink outline lacks without a saturated fill competing with the header's one primary CTA.
 - **`.btn-secondary`** — white on `--st-green`, **2.42:1, still failing**, and genuinely a brand decision rather than a label swap since the green carries no dark-label option that stays legible.
 
 ⚠ **`.btn` carries `border: 2px solid transparent`, and nothing may override it to `none`.** It does two jobs: strips the UA border a `<button class="btn">` would otherwise draw, and gives every variant one border box so filled and outlined buttons are the same height. **This is not theoretical** — `.payfast-form button { border: none }`, written when that button was a filled pill, silently flattened it to bare unboxed text the moment it was demoted to an outline, and only a screenshot caught it. The same override was removed from `.contact-form .btn`, `AddToCartButton.svelte` and `CopyQuestionsButton.svelte` so the base rule actually holds. It also fixed a pre-existing 4px height mismatch between the paired buttons on the closing CTA rows.
 
 **Buttons commit, links navigate — the donate page deliberately uses both** (asked 2026-08-19: should the "Ways to give" CTAs match the plainer underlined links in "Goods and products also help"?). Kept different, because the two sets differ in kind: the goods cards *navigate* to another page on this site, while the payment cards *act* — four hand off to an external payment provider, one submits a rand amount, one writes to the clipboard. A control about to move money should not look identical to one that opens a list. There is also a hard constraint: PayFast's is a genuine `<form>` submit and "Copy bank details" navigates nowhere, so **at least two of the six cannot be links whatever is decided** — making the other four links would put the inconsistency *inside* one grid, where it is actually visible.
 
-**Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does. Promoting that one card back to `.btn-primary` is the one-word change that would make the page mean what it says.
+~~**Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does.~~ **Handled by layout, 2026-09-14**: the EFT card now leads, larger and first, with a teal top rule. Its button deliberately stayed `.btn-outline-teal` like the other four, so the header's Donate is still the page's one filled primary. Promoting it to `.btn-primary` remains the stronger option if Kerry wants it.
 
 ## Fonts — the custom font is currently OFF, and everything we learned getting there (2026-08-23)
 
@@ -801,18 +802,63 @@ the form's usual 480px.
     instead). At 1280px all three titles sit at the same height.
 
 ### Who We Are: a lead partner slot, and partner links (2026-09-13)
-- **Decision 8 of the review: Woolworths at the top, with a larger banner.** Woolworths is **not yet a
-  partner in Sanity** — the minutes: "Kerry expects [them] to become the biggest partner yet". The
-  page can now show **one lead partner** (`featured` on `partner`, "Lead partner" in the Studio) first,
-  full width, logo 220x120 beside the words; with none set, the page is unchanged.
-- ⚠ **Partner logos come from the partner, never off the web.** A company Woolworths' size controls
-  its brand and would expect to approve it; asked for on the status page (`q30`) with the blurb and
-  web address. Kerry can also add it herself in the Studio.
+- **Decision 8 of the review: Woolworths at the top, with a larger banner.** The page shows **one lead
+  partner** (`featured` on `partner`, "Lead partner" in the Studio) first, full width, logo beside the
+  words; with none set, the page is unchanged. The featured logo frame is **320x120**, widened from
+  220 on 2026-09-14 because Woolworths' wordmark is 6.5:1 and rendered 34px tall in the narrower one.
+- **Woolworths is in Sanity since 2026-09-14** (`partner-woolworths`, `order: 0`, featured, linking to
+  woolworths.co.za) — added at the user's call, reversing the earlier "logos come from the partner,
+  never off the web" rule for this one case. The logo is the **current South African wordmark** (black
+  "W" tile + WOOLWORTHS) from Wikimedia Commons, `File:Woolworths South Africa.png`, tagged
+  `PD-text-logo`. That tag covers copyright only — **the trademark is still theirs**, so `q30` now
+  asks Kerry to check the logo, blurb and link with Woolworths before launch. Not the Australian
+  Woolworths (green "W" apple mark) — easy to grab by mistake. The blurb restates only what the site
+  already says (the Woolworths Project on Corporate Partnership / Our Work, MyDifference on Get
+  Involved). No Woolworths photos were used: nothing found was licensed for reuse.
 - **`url` on `partner`** (the review: "each partner logo should link to that partner's own site"):
   a partner with a website becomes a link card with "Visit their site →". None have one yet — waiting
   on Kerry's revised list.
 - The schema change reaches the hosted Studio by itself on the next push to `main` (the Studio
   workflow runs when `studio/**` changes).
+
+### Donate page: EFT leads, and less to read (2026-09-14)
+From the review's "too much copy" point, and the user's "less wordy, more exciting". Visible words
+went from roughly 600 to 297 (measured as `main.innerText` with the FAQ closed), and the page is
+~340px shorter at 1280 - mostly by trimming rather than hiding.
+- **Zapper removed** (review decision 7; Kerry "99.9% positive" they moved to SnapScan). The QR image
+  and the decoded `zapperCode` constant went with it — both are in git history if it ever returns,
+  and the constant's comment explains why it had to be decoded from the QR rather than looked up.
+- **EFT is a full-width lead card** (words and button left, bank details right, teal top rule) above
+  a 2x2 of the other four; one column below 700px. Each card's control sits in a `.pay-action` block
+  with `margin-top: auto`, so buttons in a row line up. Two rejected layouts, for the record: EFT
+  spanning two rows of a three-column grid left a tall empty gap in the EFT card (its content is
+  shorter than two rows), and four across leaves a ~197px content box at 1100px, narrower than the
+  "Set up a debit order" button. SnapScan's QR (128px) sits beside its button so its card matches
+  its row.
+- **Kept fully visible**: bank details, both email routes (now as two short labelled lines), the
+  PayFast amount, the SnapScan QR, and the stats band (trust evidence at the point of giving — see
+  the cards rule below). **Collapsed**: only the FAQ (`collapsible`).
+- **Section badges dropped**, as on Contact and the shop — each repeated its heading.
+- **"Other ways to help" are two whole-card photo links** (`goods/food.jpg`, `workshop-craft.jpg`
+  — not `shop-products.jpg`, which is already on the shop page and the homepage). Contrast is by
+  bound rather than pixel sampling: the scrim is ≥0.6 wherever text can sit, which puts white type
+  at ≥4.6:1 even over a pure white pixel.
+- **The hero has a "Jump to ways to give" link**, white on the ink hero (teal-dark there is 3.3:1).
+  On a phone the payment cards start ~1,000px down, below the tiles and stats.
+
+### Success-story videos (2026-09-14)
+`successStory.video` (optional URL, YouTube or Vimeo only — validated in the Studio) renders through
+`src/components/StoryVideo.astro` on the Our Work story cards and the homepage stories band.
+- **A click-to-load facade**: a still plus a play button; the provider's iframe is created only on
+  click, so a page of stories costs one thumbnail per video rather than a player each. YouTube uses
+  the `youtube-nocookie.com` host. Vimeo has no derivable thumbnail, so `src/lib/video.ts` asks its
+  oEmbed endpoint at build time; a failure there costs only the still.
+- **Unlisted Vimeo links carry a privacy hash** (`vimeo.com/123/abcdef` or `?h=`), which is passed
+  through — without it the player refuses to play.
+- **Deliberately no placeholder frames.** A story without a video looks exactly as before; an
+  unrecognised URL falls back to a plain "Watch the video" link rather than vanishing.
+- The component's styles are `is:global` because the iframe is created by script and never gets the
+  scoped attribute.
 
 ### The Humanity Hub name — still the board's decision (checked 2026-09-13)
 The user remembered the review as having decided to move from "Souper Troopers" to "the Humanity Hub".

@@ -920,9 +920,20 @@ descriptions, NGO data).
   meeting than the minutes record, and judged a reversal cheap. The homepage hero paragraph, the Who
   We Are hero and the Donate hero now lead with the Hub. Each was shown to the user word for word
   first.
-- ⚠ **Still untouched until the board decides and a logo exists (`q29`)**: the header name and logo,
-  page titles and their `" - Souper Troopers"` suffix, the NGO `name`, and how `llms.txt` names the
-  organisation. `q29`'s body says exactly this, so change the two together.
+- **The header name became a lockup the same day, also at the user's call**: "The Humanity Hub" with
+  "by Souper Troopers" beneath it, beside the unchanged logo (`.brand-name` in `Layout.astro`). The
+  "by" line keeps the tie to the logo and to the registered name donors see on bank statements.
+  - ⚠ **Width is budgeted to the pixel.** The title is 0.97rem so the block is 140px wide, exactly what
+    the one-line "Souper Troopers" took. At 16px it was 144px, and those 4px moved the point where
+    the header wraps onto two rows up past 1080px (measured). Header height is unchanged at every
+    width, since the two lines total ~32px beside a 44px logo.
+  - Phones still show the logo alone: `.brand span` is hidden below 761px, as before.
+  - The link now carries `aria-label="The Humanity Hub by Souper Troopers - home"` and the logo has
+    `alt=""`. Before, its accessible name was the alt plus the words - "Souper Troopers Souper
+    Troopers".
+- ⚠ **Still untouched until the board decides and a logo exists (`q29`)**: the logo itself, page
+  titles and their `" - Souper Troopers"` suffix, the footer, the NGO `name`, and how `llms.txt`
+  names the organisation. `q29`'s body says exactly this, so change the two together.
 `q29` asks who would design a Humanity Hub logo if the name moves.
 
 ### Homepage: a shop band, one fewer Donate ask (2026-09-13)

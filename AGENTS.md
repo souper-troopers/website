@@ -864,8 +864,15 @@ went from roughly 600 to 297 (measured as `main.innerText` with the FAQ closed),
 The user remembered the review as having decided to move from "Souper Troopers" to "the Humanity Hub".
 It didn't: the minutes carry it as **not decided**, "a strategy question, not a website question", with
 Hilton's condition that "there's going to be no changes made unless there's a unanimous excitement
-about it"; Kerry to brief her board. ⚠ **Don't rewrite visible copy to lead with the Humanity Hub
-until that lands.** What doesn't pre-empt it was done on 2026-09-06 (titles, descriptions, NGO data).
+about it"; Kerry to brief her board. What doesn't pre-empt it was done on 2026-09-06 (titles,
+descriptions, NGO data).
+- **Three opening lines changed on 2026-09-14, at the user's call.** They read more certainty in the
+  meeting than the minutes record, and judged a reversal cheap. The homepage hero paragraph, the Who
+  We Are hero and the Donate hero now lead with the Hub. Each was shown to the user word for word
+  first.
+- ⚠ **Still untouched until the board decides and a logo exists (`q29`)**: the header name and logo,
+  page titles and their `" - Souper Troopers"` suffix, the NGO `name`, and how `llms.txt` names the
+  organisation. `q29`'s body says exactly this, so change the two together.
 `q29` asks who would design a Humanity Hub logo if the name moves.
 
 ### Homepage: a shop band, one fewer Donate ask (2026-09-13)

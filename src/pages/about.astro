@@ -30,9 +30,10 @@ const pressMentions = await getPressMentions();
 	</section>
 
 	<section class="section wrap">
-		<div class="section-intro statement">
-			<span class="badge">Our mission</span>
-			<h2><span class="glow-word">Every</span> person deserves dignity</h2>
+		{/* Section titles on this page say what the section is; the old chips above them did that,
+		    and the titles repeated the paragraph's first line (changed 2026-09-14). */}
+		<div class="section-intro">
+			<h2>Our mission</h2>
 			<p>
 				Every person deserves dignity, and with the right support, anyone can rebuild their future.
 				That belief drives everything we do - from a first conversation on the street to a first
@@ -44,8 +45,7 @@ const pressMentions = await getPressMentions();
 	<section class="stories-band">
 		<div class="wrap">
 			<div class="section-intro">
-				<span class="badge badge-on-dark">How we began</span>
-				<h2>It started with soup and sandwiches</h2>
+				<h2>How we began</h2>
 				<p>
 					In June 2014, Kerry Hoffman spent a day sharing soup and sandwiches with people living on
 					the street. That relaxed social gathering - and the regular monthly events that followed
@@ -61,11 +61,13 @@ const pressMentions = await getPressMentions();
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">How we work</span>
-			<h2>Dignity. Love. Respect.</h2>
+			<h2>How we work</h2>
+			{/* "Dignity, love and respect" is the organisation's motto (the bracelet, the CAST steps,
+			    the homepage). It was this section's title until 2026-09-14 and nothing else on the page
+			    says it, so it moved into the first line rather than going. */}
 			<p>
-				Every beneficiary is seen as human first - before being homeless. Three principles hold
-				that in place.
+				Everything rests on dignity, love and respect. Every beneficiary is seen as human first -
+				before being homeless - and three principles hold that in place.
 			</p>
 		</div>
 		<div class="grid grid-3">
@@ -94,7 +96,6 @@ const pressMentions = await getPressMentions();
 	<section class="section wrap">
 		<div class="grid grid-2" style="align-items:center;">
 			<div class="section-intro">
-				<span class="badge">Where we work</span>
 				<h2>The Humanity Hub</h2>
 				<p>
 					Our service centre at 66 Newmarket Street, Woodstock, is where all of this happens - a
@@ -131,8 +132,7 @@ const pressMentions = await getPressMentions();
 				/>
 			</div>
 			<div class="section-intro">
-				<span class="badge">A business, not just a charity</span>
-				<h2>The Souper Squad &amp; Shmiley</h2>
+				<h2>A business, not just a charity</h2>
 				{/* The Squad's list of activities lives on Our Work (the services cards); repeating it here
 				    word for word was the About/Our Work overlap found in the 2026-09-14 repetition pass. */}
 				<p>
@@ -151,8 +151,7 @@ const pressMentions = await getPressMentions();
 
 	<section id="team" class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Meet the team</span>
-			<h2>The people behind the Humanity Hub</h2>
+			<h2>Meet the team</h2>
 		</div>
 		<div class="team-grid">
 			{team.map((person) => (
@@ -183,8 +182,7 @@ const pressMentions = await getPressMentions();
 	<section class="dark-band">
 		<div class="wrap">
 			<div class="section-intro">
-				<span class="badge badge-on-dark">Partners &amp; supporters</span>
-				<h2>We don't do this alone</h2>
+				<h2>Partners &amp; supporters</h2>
 				<p>These businesses and organisations choose to partner with and support Souper Troopers.</p>
 			</div>
 			{featuredPartner && (
@@ -252,8 +250,7 @@ const pressMentions = await getPressMentions();
 	{pressMentions.length > 0 && (
 		<section class="section wrap">
 			<div class="section-intro">
-				<span class="badge">In the news</span>
-				<h2>What others have written about us</h2>
+				<h2>In the news</h2>
 			</div>
 			<div class="grid grid-3">
 				{pressMentions.map((mention) => (

@@ -897,6 +897,12 @@ it is ~40 lines and takes a second.
   twice; Donate goods repeated its FAQ in prose; Get Involved's skills card "More" was the child page's
   card word for word; About repeated Our Work's Souper Squad activity list and the footer's NPO / PBO /
   B-BBEE line; Donate's first two answers both said "for the full value".
+- **Who We Are, the same day (the user's call):** every section chip removed, and each section is
+  titled with what its chip said (Our mission, How we began, How we work, A business not just a
+  charity, Meet the team, Partners & supporters, In the news). "The Humanity Hub" stays the Hub
+  section's title since it is a name, not a label. ⚠ "Dignity, love and respect" - the motto, and
+  the old How we work title - now opens that section's paragraph; nothing else on the page says it,
+  so don't trim it away. The Squad section's title no longer names Shmiley (decision 1).
 - **Kept, deliberately** - don't "fix" these on a future pass:
   - FAQ answers restating facts on each giving page (PBO, 18A, the address). Each answer has to make
     sense extracted alone - the LLM rule above - and they are collapsed now, so a reader meets them

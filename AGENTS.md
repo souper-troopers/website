@@ -903,6 +903,28 @@ it is ~40 lines and takes a second.
   section's title since it is a name, not a label. ⚠ "Dignity, love and respect" - the motto, and
   the old How we work title - now opens that section's paragraph; nothing else on the page says it,
   so don't trim it away. The Squad section's title no longer names Shmiley (decision 1).
+- **Who We Are, second pass the same day** (815 → 563 visible words, 5,752 → 5,230px at 1280):
+  - **Opens on a card like the shop's** "Every purchase pays a wage": the Hub exterior fills a
+    rounded card (3:1 from 701px, 16:9 below), tinted on the left, "Who We Are" and the opening line
+    in white. Its own markup and styles rather than `ShopPromise.astro`, because the tint is measured
+    per photo. The shop's stops pass on this photo too: heading ≥7.95:1, paragraph ≥7.2:1 at nine
+    widths, measured on real pixels with `tint2.mjs` (scratchpad; a generalised `tint.mjs` that
+    samples text line boxes rather than block boxes and counts element opacity). The building, not
+    people, because q19 (consent) is unsettled; `alt=""` since Contact carries the described copy.
+  - ⚠ **`.about-top` gives the first section 48px (32px on phones) of top padding.** `main` spaces
+    sections with `gap`, which puts nothing above the first, so a card sitting first on a page is
+    flush against the sticky header. Pages that open on an ink `.page-hero` never showed it.
+  - ⚠ **`.section-intro.statement` is the centred, larger variant** - the mission uses it. It was
+    removed by mistake earlier the same day on the claim it had no styles; a grep for `^\.statement`
+    misses the compound selector.
+  - **Partners are a logo wall**: every partner except the lead one is a `<details>` tile (logo +
+    name; what they give opens on click), flex-wrapped and centred like `.team-grid`, so five to a
+    row at 1100px and part-rows centre whatever the count. Names reserve two lines (three below
+    481px) so closed tiles are one height. Tile logos are `alt=""` - the name is beside them - and a
+    partner's website link goes inside the opened tile, since the tile is itself a control.
+  - **The supporters list is a `<details>`** behind its existing heading; **How we began** shows
+    its first sentence and puts the rest in a `.card-more` (white summary on the gradient band); **How
+    we work** ends on the CAST link alone.
 - **Kept, deliberately** - don't "fix" these on a future pass:
   - FAQ answers restating facts on each giving page (PBO, 18A, the address). Each answer has to make
     sense extracted alone - the LLM rule above - and they are collapsed now, so a reader meets them

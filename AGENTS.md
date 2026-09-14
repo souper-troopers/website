@@ -821,6 +821,22 @@ the form's usual 480px.
 - The schema change reaches the hosted Studio by itself on the next push to `main` (the Studio
   workflow runs when `studio/**` changes).
 
+### The header's Donate / Shop control: two links, not a menu (2026-09-14)
+The review made the header CTA Donate / Shop (Adrian: people should see the word "Shop"). It was built
+as a `<details>` menu whose panel offered the two destinations; the user pointed out that a menu which
+only ever chooses between two places costs a click for nothing. It is now **two links sharing one teal
+pill** (`.support-menu`), with a hairline divider and a per-half hover.
+- **Lost, knowingly**: the one-line descriptions in the panel ("Support the work directly", "…every
+  purchase pays a wage"). The shop page leads with that line itself.
+- ⚠ **Width is budgeted**: ~162px against the menu pill's 163px (15px padding per side of each half).
+  The header row sits at `.wrap`'s 1100px cap with no slack, so a longer label or more padding wraps
+  every page's header.
+- ⚠ **The ≤760px rules key on `.support-menu` as a direct child of `.header-inner`** — order, and the
+  homepage's hide-until-the-hero-Donate-scrolls-away. The "show" rule must be `inline-flex`, not
+  `inline-block`, or the halves stack.
+- Strictly this is a **segmented pair**, not a "split button" (which conventionally means a main action
+  plus an arrow that opens a menu).
+
 ### Donate page: EFT leads, and less to read (2026-09-14)
 From the review's "too much copy" point, and the user's "less wordy, more exciting". Visible words
 went from roughly 600 to 297 (measured as `main.innerText` with the FAQ closed), and the page is

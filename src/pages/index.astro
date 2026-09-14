@@ -197,8 +197,8 @@ const heroLqip =
 			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
 			header.style.setProperty("--header-fade", String(progress));
 
-			// Mobile only (see .site-header-overlay .donate-cta in Layout.astro): the header's own
-			// Donate button stays hidden - redundant right next to the hero's - until the hero's
+			// Mobile only (see .site-header-overlay .support-menu in Layout.astro): the header's own
+			// Donate / Shop control stays hidden - redundant right next to the hero's - until the hero's
 			// button has actually scrolled out from under the header, at which point it's the only
 			// Donate CTA left on screen and needs to reappear.
 			const heroDonateHidden = heroDonateBtn ? heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight : window.scrollY > 0;

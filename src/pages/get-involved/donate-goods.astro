@@ -112,12 +112,10 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			    contact page uses the same standalone-paragraph pattern for the same reason. */}
 			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
 			<p>
-				Email <EmailLink client:visible address={goodsEmail} /> to arrange a time before you come.
-				The Hub is a working day centre rather than a drop-in donation point, so arranging it
-				means somebody is expecting you and free to help you carry things in. Bringing things
-				yourself is genuinely preferred - it is how we get to meet the people who support the
-				work, and how you get to see what it goes into. If something is too large to move, ask
-				and we will see whether we can collect it.
+				{/* The why, and collection for large items, are in the questions below - this used to
+				    say both again. */}
+				Email <EmailLink client:visible address={goodsEmail} /> to arrange a time before you come -
+				the Hub is a working day centre rather than a drop-in donation point.
 			</p>
 		</div>
 	</section>
@@ -156,7 +154,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			<span class="badge">Common questions</span>
 			<h2>Before you come</h2>
 		</div>
-		<Faq items={faqItems} />
+		<Faq items={faqItems} collapsible />
 	</section>
 
 	<section class="section wrap">

@@ -65,7 +65,7 @@ const faqItems: FaqItem[] = [
 	{
 		question: "Can we donate our services instead of money?",
 		answer:
-			"Yes, and it goes just as far. Our accountants, our lawyers and our web hosting are all donated. Marketing, IT, design, mentoring, training and delivery are all things we can put to use.",
+			"Yes, and it goes just as far, because a donated service replaces a cost we would otherwise carry. Professional services, skills and office equipment are all useful.",
 	},
 	{
 		question: "What does Souper Troopers do with corporate support?",
@@ -182,7 +182,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			<span class="badge">Common questions</span>
 			<h2>What businesses ask us first</h2>
 		</div>
-		<Faq items={faqItems} />
+		<Faq items={faqItems} collapsible />
 		{settings?.bbbeeNote && (
 			<p class="scorecard-note">
 				{settings.bbbeeNote}

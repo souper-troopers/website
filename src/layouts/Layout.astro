@@ -1926,13 +1926,6 @@ const structuredData = {
 				gap: var(--space-5);
 			}
 
-			.closing-credentials {
-				margin-top: var(--space-2);
-				font-size: 0.9rem;
-				line-height: 1.7;
-				color: rgba(36, 35, 43, 0.7);
-			}
-
 			/* Non-interactive category labels (donate + get-involved) — no hover lift, so they
 			   don't read as clickable now that the mailto wrapping has been removed. */
 			.goods-tile {
@@ -2004,8 +1997,20 @@ const structuredData = {
 				padding: var(--space-16) 0;
 			}
 
+			/* Fills the first screen, so a visitor lands on the photo and the message and everything
+			   else starts below the fold - the mechanism agreed on the 2 September review ("fills the
+			   vertical space on landing"). Built for the mural now; the hero video drops into the same
+			   box when it arrives. svh, not vh: on phones vh includes the space under the browser's
+			   toolbar, which would push the bottom of the hero off screen. min-height, so the box still
+			   grows if the words need more room (short landscape phones). */
 			.hero-photo {
 				position: relative;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				min-height: 100vh;
+				min-height: 100svh;
 				padding: calc(var(--space-20) + var(--header-height)) 0 var(--space-20);
 				overflow: hidden;
 				background: var(--st-ink);
@@ -2530,7 +2535,10 @@ const structuredData = {
 				   text on its own — stacking the full var(--space-12) on top of --header-height as well
 				   doubles up on that framing and reads as too much dead air before the heading. The
 				   bottom, with nothing above it, keeps the fuller gap before the next section. */
+				/* Words at the foot on phones, not the middle: the full-height box leaves ~200px of empty
+				   close-up mural below centred text at 390px, and the face is at the top of the frame. */
 				.hero-photo {
+					justify-content: flex-end;
 					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-12);
 				}
 

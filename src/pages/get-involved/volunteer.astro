@@ -113,11 +113,8 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 				both welcome, and it can be a single morning or a regular arrangement.
 			</p>
 			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
-			<p>
-				Email <EmailLink client:visible address={volunteerEmail} /> with roughly what you would
-				like to do and when you are free. It is arranged in advance rather than being a walk-in,
-				so that somebody is expecting you and there is work ready for you to do.
-			</p>
+			{/* How to arrange it is said once, in the first question below, and the closing card
+			    carries the address to write to. This paragraph used to say it a third time. */}
 		</div>
 	</section>
 
@@ -142,15 +139,15 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			<span class="badge">Common questions</span>
 			<h2>Before you get in touch</h2>
 		</div>
-		<Faq items={faqItems} />
+		<Faq items={faqItems} collapsible />
 	</section>
 
 	<section class="section wrap">
 		<div class="volunteer-cta">
 			<h2>Ready when you are</h2>
 			<p>
-				Tell us what you would like to do and roughly when. If you are not sure what would be
-				most useful, say so - that is an easier question for us to answer than for you to guess.
+				Not sure what would be most useful? Say so - that is an easier question for us to answer
+				than for you to guess.
 			</p>
 			<p class="volunteer-cta-email"><EmailLink client:visible address={volunteerEmail} /></p>
 		</div>

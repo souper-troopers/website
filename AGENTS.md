@@ -126,7 +126,7 @@ Four rules follow, and they drove everything below:
 ### Components added
 - **`src/components/Breadcrumbs.astro` + `src/lib/breadcrumbs.ts`** — one `Crumb[]` feeds both the visible `<nav>` and the `BreadcrumbList` JSON-LD, so they cannot disagree. `path` **must carry a trailing slash** to match Astro's canonical/sitemap URLs. `shop/[category]/[item].astro` was refactored onto this (it had the only copy); a side effect is that its trail's hrefs now carry trailing slashes too, which removes a redirect hop.
 - **`src/components/Faq.astro` + `src/lib/faq.ts`** — one `FaqItem[]` feeds the visible `<dl>` and `FAQPage`. **The structured data buys nothing in a search listing** — Google retired FAQ rich results for most sites — so the value is entirely the visible question text; do not "optimise" by moving answers into the schema block only.
-  - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate followed on 2026-09-14, and the three Get Involved child pages still render every answer.
+  - ~~**Not a `<details>` accordion**: answers are two sentences, and hiding them costs both the extraction and the scan.~~ **Revised 2026-09-13: an opt-in `collapsible` prop, used on `/contact` first.** Half of the original reasoning was wrong: a closed `<details>` is still in the HTML, so extraction costs nothing — Google indexes it at full weight and the `FAQPage` data is identical in both modes. The scan argument inverts once you ask who reads an FAQ: someone with a question, looking for *theirs*, which the questions alone serve better. That is the cards rule below applied to an FAQ. The real cost is the top-to-bottom reader, who pays a click per answer. Opt-in so each page moves deliberately; Donate and the three Get Involved child pages followed on 2026-09-14 (the repetition pass - their answers sat visibly under body copy saying the same thing), so every FAQ on the site now collapses.
     - **The question stays ink; the chevron is teal-dark.** Four teal underlined questions would read as four links elsewhere. The chevron carries the colour affordance and is visible without hover.
     - A `<details>` cannot live inside a `<dl>`, so collapsible mode renders a `<div>` of `<details>` rather than wrapping the existing markup.
   - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught. (`/contact` centres the FAQ in a `.faq-column` with its heading inside the same box, so the two share a left edge. The earlier 480px intro box plus a `.faq-centred` wrapper had the heading starting 124px right of its own list.)
@@ -875,6 +875,40 @@ went from roughly 600 to 297 (measured as `main.innerText` with the FAQ closed),
   unrecognised URL falls back to a plain "Watch the video" link rather than vanishing.
 - The component's styles are `is:global` because the iframe is created by script and never gets the
   scoped attribute.
+
+### Homepage: the hero fills the first screen (2026-09-14)
+The review's agreed mechanism ("fills the vertical space on landing"), done with the mural rather than
+waiting for the video, which drops into the same box. `.hero-photo` is a flex column with
+`min-height: 100svh` (a `100vh` line first as the fallback); svh, because on phones vh includes the
+area under the browser toolbar. Text is centred on laptops and sits at the foot on phones - centred
+text at 390px left ~200px of empty close-up mural beneath it.
+- The "Choose your path" chip and three of the CAST paragraph's four sentences went at the same time
+  (the rest is on Our Work). `q28` on the status page now carries a draft of three pillars, built only
+  from lines the site already uses, and `q31` asks for Shan's Shmiley carousel, which Kerry offered on
+  the call for the homepage.
+
+### Site-wide repetition pass (2026-09-14)
+Method: `repeat.py` in the session scratchpad (not committed) pulls `<main>` text from every public
+page in `dist/` (product pages excluded - they are template-driven), then lists identical sentences on
+two or more pages and passages sharing two or more six-word runs. Re-run it after large copy changes;
+it is ~40 lines and takes a second.
+- **Cut** - repetition *within* one page, plus copies between a parent and its child page: Volunteer
+  said "what you'd like to do and when" three times; Corporate Partnership listed the donated services
+  twice; Donate goods repeated its FAQ in prose; Get Involved's skills card "More" was the child page's
+  card word for word; About repeated Our Work's Souper Squad activity list and the footer's NPO / PBO /
+  B-BBEE line; Donate's first two answers both said "for the full value".
+- **Kept, deliberately** - don't "fix" these on a future pass:
+  - FAQ answers restating facts on each giving page (PBO, 18A, the address). Each answer has to make
+    sense extracted alone - the LLM rule above - and they are collapsed now, so a reader meets them
+    only by asking.
+  - "at the Humanity Hub in Woodstock, Cape Town" in each page's opening paragraph: the same rule.
+  - Link labels and shop tiles that preview their category pages: navigation, not content.
+  - Featured success stories on both the homepage and Our Work: the `featured` flag exists for it.
+  - "from a first conversation to a first pay cheque" on Donate and Get Involved (and "to a job" on the
+    homepage): a tagline, once per page.
+  - The B-BBEE disclaimer lines wherever B-BBEE figures appear.
+  - The homepage shop band and the shop page share one phrase ("people the CAST programme has
+    supported"); the rest of each paragraph differs, per the parent/child rule.
 
 ### The Humanity Hub name — still the board's decision (checked 2026-09-13)
 The user remembered the review as having decided to move from "Souper Troopers" to "the Humanity Hub".

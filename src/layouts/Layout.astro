@@ -666,12 +666,19 @@ const structuredData = {
 			}
 
 			/* Each half carries the pill's outer curve, so its hover fill and focus ring follow the
-			   pill's shape rather than poking square corners out of it. */
+			   pill's shape rather than poking square corners out of it.
+			   The labels sit toward the divider (10px) and away from the rounded ends (20px), so the
+			   pair reads as centred on the line between them - the curve eats visual space at the
+			   ends. Same 30px per half as even padding, so the width budget is unchanged. */
 			.support-menu a:first-child {
+				padding-left: 20px;
+				padding-right: 10px;
 				border-radius: 999px 0 0 999px;
 			}
 
 			.support-menu a:last-child {
+				padding-left: 10px;
+				padding-right: 20px;
 				border-radius: 0 999px 999px 0;
 			}
 

@@ -30,9 +30,20 @@ const { item, related } = Astro.props;
 
 const rand = (n: number) => "R" + n.toLocaleString("en-ZA");
 
+// The main photo, then the gallery. Width only, no crop: the doll shots are 3:4 portrait and a square
+// crop clipped hats and feathers. Every slide shares the first photo's shape (see .carousel).
+const slides = [item.photo, ...(item.gallery ?? [])].filter(Boolean).map((image) => ({
+	src: urlFor(image!).width(900).auto("format").url(),
+	srcset: [450, 900].map((w) => `${urlFor(image!).width(w).auto("format").url()} ${w}w`).join(", "),
+}));
+// Share cards and structured data want a landscape-friendly square; pad rather than crop.
 const photoUrl = item.photo
-	? urlFor(item.photo).width(900).height(900).fit("crop").auto("format").url()
+	? urlFor(item.photo).width(900).height(900).fit("fill").bg("ffffff").auto("format").url()
 	: undefined;
+
+// Worry dolls are each made by hand, so the photos show the style, not the exact doll you receive
+// (Kerry, 21 September review: "you're placing an order for the variation and not what it looks like").
+const handmade = item.categorySlug === "worry-dolls";
 
 // Trailing slashes deliberately match Astro's own canonical/sitemap URLs — structured data that
 // disagrees with the canonical tag on the same page reads as two URLs for one product.
@@ -47,7 +58,7 @@ const productJsonLd = {
 	name: item.name,
 	url: pageUrl,
 	sku: item._id,
-	...(photoUrl && { image: [photoUrl] }),
+	...(photoUrl && { image: [photoUrl, ...slides.slice(1).map((slide) => slide.src)] }),
 	...(bodyCopy && { description: bodyCopy }),
 	brand: { "@type": "Brand", name: "Souper Troopers" },
 	offers: {
@@ -88,15 +99,33 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 
 	<section class="section wrap">
 		<div class="product">
-			{photoUrl && (
-				<div class="product-photo">
-					<img
-						src={photoUrl}
-						alt={item.name}
-						width="900"
-						height="900"
-						fetchpriority="high"
-					/>
+			{slides.length > 0 && (
+				<div class="carousel" data-carousel>
+					{/* A scroll-snap track: swipes on a phone and scrolls with a trackpad with no script at all.
+					    The script below only adds the buttons and the counter. */}
+					<ul class="carousel-track" tabindex="0" aria-label={`Photos of ${item.name}`}>
+						{slides.map((slide, i) => (
+							<li class="carousel-slide">
+								<img
+									src={slide.src}
+									srcset={slide.srcset}
+									sizes="(min-width: 721px) 520px, 100vw"
+									alt={slides.length > 1 ? `${item.name}, example ${i + 1} of ${slides.length}` : item.name}
+									width="900"
+									height="1200"
+									loading={i === 0 ? "eager" : "lazy"}
+									fetchpriority={i === 0 ? "high" : undefined}
+								/>
+							</li>
+						))}
+					</ul>
+					{slides.length > 1 && (
+						<div class="carousel-controls" hidden>
+							<button type="button" class="carousel-btn" data-dir="-1" aria-label="Previous photo">&larr;</button>
+							<span class="carousel-count" aria-live="polite">1 / {slides.length}</span>
+							<button type="button" class="carousel-btn" data-dir="1" aria-label="Next photo">&rarr;</button>
+						</div>
+					)}
 				</div>
 			)}
 
@@ -104,6 +133,13 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 				<div class="product-price">{rand(item.price)}</div>
 
 				{bodyCopy && <p class="product-body">{bodyCopy}</p>}
+
+				{handmade && (
+					<p class="product-handmade">
+						Every doll is handmade, so yours will be one of a kind. The photos show the style, not the
+						exact doll you'll receive.
+					</p>
+				)}
 
 				{item.soldOut ? (
 					<p class="sold-out">
@@ -145,7 +181,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 						description={other.description}
 						soldOut={other.soldOut}
 						href={`/shop/${other.categorySlug}/${other.slug}`}
-						photoUrl={other.photo ? urlFor(other.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
+						photoUrl={other.photo ? urlFor(other.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined}
 						photoLqip={other.photoLqip}
 					/>
 				))}
@@ -172,10 +208,98 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		}
 	}
 
-	.product-photo img {
+	/* One slide per view, all the shape of the doll shots (3:4) so nothing jumps between photos;
+	   `contain` on white keeps an odd-shaped photo whole rather than cropping it. */
+	.carousel {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.carousel-track {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-radius: var(--radius, 18px);
+		background: #fff;
+	}
+
+	.carousel-track::-webkit-scrollbar {
+		display: none;
+	}
+
+	.carousel-track:focus-visible {
+		outline: 3px solid var(--st-teal-dark);
+		outline-offset: 3px;
+	}
+
+	.carousel-slide {
+		flex: 0 0 100%;
+		scroll-snap-align: start;
+	}
+
+	.carousel-slide img {
+		display: block;
 		width: 100%;
 		height: auto;
-		border-radius: var(--radius, 18px);
+		aspect-ratio: 3 / 4;
+		object-fit: contain;
+	}
+
+	.carousel-controls {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	/* Ink on white with a border: a control, but not a competing primary. 24px+ target. */
+	.carousel-btn {
+		min-width: 44px;
+		min-height: 44px;
+		border: 1px solid rgba(36, 35, 43, 0.25);
+		border-radius: 999px;
+		background: #fff;
+		color: var(--st-ink);
+		font-size: 1.1rem;
+		cursor: pointer;
+	}
+
+	.carousel-btn:hover {
+		border-color: var(--st-ink);
+	}
+
+	.carousel-btn:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	.carousel-count {
+		min-width: 4ch;
+		text-align: center;
+		font-size: 0.9rem;
+		font-variant-numeric: tabular-nums;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.carousel-track {
+			scroll-behavior: auto;
+		}
+	}
+
+	.product-handmade {
+		margin: 0 0 1.5rem;
+		padding: 0.75rem 1rem;
+		border-left: 3px solid var(--st-teal);
+		background: #fff;
+		border-radius: 0 8px 8px 0;
+		font-size: 0.95rem;
+		line-height: 1.55;
 	}
 
 	/* Ink, not teal-dark: the teal family is reserved for things you can act on. As the largest
@@ -216,3 +340,36 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		color: var(--st-teal-dark, #148294);
 	}
 </style>
+
+<script>
+	// Buttons and a counter for the photo carousel. The track already scrolls and snaps on its own, so
+	// with no script the carousel still works - the controls just stay hidden.
+	for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
+		const track = root.querySelector<HTMLElement>(".carousel-track");
+		const controls = root.querySelector<HTMLElement>(".carousel-controls");
+		if (!track || !controls) continue;
+		const count = controls.querySelector<HTMLElement>(".carousel-count");
+		const [prev, next] = controls.querySelectorAll<HTMLButtonElement>(".carousel-btn");
+		const total = track.children.length;
+		const current = () => Math.round(track.scrollLeft / track.clientWidth);
+		const update = () => {
+			const i = current();
+			if (count) count.textContent = `${i + 1} / ${total}`;
+			prev.disabled = i === 0;
+			next.disabled = i === total - 1;
+		};
+		for (const button of [prev, next]) {
+			button.addEventListener("click", () => {
+				track.scrollTo({ left: (current() + Number(button.dataset.dir)) * track.clientWidth });
+			});
+		}
+		track.addEventListener("keydown", (event) => {
+			if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+			event.preventDefault();
+			(event.key === "ArrowLeft" ? prev : next).click();
+		});
+		track.addEventListener("scroll", update, { passive: true });
+		controls.hidden = false;
+		update();
+	}
+</script>

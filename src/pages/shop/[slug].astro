@@ -61,6 +61,16 @@ const breadcrumbJsonLd = {
 	],
 };
 
+/**
+ * Worry dolls only, from the 21 September review: each is handmade, so the photos show a style, not
+ * the doll you'll get; bespoke dolls and bulk orders go to a person rather than the cart. The minimum
+ * of 10 and the inbox are what the call floated - confirming both is `q33` on the status page.
+ */
+const isDolls = category.slug === "worry-dolls";
+const ordersEmail = "manager@soupertroopers.org";
+const customHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Custom African Worry Dolls")}`;
+const wholesaleHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Wholesale African Worry Dolls")}`;
+
 const jsonLd = attributeProductJsonLd
 	? [attributeProductJsonLd, breadcrumbJsonLd]
 	: [breadcrumbJsonLd];
@@ -100,6 +110,13 @@ const jsonLd = attributeProductJsonLd
 				variants={category.attributeVariants ?? []}
 			/>
 		) : (
+			<>
+			{isDolls && (
+				<p class="handmade-note">
+					Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
+					exact doll you'll receive.
+				</p>
+			)}
 			<div class="grid grid-3">
 				{items.map((item) => (
 					<ItemCard
@@ -111,11 +128,27 @@ const jsonLd = attributeProductJsonLd
 						description={item.description}
 						soldOut={item.soldOut}
 						href={`/shop/${category.slug}/${item.slug}`}
-						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("crop").auto("format").url() : undefined}
+						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined}
 						photoLqip={item.photoLqip}
 					/>
 				))}
+				{isDolls && (
+					<a class="card custom-card" href={customHref}>
+						<h3>Custom dolls</h3>
+						<p>
+							Your colours, a theme, or dolls for an event. Made to order in batches of 10 or more,
+							priced on request.
+						</p>
+						<span class="custom-card-cta">Ask about a custom order &rarr;</span>
+					</a>
+				)}
 			</div>
+			{isDolls && (
+				<p class="wholesale-note">
+					Buying for a shop or a corporate gift? Wholesale is by appointment - <a href={wholesaleHref}>email us</a> and we'll send prices.
+				</p>
+			)}
+			</>
 		)}
 	</section>
 </Layout>
@@ -137,5 +170,47 @@ const jsonLd = attributeProductJsonLd
 
 	.back-link:hover {
 		color: var(--st-teal);
+	}
+
+	.handmade-note {
+		margin: 0 0 var(--space-2);
+		padding: 0.75rem 1rem;
+		max-width: 60ch;
+		border-left: 3px solid var(--st-teal);
+		background: #fff;
+		border-radius: 0 8px 8px 0;
+		line-height: 1.55;
+	}
+
+	/* A whole-card link, like the shop landing tiles: ink text, the cue in teal-dark and underlined.
+	   Dashed border so it reads as "something else" in a grid of products, not a tenth doll. */
+	.custom-card {
+		justify-content: center;
+		border: 2px dashed rgba(36, 35, 43, 0.2);
+		background: transparent;
+		box-shadow: none;
+		color: var(--st-ink);
+		text-decoration: none;
+	}
+
+	.custom-card:hover {
+		border-color: var(--st-teal-dark);
+	}
+
+	.custom-card p {
+		color: rgba(36, 35, 43, 0.75);
+	}
+
+	.custom-card-cta {
+		margin-top: auto;
+		font-weight: 700;
+		color: var(--st-teal-dark);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.wholesale-note {
+		margin: var(--space-2) 0 0;
+		color: rgba(36, 35, 43, 0.75);
 	}
 </style>

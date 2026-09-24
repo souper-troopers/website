@@ -67,6 +67,8 @@ export interface ShopItem {
 	price: number;
 	photo?: SanityImageSource;
 	photoLqip?: string;
+	/** Extra photos for the product page's carousel, after the main photo. */
+	gallery?: SanityImageSource[];
 	description?: string;
 	details?: string;
 	soldOut: boolean;
@@ -102,6 +104,7 @@ const SHOP_ITEM_PROJECTION = `
 	price,
 	photo,
 	"photoLqip": photo.asset->metadata.lqip,
+	"gallery": gallery[defined(asset)],
 	description,
 	details,
 	"soldOut": coalesce(soldOut, false),

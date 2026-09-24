@@ -23,7 +23,22 @@ export default defineType({
       options: {source: 'name'},
     }),
     defineField({name: 'price', title: 'Price (R)', type: 'number', validation: (rule) => rule.required()}),
-    defineField({name: 'photo', title: 'Photo', type: 'image', options: {hotspot: true}}),
+    defineField({
+      name: 'photo',
+      title: 'Main photo',
+      description: 'Shown on the product card in the shop, and first on the product page.',
+      type: 'image',
+      options: {hotspot: true},
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'More photos',
+      description:
+        'Extra photos of this product, shown as a swipeable carousel on its own page after the main photo. For handmade items, show the range: a few different examples of the same style.',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}}],
+      options: {layout: 'grid'},
+    }),
     defineField({
       name: 'description',
       title: 'Short description',

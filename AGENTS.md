@@ -681,10 +681,34 @@ What changes what we build:
 - **Fonts stay off.** Kerry asked, Stephen explained the swap, Kerry: *"I'm not attached to it."*
 - **No hard deadline.** World Homeless Day is dropped; "before the end of the year"; two more review
   rounds, then consider switching the domain. Hilton: *"the cost of perfection is prohibitive."*
-- ⚠ **Adrian cannot get into `/request-for-comment`** — he meets the Basic-auth dialog and has never
-  had credentials. He is the reviewer most likely to leave useful comments, so this is worth fixing
-  before the next round (add him to `STATUS_USERS`; note that variable change needs a deploy).
+- ~~**Adrian cannot get into `/request-for-comment`**~~ **Sorted by the user on 2026-09-24** (a login
+  in `STATUS_USERS`). That variable change only takes effect after the next production deploy.
+- **Worry Dolls restructured on 2026-09-24** — see "The Worry Dolls, by variation" below.
 - Next meeting **Wednesday 30 September, 16:00**. Include Hilton on emails; the last one missed him.
+
+### The Worry Dolls, by variation (2026-09-24)
+The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop/Dolls/<variation>`).
+- **`shopItem.gallery`** (array of images, "More photos") joined `photo` ("Main photo"). The product
+  page renders `[photo, ...gallery]` as a scroll-snap carousel: it swipes and scrolls with no JS; an
+  inline script only adds ←/→ buttons (44px), a live "n / N" counter and arrow keys, and the controls
+  stay `hidden` without it. Slides are fixed 3:4 with `object-fit: contain` on white, so nothing jumps
+  between photos. All slides go into the `Product` JSON-LD `image`.
+- **Cards and share images pad instead of crop** (`fit("fill").bg("ffffff")`). The doll shots are 3:4
+  portrait, and the old square crop clipped hats and feathers. The only other items (two gift tags)
+  are already square, so the change is a no-op for them.
+- **Data, written by a one-off `sanity exec --with-user-token` script** (not kept): 43 distinct images
+  (45 files; Sanity de-duplicates the two files Shan put in two folders). Each of the nine products got
+  a lead photo, the rest as gallery, a Shan-list name ("African Worry Doll - Christmas Elf", singular
+  "Doll" throughout) and an **explicit slug** (`african-worry-doll-<variation>`), so renames no longer
+  move URLs. **Madiba became General** (same document, `UohOeKbgohNmjusgcltWlT`, kept R250) — Shan: a
+  one-off custom doll, and General is on her list.
+- **On the category page, for `worry-dolls` only**: the handmade note above the grid, a dashed
+  **Custom dolls** card after the products ("batches of 10 or more, priced on request"), and a
+  **wholesale by appointment** line — both `mailto:manager@` with a subject. The note repeats on each
+  doll's product page. ⚠ The price, minimum, inbox and the two double-filed photos are unconfirmed:
+  `q33` on the status page.
+- **Not done**: the `/shop` landing tile for Worry Dolls still uses the old 600×364 category photo;
+  the per-doll "details" copy is still empty; the display order still has General fifth.
 
 ## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
 From the 2 September review — Adrian's point, and the one the room liked most: the page opened with

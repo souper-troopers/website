@@ -683,8 +683,8 @@ What changes what we build:
 - **Fonts stay off.** Kerry asked, Stephen explained the swap, Kerry: *"I'm not attached to it."*
 - **No hard deadline.** World Homeless Day is dropped; "before the end of the year"; two more review
   rounds, then consider switching the domain. Hilton: *"the cost of perfection is prohibitive."*
-- ~~**Adrian cannot get into `/request-for-comment`**~~ **Sorted by the user on 2026-09-24** (a login
-  in `STATUS_USERS`). That variable change only takes effect after the next production deploy.
+- ~~**Adrian cannot get into `/request-for-comment`**~~ **Done, 2026-09-24** - the user set up his login
+  and helped him in; it is live. Nothing to follow up, and don't ask the user about it again.
 - **Worry Dolls restructured on 2026-09-24** — see "The Worry Dolls, by variation" below.
 - Next meeting **Wednesday 30 September, 16:00**. Include Hilton on emails; the last one missed him.
 

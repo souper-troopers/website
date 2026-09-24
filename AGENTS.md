@@ -707,8 +707,18 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   **wholesale by appointment** line — both `mailto:manager@` with a subject. The note repeats on each
   doll's product page. ⚠ The price, minimum, inbox and the two double-filed photos are unconfirmed:
   `q33` on the status page.
-- **Not done**: the `/shop` landing tile for Worry Dolls still uses the old 600×364 category photo;
-  the per-doll "details" copy is still empty; the display order still has General fifth.
+- **Same day, tidy-ups**: General moved to third (after Female, Male), and the Worry Dolls **category
+  photo** (the `/shop` landing tile) is now a composed 1600×1200 of three new shots side by side
+  (Female 24, Brooch 37, Literary 35) - one portrait doll in a landscape tile would lose its head to
+  the crop. Built as an HTML page screenshotted by Playwright, each photo in its own third with a
+  radial mask softening its edges into white (the photos' slightly grey interiors otherwise show as
+  faint boxes). **Still not done**: per-doll "details" copy is empty; the Gift Tags tile is still the
+  soft 600px scrape.
+- ⚠ **A build straight after a Sanity write can read stale data for about a minute.** The site's
+  client uses the CDN in production (`useCdn: !import.meta.env.DEV`), and the CDN caches per query
+  and API version - a query checked with a *different* `apiVersion` can already be fresh while the
+  site's (`2026-08-08`) is not. Found when a rebuild still showed the old doll order. Before
+  publishing right after a content edit, confirm the built HTML, or wait a minute.
 
 ## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
 From the 2 September review — Adrian's point, and the one the room liked most: the page opened with

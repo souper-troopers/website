@@ -59,7 +59,7 @@ Context: Kerry bought a Shmiley domain hoping to make the products more findable
   - `soldOut` is a manual toggle, not inventory tracking (still deliberately absent — see `docs/shop-checkout-decision.md`). It hides Add to cart and flips `availability` to `OutOfStock`.
 - **Product photos — the two gift tags are fixed (2026-08-15), the rest are not.** `Gift Tag - India Harris (pack of 5)` and `Gift Tag - Hans Moolman (pack of 3)` now carry 1800×1800 crops of the real originals, replacing 600×203 and 600×166 scrapes that were being stretched to ~3× and ~2.5×. Three things deliberately left alone:
   - **The coffee.** `photo-output_0` is the *same shot* as the current 600×600 category image at 3840×3840 — but it carries a **Souper Troopers watermark** and a studio background, where the current one is a clean cutout on white. That's a trade, not an upgrade, so it's the client's call. Asked on the RFC page.
-  - **The `gift-tags` category tile is still 600×166**, and the shop landing page asks for `width(500).height(375).fit("crop")` — so it is upscaled ~2.3× *and* centre-cropped to an arbitrary middle slice of what is actually a lay-flat of six tags. No single new photo reproduces that composition, so fixing it means either choosing one pack shot to stand for the category or rebuilding the lay-flat. Both are design decisions, not swaps.
+  - ~~**The `gift-tags` category tile is still 600×166**~~ **Fixed 2026-09-24** - see "The Worry Dolls, by variation". Original note: and the shop landing page asks for `width(500).height(375).fit("crop")` — so it is upscaled ~2.3× *and* centre-cropped to an arbitrary middle slice of what is actually a lay-flat of six tags. No single new photo reproduces that composition, so fixing it means either choosing one pack shot to stand for the category or rebuilding the lay-flat. Both are design decisions, not swaps.
   - **The `worry-dolls` category tile (600×364)**, for the same reason.
 - **Still outstanding — real product descriptions, now 1 of 12 in.** Shan sent a full African Worry Dolls description on 2026-08-15; it's live on the `productCategory` for `worry-dolls` (three Portable Text paragraphs, near-verbatim — only the repeated `African Worry Dolls™` opener was dropped, since the page heading already says it, and with it the question of whether the site should assert a ™). **Left at category level, not copied onto the 9 dolls**: it describes the product line, and duplicating identical text across 9 pages is what search engines treat as thin content. Each doll still needs a line or two on what makes *that* one different, and the coffee and the two gift tags still have nothing at all. `details` remains empty on every item, so most `Product` blocks still ship without a `description`. Blocked on the client, not on code.
 
@@ -714,8 +714,15 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   (Female 24, Brooch 37, Literary 35) - one portrait doll in a landscape tile would lose its head to
   the crop. Built as an HTML page screenshotted by Playwright, each photo in its own third with a
   radial mask softening its edges into white (the photos' slightly grey interiors otherwise show as
-  faint boxes). **Still not done**: per-doll "details" copy is empty; the Gift Tags tile is still the
-  soft 600px scrape.
+  faint boxes). **Still not done**: per-doll "details" copy is empty.
+- **The Gift Tags category tile, same day**: a 1600×1200 composite of the two pack cards side by side
+  (India Harris `DSC_7519` left, Hans Moolman `DSC_7525` right, from `Content/Shop/Dolls/Tags/`),
+  built with the repo's `sharp` (script in the session scratchpad, not kept): each card located by
+  its printed ink, a 1200×1600 crop around it scaled to a 900px half, the two halves overlapped by
+  200px with a linear feather, and the studio grey lifted ×1.05 so it sits near the other tiles'
+  white. Judged at the tile's real size (337px), not at full size - at full size a card filling 60%
+  of the frame looks generous, at tile size beside the coffee and dolls it looked lost. Two earlier
+  attempts are orphaned assets in Sanity (`e9176…`, `6e1ab…`), unreferenced and harmless.
 - ⚠ **A build straight after a Sanity write can read stale data for about a minute.** The site's
   client uses the CDN in production (`useCdn: !import.meta.env.DEV`), and the CDN caches per query
   and API version - a query checked with a *different* `apiVersion` can already be fresh while the
@@ -908,9 +915,8 @@ the form's usual 480px.
   - ⚠ **`.card.category-tile { padding: 0 }` is a doubled class on purpose.** The ≤700px
     `.card { padding }` rule sits later in `Layout.astro` at the same specificity, so a plain
     `.category-tile` rule loses on phones and the photo is inset again.
-  - **The Gift Tags photo in Sanity is 600x166**, so filling a tile scales it up ~1.5x (about 3x on a
-    retina screen) and it looks soft. It was already upscaled before this change; the fix is a better
-    photo, which is the open item under "Shop discoverability" above.
+  - ~~**The Gift Tags photo in Sanity is 600x166**~~ - replaced 2026-09-24 with a 1600×1200
+    composite of the two pack cards.
   - Trade: across a row the titles do not line up when blurbs differ in length (the text ends level
     instead). At 1280px all three titles sit at the same height.
 

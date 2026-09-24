@@ -48,9 +48,8 @@ const categories = await getProductCategories();
 							style={category.photoLqip ? `background-image:url(${category.photoLqip})` : undefined}
 						>
 							{/* Requested uncropped, by width only: the tile decides the crop (see
-							    .category-tile-img).
-							    ⚠ The gift-tags source is 600x166, so it is upscaled at any tile size - a
-							    better photo is the fix, not a setting. */}
+							    .category-tile-img). Category photos should be 4:3, like the Worry Dolls and
+							    Gift Tags composites. */}
 							<img
 								src={urlFor(category.photo).width(800).auto("format").url()}
 								srcset={`${urlFor(category.photo).width(400).auto("format").url()} 400w, ${urlFor(category.photo).width(800).auto("format").url()} 800w`}

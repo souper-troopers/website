@@ -1094,6 +1094,26 @@ each a full-bleed photo under a dark tint with the title and description in whit
     - **WordPress keeps the full original behind the size suffix.** The page serves `where-we-do-it--1024x683.jpg`; dropping the suffix gives `where-we-do-it-.jpg` at **7079×4719** (5.8MB), and `-scaled.jpg` gives 2560px. Worth trying against any other image still on the old site — it is the difference between a web crop and a camera file.
     - Original archived to `Content/Images/Building/humanity-hub-exterior-original.jpg`; a 2400px copy is `src/assets/images/humanity-hub-exterior.jpg` and is on the Contact page. **The `<Image>` there sets `width` as well as `widths`** — without it Astro points the plain `src` at the full 2400px file as the srcset fallback, 272KB for a 340px card.
     - Incidentally corroborates the postal code: the old page reads "66 Newmarket street, Woodstock 7925", independently of Shan's answer.
+  - **Replaced wholesale from the Drive on 2026-09-24** (the user downloaded `Website/` and swapped the
+    folder). **The layout changed** — Shan reorganised `Content/` by site page on 14–18 September:
+    `Content/{Home, Our Work/<service>, Who we are/The Humanity Hub, Get involved/{Individuals,
+    Companies}, Shop/{Dolls/<variation>, Coffee, Bracelets}, Extra/{Images, Videos}}`. Older paths in
+    these notes (`Content/Images/...`, `Content/Videos/...`) now live under `Content/Shop/` and
+    `Content/Extra/`.
+    - `Shop/Dolls/` holds **44 new studio shots, one folder per variation** (Female, Male, General,
+      Angel, Elf, Literary, Brooch, Magnet, Key rings; gift-tag originals under `Dolls/Tags`) — the
+      material for per-variation carousels. A few files sit in two folders (`8.png`: Magnet and
+      Female; `6.png`: General and Female) — ask Shan which is right. No Madiba: a one-off custom doll.
+    - `Our Work/<service>/` are real photos for the service cards, but ⚠ `Documentation/` includes two
+      **AI-generated images** (one named "ChatGPT Image…") — never present those as real, and confirm
+      consent before showing participants' faces (q19 covered names only).
+    - `Home/0916.mp4` (48 MB, 16 Sep) is unreviewed — possibly an early hero cut.
+    - ⚠ **Lost in the swap: `Content/Images/Building/humanity-hub-exterior-original.jpg`** (7079px),
+      which we had added ourselves and was never on the Drive. The 2400px copy in `src/assets/images/`
+      is intact and is what the site uses; the old site's source URL returned 500 on 2026-09-24.
+    - **We now have Drive access** through the claude.ai Google Drive connector (folder owned by
+      soupertroopers1818@gmail.com, shared to StephenSimonPaul@gmail.com), so the "no Drive access"
+      line below is history.
   - **Refreshed from the client's Google Drive 2026-08-15**, adding `Content/Images/Products/` (49 real product originals, 3,000–4,000px — against the ≤600px WooCommerce scrapes we'd been using), `Press/PRESS.docx`, `Profile pages/`, and `Shmiley/`. **We have no Drive access ourselves**; it arrives only when the user copies it across, so treat the folder as a snapshot with a date, not a live mirror.
   - **What the 49 product photos actually are**, since the filenames say nothing: `DSC_7479`–`DSC_7514` are ~35 individual worry dolls, one design each, studio-shot on a white sweep and **unwatermarked**. `DSC_7515`–`7517` are a beaded bracelet reading "Souper Trooper / Dignity / Love / Respect" — **a product that does not exist in the shop at all**; raised on the RFC page. `DSC_7518`, `7520`, `7521`, `7522`, `7524` are the five India Harris gift tags individually and `DSC_7519` is their pack card; `DSC_7526`–`7528` are the three Hans Moolman designs and `DSC_7525` is theirs. **That 5-and-3 split is what identifies the two packs** — the cards are captioned and signed ("Indi", "Moolman"), and the counts match "pack of 5" and "pack of 3" exactly. The `photo-output_*` files are Troopers Coffee and are **watermarked**, unlike the DSC series.
   - **The 35 doll photos cannot be assigned without the client.** The shop sells nine *kinds* of doll (Angel, Elf, Madiba, Keyring, Brooch, Magnet, Literary, Female, Male) while the photos are individual designs; nothing in the file or the frame says which kind a given doll is. Asked on the RFC page — don't guess, a wrong guess puts the wrong picture on a product page.

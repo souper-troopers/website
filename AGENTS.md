@@ -1107,7 +1107,11 @@ each a full-bleed photo under a dark tint with the title and description in whit
     - `Our Work/<service>/` are real photos for the service cards, but ⚠ `Documentation/` includes two
       **AI-generated images** (one named "ChatGPT Image…") — never present those as real, and confirm
       consent before showing participants' faces (q19 covered names only).
-    - `Home/0916.mp4` (48 MB, 16 Sep) is unreviewed — possibly an early hero cut.
+    - `Home/0916.mp4` (48 MB, 38s, 1080p HEVC, with sound) is **not a hero clip**: it is Odette's
+      success-story video — a captioned talking head with b-roll, likely Shan's edit. It belongs in
+      `successStory.video` for "Odette Sue Oliver" (the first featured story). `q32` asks for it on
+      YouTube as unlisted, plus Odette's consent; paste the link into the Studio once it arrives. Don't
+      self-host it: too heavy, and HEVC won't play in Firefox or on most Android/Windows Chrome.
     - ⚠ **Lost in the swap: `Content/Images/Building/humanity-hub-exterior-original.jpg`** (7079px),
       which we had added ourselves and was never on the Drive. The 2400px copy in `src/assets/images/`
       is intact and is what the site uses; the old site's source URL returned 500 on 2026-09-24.

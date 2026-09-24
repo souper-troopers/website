@@ -48,7 +48,7 @@ const goodsCategories = [
 		<div class="wrap">
 			<details class="gi-group-box">
 				<summary class="gi-group-summary">
-			<div class="gi-band-media shimmer-up">
+			<div class="gi-band-media gi-tint-light shimmer-up">
 				<Image
 					src={individualsPhoto}
 					alt="A volunteer showing a Souper Squad member a technique, one to one"
@@ -179,7 +179,7 @@ const goodsCategories = [
 		<div class="wrap">
 			<details class="gi-group-box">
 				<summary class="gi-group-summary">
-			<div class="gi-band-media shimmer-up">
+			<div class="gi-band-media gi-tint-light shimmer-up">
 				<Image
 					src={businessesPhoto}
 					alt="Kerry meeting a corporate partner at a Souper Troopers event"
@@ -439,6 +439,42 @@ const goodsCategories = [
 		margin: 0;
 		color: rgba(255, 255, 255, 0.86);
 		max-width: 32ch;
+	}
+
+	/* TRIAL (2026-09-24), from Adrian on the 21 September review: the site sits on a lot of black, so
+	   try a pale tint with ink text instead. The page's own off-white (--st-bg, 250,249,246) fades out
+	   left to right, so the words sit on light and the photo survives on the right. Remove the
+	   `gi-tint-light` class from the two banners to go back to the dark version - nothing else
+	   changes. Stops measured against the real photo pixels; change them and re-run that check. */
+	.gi-tint-light .gi-band-scrim {
+		background: linear-gradient(
+			100deg,
+			rgba(250, 249, 246, 0.92) 0%,
+			rgba(250, 249, 246, 0.8) 40%,
+			rgba(250, 249, 246, 0.2) 74%,
+			rgba(250, 249, 246, 0) 100%
+		);
+	}
+
+	.gi-tint-light .gi-band-text h2 {
+		color: var(--st-ink);
+	}
+
+	.gi-tint-light .gi-band-text p {
+		color: rgba(36, 35, 43, 0.85);
+	}
+
+	.gi-tint-light + .gi-group-cue,
+	.gi-group-summary:has(.gi-tint-light) .gi-group-cue {
+		background: rgba(255, 255, 255, 0.92);
+		border-color: rgba(36, 35, 43, 0.2);
+		color: var(--st-ink);
+	}
+
+	.gi-group-summary:has(.gi-tint-light):hover .gi-group-cue,
+	.gi-group-summary:has(.gi-tint-light):focus-visible .gi-group-cue {
+		background: #fff;
+		border-color: var(--st-ink);
 	}
 
 	/* --- Folds ---------------------------------------------------------------------------------

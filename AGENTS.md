@@ -720,6 +720,15 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   site's (`2026-08-08`) is not. Found when a rebuild still showed the old doll order. Before
   publishing right after a content edit, confirm the built HTML, or wait a minute.
 
+### Trial: a light tint on Get Involved's banners (2026-09-24)
+Adrian, 21 September: the site sits on a lot of black. The two audience banners now use a pale tint
+(the page's own off-white, 0.92 -> 0 left to right) with ink text and a solid white "See how" pill -
+all behind a `gi-tint-light` class on the two `.gi-band-media` elements, so **deleting that class
+restores the dark version** with no other change. Measured on real pixels with the text's own colour:
+headings >=4.5:1 (large text needs 3), paragraphs >=5.7:1, at 360-1440px. It is a trial to show on the
+30 September call; if it's liked, the shop card, Who We Are card and service cards are the next
+candidates, each needing its own measurement.
+
 ## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
 From the 2 September review — Adrian's point, and the one the room liked most: the page opened with
 six action cards and left the reader to work out which applied to them. It now asks **who you are**

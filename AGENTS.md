@@ -722,6 +722,33 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   site's (`2026-08-08`) is not. Found when a rebuild still showed the old doll order. Before
   publishing right after a content edit, confirm the built HTML, or wait a minute.
 
+### The shop grid, decluttered (2026-09-24)
+Adrian on the 21 September review: the product grid read as cluttered, and he preferred the old
+site's larger images without card borders; Hilton: "simple is sexy". Applied to the category pages,
+the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` landing tiles.
+- **No card boxes.** The white product photo is the only shape; name, price and button sit on the
+  page beneath it. Landing tiles likewise: a rounded 4:3 photo, then name, blurb and "Shop →".
+- **`.product-grid`** (global, in `Layout.astro`): fixed **3 columns, 2 below 900px** - never 1, since
+  products are browsed by picture. Fixed counts replace `grid-3`'s auto-fit, which was fitting four
+  small cards at 1280 (photos ~200px, now 332px), and they also do `.grid-fill`'s job: a short row
+  never stretches. Row gap larger than column gap, since nothing else separates one product from
+  the next. The landing tiles stay on `grid-3` (one column on a phone - they carry a blurb).
+- **`shortProductName()`** (`src/lib/sanity.ts`) shows "Female" under an "African Worry Dolls" page,
+  "India Harris (pack of 5)" under "Gift Tags - Worry Dolls". It strips only when the part before
+  " - " is the range's own name, singular or plural, ignoring anything after the range's own dash;
+  otherwise the name shows whole. Passed as `shortName`; the full name stays on the alt text, the
+  cart and the product page.
+- **Add to cart is a small `.btn-outline` (ink), filling ink on hover** - nine teal pills were most of
+  the clutter, and the header's Donate / Shop stays the one filled control. The old `border: none`
+  on it (against the button-system rule) is gone.
+- **Landing tile "Shop →" is ink and underlined**, not teal-dark: off a white card, teal-dark on
+  `--st-bg` is 4.28:1, under AA at that size.
+- **Custom dolls and Wholesale are one dashed box under the Worry Dolls grid**, two columns (stacked
+  below 700px). As a card in the grid, Custom sat alone on the last row once the boxes went. The one
+  new piece of copy is the "Wholesale" heading.
+- Checked at 390 and 1280 on the Worry Dolls, Gift Tags, a product page and `/shop`: no sideways
+  scroll, buttons 35px tall, Add to cart still adds.
+
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
 Adrian, 21 September: the site sits on a lot of black. The two audience banners now use a pale tint
 (the page's own off-white, 0.92 -> 0 left to right) with ink text and a solid white "See how" pill -
@@ -872,6 +899,7 @@ the form's usual 480px.
   keeps it (it names the city, CAST and the Hub, and it is the trust statement); the hero now just
   names the range. Not "handmade in Cape Town": the coffee is not handmade. Tile links read "Shop →"
   rather than repeating the name one line above; the whole card is the link.
+- ⚠ **Superseded 2026-09-24** - the tiles lost their card box; see "The shop grid, decluttered".
 - **Category tiles: the photo runs edge to edge and takes the card's spare height**, so the text ends
   level along the bottom of the row. `.category-tile-img` is `flex: 1 0 auto` with `aspect-ratio: 4/3`
   as the floor, and the image is absolute so it follows the grown height. The tile photos are now

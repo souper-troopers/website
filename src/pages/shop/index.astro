@@ -41,14 +41,14 @@ const categories = await getProductCategories();
 	<section class="section wrap">
 		<div class="grid grid-3">
 			{categories.map((category) => (
-				<a class="card category-tile" href={`/shop/${category.slug}`}>
+				<a class="category-tile" href={`/shop/${category.slug}`}>
 					{category.photo && (
 						<div
 							class="category-tile-img blur-up"
 							style={category.photoLqip ? `background-image:url(${category.photoLqip})` : undefined}
 						>
-							{/* Requested uncropped, by width only: the tile decides the crop now, since the
-							    photo grows to fill the card's spare height (see .category-tile-img).
+							{/* Requested uncropped, by width only: the tile decides the crop (see
+							    .category-tile-img).
 							    ⚠ The gift-tags source is 600x166, so it is upscaled at any tile size - a
 							    better photo is the fix, not a setting. */}
 							<img

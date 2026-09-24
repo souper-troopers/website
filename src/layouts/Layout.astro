@@ -1570,25 +1570,15 @@ const structuredData = {
 
 			/* A frame: no padding of its own, so the photo runs flush to the card's edges, and the body
 			   restores the padding the global .card rule would have given. */
+			/* Shop landing tiles - no card box since 2026-09-24, to match the product grid (Adrian on the
+			   21 September review: larger images, no card borders). The photo is the tile's only shape;
+			   name, blurb and link sit on the page beneath it. Whole-tile link. */
 			.category-tile {
 				text-decoration: none;
 				color: inherit;
 				display: flex;
 				flex-direction: column;
 				gap: 0;
-				overflow: hidden;
-				transition: transform 0.15s ease, color 0.3s ease;
-			}
-
-			/* Doubled class on purpose: the ≤700px `.card { padding }` rule sits later in this sheet at
-			   the same specificity, so a plain `.category-tile { padding: 0 }` loses on phones and the
-			   photo stops being flush. */
-			.card.category-tile {
-				padding: 0;
-			}
-
-			.category-tile:hover {
-				transform: translateY(-3px);
 			}
 
 			.blur-up {
@@ -1660,34 +1650,38 @@ const structuredData = {
 				animation: none;
 			}
 
-			/* Edge to edge, and it takes the card's spare height: the grid stretches the three tiles to
-			   the tallest, so a tile with less text grows its photo rather than leaving white under the
-			   link, and the text ends level across the row. `aspect-ratio` is the floor, not the shape -
-			   it reserves 4:3 before the image loads. The image is absolute so it follows that grown
-			   height. Same pattern as the Contact page's Visit us card. */
+			/* A fixed 4:3 now that there is no card box to fill - the old "grow into the card's spare
+			   height" rule existed only to stop white showing under the link. The image is requested
+			   uncropped from Sanity, so object-fit cover decides the crop here. */
 			.category-tile-img {
 				position: relative;
 				width: 100%;
-				flex: 1 0 auto;
 				aspect-ratio: 4 / 3;
+				border-radius: calc(var(--radius) - 6px);
+				overflow: hidden;
+				margin-bottom: var(--space-4);
 			}
 
 			.category-tile-img img {
 				position: absolute;
 				inset: 0;
+				transition: transform 0.3s ease, opacity 0.4s ease;
+			}
+
+			.category-tile:hover .category-tile-img img {
+				transform: scale(1.03);
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.category-tile:hover .category-tile-img img {
+					transform: none;
+				}
 			}
 
 			.category-tile-body {
 				display: flex;
 				flex-direction: column;
-				padding: var(--space-6);
-			}
-
-			@media (max-width: 700px) {
-				/* Mirrors the global .card padding at this width. */
-				.category-tile-body {
-					padding: var(--space-4);
-				}
+				flex: 1;
 			}
 
 			.category-tile h2 {
@@ -1701,11 +1695,19 @@ const structuredData = {
 				margin-bottom: var(--space-3);
 			}
 
+			/* Ink and underlined, not teal-dark: off the white card, teal-dark on --st-bg is 4.28:1, under
+			   AA at this size. Matches the product names in the grid, which are ink and underlined. */
 			.category-tile-cta {
 				margin-top: auto;
 				font-weight: 700;
+				color: var(--st-ink);
+				text-decoration: underline;
+				text-underline-offset: 3px;
+				font-size: 0.95rem;
+			}
+
+			.category-tile:hover .category-tile-cta {
 				color: var(--st-teal-dark);
-				font-size: 0.9rem;
 			}
 
 			.payment-method-header {

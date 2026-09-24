@@ -996,6 +996,9 @@ went from roughly 600 to 297 (measured as `main.innerText` with the FAQ closed),
   scoped attribute.
 
 ### Homepage: the hero fills the first screen (2026-09-14)
+⚠ **Reverted 2026-09-24, at the user's call**: with the still mural, the full-screen box read oddly
+(mostly close-up wall), so the hero is back to its natural height - 637px at 1280, 530px at 390. It
+returns with the video: the CSS is in commit `37ab492`, and the comment on `.hero-photo` lists it.
 The review's agreed mechanism ("fills the vertical space on landing"), done with the mural rather than
 waiting for the video, which drops into the same box. `.hero-photo` is a flex column with
 `min-height: 100svh` (a `100vh` line first as the fallback); svh, because on phones vh includes the

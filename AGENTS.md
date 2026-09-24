@@ -674,6 +674,8 @@ What changes what we build:
   check re-run (`tint2.mjs` pattern), since it inverts the assumption those stops were tuned under.
 - **The homepage is still the least resolved page**, and the "three pillars" need re-deciding; `q28`
   carries a draft. Kerry floated a big, obvious "how to get involved" on it.
+  **Draft built 2026-09-24** for the 30 September call - see "Homepage: three pillars, then how to
+  get involved" below.
 - **Media is the real unblocker.** Shan has reshot the products and says everything is on the Drive
   (`Events`, `Mix`, `Products`); we only see uploads to 14 August, so that needs reconciling. Brad
   has started the video (rough cut, shot with Shan) and has **drone footage of the building**.
@@ -1067,12 +1069,36 @@ Two things from the 2 September transcript that the minutes' actions had not car
   with Donate / Shop always in the header too. Stephen had flagged it himself on the call ("calls to
   action to donate are kind of littered throughout"). ⚠ **The hero's Donate button must stay**: the
   mobile header's Donate appears only once that button has scrolled away.
+- ⚠ **Superseded 2026-09-24**: the shop band left the homepage for the pillars row (next section);
+  `ShopPromise` is now used by the shop page only.
 - **`src/components/ShopPromise.astro` is shared by the shop and the homepage** — one component, so
   the measured tint (see "The shop landing page") can't drift between copies. `eager` only on the
   shop, where it is the LCP image; lazy on the homepage. ⚠ **Each page passes its own paragraph**
   (the slot): the headline is shared, the words are not, per the parent/child rule. The homepage's
   line is stitched only from phrases the site already uses. Contrast re-measured on both pages:
   homepage paragraph worst 6.60:1, link 6.55:1; the shop unchanged.
+
+### Homepage: three pillars, then how to get involved (2026-09-24) - a draft for the 30th
+Built so the 30 September review reacts to something concrete, on the 21 September minutes ("the
+homepage is still the least resolved part") and q28's first try at three pillars. Order is now
+**hero → three pillars → How to get involved → success stories**, down from five sections.
+- **The pillars** (`pillars` array in `index.astro`): The Humanity Hub → `/about#humanity-hub` (an
+  anchor added to that section for it), The CAST programme → `/our-work`, Every purchase pays a wage
+  → `/shop`. Every line is wording the site already used; the user approved it word for word.
+- **They replace two whole sections**: the CAST photo-and-text block and the `ShopPromise` band. The
+  CAST photo moved into its card; the "Connect. Assess. Support. Transform." heading is gone from
+  the homepage (Our Work carries it).
+- **Photo on top, text on white beneath, no text on any photo** - Adrian's "too dark" point, and it
+  means no per-photo contrast to measure. Whole-card links like the shop's category tiles;
+  `.card.pillar` is a doubled class for the same ≤700px padding reason. Three across above 900px;
+  **sideways (photo 42% beside text) from 561 to 900px**, because two across would strand the third
+  card; stacked below. The Hub photo crops from the right, like Contact, to keep the 66.
+- **"How to get involved"** is Kerry's phrase from the 21st, replacing "However you want to help,
+  there's a clear next step"; the heading is larger and the tiles taller (280px) for her "big and
+  obvious". `#get-involved` is unchanged, so the hero's "Or see how else you can help" still lands.
+- Checked at 390, 760 and 1280: no sideways scroll; the three cards are one height (451px at 1280).
+  Phone page height 4,506px. **If it reads long on a phone**, 16:9 phone photos is the first lever.
+- It is a draft: q28 now says so and asks for a reaction rather than a list.
 
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not

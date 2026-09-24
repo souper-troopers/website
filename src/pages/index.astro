@@ -2,9 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import supportPhoto from "../assets/images/support-conversation.jpg";
+import hubPhoto from "../assets/images/humanity-hub-exterior.jpg";
+import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import BrushRing from "../components/BrushRing.astro";
-import ShopPromise from "../components/ShopPromise.astro";
 import StoryVideo from "../components/StoryVideo.astro";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
@@ -14,6 +15,42 @@ const stories = await getFeaturedSuccessStories();
 // The Donate tile leads on the same headline number as the impact band, read from Sanity rather
 // than retyped here so the two can't drift apart when Kerry updates it.
 const leadStat = impactStats.find((stat) => stat.value != null);
+
+// The three pillars - the first try put to Kerry on the status page (q28), and the answer to "what
+// is this?" before the page asks for anything. Every line is built from wording the site already
+// uses. Photo on top, text on white beneath: Adrian's "too dark" point from the 21 September
+// review, and no text ever sits on a photo, so there is no contrast to tune per image. The Hub
+// photo is the building, not people (q19); the CAST one is the photo this page already used.
+const pillars = [
+	{
+		title: "The Humanity Hub",
+		text: "A service centre in Woodstock, Cape Town, and where all of our work happens.",
+		href: "/about#humanity-hub",
+		cta: "Visit the Hub",
+		photo: hubPhoto,
+		// Mirrors contact.astro: the 66 sits at the photo's left edge, so crop from the right only.
+		position: "left center",
+		alt: "The Humanity Hub on Newmarket Street, Woodstock, with Table Mountain behind",
+	},
+	{
+		title: "The CAST programme",
+		text: "From a first conversation to a first pay cheque - rooted in dignity, love and respect.",
+		href: "/our-work",
+		cta: "See the CAST journey",
+		photo: supportPhoto,
+		position: "center",
+		alt: "A Souper Troopers social worker in conversation with a CAST participant",
+	},
+	{
+		title: "Every purchase pays a wage",
+		text: "Troopers Coffee and African Worry Dolls, made by people the CAST programme has supported.",
+		href: "/shop",
+		cta: "Visit the shop",
+		photo: shopPhoto,
+		position: "center",
+		alt: "Troopers Coffee and African Worry Dolls from the Souper Troopers shop",
+	},
+];
 
 // Generated once via sharp (resize 24px wide, jpeg q40) from mandela-mural.png - see commit history if it
 // ever needs regenerating after the source photo changes.
@@ -56,9 +93,40 @@ const heroLqip =
 		</div>
 	</section>
 
+	{/* The CAST section and the shop band were folded into these cards on 2026-09-24 (the draft for
+	    the 30 September review): each had its own full section, and the page said the same three
+	    things at greater length. Our Work and the shop page carry the detail, one click away. */}
+	<section class="section wrap">
+		<h2 class="visually-hidden">What we do</h2>
+		<div class="pillar-grid">
+			{pillars.map((p) => (
+				<a class="card pillar" href={p.href}>
+					<div class="pillar-img shimmer-up">
+						<Image
+							src={p.photo}
+							alt={p.alt}
+							width={720} widths={[400, 720]}
+							sizes="(min-width: 901px) 340px, (min-width: 561px) 50vw, 100vw"
+							style={`object-position: ${p.position}`}
+							onload="this.classList.add('is-loaded')"
+						/>
+					</div>
+					<div class="pillar-body">
+						<h3>{p.title}</h3>
+						<p>{p.text}</p>
+						<span class="pillar-cta">{p.cta} &rarr;</span>
+					</div>
+				</a>
+			))}
+		</div>
+	</section>
+
 	<section id="get-involved" class="section wrap">
-		<div class="section-intro">
-			<h2>However you want to help, there's a clear next step</h2>
+		{/* "How to get involved" is Kerry's own phrase from the 21 September review, where she asked
+		    for a big, obvious one on the homepage. Below the pillars, so the page says what the
+		    organisation is before it asks. */}
+		<div class="section-intro gi-intro">
+			<h2>How to get involved</h2>
 		</div>
 		<div class="path-grid">
 			<a href="/donate" class="path-tile path-lead">
@@ -96,54 +164,6 @@ const heroLqip =
 		</div>
 	</section>
 
-	{/* The social enterprise gets its own band rather than one small tile in the grid above - Kerry on
-	    the 2 September review: the homepage "needs to kind of speak to our social enterprise, and if
-	    you're interested in that, go to..." (Adrian made the same point). Branded Souper Troopers, not
-	    Shmiley, per the review's first decision. The shop's own card, in its own words: the headline is
-	    shared, the paragraph is not, so the two pages don't repeat each other. Every phrase in it is
-	    already on the site. */}
-	<section class="section wrap">
-		<ShopPromise heading="Every purchase pays a wage" href="/shop" linkLabel="Visit the shop">
-			<p>
-				Troopers Coffee and African Worry Dolls, made by people the CAST programme has supported.
-				Every order funds the jobs behind them.
-			</p>
-		</ShopPromise>
-	</section>
-
-	{/* The impact band was removed on 2026-09-13. It repeated 1,700+ from the lead "Donate" tile
-	    directly above it, plus three stats that also appear on Our Work - the repetition the
-	    2 September review asked us to cut. The homepage keeps its single strongest figure, in the
-	    tile, where it sits next to the action it argues for. Our Work keeps the full set.
-
-	    The three other "home" impactStat documents were unpublished on 2026-09-13 (drafts, not
-	    deleted - republish from the Studio to bring one back). Only "home" #1, 1,700+, is still
-	    published, and it feeds the tile. */}
-
-	<section class="section wrap">
-		<div class="grid grid-2" style="align-items: center;">
-			<div class="figure shimmer-up">
-				<Image
-					src={supportPhoto}
-					alt="A Souper Troopers social worker in conversation with a CAST participant"
-					width={800} widths={[400, 800]}
-					sizes="(min-width: 700px) 500px, 100vw"
-					onload="this.classList.add('is-loaded')"
-				/>
-			</div>
-			<div class="section-intro">
-				<span class="badge">The CAST journey</span>
-				<h2>Connect. Assess. Support. Transform.</h2>
-				{/* One line, not the four steps: Our Work tells the whole journey, one click away. */}
-				<p>
-					Every journey starts with a person requesting help and a social worker who shows up -
-					rooted in dignity, love, and respect.
-				</p>
-				<a href="/our-work">See the full CAST journey &rarr;</a>
-			</div>
-		</div>
-	</section>
-
 	<section class="stories-band">
 		<div class="wrap">
 			<span class="badge badge-on-dark">Success stories</span>
@@ -167,6 +187,111 @@ const heroLqip =
 	    asked us to cut. The hero button stays: the mobile header's Donate appears only once it has
 	    scrolled away (see the script below). */}
 </Layout>
+
+<style>
+	/* Three across on a laptop, one per row on a phone. Two across between would strand the third
+	   card, so the middle band keeps one column but lays each card sideways (photo beside text). */
+	.pillar-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--space-5);
+	}
+
+	/* Doubled class for the same reason as .card.category-tile on the shop page: the ≤700px
+	   `.card { padding }` rule sits later in Layout.astro at the same specificity. */
+	.card.pillar {
+		padding: 0;
+		gap: 0;
+		overflow: hidden;
+		align-items: stretch;
+		text-decoration: none;
+		color: var(--st-ink);
+		transition: transform 0.2s ease;
+	}
+
+	.card.pillar:hover {
+		transform: translateY(-4px);
+	}
+
+	.pillar-img {
+		position: relative;
+		aspect-ratio: 4 / 3;
+	}
+
+	.pillar-img img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.pillar-body {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		padding: var(--space-6);
+	}
+
+	.pillar-body h3 {
+		font-size: 1.35rem;
+		margin-bottom: var(--space-2);
+	}
+
+	.pillar-body p {
+		margin-bottom: var(--space-5);
+	}
+
+	/* The whole card is the link; this is its visible label, underlined like every link here. */
+	.pillar-cta {
+		margin-top: auto;
+		font-weight: 700;
+		color: var(--st-teal-dark);
+		text-decoration: underline;
+	}
+
+	@media (max-width: 900px) and (min-width: 561px) {
+		.pillar-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.card.pillar {
+			flex-direction: row;
+		}
+
+		.pillar-img {
+			flex: 0 0 42%;
+			aspect-ratio: auto;
+			min-height: 200px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.pillar-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card.pillar {
+			transition: none;
+		}
+
+		.card.pillar:hover {
+			transform: none;
+		}
+	}
+
+	/* "Big and obvious" was Kerry's ask for this section: a larger heading than a normal section
+	   intro, and taller tiles than the old secondary grid had. */
+	.gi-intro h2 {
+		font-size: clamp(2rem, 4.5vw, 2.8rem);
+	}
+
+	#get-involved :global(.path-tile) {
+		min-height: 280px;
+	}
+</style>
 
 <script>
 	const heroImg = document.querySelector<HTMLElement>(".hero-bg");

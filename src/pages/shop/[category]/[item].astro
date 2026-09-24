@@ -1,6 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
+import { getAllShopItems, shortProductName, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
 import ItemCard from "../../../components/ItemCard.svelte";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
@@ -166,17 +166,17 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	{related.length > 0 && (
 		<section class="section wrap">
 			<h2>More from {item.categoryName}</h2>
-			{/* grid-fill, not the bare .grid-3: .grid-3 uses auto-fit, which collapses empty tracks,
-			    so a category with only one sibling left stretched that single card across the whole
-			    row - rendering the related thumbnail at 1012px against the actual product's 510px.
-			    auto-fill keeps the empty tracks, so one card stays one column wide. */}
-			<div class="grid grid-3 grid-fill">
+			{/* .product-grid has fixed column counts, so a category with only one sibling left keeps
+			    that card one column wide - the bug .grid-fill was once added here to fix (a lone
+			    related thumbnail rendered at 1012px against the product's own 510px). */}
+			<div class="product-grid">
 				{related.map((other) => (
 					<ItemCard
 						client:load
 						id={other._id}
 						categoryName={other.categoryName}
 						name={other.name}
+						shortName={shortProductName(other.name, other.categoryName)}
 						price={other.price}
 						description={other.description}
 						soldOut={other.soldOut}

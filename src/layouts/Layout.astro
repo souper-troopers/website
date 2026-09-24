@@ -1277,6 +1277,24 @@ const structuredData = {
 				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 			}
 
+			/* Product grids (2026-09-24): fixed column counts rather than auto-fit, so the photos are as
+			   large as the column allows - three across on a laptop, where auto-fit had been fitting four
+			   smaller ones - and a short row never stretches. Two across on a phone, not one: products
+			   are browsed by picture, and one per screen made nine dolls a long scroll. More room between
+			   rows than columns, since there is no card box to separate one product from the next. */
+			.product-grid {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: var(--space-12) var(--space-8);
+			}
+
+			@media (max-width: 900px) {
+				.product-grid {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: var(--space-8) var(--space-5);
+				}
+			}
+
 			/* --- "More" inside a card (2026-09-13) -------------------------------------------------
 			   The rule this serves, in the user's words: people don't read *unless* they are deciding
 			   something or checking whether the organisation can be trusted. So a card keeps visible

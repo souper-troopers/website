@@ -255,3 +255,21 @@ export async function getPressMentions(): Promise<PressMention[]> {
 		`*[_type == "pressMention"] | order(defined(date) desc, date desc) { publication, headline, url, date }`
 	);
 }
+
+/**
+ * A product's name without the range it belongs to, for grids on a page that already names the range:
+ * "African Worry Doll - Female" under an "African Worry Dolls" heading shows as "Female". Only strips
+ * when the part before " - " is the range's own name (singular or plural), so a name that doesn't
+ * follow the pattern is shown whole rather than guessed at.
+ */
+export function shortProductName(name: string, rangeName: string): string {
+	const split = name.split(/\s+[-–—]\s+/);
+	if (split.length < 2) return name;
+	const prefix = split[0].trim().toLowerCase();
+	const range = rangeName.trim().toLowerCase();
+	// "Gift Tags - Worry Dolls" names the Gift Tag range too, so the range may carry its own
+	// " - ..." after the plural or singular.
+	const rangeHead = range.split(/\s+[-–—]\s+/)[0];
+	const matches = rangeHead === prefix || rangeHead === `${prefix}s`;
+	return matches ? split.slice(1).join(" - ") : name;
+}

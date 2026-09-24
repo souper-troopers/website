@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { PortableText } from "astro-portabletext";
-import { getProductCategories, getShopItems, urlFor } from "../../lib/sanity";
+import { getProductCategories, getShopItems, shortProductName, urlFor } from "../../lib/sanity";
 import AttributeProduct from "../../components/AttributeProduct.svelte";
 import ItemCard from "../../components/ItemCard.svelte";
 
@@ -117,13 +117,14 @@ const jsonLd = attributeProductJsonLd
 					exact doll you'll receive.
 				</p>
 			)}
-			<div class="grid grid-3">
+			<div class="product-grid">
 				{items.map((item) => (
 					<ItemCard
 						client:load
 						id={item._id}
 						categoryName={category.name}
 						name={item.name}
+						shortName={shortProductName(item.name, category.name)}
 						price={item.price}
 						description={item.description}
 						soldOut={item.soldOut}
@@ -132,21 +133,28 @@ const jsonLd = attributeProductJsonLd
 						photoLqip={item.photoLqip}
 					/>
 				))}
-				{isDolls && (
-					<a class="card custom-card" href={customHref}>
+			</div>
+			{/* Custom and wholesale share one box under the grid (2026-09-24). As a card inside the grid,
+			    "Custom dolls" sat alone on the last row once the products lost their card boxes, with
+			    the wholesale line trailing under it. Both are "talk to a person" routes, so they read
+			    as one thing, apart from the products. */}
+			{isDolls && (
+				<div class="dolls-orders">
+					<div>
 						<h3>Custom dolls</h3>
 						<p>
 							Your colours, a theme, or dolls for an event. Made to order in batches of 10 or more,
 							priced on request.
 						</p>
-						<span class="custom-card-cta">Ask about a custom order &rarr;</span>
-					</a>
-				)}
-			</div>
-			{isDolls && (
-				<p class="wholesale-note">
-					Buying for a shop or a corporate gift? Wholesale is by appointment - <a href={wholesaleHref}>email us</a> and we'll send prices.
-				</p>
+						<a href={customHref}>Ask about a custom order &rarr;</a>
+					</div>
+					<div>
+						<h3>Wholesale</h3>
+						<p>
+							Buying for a shop or a corporate gift? Wholesale is by appointment - <a href={wholesaleHref}>email us</a> and we'll send prices.
+						</p>
+					</div>
+				</div>
 			)}
 			</>
 		)}
@@ -182,35 +190,37 @@ const jsonLd = attributeProductJsonLd
 		line-height: 1.55;
 	}
 
-	/* A whole-card link, like the shop landing tiles: ink text, the cue in teal-dark and underlined.
-	   Dashed border so it reads as "something else" in a grid of products, not a tenth doll. */
-	.custom-card {
-		justify-content: center;
+	/* Dashed, not a filled card: it should read as "something else" beside the product photos,
+	   not as another product. Two columns on a laptop, stacked below 700px. */
+	.dolls-orders {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-8);
+		margin-top: var(--space-12);
+		padding: var(--space-6) var(--space-8);
 		border: 2px dashed rgba(36, 35, 43, 0.2);
-		background: transparent;
-		box-shadow: none;
-		color: var(--st-ink);
-		text-decoration: none;
+		border-radius: var(--radius);
 	}
 
-	.custom-card:hover {
-		border-color: var(--st-teal-dark);
+	.dolls-orders h3 {
+		font-size: 1.1rem;
+		margin-bottom: var(--space-2);
 	}
 
-	.custom-card p {
+	.dolls-orders p {
 		color: rgba(36, 35, 43, 0.75);
+		margin-bottom: var(--space-3);
 	}
 
-	.custom-card-cta {
-		margin-top: auto;
+	.dolls-orders > div > a {
 		font-weight: 700;
-		color: var(--st-teal-dark);
-		text-decoration: underline;
-		text-underline-offset: 3px;
 	}
 
-	.wholesale-note {
-		margin: var(--space-2) 0 0;
-		color: rgba(36, 35, 43, 0.75);
+	@media (max-width: 700px) {
+		.dolls-orders {
+			grid-template-columns: 1fr;
+			gap: var(--space-6);
+			padding: var(--space-5);
+		}
 	}
 </style>

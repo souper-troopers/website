@@ -1089,7 +1089,21 @@ the final design**. That brief is with Brad's designer friend (2 September minut
 ### Our Work: the Humanity Hub services as photo cards (2026-09-13) — placeholders, not settled
 The user is **not fully sure about this yet**; it was committed so it isn't lost. Seven identical cards,
 each a full-bleed photo under a dark tint with the title and description in white.
-- **The photos are stock placeholders**, CC0 from Wikimedia Commons — sources, licences and authors in
+- **2026-09-24: three are now Souper Troopers' own** (from `Content/Our Work/` on the Drive): Essential
+  needs (donated clothes, no people), Recovery support (a yoga session, face not visible) and Social
+  enterprises (Kerry and a colleague at the stall - staff, not participants). ⚠ **Chosen so no
+  participant can be identified**: a face beside "Recovery support" or "Housing assistance" says
+  something about that person on a permanent, searchable page, and q19's consent answer covers names,
+  not faces. Housing (one low-res WhatsApp photo of two identifiable people), Employment (faces),
+  Documentation (both Drive images are **AI-generated**) and Souper Squad (no folder) stay stock.
+  Re-measured on real pixels: worst text contrast 7.0:1 on any card at 390–1280px (the new three
+  9.2–12.2:1).
+- ⚠ **Contrast-script gotcha: Chrome's computed `background-image` rewrites `linear-gradient(to top,
+  A 0%, B 45%, C 100%)` as the default top-to-bottom direction with the stops reversed** (C 0%, B 55%,
+  A 100%). A checker that parses the computed value and still applies "to top" reads the tint upside
+  down - it reported this grid failing at 3.4–3.9:1 when it passes at 7:1+. Map stops as top-to-bottom
+  after reading the computed value.
+- **The other photos are stock placeholders**, CC0 from Wikimedia Commons — sources, licences and authors in
   `src/assets/images/services/SOURCES.md`. Chosen to show the *service*, never a person in hardship,
   and marked decorative (`alt=""`) so nobody is presented as a Souper Troopers participant. **Replace
   them when the shoot delivers real ones**; the client has said more images are coming.

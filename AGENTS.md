@@ -646,6 +646,46 @@ appear in titles, descriptions, the NGO structured data (as `location`, delibera
 `alternateName`, which would take a side on the naming question) and `llms.txt`. It had previously
 appeared 19 times in body copy and **zero times** in any of those places.
 
+## The 21 September 2026 review
+Minutes: `docs/meeting-notes/2026-09-21-website-review.md`; speaker mapping and mis-hearings in
+`2026-09-21-transcript-notes.md`.
+
+⚠ **The transcript file one level up is now the 21 September recording — it overwrote the 2 September
+one.** That meeting survives only as its minutes and notes. Rename the next transcript on arrival.
+
+**The thing that outranks the website: the Hub's landlord is selling the building.** For-sale sign up
+on the day, R5.75m, lease to February, Kerry hunting an aligned buyer; a donation towards it can
+carry a Section 18A certificate. **If the address ever changes it is a coordinated edit** —
+`src/lib/address.ts`, the `PostalAddress` in the NGO block, the contact page, `/google-listing` and
+the real Google profile. A building-appeal page is possible but unscoped; don't start one unasked.
+
+What changes what we build:
+- **The Humanity Hub goes to Kerry's board on 28 September** — see that section below.
+- **The shop needs restructuring**, and it is the largest outstanding piece of work. Keep the
+  variations visible (the review liked it over the old dropdown) but **name them properly** ("African
+  Worry Doll — General Female"); **a carousel per variation** rather than one mixed photo; ⚠ say
+  plainly that **each doll is handmade and will not match the photo** — Kerry: *"you're placing an
+  order for the variation and not what it looks like"*; add a **custom option** (higher price,
+  minimum ~10, routed to a contact form); add **"wholesale by appointment"** contact routing to a
+  team member, with **no price list on the site**. Seasonal/topical banner and photos of the dolls
+  *in use* were both asked for.
+- **The site is too dark** (Adrian). Try **light tints with dark text**, or a coloured tint, on image
+  cards - the opposite of what every banner does today. ⚠ Any such change needs the measured contrast
+  check re-run (`tint2.mjs` pattern), since it inverts the assumption those stops were tuned under.
+- **The homepage is still the least resolved page**, and the "three pillars" need re-deciding; `q28`
+  carries a draft. Kerry floated a big, obvious "how to get involved" on it.
+- **Media is the real unblocker.** Shan has reshot the products and says everything is on the Drive
+  (`Events`, `Mix`, `Products`); we only see uploads to 14 August, so that needs reconciling. Brad
+  has started the video (rough cut, shot with Shan) and has **drone footage of the building**.
+- **The partner list is out of date** — Kerry to say which to remove; Woolworths still not confirmed.
+- **Fonts stay off.** Kerry asked, Stephen explained the swap, Kerry: *"I'm not attached to it."*
+- **No hard deadline.** World Homeless Day is dropped; "before the end of the year"; two more review
+  rounds, then consider switching the domain. Hilton: *"the cost of perfection is prohibitive."*
+- ⚠ **Adrian cannot get into `/request-for-comment`** — he meets the Basic-auth dialog and has never
+  had credentials. He is the reviewer most likely to leave useful comments, so this is worth fixing
+  before the next round (add him to `STATUS_USERS`; note that variable change needs a deploy).
+- Next meeting **Wednesday 30 September, 16:00**. Include Hilton on emails; the last one missed him.
+
 ## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
 From the 2 September review — Adrian's point, and the one the room liked most: the page opened with
 six action cards and left the reader to work out which applied to them. It now asks **who you are**
@@ -938,7 +978,7 @@ it is ~40 lines and takes a second.
   - The homepage shop band and the shop page share one phrase ("people the CAST programme has
     supported"); the rest of each paragraph differs, per the parent/child rule.
 
-### The Humanity Hub name — still the board's decision (checked 2026-09-13)
+### The Humanity Hub name — with Kerry's board on 28 September 2026 (updated 2026-09-21)
 The user remembered the review as having decided to move from "Souper Troopers" to "the Humanity Hub".
 It didn't: the minutes carry it as **not decided**, "a strategy question, not a website question", with
 Hilton's condition that "there's going to be no changes made unless there's a unanimous excitement
@@ -962,6 +1002,15 @@ descriptions, NGO data).
 - ⚠ **Still untouched until the board decides and a logo exists (`q29`)**: the logo itself, page
   titles and their `" - Souper Troopers"` suffix, the footer, the NGO `name`, and how `llms.txt`
   names the organisation. `q29`'s body says exactly this, so change the two together.
+- **21 September: Kerry takes it to her board on 28 September**, after speaking to her colleague
+  Karen. Her own wording is what the site already does - *"promoting the Humanity Hub by Souper
+  Troopers, and… our social enterprise and product is Shmiley by Souper Troopers"* - and
+  **soupertroopers.org stays the address**. So this is close to settled, but not settled.
+- ⚠ **A Humanity Hub logo already exists**, painted on the building in purple, designed to sit with
+  the Souper Troopers identity; Kerry is unsure whether to keep it. `q29` asks *who would design*
+  one, which is now the wrong question - **ask Kerry for the existing file first**.
+- Shan's caution, worth keeping in view: two names can confuse newcomers, *"people generally just
+  want one name."*
 `q29` asks who would design a Humanity Hub logo if the name moves.
 
 ### Homepage: a shop band, one fewer Donate ask (2026-09-13)

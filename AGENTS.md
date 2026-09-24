@@ -1094,7 +1094,7 @@ each a full-bleed photo under a dark tint with the title and description in whit
   enterprises (Kerry and a colleague at the stall - staff, not participants). ⚠ **Chosen so no
   participant can be identified**: a face beside "Recovery support" or "Housing assistance" says
   something about that person on a permanent, searchable page, and q19's consent answer covers names,
-  not faces. Housing (one low-res WhatsApp photo of two identifiable people), Employment (faces),
+  not faces - `q33` point 5 now asks who in the Employment and Housing folders has agreed. Housing (one low-res WhatsApp photo of two identifiable people), Employment (faces),
   Documentation (both Drive images are **AI-generated**) and Souper Squad (no folder) stay stock.
   Re-measured on real pixels: worst text contrast 7.0:1 on any card at 390–1280px (the new three
   9.2–12.2:1).

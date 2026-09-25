@@ -44,28 +44,46 @@ const goodsCategories = [
 		<p>There's a way to help whatever you have to give - time, goods, money, or a partnership.</p>
 	</PhotoHero>
 
-	<section class="gi-group" id="individuals-band">
-		<div class="wrap">
-			<details class="gi-group-box">
+	{/* Two photo-top cards, side by side from 761px (decided 25 September): the page was three
+	    text-on-photo blocks in a row - the hero and two banners - so the hero stopped reading as the
+	    hero. Each card's <details> holds only its <summary> (photo, title, "See how"); its content is
+	    the region straight after the card, shown by CSS `:has()` while that <details> is open. That is
+	    what lets an opened card drop its content full width beneath the pair instead of growing one
+	    column - a <details> body cannot be positioned outside its own box. DOM order is card, body,
+	    card, body, so on a phone the content opens right under its card and the heading outline stays
+	    h2 > h3. No JavaScript needed to open or close; the script below only handles anchors. */}
+	<section class="section wrap gi-groups">
+		<div class="card gi-card" id="individuals-band">
+			<details class="gi-group-box" id="gi-individuals">
 				<summary class="gi-group-summary">
-			<div class="gi-band-media shimmer-up">
-				<Image
-					src={individualsPhoto}
-					alt="A volunteer showing a Souper Squad member a technique, one to one"
-					class="gi-band-img"
-					width={1200} widths={[700, 1200]}
-					sizes="(min-width: 1100px) 1060px, 100vw"
-					onload="this.classList.add('is-loaded')"
-				/>
-				<div class="gi-band-scrim"></div>
-				<div class="gi-band-text">
-					<h2>For individuals</h2>
-					<p>Give time, goods or money - and every route starts with something you already have.</p>
-				</div>
-			</div>
-					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+					<span class="gi-card-media shimmer-up">
+						<Image
+							src={individualsPhoto}
+							alt="A volunteer showing a Souper Squad member a technique, one to one"
+							class="gi-card-img"
+							width={1200} widths={[600, 1200]}
+							sizes="(min-width: 761px) 540px, 100vw"
+							onload="this.classList.add('is-loaded')"
+						/>
+					</span>
+					<span class="gi-card-head">
+						<h2 id="gi-individuals-title">For individuals</h2>
+						<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+					</span>
 				</summary>
-				<div class="gi-group-body">
+			</details>
+			<div class="gi-card-text">
+				<p>Give time, goods or money - and every route starts with something you already have.</p>
+				<nav class="gi-routes" aria-label="Ways to help, person to person">
+					<a href="/donate">Donate money</a>
+					<a href="/get-involved/donate-goods/">Donate goods</a>
+					<a href="/get-involved/volunteer/">Volunteer</a>
+					<a href="/shop">Buy products</a>
+					<a href="#fundraise">Fundraise for us</a>
+				</nav>
+			</div>
+		</div>
+		<div class="gi-group-body gi-body-individuals" role="region" aria-labelledby="gi-individuals-title" data-for="gi-individuals">
 
 	<section id="individuals" class="section wrap">
 		<div class="section-intro">
@@ -169,44 +187,36 @@ const goodsCategories = [
 		</div>
 	</section>
 
-				</div>
-			</details>
-			{/* One line of routes under the closed banner (design brief phase 3: "closed banners still
-			    route people"). Outside the <summary> on purpose - links inside what is effectively a
-			    button are unreachable for some screen readers - and hidden once the banner is open,
-			    where the full content says the same. Labels are the section's own headings. */}
-			<nav class="gi-routes" aria-label="Ways to help, person to person">
-				<a href="/donate">Donate money</a>
-				<a href="/get-involved/donate-goods/">Donate goods</a>
-				<a href="/get-involved/volunteer/">Volunteer</a>
-				<a href="/shop">Buy products</a>
-				<a href="#fundraise">Fundraise for us</a>
-			</nav>
 		</div>
-	</section>
-
-	<section class="gi-group" id="businesses-band">
-		<div class="wrap">
-			<details class="gi-group-box">
+		<div class="card gi-card" id="businesses-band">
+			<details class="gi-group-box" id="gi-businesses">
 				<summary class="gi-group-summary">
-			<div class="gi-band-media shimmer-up">
-				<Image
-					src={businessesPhoto}
-					alt="Kerry meeting a corporate partner at a Souper Troopers event"
-					class="gi-band-img"
-					width={1200} widths={[700, 1200]}
-					sizes="(min-width: 1100px) 1060px, 100vw"
-					onload="this.classList.add('is-loaded')"
-				/>
-				<div class="gi-band-scrim"></div>
-				<div class="gi-band-text">
-					<h2>For companies</h2>
-					<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
-				</div>
-			</div>
-					<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+					<span class="gi-card-media shimmer-up">
+						<Image
+							src={businessesPhoto}
+							alt="Kerry meeting a corporate partner at a Souper Troopers event"
+							class="gi-card-img"
+							width={1200} widths={[600, 1200]}
+							sizes="(min-width: 761px) 540px, 100vw"
+							onload="this.classList.add('is-loaded')"
+						/>
+					</span>
+					<span class="gi-card-head">
+						<h2 id="gi-businesses-title">For companies</h2>
+						<span class="gi-group-cue"><span class="gi-group-cue-text">See how</span><span class="gi-group-cue-mark" aria-hidden="true"></span></span>
+					</span>
 				</summary>
-				<div class="gi-group-body">
+			</details>
+			<div class="gi-card-text">
+				<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
+				<nav class="gi-routes" aria-label="Ways to work with us">
+					<a href="/get-involved/corporate-partnership/">Corporate partnership</a>
+					<a href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Corporate workshops</a>
+					<a href="/shop">Coffee for your workplace</a>
+				</nav>
+			</div>
+		</div>
+		<div class="gi-group-body gi-body-businesses" role="region" aria-labelledby="gi-businesses-title" data-for="gi-businesses">
 
 	<section id="businesses" class="section wrap">
 					<div class="section-intro">
@@ -294,13 +304,6 @@ const goodsCategories = [
 		</section>
 	)}
 
-				</div>
-			</details>
-			<nav class="gi-routes" aria-label="Ways to work with us">
-				<a href="/get-involved/corporate-partnership/">Corporate partnership</a>
-				<a href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Corporate workshops</a>
-				<a href="/shop">Coffee for your workplace</a>
-			</nav>
 		</div>
 	</section>
 
@@ -320,9 +323,16 @@ const goodsCategories = [
 		if (!location.hash) return;
 		const target = document.querySelector(location.hash);
 		if (!target) return;
-		// Every ancestor, not just the nearest: a link to #goods now sits inside a collapsed
-		// audience box, so opening one level would still leave it hidden.
+		// The audience content is not inside its <details> any more (see the note on .gi-groups): it
+		// is a region after the card, shown while that card's <details> is open. So a target inside a
+		// region opens the card named by its data-for, and any ancestor <details> as before.
 		let opened = false;
+		const region = target.closest<HTMLElement>("[data-for]");
+		const card = region ? document.getElementById(region.dataset.for ?? "") : null;
+		if (card instanceof HTMLDetailsElement && !card.open) {
+			card.open = true;
+			opened = true;
+		}
 		let el: Element | null = target;
 		while (el) {
 			if (el instanceof HTMLDetailsElement && !el.open) {
@@ -343,32 +353,136 @@ const goodsCategories = [
 
 
 <style>
-	/* --- Audience jump bar and bands (2026-09-07) -----------------------------------------------
-	   The page opened with six action cards and left the reader to work out which applied to them.
-	   It now names the two audiences, which is what Adrian argued for and what Kerry meant by
-	   speaking differently to each one.
+	/* --- Audience cards (2026-09-25) -------------------------------------------------------------
+	   Two photo-top cards, the site's one photo-card shape: photo on top with no tint, then title,
+	   "See how", one line and the route links on white. They replaced two full-width text-on-photo
+	   banners (2026-09-07), which with the hero made three look-alike blocks in a row. The banner tint
+	   and its contrast measurement went with them - nothing sits on a photo here now.
 
-	   ⚠ The bands are the hierarchy here, so they are the only thing at this level that carries
-	   weight. An earlier pass put two large cards at the top *and* headings below, which repeated
-	   both labels word for word - and the section chips ("Individuals", "Businesses") repeated them
-	   a third time. The chips are gone and the chooser is now a slim bar; the band is the heading. */
-	/* Each audience is one box: banner across the top, its sections inside. Before this the two
-	   groups were only separated by whitespace, so on a long page it was easy to lose track of which
-	   audience you were reading - the fold headings all look alike once the chips are gone. */
-	.gi-group-box {
-		/* ⚠ Not white. The cards inside are white, and on a white box they vanished into it - only
-		   their shadow gave them an edge. Tinted to the page ground instead, so the box is defined by
-		   its border and banner while the cards keep reading as cards. */
-		background: var(--st-bg);
-		border: 1px solid rgba(36, 35, 43, 0.12);
-		border-radius: 20px;
+	   Layout: one column below 761px in DOM order (card, its content, card, its content); from 761px
+	   the two cards share the first row and each content region spans the full width beneath them.
+	   Row gaps are margins, not `gap`, because a closed region still occupies an (empty) grid row and
+	   would leave a gap behind it. */
+	.gi-groups {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		column-gap: var(--space-6);
+		row-gap: 0;
+	}
+
+	.gi-card + .gi-group-body,
+	.gi-group-body + .gi-card {
+		margin-top: var(--space-5);
+	}
+
+	@media (min-width: 761px) {
+		.gi-groups {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		#individuals-band {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		#businesses-band {
+			grid-column: 2;
+			grid-row: 1;
+			margin-top: 0;
+		}
+
+		.gi-body-individuals {
+			grid-column: 1 / -1;
+			grid-row: 2;
+		}
+
+		.gi-body-businesses {
+			grid-column: 1 / -1;
+			grid-row: 3;
+		}
+
+		.gi-card + .gi-group-body,
+		.gi-group-body + .gi-card {
+			margin-top: 0;
+		}
+
+		.gi-group-body {
+			margin-top: var(--space-6);
+		}
+	}
+
+	/* Doubled class: the <=700px `.card { padding }` rule would otherwise inset the photo. */
+	.card.gi-card {
+		padding: 0;
+		gap: 0;
+		overflow: hidden;
+		align-items: stretch;
+	}
+
+	.gi-card-media {
+		display: block;
+		position: relative;
+		aspect-ratio: 16 / 9;
 		overflow: hidden;
 	}
 
+	.gi-card-img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.gi-card-head {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-2);
+		padding: var(--space-5) var(--space-6) 0;
+	}
+
+	.gi-card-head h2 {
+		margin: 0;
+		font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+		line-height: 1.15;
+	}
+
+	.gi-card-text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		padding: var(--space-3) var(--space-6) var(--space-6);
+	}
+
+	.gi-card-text p {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.75);
+	}
+
+	@media (max-width: 700px) {
+		.gi-card-head {
+			padding: var(--space-4) var(--space-4) 0;
+		}
+
+		.gi-card-text {
+			padding: var(--space-2) var(--space-4) var(--space-4);
+		}
+	}
+
+	/* The content region, shown while its card is open. A box on the page ground, so the white cards
+	   inside it keep reading as cards. */
 	.gi-group-body {
-		/* Deliberately more on top than the sides: the banner is a hard edge running the full width
-		   of the box, and 16px under it read as the content being pressed against the photograph. */
+		display: none;
+		border: 1px solid rgba(36, 35, 43, 0.12);
+		border-radius: 20px;
 		padding: var(--space-8) var(--space-5) var(--space-6);
+	}
+
+	.gi-groups:has(#gi-individuals[open]) .gi-body-individuals,
+	.gi-groups:has(#gi-businesses[open]) .gi-body-businesses {
+		display: block;
 	}
 
 	/* The sections inside still carry `.wrap`, which would apply a second max-width and a second set
@@ -381,88 +495,6 @@ const goodsCategories = [
 		padding-left: 0;
 		padding-right: 0;
 	}
-
-	/* The banner sits flush inside the box, so it loses its own rounding to the box's. */
-	.gi-group-box .gi-band-media {
-		border-radius: 0;
-	}
-
-	.gi-band {
-
-		padding-top: var(--space-6);
-	}
-
-	.gi-band-media {
-		position: relative;
-		border-radius: 18px;
-		overflow: hidden;
-		/* ⚠ `width: 100%` is load-bearing, not tidiness. With `aspect-ratio` set and no explicit
-		   width, a `min-height` makes the browser derive the *width* from the height instead - at
-		   390px this rendered a 570px-wide banner and pushed the whole page 200px sideways. The
-		   ratio changes at the breakpoint rather than a minimum height being imposed. */
-		width: 100%;
-		aspect-ratio: 16 / 9;
-	}
-
-	@media (min-width: 700px) {
-		/* Short and wide once there is room: this is a banner, not a photograph to study, and a tall
-		   one would push the content it introduces off the screen. */
-		.gi-band-media {
-			aspect-ratio: 3 / 1;
-		}
-	}
-
-	.gi-band-img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	/* Held to the text side and fading to nothing (design brief, tint bullet, 25 September): 0.72+
-	   across the text (at most ~52% of the banner), clear photo on the right. A short band along the
-	   bottom-right keeps the "See how" cue readable. Measured on real pixels; re-run after changing. */
-	.gi-band-scrim {
-		position: absolute;
-		inset: 0;
-		background:
-			radial-gradient(ellipse 22rem 7rem at 100% 100%, rgba(24, 23, 31, 0.85) 0%, rgba(24, 23, 31, 0.6) 45%, rgba(24, 23, 31, 0) 100%),
-			linear-gradient(
-				100deg,
-				rgba(24, 23, 31, 0.9) 0%,
-				rgba(24, 23, 31, 0.8) 40%,
-				rgba(24, 23, 31, 0.72) 56%,
-				rgba(24, 23, 31, 0) 82%
-			);
-	}
-
-	.gi-band-text {
-		position: absolute;
-		inset: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: var(--space-2);
-		padding: var(--space-5);
-		max-width: 34rem;
-	}
-
-	.gi-band-text h2 {
-		margin: 0;
-		color: #fff;
-		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
-		line-height: 1.1;
-	}
-
-	.gi-band-text p {
-		margin: 0;
-		color: rgba(255, 255, 255, 0.86);
-		max-width: 32ch;
-	}
-
-	/* The pale-wash trial (`gi-tint-light`, 2026-09-24) was dropped on 25 September - see the design
-	   brief's tint bullet: it erased the photo where the eye lands and read as faded, not lit. Its CSS
-	   is in git history if the question is ever reopened. */
 
 	/* --- Folds ---------------------------------------------------------------------------------
 	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this
@@ -503,12 +535,9 @@ const goodsCategories = [
 		white-space: nowrap;
 	}
 
-	/* The box is the one place this page collapses — one level, at the audience level. The inner
-	   folds are gone with it: two levels meant two clicks to reach any content, and the reader
-	   choosing an audience has already said what they want to see. */
+	/* The card's photo and title are the control: one click opens its content beneath the pair. */
 	.gi-group-summary {
 		display: block;
-		position: relative;
 		list-style: none;
 		cursor: pointer;
 	}
@@ -517,30 +546,19 @@ const goodsCategories = [
 		display: none;
 	}
 
-	/* A link-style cue, not a pill (design brief phase 2 - three button styles, and this was a
-	   fifth): white, bold and underlined like the hero's secondary link, with its chevron. */
+	.gi-group-summary:focus-visible {
+		outline: 3px solid var(--st-teal-dark);
+		outline-offset: -3px;
+	}
+
+	/* "See how" under the title: teal-dark and underlined like any link here, with its chevron. */
 	.gi-group-cue {
-		position: absolute;
-		right: var(--space-5);
-		bottom: var(--space-5);
 		display: inline-flex;
 		align-items: center;
 		gap: var(--space-2);
-		color: #fff;
+		color: var(--st-teal-dark);
 		font-weight: 700;
 		font-size: 0.95rem;
-	}
-
-	.gi-routes {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-2) var(--space-5);
-		margin-top: var(--space-4);
-		font-weight: 600;
-	}
-
-	.gi-group-box[open] + .gi-routes {
-		display: none;
 	}
 
 	.gi-group-cue-text {
@@ -549,8 +567,8 @@ const goodsCategories = [
 	}
 
 	.gi-group-cue-mark {
-		width: 9px;
-		height: 9px;
+		width: 8px;
+		height: 8px;
 		border-right: 2px solid currentColor;
 		border-bottom: 2px solid currentColor;
 		transform: rotate(45deg) translate(-1px, -1px);
@@ -567,39 +585,11 @@ const goodsCategories = [
 		}
 	}
 
-	@media (max-width: 700px) {
-		/* The banner is only ~350px wide here, so the copy spans it and the cue would land on the
-		   words. The text moves to the top and reserves the strip the cue sits in, rather than the
-		   two being left to collide. */
-		.gi-band-text {
-			justify-content: flex-start;
-			padding-bottom: 4.5rem;
-		}
-
-		.gi-group-cue {
-			right: var(--space-4);
-			bottom: var(--space-4);
-			font-size: 0.85rem;
-		}
-
-		/* The copy spans the banner here, so the tint is near-even (as on the heroes). */
-		.gi-band-scrim {
-			background: linear-gradient(180deg, rgba(24, 23, 31, 0.76) 0%, rgba(24, 23, 31, 0.82) 100%);
-		}
-	}
-
-	@media (max-width: 430px) {
-		/* On the narrowest phones the banner is about 180px tall, and the title, three lines of copy
-		   and the cue do not all fit - measured, they overlap by a pixel at 360 and by 24 at 320.
-		   The blurb goes rather than the banner growing: it is the least load-bearing thing here, and
-		   the same words are in the content directly below it. */
-		.gi-band-text p {
-			display: none;
-		}
-
-		.gi-band-text {
-			padding-bottom: 3.4rem;
-		}
+	.gi-routes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		font-weight: 600;
 	}
 
 	@media (min-width: 780px) {

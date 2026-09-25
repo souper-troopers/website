@@ -250,6 +250,26 @@ give). `center 25%`; both faces sit right of the words at 1024-1440 without `zoo
 lines on the three pages at 8 widths, worst body 5.4:1. Our Work is now the only page with the
 two-people photo; Corporate partnership keeps `partner-visit` as the brief assigned.
 
+## Get Involved: two audience cards (2026-09-25)
+Decided 25 September: the page was three text-on-photo blocks with one treatment (the hero and two
+banners), so the hero stopped reading as the hero. The two audiences are now the site's photo-top card
+- photo with no tint, then the title, "See how" (teal-dark, underlined, chevron), one line and the
+route links, on white - side by side from 761px, stacked below.
+- **The content opens full width beneath the pair, not inside its column.** A `<details>` body can't be
+  placed outside its own box, so each card's `<details>` now holds only its `<summary>` (photo, title,
+  cue); the content is a sibling region (`.gi-group-body`, `role="region"`, `aria-labelledby` the
+  card's h2, `data-for` the details' id) shown by CSS `.gi-groups:has(#gi-…[open])`. No JavaScript
+  is needed to open or close.
+- **DOM order is card, content, card, content.** On a phone each card's content opens straight under
+  it, and the outline stays h2 > h3. From 761px a grid puts both cards in row 1 and each region across
+  rows 2 and 3; row spacing is margins, not `gap`, since a closed region still holds an empty row.
+- **Anchors**: `#individuals`, `#businesses`, `#goods`, `#fundraise` are unchanged; the script opens the
+  card named by the target's region `data-for` (as well as any ancestor `<details>`). Checked: each
+  lands visible, just under the header.
+- The banner tint CSS and the banner contrast check are gone - nothing on this page sits on a photo
+  below the hero. The route links are always visible now (they used to hide while a banner was open).
+- Page height with both closed: 1,297px at 1280 (two cards 518×529), 1,669px at 390.
+
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch
@@ -822,6 +842,8 @@ headings >=4.5:1 (large text needs 3), paragraphs >=5.7:1, at 360-1440px. It is 
 candidates, each needing its own measurement.
 
 ## Get Involved is organised by audience, and collapses to two banners (2026-09-07)
+⚠ **The two banners became two photo-top cards on 2026-09-25** - see "Get Involved: two audience
+cards" below. The bullets here are history where they describe the banner.
 From the 2 September review — Adrian's point, and the one the room liked most: the page opened with
 six action cards and left the reader to work out which applied to them. It now asks **who you are**
 before it asks what you want to do, because "you speak differently according to the audience" (Kerry).
@@ -1273,7 +1295,7 @@ homepage is still the least resolved part") and q28's first try at three pillars
   conversation" (its "other ways to get involved" words now link to `/get-involved`, since the button
   that carried that link went). Donate goods' panel went entirely - its email is in the opening
   paragraph.
-- **Get Involved's banners are back on the dark tint**, the heroes' sweep plus a bottom band under
+- ~~**Get Involved's banners are back on the dark tint**~~ (superseded 2026-09-25: the banners are photo-top cards, no tint), the heroes' sweep plus a bottom band under
   the cue, near-even on phones. Measured (62 lines, 360-1440): worst body 5.89:1, headings 5.07:1.
 - Dead CSS removed with it: the `.path-*` tiles, `.stories-band`/`.story-card` family, `.btn-on-tile`.
 - **Not done here**: §3.4 typography and spacing (one h2 scale, one section gap) - the brief's

@@ -480,11 +480,6 @@ Reasoning: if these accounts are created under the user's personal logins, the c
   on the old links don't carry over. Why it can't stay: the charity wouldn't own its own videos, the
   player shows the uploader's name rather than Souper Troopers', and the Capital International Group
   film is partly the partner's.
-- [ ] **Remove the shop's temporary look switch** (added 2026-09-25): the "Compare looks: Cards ·
-  Plain" line above the product grid in `src/pages/shop/[slug].astro`, its inline script and
-  `.look-switch` styles, and the `:global(.product-grid[data-look="plain"])` block at the end of
-  `ItemCard.svelte`. It exists so the card grid and the plain (cardless) grid can be compared before
-  the 30 September call; keep whichever is chosen and delete the other along with the switch.
 - [ ] Point the real domain at Netlify and update DNS.
 - [ ] Transfer the Sanity project from the user's personal account to a Sanity Organization.
 - [ ] Update `site:` in `astro.config.mjs` from `souper-troopers.netlify.app` to the real domain (used for canonical/Open Graph URLs — see "SEO/AEO basics" below). Also remove the `Disallow: /` rule in `public/robots.txt` at the same time as the noindex meta tag above.
@@ -1041,18 +1036,20 @@ treating it as settled.
   20% the dolls' feet showed through it. The photo sits at z-index -2 so the wedge (-1) is above it.
   - **The card takes the photo's own backdrop colour**, read at build time by `src/lib/backdrop.ts`
     (per-channel median of the top 12 rows of the *unpadded* photo: dolls `#fefefe`, gift tags
-    `#e8e8e8`), multiplied by the stage wash in the component. The same colour is the `bg` of the
+    `#e8e8e8`), used as the card's own colour. The same colour is the `bg` of the
     Sanity `fit("fill")` padding, so there are no faint edges where the padding meets the photo.
     Sanity's palette was tried and is useless here (it describes the product's colours); sharp's
     `dominant` is too coarse; a top-edge fade washed out the dolls' heads.
   - An intermediate version put the name over the photo's foot with a white fade under it for
     contrast (Christmas Angel's name crossed its wings at ~3.2:1). Dropped once the name moved to the
     top, which needs no fade and no contrast check on photo pixels.
-- **A temporary switch compares this with the plain look** (`?look=cards` / `?look=plain`, links
-  above the grid; 25 September, for the 30th): plain is the 24 September cardless grid rebuilt on
-  the new card - rounded photo tile on its backdrop colour, the name underlined as the link cue, the
-  price as muted text, no box, shadow or wedge. CSS-only on top of the same markup, keyed on
-  `data-look` set by an inline script. On the launch checklist to remove.
+- **The card look was chosen over the plain look** (the user, 25 September: the cards "look
+  cuter"), after a temporary `?look=` switch compared them; the switch and the plain CSS are gone.
+- **Cards are the photo's backdrop colour itself** - `#fefefe` for the dolls, `#efeeec` for the gift
+  tags - with no stage wash. The wash (`#f3f2ef`, multiplied) was there to give white-backed photos an
+  edge on white cards; once the card became the backdrop it only made them off-white, too close to
+  the page ground. Known and small: the India Harris photo's sweep lightens towards its top-left,
+  so a faint edge shows where that photo begins; fixing it means re-cropping the photo.
 - ⚠ **`@sanity/image-url` crops by itself when given both a width and a height, even with
   `fit("fill")`**: with no crop set in the Studio it still adds `rect=` for a centre square, so every
   3:4 doll lost ~12% top and bottom before padding (the user noticed the originals weren't cropped).

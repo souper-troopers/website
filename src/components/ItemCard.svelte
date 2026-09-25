@@ -22,18 +22,9 @@
 
 	let photoLoaded = $state(false);
 
-	// The card's colour: the photo's backdrop under the same stage wash (#f3f2ef, multiplied) that
-	// sits over the photo, so the card and the photo's own backdrop are one surface.
-	const cardColour = $derived.by(() => {
-		const hex = /^#([0-9a-f]{6})$/i.exec(backdrop ?? "#ffffff")?.[1] ?? "ffffff";
-		const wash = [0xf3, 0xf2, 0xef];
-		return (
-			"#" +
-			[0, 2, 4]
-				.map((i, c) => Math.round((parseInt(hex.slice(i, i + 2), 16) * wash[c]) / 255).toString(16).padStart(2, "0"))
-				.join("")
-		);
-	});
+	// The card's colour is the photo's own backdrop (read at build time), so the card and the photo
+	// are one surface: white for the dolls, the grey sweep for the gift tags.
+	const cardColour = $derived(backdrop ?? "#ffffff");
 
 	function rand(n: number) {
 		return "R" + n.toLocaleString("en-ZA");
@@ -99,7 +90,7 @@
 		padding: 0;
 		align-items: stretch;
 		isolation: isolate;
-		background: var(--card-colour, #f3f2ef);
+		background: var(--card-colour, #fff);
 	}
 
 	.item-card-head {
@@ -123,17 +114,6 @@
 		position: absolute;
 		inset: 0;
 		transition: transform 0.3s ease, opacity 0.4s ease;
-	}
-
-	/* The shop tiles' shared "stage" (see .category-tile-img::after in Layout.astro). The card's own
-	   colour is the same wash applied to the photo's backdrop, so the two meet without a seam. */
-	.item-card-photo::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		background: #f3f2ef;
-		mix-blend-mode: multiply;
-		pointer-events: none;
 	}
 
 	a.item-card:hover .item-card-photo img {
@@ -226,63 +206,5 @@
 		margin: 0;
 		font-size: 0.85rem;
 		color: rgba(36, 35, 43, 0.65);
-	}
-
-	/* TEMPORARY: the plain look (the cardless grid of 24 September), switched on by the look switch
-	   above the grid (?look=plain) so the two can be compared. Remove with the switch. No card box,
-	   shadow or wedge; the photo is a rounded tile on its own backdrop, then the name as an underlined
-	   link, then the price as plain text. */
-	:global(.product-grid[data-look="plain"]) .card.item-card {
-		background: transparent;
-		box-shadow: none;
-		border-radius: 0;
-		overflow: visible;
-	}
-
-	:global(.product-grid[data-look="plain"]) a.card-cta.item-card::after {
-		display: none;
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card-photo {
-		order: -1;
-		z-index: auto;
-		overflow: hidden;
-		border-radius: var(--radius, 16px);
-		background-color: var(--card-colour);
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card-view {
-		order: 0;
-		align-self: flex-start;
-		margin: var(--space-3, 0.75rem) 0 0;
-		padding-top: 0;
-		text-align: left;
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card-view .card-cta-arrow {
-		display: none;
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card .item-card-view h3 {
-		font-size: 1.05rem;
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-
-	:global(.product-grid[data-look="plain"]) a.item-card:hover .item-card-view h3 {
-		color: var(--st-teal-dark, #148294);
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card-head {
-		order: 1;
-		padding: var(--space-1, 0.25rem) 0 0;
-	}
-
-	:global(.product-grid[data-look="plain"]) .item-card-pill {
-		padding: 0;
-		background: none;
-		box-shadow: none;
-		font-weight: 400;
-		color: rgba(36, 35, 43, 0.75);
 	}
 </style>

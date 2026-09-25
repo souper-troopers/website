@@ -143,13 +143,7 @@ const jsonLd = attributeProductJsonLd
 					<p>The photos show each style, not the exact doll you'll receive.</p>
 				</div>
 			)}
-			{/* TEMPORARY (25 September): a switch between the card look and the plain look from 24
-			    September, so the two can be compared before the 30 September call. Remove before launch -
-			    it is on the launch checklist in AGENTS.md. Plain links, so either look can be shared. */}
-			<p class="look-switch">
-				Compare looks:{" "}<a href="?look=cards" data-look="cards">Cards</a>{" "}<span aria-hidden="true">·</span>{" "}<a href="?look=plain" data-look="plain">Plain</a>
-			</p>
-			<div class="product-grid" id="product-grid">
+			<div class="product-grid">
 				{items.map((item, i) => (
 					<ItemCard
 						client:load
@@ -196,18 +190,6 @@ const jsonLd = attributeProductJsonLd
 		</section>
 	)}
 
-<script is:inline>
-	// TEMPORARY look switch (see the comment above the grid). Runs on every load, so the chosen look
-	// follows the link that was shared.
-	(function () {
-		var look = new URLSearchParams(location.search).get("look") === "plain" ? "plain" : "cards";
-		var grid = document.getElementById("product-grid");
-		if (grid) grid.dataset.look = look;
-		document.querySelectorAll(".look-switch a").forEach(function (a) {
-			if (a.dataset.look === look) a.setAttribute("aria-current", "true");
-		});
-	})();
-</script>
 </Layout>
 
 <style>
@@ -272,20 +254,4 @@ const jsonLd = attributeProductJsonLd
 		}
 	}
 
-	/* TEMPORARY look switch. */
-	.look-switch {
-		margin: 0 0 var(--space-4);
-		font-size: 0.9rem;
-		color: rgba(36, 35, 43, 0.75);
-	}
-
-	.look-switch a {
-		color: var(--st-ink);
-		font-weight: 600;
-	}
-
-	.look-switch a[aria-current] {
-		text-decoration-thickness: 3px;
-		text-decoration-color: var(--st-teal);
-	}
 </style>

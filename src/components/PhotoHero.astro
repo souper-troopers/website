@@ -43,9 +43,12 @@ interface Props {
 	 * It enlarges the image, so it is softer; keep it to the band.
 	 */
 	zoom?: number;
+	/** Flip the photo left to right, when its subject sits where the words go (left) and the photo
+	 *  has nothing that reads wrong mirrored - no signs, no text. Who We Are's yoga session uses it. */
+	mirror?: boolean;
 }
 
-const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom } = Astro.props;
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, mirror } = Astro.props;
 
 // The hero is the page's LCP image everywhere but on product pages, where the product photo is
 // larger - so the band loads eagerly (it is in the first screen) but without jumping the queue.
@@ -63,7 +66,7 @@ const highPriority = size !== "band";
 			sizes={zoom ? `(min-width: 901px) ${Math.round(zoom * 100)}vw, 100vw` : "100vw"}
 			loading="eager"
 			fetchpriority={highPriority ? "high" : undefined}
-			style={`object-position: ${position}`}
+			style={`object-position: ${position}${mirror ? "; transform: scaleX(-1)" : ""}`}
 			onload="this.classList.add('is-loaded')"
 		/>
 	</div>

@@ -853,9 +853,22 @@ the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` 
   " - " is the range's own name, singular or plural, ignoring anything after the range's own dash;
   otherwise the name shows whole. Passed as `shortName`; the full name stays on the alt text, the
   cart and the product page.
-- **Add to cart is a small `.btn-outline` (ink), filling ink on hover** - nine teal pills were most of
-  the clutter, and the header's Donate / Shop stays the one filled control. The old `border: none`
-  on it (against the button-system rule) is gone.
+- ~~**Add to cart is a small `.btn-outline` (ink)**~~ **Removed from the grid on 2026-09-25.** Each
+  tile in `ItemCard.svelte` is now **one link** to the product page - photo, name and price - and
+  Add to cart lives on the product page only. The sold-out label stays. Still no card box.
+  - The photo's alt is empty and the name is the link's text; where the tile shows a short name
+    ("Female"), the full name is a visually-hidden span and the short one `aria-hidden`, so the link
+    reads "African Worry Doll - Female, R225". The name stays underlined at rest (the link cue);
+    hover turns it teal-dark and scales the photo; focus is a 3px teal ring 4px outside the tile.
+  - `id` and `categoryName` are still accepted but unused - the callers pass them and it saved
+    touching both pages.
+- **Product pages lost "More from <category>"** (2026-09-25): the category page is one click back and
+  already shows every sibling. The breadcrumbs and the "← All <category>" link stay; the back link
+  now sits in its own short section. The `related` prop went with it. URLs and `Product` /
+  `BreadcrumbList` data are unchanged.
+- Verified 2026-09-25 at 390 and 1280 on Worry Dolls, Gift Tags and a product page: no sideways
+  scroll, no buttons left in the grid, tiles reachable by Tab with the ring showing, and Add to cart
+  on the product page opens the drawer with the item in it.
 - **Landing tile "Shop →" is ink and underlined**, not teal-dark: off a white card, teal-dark on
   `--st-bg` is 4.28:1, under AA at that size.
 - **Custom dolls and Wholesale are one dashed box under the Worry Dolls grid**, two columns (stacked

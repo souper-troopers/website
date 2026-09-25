@@ -1,69 +1,51 @@
 <script lang="ts">
-	import { cart } from "../lib/cart.svelte";
-
-	let { id, categoryName, name, shortName, price, description, photoUrl, photoLqip, href, soldOut = false } = $props<{
-		id: string;
-		categoryName: string;
+	let { name, shortName, price, description, photoUrl, photoLqip, href, soldOut = false } = $props<{
+		/** Kept for the callers, which still pass it; the grid no longer adds to the cart itself. */
+		id?: string;
+		categoryName?: string;
 		name: string;
 		/** What the card shows, when the page already names the range (see `shortProductName`). The
-		 *  full name stays on the photo's alt text and in the cart. */
+		 *  full name is still the link's accessible name (visually hidden) and stays in the cart. */
 		shortName?: string;
 		price: number;
 		description?: string;
 		photoUrl?: string;
 		photoLqip?: string;
-		/** Link through to the item's own page. Rendered into the static HTML, so it's also the crawl path to that page. */
+		/** The item's own page. The whole tile links there - rendered into the static HTML, so it is
+		 *  also the crawl path to that page. */
 		href?: string;
 		soldOut?: boolean;
 	}>();
 
-	let added = $state(false);
 	let photoLoaded = $state(false);
-
-	function addToCart() {
-		cart.add({ key: id, ref: { kind: "item", id }, categoryName, name, price });
-		added = true;
-		setTimeout(() => (added = false), 1500);
-	}
 
 	function rand(n: number) {
 		return "R" + n.toLocaleString("en-ZA");
 	}
 </script>
 
-<div class="item-card">
+<!-- One link per tile since 25 September: photo, name and price all go to the product page, and
+     Add to cart lives there only. The photo's alt is empty because the name is right below it, in
+     the same link - otherwise the link reads the product's name twice. -->
+<svelte:element this={href ? "a" : "div"} {href} class="item-card">
 	{#if photoUrl}
 		<div class="item-card-img blur-up" style={photoLqip ? `background-image:url(${photoLqip})` : undefined}>
-			{#if href}
-				<a {href} tabindex="-1" aria-hidden="true">
-					<img
-						src={photoUrl}
-						alt={name}
-						width="500"
-						height="500"
-						loading="lazy"
-						class:is-loaded={photoLoaded}
-						onload={() => (photoLoaded = true)}
-					/>
-				</a>
-			{:else}
-				<img
-					src={photoUrl}
-					alt={name}
-					width="500"
-					height="500"
-					loading="lazy"
-					class:is-loaded={photoLoaded}
-					onload={() => (photoLoaded = true)}
-				/>
-			{/if}
+			<img
+				src={photoUrl}
+				alt=""
+				width="500"
+				height="500"
+				loading="lazy"
+				class:is-loaded={photoLoaded}
+				onload={() => (photoLoaded = true)}
+			/>
 		</div>
 	{/if}
 	<h3>
-		{#if href}
-			<a {href}>{shortName ?? name}</a>
+		{#if shortName && shortName !== name}
+			<span class="visually-hidden">{name}</span><span class="item-card-name" aria-hidden="true">{shortName}</span>
 		{:else}
-			{shortName ?? name}
+			<span class="item-card-name">{name}</span>
 		{/if}
 	</h3>
 	{#if description}
@@ -72,12 +54,8 @@
 	<div class="item-card-price">{rand(price)}</div>
 	{#if soldOut}
 		<span class="item-card-soldout">Sold out</span>
-	{:else}
-		<button class="btn btn-outline" onclick={addToCart} aria-label={added ? undefined : `Add ${name} to cart`}>
-			{added ? "Added ✓" : "Add to cart"}
-		</button>
 	{/if}
-</div>
+</svelte:element>
 
 <style>
 	/* No card box (2026-09-24). Adrian, on the 21 September review: the grid read as cluttered, and
@@ -102,16 +80,12 @@
 		transition: transform 0.3s ease;
 	}
 
-	.item-card-img:hover img {
-		transform: scale(1.03);
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		.item-card-img img {
 			transition: none;
 		}
 
-		.item-card-img:hover img {
+		a.item-card:hover .item-card-img img {
 			transform: none;
 		}
 	}
@@ -120,24 +94,34 @@
 		font-size: 1.1rem;
 	}
 
-	/* Underlined at rest, not only on hover: this is the crawl and click path into the item's own
-	   page, and a hover-only affordance doesn't exist at all on touch. Colour is left to inherit so
-	   the heading still reads as a heading; the underline is what says "link". */
-	.item-card h3 a {
+	/* The whole tile is the link. Text keeps the page's ink; the name is underlined at rest, not
+	   only on hover - hover doesn't exist on touch, and the underline is what says "link" (see
+	   "Colour is an affordance"). */
+	a.item-card {
 		color: inherit;
+		text-decoration: none;
+		border-radius: calc(var(--radius, 18px) - 6px);
 	}
 
-	.item-card h3 a:hover {
+	a.item-card .item-card-name {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	a.item-card:hover .item-card-name {
 		color: var(--st-teal-dark, #148294);
 	}
 
-	.item-card-img a {
-		display: block;
-		height: 100%;
+	a.item-card:hover .item-card-img img {
+		transform: scale(1.03);
+	}
+
+	a.item-card:focus-visible {
+		outline: 3px solid var(--st-teal, #1babbe);
+		outline-offset: 4px;
 	}
 
 	.item-card-soldout {
-		margin-top: auto;
 		align-self: flex-start;
 		padding: 0.5rem 0.9rem;
 		border-radius: 999px;
@@ -160,21 +144,4 @@
 		color: var(--st-ink, #24232b);
 	}
 
-	/* An ink outline, not the teal fill: nine identical teal pills were most of the clutter, and the
-	   header's Donate / Shop stays the one filled control. Smaller than a standard .btn. No `border`
-	   override here - .btn's border is what the outline recolours (see "The button system"). */
-	.item-card button {
-		margin-top: auto;
-		align-self: flex-start;
-		padding: 0.45rem 1.1rem;
-		font-size: 0.9rem;
-		cursor: pointer;
-		font-family: inherit;
-		transition: background 0.2s ease, color 0.2s ease;
-	}
-
-	.item-card button:hover {
-		background: var(--st-ink, #24232b);
-		color: #fff;
-	}
 </style>

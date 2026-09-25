@@ -2,9 +2,8 @@
 import Layout from "../../../layouts/Layout.astro";
 import PhotoHero from "../../../components/PhotoHero.astro";
 import shopPhoto from "../../../assets/images/shop-products.jpg";
-import { getAllShopItems, shortProductName, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
+import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
-import ItemCard from "../../../components/ItemCard.svelte";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import { breadcrumbList, type Crumb } from "../../../lib/breadcrumbs";
 
@@ -12,23 +11,15 @@ export async function getStaticPaths() {
 	const items = await getAllShopItems();
 	return items.map((item) => ({
 		params: { category: item.categorySlug, item: item.slug },
-		props: {
-			item,
-			// Siblings, so each product links onward instead of being a dead end. Capped at three to
-			// keep the row to a single grid line.
-			related: items
-				.filter((other) => other.categorySlug === item.categorySlug && other._id !== item._id)
-				.slice(0, 3),
-		},
+		props: { item },
 	}));
 }
 
 interface Props {
 	item: ShopItemWithCategory;
-	related: ShopItemWithCategory[];
 }
 
-const { item, related } = Astro.props;
+const { item } = Astro.props;
 
 const rand = (n: number) => "R" + n.toLocaleString("en-ZA");
 
@@ -164,34 +155,13 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		</div>
 	</section>
 
-	{related.length > 0 && (
-		<section class="section wrap">
-			<h2>More from {item.categoryName}</h2>
-			{/* .product-grid has fixed column counts, so a category with only one sibling left keeps
-			    that card one column wide - the bug .grid-fill was once added here to fix (a lone
-			    related thumbnail rendered at 1012px against the product's own 510px). */}
-			<div class="product-grid">
-				{related.map((other) => (
-					<ItemCard
-						client:load
-						id={other._id}
-						categoryName={other.categoryName}
-						name={other.name}
-						shortName={shortProductName(other.name, other.categoryName)}
-						price={other.price}
-						description={other.description}
-						soldOut={other.soldOut}
-						href={`/shop/${other.categorySlug}/${other.slug}`}
-						photoUrl={other.photo ? urlFor(other.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined}
-						photoLqip={other.photoLqip}
-					/>
-				))}
-			</div>
-			<p class="back-to-category">
-				<a href={`/shop/${item.categorySlug}`}>&larr; All {item.categoryName}</a>
-			</p>
-		</section>
-	)}
+	{/* "More from <category>" was removed on 25 September: the category page is one click back and
+	    already shows every sibling. The back link stays. */}
+	<section class="section wrap back-section">
+		<p class="back-to-category">
+			<a href={`/shop/${item.categorySlug}`}>&larr; All {item.categoryName}</a>
+		</p>
+	</section>
 </Layout>
 
 <style>
@@ -331,7 +301,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	}
 
 	.back-to-category {
-		margin-top: 1.5rem;
+		margin: 0;
 	}
 
 	/* Underline kept (no text-decoration: none): this had colour as its only affordance, with no

@@ -401,12 +401,14 @@ const goodsCategories = [
 			grid-row: 3;
 		}
 
-		.gi-card + .gi-group-body,
+		/* The second card sits beside the first here, not under its content. */
 		.gi-group-body + .gi-card {
 			margin-top: 0;
 		}
 
-		.gi-group-body {
+		/* Same specificity as the phone rule it overrides - an earlier version zeroed this too, and
+		   the opened content sat flush against the cards. */
+		.gi-card + .gi-group-body {
 			margin-top: var(--space-6);
 		}
 	}

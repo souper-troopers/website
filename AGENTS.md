@@ -241,14 +241,18 @@ Not in the brief; asked for before the 30 September call.
 
 ## Get Involved has its own hero photo (2026-09-25)
 The user noticed Get Involved and Our Work shared a banner (`support-conversation`, per the brief's
-photo table). Get Involved, and by the brief's parent/child rule Volunteer and Donate goods, now use
-**`src/assets/images/stall-kerry.jpg`**: Kerry and a colleague at the doll and coffee stall, a 2400px
-copy of the Drive original `Content/Our Work/Social Enterprise/19-IMG_9524.jpg` (4985×3065). Chosen
-because it was already published (the Our Work social-enterprises card uses a 1600px copy), shows
-staff rather than participants (no consent question), and suits the page's routes (buy, volunteer,
-give). `center 25%`; both faces sit right of the words at 1024-1440 without `zoom`. Contrast: 238
-lines on the three pages at 8 widths, worst body 5.4:1. Our Work is now the only page with the
-two-people photo; Corporate partnership keeps `partner-visit` as the brief assigned.
+photo table). Get Involved, and by the brief's parent/child rule Volunteer and Donate goods, use
+**`src/assets/images/volunteer-day.jpg`**: the Forvia company volunteer day at the Hub, a 2400px copy
+of the Drive original `Content/Get involved/Companies/1-IMG_9839.jpg`. `center 40%`.
+- **Replaced the same day**: the first pick, `stall-kerry.jpg` (Kerry at the doll and coffee stall),
+  read as the shop rather than as getting involved, the user's call. That file was deleted as unused;
+  it's in git history.
+- Most people face away. The one visible face (a woman in profile) sits beside or above the words at
+  1440, 1280, 1024 and 390 on the page hero and the band. **"FORVIA" shows on their backs**: a
+  partner's name on the page, which fits the corporate route, but mention it if Forvia is ever no
+  longer a partner.
+- Contrast: 1,216 hero lines site-wide at 8 widths, none failing; worst body 4.98:1 on the Volunteer
+  and Donate goods bands.
 
 ## Get Involved: two audience cards (2026-09-25)
 Decided 25 September: the page was three text-on-photo blocks with one treatment (the hero and two

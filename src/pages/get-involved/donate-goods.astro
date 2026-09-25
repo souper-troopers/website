@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PhotoHero from "../../components/PhotoHero.astro";
-import stallPhoto from "../../assets/images/stall-kerry.jpg";
+import volunteerDayPhoto from "../../assets/images/volunteer-day.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -91,7 +91,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	jsonLd={jsonLd}
 	heroOverlay
 >
-	<PhotoHero image={stallPhoto} size="band" position="center 25%">
+	<PhotoHero image={volunteerDayPhoto} size="band" position="center 40%">
 		<Breadcrumbs crumbs={crumbs} />
 		<h1>Donate goods</h1>
 		<p>What we can use, where to bring it, and how to arrange it.</p>

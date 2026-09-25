@@ -1026,26 +1026,26 @@ treating it as settled.
   appointment and we'll send prices." The left-rule callout styles went with it.
 - Checked at 390 and 1280 on Worry Dolls, Gift Tags and a product page: no sideways scroll, every
   card one link with no nested controls, labels 16px off the card's foot, teal focus ring.
-- **Later the same day, the photo's backdrop runs the whole card** (the user: no white behind the
-  name; room above the image; the wedge "half above, half beneath"). In `ItemCard.svelte`:
-  - `.item-card-img` is an absolute box filling the card (z -2, under the wedge's -1), holding the
-    square photo (`.item-card-photo`) after `--photo-top` of room (32px on wide cards, 16px narrow).
-    The body's top padding is a percentage of the card's width, so it tracks the square.
-  - **The box's colour is the photo's own backdrop, read at build time** by `src/lib/backdrop.ts`:
-    the per-channel median of the top 12 rows of the exact image the card shows (dolls #fefefe, gift
-    tags #e8e8e8). Sanity's palette was tried first and is useless here - it describes the product's
-    colours, not the backdrop - and sharp's `dominant` is quantised enough to leave a faint seam. A
-    top-edge fade was tried and removed: it washed out the dolls' heads, which touch the top edge.
-  - **On cards 300px or wider** (container query on the card) the text starts 44px above the photo's
-    foot, so the name overlays the photo beside the doll, with a 72px fade into the backdrop colour
-    under it. **Narrower cards (phones) don't overlap** - the dolls fill too much of a ~165px card
-    and names ran across them - so the name sits just under the photo, still on the backdrop.
-  - **Measured on real pixels** (names hidden, 9 widths 360-1440, 99 names): all pass, lowest 5.67:1
-    at the 5th percentile (Christmas Angel, which failed at ~3.2:1 before the fade). ⚠ When
-    re-measuring, switch transitions off - the name's colour transition otherwise gets screenshotted
-    mid-fade and every result reads 1.0.
-  - **The wedge is opaque on these cards** (`#dfecec`, hover `#d2e9ea` - the colours the 20% tint makes
-    over the stage wash), because at 20% the dolls' feet showed through it.
+- **Later the same day, reworked with the user** (no white behind the name; room above the image;
+  the wedge looked "half above, half beneath"; title above the price). Final shape in
+  `ItemCard.svelte`: **name, then the price pill, then the photo, then "View" on the wedge**, which
+  now overlaps the photo's foot and is opaque and a shade darker (`#d5e7e8`, hover `#c6e1e3`) - at
+  20% the dolls' feet showed through it. The photo sits at z-index -2 so the wedge (-1) is above it.
+  - **The card takes the photo's own backdrop colour**, read at build time by `src/lib/backdrop.ts`
+    (per-channel median of the top 12 rows of the *unpadded* photo: dolls `#fefefe`, gift tags
+    `#e8e8e8`), multiplied by the stage wash in the component. The same colour is the `bg` of the
+    Sanity `fit("fill")` padding, so there are no faint edges where the padding meets the photo.
+    Sanity's palette was tried and is useless here (it describes the product's colours); sharp's
+    `dominant` is too coarse; a top-edge fade washed out the dolls' heads.
+  - An intermediate version put the name over the photo's foot with a white fade under it for
+    contrast (Christmas Angel's name crossed its wings at ~3.2:1). Dropped once the name moved to the
+    top, which needs no fade and no contrast check on photo pixels.
+- ⚠ **`@sanity/image-url` crops by itself when given both a width and a height, even with
+  `fit("fill")`**: with no crop set in the Studio it still adds `rect=` for a centre square, so every
+  3:4 doll lost ~12% top and bottom before padding (the user noticed the originals weren't cropped).
+  `.ignoreImageParams()` removes it - on the three `fit("fill")` URLs (card photo, backdrop read,
+  product share image). The trade: a crop set in the Studio is ignored there too, which for padded
+  product photos is what we want.
 
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
 ⚠ **Switched off 2026-09-25 by design brief phase 2, then dropped for good the same day** (the

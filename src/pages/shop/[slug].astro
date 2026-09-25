@@ -19,13 +19,15 @@ export async function getStaticPaths() {
 
 const { category } = Astro.props;
 const items = category.displayMode === "items" ? await getShopItems(category.slug) : [];
-// Each card's photo, and the colour of its own backdrop for the room above it (see backdrop.ts).
+// Each card's photo and the colour of its own backdrop (see backdrop.ts). The colour is read from
+// the unpadded photo first, then used as the padding that makes it square - padding in plain white
+// showed as faint edges either side of the dolls.
 const cardPhotos = await Promise.all(
 	items.map(async (item) => {
-		const url = item.photo ? urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined;
-		const backdrop = item.photo
-			? await backdropColour(urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").url())
-			: undefined;
+		if (!item.photo) return { url: undefined, backdrop: undefined };
+		const backdrop = await backdropColour(urlFor(item.photo).width(500).ignoreImageParams().url());
+		const bg = (backdrop ?? "#ffffff").slice(1);
+		const url = urlFor(item.photo).width(500).height(500).fit("fill").bg(bg).ignoreImageParams().auto("format").url();
 		return { url, backdrop };
 	}),
 );

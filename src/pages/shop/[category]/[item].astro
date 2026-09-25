@@ -31,7 +31,7 @@ const slides = [item.photo, ...(item.gallery ?? [])].filter(Boolean).map((image)
 }));
 // Share cards and structured data want a landscape-friendly square; pad rather than crop.
 const photoUrl = item.photo
-	? urlFor(item.photo).width(900).height(900).fit("fill").bg("ffffff").auto("format").url()
+	? urlFor(item.photo).width(900).height(900).fit("fill").bg("ffffff").ignoreImageParams().auto("format").url()
 	: undefined;
 
 // Worry dolls are each made by hand, so the photos show the style, not the exact doll you receive

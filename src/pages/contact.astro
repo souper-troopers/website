@@ -88,8 +88,11 @@ const faqItems: FaqItem[] = [
 		<p>We'd love to hear from you - whether you're donating, volunteering, or partnering with us.</p>
 	</PhotoHero>
 
-	{/* Visit us on the left; the two channels - email, and the shop's own accounts - stacked on the
-	    right. All plain cards since the Hub photo moved up into the hero (24 September). */}
+	{/* Visit us and the shop's accounts stacked on the left, Email us on the right (2026-09-25): with
+	    the photo gone to the hero, Visit us is ~236px tall against Email us's 423, and stretched to
+	    match it showed ~350px of empty card. Stacking the shop card under it balances the columns
+	    (~404 against 423). A flat grid rather than wrappers, so a phone keeps the DOM order -
+	    Visit, Email, Shop. */}
 	<section class="section wrap">
 		<div class="contact-cards">
 			<div class="card visit-card" data-name="visit">
@@ -110,28 +113,26 @@ const faqItems: FaqItem[] = [
 					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
 				</div>
 			</div>
-			<div class="contact-reach">
-				<div class="card email-card" data-name="email">
-					<h2 class="contact-title">Email us</h2>
-					<dl class="email-directory">
-						{emailDirectory.map((entry) => (
-							<div>
-								<dt>{entry.label}</dt>
-								<dd><EmailLink client:visible address={entry.address} /></dd>
-							</div>
-						))}
-					</dl>
-				</div>
-				<div class="card brand-card" data-name="shop">
-					<h2 class="contact-title">Follow the shop brands</h2>
-					<ul class="brand-list">
-						{shopBrands.map((brand) => (
-							<li>
-								<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
-							</li>
-						))}
-					</ul>
-				</div>
+			<div class="card email-card" data-name="email">
+				<h2 class="contact-title">Email us</h2>
+				<dl class="email-directory">
+					{emailDirectory.map((entry) => (
+						<div>
+							<dt>{entry.label}</dt>
+							<dd><EmailLink client:visible address={entry.address} /></dd>
+						</div>
+					))}
+				</dl>
+			</div>
+			<div class="card brand-card" data-name="shop">
+				<h2 class="contact-title">Follow the shop brands</h2>
+				<ul class="brand-list">
+					{shopBrands.map((brand) => (
+						<li>
+							<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
+						</li>
+					))}
+				</ul>
 			</div>
 		</div>
 	</section>
@@ -188,21 +189,47 @@ const faqItems: FaqItem[] = [
 </Layout>
 
 <style>
-	/* Two cards per row from 701px, one below. Stretched, so the two columns end level. */
+	/* From 701px: Visit us over the shop card on the left, Email us spanning both rows on the right.
+	   `auto 1fr` puts any spare height in the second row - the shop card - never under Visit us's
+	   hours. One column below 701px, in DOM order. */
 	.contact-cards {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: stretch;
+		/* minmax(0, ...): a long email address must not widen its column (the old wrapper's min-width: 0). */
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		grid-template-rows: auto 1fr;
+		grid-template-areas:
+			"visit email"
+			"shop email";
 		gap: var(--space-6);
 	}
-	
+
+	.visit-card {
+		grid-area: visit;
+	}
+
+	.email-card {
+		grid-area: email;
+	}
+
+	.brand-card {
+		grid-area: shop;
+	}
+
 	@media (max-width: 700px) {
 		.contact-cards {
 			grid-template-columns: 1fr;
+			grid-template-rows: none;
+			grid-template-areas: none;
 			gap: var(--space-5);
 		}
+
+		.visit-card,
+		.email-card,
+		.brand-card {
+			grid-area: auto;
+		}
 	}
-	
+
 	/* One size for every title below the h1. The four cards and the questions are peers, and they had
 	   been three sizes at two heading levels (27, 19 and 35px; h3 before h2). This is Get Involved's
 	   sub-section size, which is the level these sit at. */
@@ -232,30 +259,6 @@ const faqItems: FaqItem[] = [
 		gap: var(--space-3);
 	}
 
-	/* The email directory and the shop card, stacked opposite the Hub. */
-	.contact-reach {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-6);
-		min-width: 0;
-	}
-	
-	/* Grows to absorb whichever column ends up shorter, so the slack lands inside the last card rather
-	   than as a gap between the two. */
-	.brand-card {
-		flex: 1;
-	}
-	
-	@media (max-width: 700px) {
-		.contact-reach {
-			gap: var(--space-5);
-		}
-	
-		.brand-card {
-			flex: none;
-		}
-	}
-	
 	/* The questions' column: same width, same left edge. */
 	.message-column {
 		display: flex;

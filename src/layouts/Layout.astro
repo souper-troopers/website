@@ -2239,6 +2239,15 @@ const structuredData = {
 				height: 124%;
 			}
 
+			/* PhotoHero's `zoom` (desktop only): the photo is enlarged from its left edge, so the subject
+			   moves right of the text column. The hero's overflow: hidden crops the rest. */
+			@media (min-width: 901px) {
+				.photo-hero[style*="--hero-zoom"] .hero-bg img {
+					width: calc(var(--hero-zoom) * 100%);
+					max-width: none;
+				}
+			}
+
 			/* Top-level inner pages: most of a laptop screen, words at the foot of the photo. */
 			.hero-photo.photo-hero--page {
 				display: flex;

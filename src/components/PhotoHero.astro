@@ -35,16 +35,24 @@ interface Props {
 	lqip?: string;
 	/** An alternative tint (a CSS background) for a photo the default fails on. */
 	scrim?: string;
+	/**
+	 * Above 900px only: enlarge the photo from its left edge by this factor, carrying the subject to
+	 * the right of the text column. In a wide band the photo is scaled to the full width, so
+	 * `position` can only move it up and down - it cannot move a face out from behind the h1.
+	 * Corporate partnership uses 1.7 (her face ~42% across the photo lands ~71% across the band).
+	 * It enlarges the image, so it is softer; keep it to the band.
+	 */
+	zoom?: number;
 }
 
-const { image, alt = "", size = "page", position = "center 30%", lqip, scrim } = Astro.props;
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom } = Astro.props;
 
 // The hero is the page's LCP image everywhere but on product pages, where the product photo is
 // larger - so the band loads eagerly (it is in the first screen) but without jumping the queue.
 const highPriority = size !== "band";
 ---
 
-<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax={size === "home" ? "0.3" : "0.1"}>
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax={size === "home" ? "0.3" : "0.1"} style={zoom ? `--hero-zoom: ${zoom}` : undefined}>
 	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
 		<Image
 			src={image}
@@ -52,7 +60,7 @@ const highPriority = size !== "band";
 			role={alt ? undefined : "presentation"}
 			width={Math.min(image.width, 2400)}
 			widths={[640, 800, 1280, 1600, Math.min(image.width, 2400)].filter((w, i, a) => a.indexOf(w) === i && w <= image.width)}
-			sizes="100vw"
+			sizes={zoom ? `(min-width: 901px) ${Math.round(zoom * 100)}vw, 100vw` : "100vw"}
 			loading="eager"
 			fetchpriority={highPriority ? "high" : undefined}
 			style={`object-position: ${position}`}

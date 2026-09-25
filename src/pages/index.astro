@@ -112,8 +112,8 @@ const heroLqip =
 		</div>
 		{/* Three equal white cards with a teal top rule (design brief phase 2): the solid-teal Donate
 		    tile and the two pale-teal ones were two of the site's ten card styles. Whole-card links; the
-		    hero's Donate button stays the page's one filled button. The small labels are kept - unlike
-		    section chips they say something the heading doesn't. */}
+		    hero's Donate button stays the page's one filled button. No eyebrow labels (removed
+		    2026-09-25): two cards had one and Donate didn't, so the titles sat at different heights. */}
 		<div class="grid grid-3 ways-grid">
 			<a href="/donate" class="card way-card">
 				<h3>Donate</h3>
@@ -127,13 +127,11 @@ const heroLqip =
 				<span class="way-cta">Donate now &rarr;</span>
 			</a>
 			<a href="/get-involved#individuals" class="card way-card">
-				<span class="way-label">Individuals &amp; groups</span>
 				<h3>Volunteer</h3>
 				<p>Give time, skills, or goods. Both make the Humanity Hub run.</p>
 				<span class="way-cta">Get involved &rarr;</span>
 			</a>
 			<a href="/get-involved#businesses" class="card way-card">
-				<span class="way-label">B-BBEE Level 1</span>
 				<h3>Partner with us</h3>
 				<p>Corporate giving, B-BBEE points, and sponsorship with measurable impact.</p>
 				<span class="way-cta">Partner with us &rarr;</span>
@@ -304,14 +302,6 @@ const heroLqip =
 		font-weight: 700;
 		line-height: 1;
 		letter-spacing: -0.02em;
-	}
-
-	.way-label {
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		color: rgba(36, 35, 43, 0.7);
 	}
 
 	.way-card p {

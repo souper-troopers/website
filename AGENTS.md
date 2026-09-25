@@ -219,6 +219,26 @@ Three questions briefly carried a Netlify-Forms-backed "Mark as done" button. **
 
 The Netlify form `task-done` and `src/components/MarkDone.svelte` are gone with it. `src/lib/people.ts` outlived it as the comment picker's name list, and went when that did (2026-08-15).
 
+## Four fixes from the review of phases 1-3 (2026-09-25)
+Not in the brief; asked for before the 30 September call.
+- **Contact**: Visit us over "Follow the shop brands" on the left, Email us spanning both rows on the
+  right - a flat `grid-template-areas` grid with rows `auto 1fr`, so any spare height goes to the
+  shop card, never under Visit us's hours. Chosen over `align-self: start`, which would have moved
+  the ~350px of empty card into empty page beside it. Measured at 1280: Visit us 0px spare, the
+  columns 423 / 423. Phones keep DOM order (Visit, Email, Shop). Columns are `minmax(0, 1fr)` so a
+  long email address can't widen one (the old wrapper's `min-width: 0`).
+- **Our Work service cards**: `grid-auto-rows: 1fr` removed, so rows size to content, and Souper
+  Squad's second sentence is behind a `.card-more` (words unchanged). Spare white under a card went
+  from ~180px to at most 68px at 1280 - what remains is cards in one row matching each other.
+- **Homepage "How to get involved"**: the two eyebrows ("Individuals & groups", "B-BBEE Level 1")
+  are gone, so all three titles start at the same height (344px at 1280).
+- **Corporate partnership hero**: the words ran across her face. A wide band scales the photo to the
+  full width, so `object-position` can only move it vertically - so `PhotoHero` gained **`zoom`**
+  (above 900px only): the photo is enlarged from its left edge, carrying the subject right. `zoom={1.7}`
+  puts her face ~71% across, clear of the text at 1024, 1280 and 1440. The cost is softness (a
+  1600px photo shown ~2,200px wide at 1280); the photo was already the brief's softest.
+- Hero contrast re-run after: 1,123 lines, none failing. No sideways scroll at 390 or 1280.
+
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch

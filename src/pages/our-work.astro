@@ -45,14 +45,15 @@ const castSteps = [
 // src/assets/images/services/SOURCES.md) until the shoot provides real ones - decorative, alt="", so
 // nobody is presented as a Souper Troopers participant. Copy unchanged; Documentation sits with the
 // other basics.
-const hubServices = [
+// `more` opens on click (the card-text budget); only Souper Squad, the one card well over it.
+const hubServices: { title: string; body: string; more?: string; photo: ImageMetadata }[] = [
 	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts.", photo: essentialsPhoto },
 	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling.", photo: recoveryPhoto },
 	{ title: "Housing assistance", body: "Shelter placements and family reunification.", photo: housingPhoto },
 	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting.", photo: documentationPhoto },
 	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments.", photo: employmentPhoto },
 	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers.", photo: socialPhoto },
-	{ title: "Souper Squad", body: "A stipended employment initiative (via Khulisa Social Solutions). Members work the community garden, make Worry Dolls, sell coffee, and take on community projects - alongside workshops and skills training toward independent work.", photo: squadPhoto },
+	{ title: "Souper Squad", body: "A stipended employment initiative (via Khulisa Social Solutions).", more: "Members work the community garden, make Worry Dolls, sell coffee, and take on community projects - alongside workshops and skills training toward independent work.", photo: squadPhoto },
 ];
 ---
 
@@ -182,6 +183,12 @@ const hubServices = [
 					<div class="svc-card-text">
 						<h3>{item.title}</h3>
 						<p>{item.body}</p>
+						{item.more && (
+							<details class="card-more">
+								<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about the {item.title}</span></summary>
+								<div><p>{item.more}</p></div>
+							</details>
+						)}
 					</div>
 				</li>
 			))}
@@ -462,13 +469,12 @@ const hubServices = [
 
 	/* PROTOTYPE: the Humanity Hub services as identical photo cards - see the note on `hubServices`.
 	   An 8-column grid with every card two columns wide, so four sit on a row and the fifth can start
-	   one column in: the last three are then centred with no extra wrapper. `grid-auto-rows: 1fr`
-	   makes every row as tall as the tallest card (Souper Squad has the most words), so all seven
-	   are genuinely the same size. */
+	   one column in: the last three are then centred with no extra wrapper. Rows size to their own
+	   content (2026-09-25): `grid-auto-rows: 1fr` made every row as tall as the tallest card, which
+	   once the photos went on top left ~180px of empty white in six of the seven. */
 	.svc-cards {
 		display: grid;
 		grid-template-columns: repeat(8, 1fr);
-		grid-auto-rows: 1fr;
 		gap: var(--space-5);
 		margin: 0;
 		padding: 0;

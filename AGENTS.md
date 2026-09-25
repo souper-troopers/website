@@ -335,6 +335,20 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   Souper Squad"), Who We Are's "A business, not just a charity", Volunteer, Get Involved, Donate goods,
   Corporate partnership. `q38` ("Is the Souper Squad finished altogether?", flagged for launch) asks
   who makes the dolls now before any of that copy changes.
+- **Video placement (agreed with the user 2026-09-25)**: no videos page or gallery - one short,
+  click-to-play video per page, where it helps that visitor decide. Odette's story -> her Our Work
+  story card and the homepage quote (`successStory.video`, already built); Anthony / CAST model ->
+  Our Work beside the CAST steps; the African Worry Dolls film -> the Worry Dolls page; a 60-90s cut
+  of the **Capital International Group** CSI film -> Corporate partnership; Brad's film -> the
+  homepage hero. Full versions stay on YouTube. `q39` asks Shan to add us to the channel as
+  **Editor** (never a password) and for consent per video, and to flag any footage of the man from
+  `q35`.
+  - **The CSI film** (`Extra/Videos/Capital International Group - CSI Partner.mov`, 7:06, 933MB) was
+    mapped with frames every 8s (Swift/AVFoundation script - there is no ffmpeg here): partner
+    interviews throughout (a man at an elephant painting, two men on a green sofa - "David Long" -
+    and two women - "Jacqui Holliday"), a woman in lilac at 3:12-4:00, 4:48-4:56 and 6:16-6:40, and
+    b-roll of food (0:08-0:32), the mural (1:04), football (2:32), a workshop (4:08) and a street
+    walk (6:48-6:56). Without the audio we can't say which lines are strongest - that is Brad's call.
 - Shan quotes the page's *visible* numbers, which shift when questions are added (she said "10, 19 and
   35"; the replies were in `q33` and `q35`). Refer her to questions by title.
 

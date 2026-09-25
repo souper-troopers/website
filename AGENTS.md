@@ -317,6 +317,20 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   960×1280 WhatsApp image); the **Souper Squad card removed** - the project no longer exists. Six
   cards now: a plain 3-column grid (2 on tablets, 1 on phones), so the old 8-column offset for a
   stranded seventh card is gone. `housing.jpg` and `souper-squad.jpg` were deleted.
+- **Three stock photos replaced with the client's own, the same day** (39 Drive photos reviewed; the
+  man in `IMG_9953` recognised first and ruled out of every pick - blue beanie, grey beard):
+  - **Who We Are hero**: `hub-workshop.jpg` (`Extra/Images/Mix/IMG_7419`, a workshop at the Hub).
+    Laptops anchor it low (`position="center 78%"`) so every face sits above the words; **phones
+    anchor bottom-right and scale the `<img>` 1.5x from that corner** (scoped CSS in `about.astro`,
+    `!important` over PhotoHero's inline object-position), because the narrow crop always put a face
+    under the heading. The scale is on the `<img>`; the parallax moves `.hero-bg`, so they compose.
+    Contact keeps the Hub exterior, so the two pages no longer share a photo.
+  - **Our Work, Employment & education**: `services/employment-skills.jpg` (`IMG_9873`, a volunteer
+    at a laptop with a woman), replacing the stock lecture hall.
+  - **Donate, "Course & skills training fees" tile**: `donation-funds/training.jpg` is now `IMG_7406`
+    (a young man at a table), replacing stock.
+  - Still stock, with no real equivalent in the Drive: Documentation (its Drive images are
+    AI-generated), and Donate's transport, ID documents and care packs tiles.
 - ⚠ **The Squad is mentioned elsewhere** - the dolls' description in Sanity ("made by members of the
   Souper Squad"), Who We Are's "A business, not just a charity", Volunteer, Get Involved, Donate goods,
   Corporate partnership. `q38` ("Is the Souper Squad finished altogether?", flagged for launch) asks

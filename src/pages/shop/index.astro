@@ -4,8 +4,17 @@ import PhotoHero from "../../components/PhotoHero.astro";
 import CardCtaLabel from "../../components/CardCtaLabel.astro";
 import shopPhoto from "../../assets/images/shop-products.jpg";
 import { getProductCategories, urlFor } from "../../lib/sanity";
+import { backdropColour } from "../../lib/backdrop";
 
 const categories = await getProductCategories();
+// Each tile takes the colour of its photo's own backdrop, read from the bottom edge of the 4:3 crop the tile shows (the
+// words sit below the photo), so the photo runs into the card with no white panel - as on the
+// product cards (see backdrop.ts).
+const tileColours = await Promise.all(
+	categories.map((category) =>
+		category.photo ? backdropColour(urlFor(category.photo).width(800).height(600).fit("crop").url(), "bottom") : Promise.resolve(undefined),
+	),
+);
 ---
 
 <Layout heroOverlay title="Handmade gifts and coffee from Cape Town" description="Troopers Coffee and African Worry Dolls - handmade in Cape Town by Souper Troopers. Every purchase creates work for people leaving homelessness.">
@@ -45,8 +54,8 @@ const categories = await getProductCategories();
 		{/* Two by two (25 September, when Bracelets made four categories): three across left the
 		    fourth alone on a row, and four across made each tile too narrow for its photo and blurb. */}
 		<div class="grid grid-2 category-grid">
-			{categories.map((category) => (
-				<a class="card card-cta category-tile" href={`/shop/${category.slug}`}>
+			{categories.map((category, i) => (
+				<a class="card card-cta category-tile" href={`/shop/${category.slug}`} style={`--card-colour:${tileColours[i] ?? "#ffffff"}`}>
 					{category.photo && (
 						<div
 							class="category-tile-img blur-up"

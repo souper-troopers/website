@@ -1078,6 +1078,16 @@ August she confirmed they're a real product at R40. Added at the user's call:
   script imports `sanity/cli` and a script in the scratchpad can't resolve it. The dev server
   needed the `[slug].astro` file touched before `/shop/bracelets/` stopped 404ing - its route list
   was built before the category existed.
+- **The landing tiles match the product cards** (25 September, the user): each tile is its photo's
+  own backdrop colour (`--card-colour`, set in `shop/index.astro`), the stage wash is gone, and the
+  wedge is solid `#d5e7e8` (hover `#c6e1e3`). The colour is read by `backdrop.ts` with
+  `edge: "bottom"`, from the 4:3 crop the tile actually shows, and **only from the outer 15% of the
+  bottom edge each side** - the coffee's beans and the bracelets' stand run to the bottom and
+  skewed a whole-row reading (the coffee tile went brown). Result: coffee and dolls `#ffffff`, gift
+  tags `#f4f3f1`, bracelets `#e5e5e3`. The tile blurb is ink at 0.75 (was 0.65, 4.49:1 on the
+  bracelets' grey; now 6.0:1 or better). Known: a soft line under the bracelets photo, where the
+  cream stand ends against the grey - a fade would hide it, but the user found fades odd on the
+  product cards; a photo where the stand ends inside the frame is the real fix.
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
   across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.
 

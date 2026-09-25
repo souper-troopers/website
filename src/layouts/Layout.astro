@@ -1865,6 +1865,21 @@ const structuredData = {
 				gap: 0;
 				padding: 0;
 				align-items: stretch;
+				/* The photo's own backdrop colour (set per tile by shop/index.astro), so the photo runs
+				   into the card and the words sit on its backdrop, not on a white panel - as on the
+				   product cards (25 September). */
+				background: var(--card-colour, #fff);
+			}
+
+			/* The wedge solid and a shade darker, as on the product cards, so it sits cleanly over
+			   whatever it meets. */
+			a.card-cta.category-tile::after {
+				background: #d5e7e8;
+			}
+
+			a.card-cta.category-tile:hover::after,
+			a.card-cta.category-tile:focus-visible::after {
+				background: #c6e1e3;
 			}
 
 			.blur-up {
@@ -1951,22 +1966,6 @@ const structuredData = {
 				transition: transform 0.3s ease, opacity 0.4s ease;
 			}
 
-			/* One shared "stage" behind every tile photo (25 September). The coffee and doll shots are on
-			   pure white and melted into the white card, while the gift tags are on a warm light grey
-			   with a visible edge. A wash in that grey, multiplied over the photo, turns white to
-			   #f3f2ef, barely moves the gift tags' own grey, and shifts product colours by ~5% - so all
-			   three end in the same soft edge above the white text. An overlay rather than a background
-			   under the <img>: the blur-up LQIP lives in that background, and multiplying onto it
-			   would double the image. */
-			.category-tile-img::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-				background: #f3f2ef;
-				mix-blend-mode: multiply;
-				pointer-events: none;
-			}
-
 			.category-tile:hover .category-tile-img img {
 				transform: scale(1.03);
 			}
@@ -1989,9 +1988,11 @@ const structuredData = {
 				margin-bottom: var(--space-2);
 			}
 
-			/* No bottom margin: the .card-cta label brings its own 24px above it. */
+			/* No bottom margin: the .card-cta label brings its own 24px above it. 0.75, not the site's
+			   0.65 floor: the tiles now sit on their photo's backdrop, and on the bracelets' #e5e5e3 the
+			   floor measured 4.49:1; 0.75 gives ~5.4:1 there. */
 			.category-tile p {
-				color: rgba(36, 35, 43, 0.65);
+				color: rgba(36, 35, 43, 0.75);
 				font-size: 0.92rem;
 				margin-bottom: 0;
 			}

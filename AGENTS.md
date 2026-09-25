@@ -270,6 +270,14 @@ route links, on white - side by side from 761px, stacked below.
   below the hero. The route links are always visible now (they used to hide while a banner was open).
 - Page height with both closed: 1,297px at 1280 (two cards 518×529), 1,669px at 390.
 
+## `q29` rewritten: the board's decision and the logo file (2026-09-25)
+`q29` asked "who should design a Humanity Hub logo, if the board agrees" - written before the 21 September
+call, where Kerry framed it as "the Humanity Hub by Souper Troopers", said soupertroopers.org stays, and
+the existing purple Hub logo (painted on the building) came up. Rewritten in place (same thread id) to ask
+**what the board decided on 28 September** and **for that logo file**, and flagged "Needed before
+launch": the header lockup is live, and a "no" from the board has to be reverted before the 30th. The
+domain question itself is settled (21 September minutes) and not asked again.
+
 ## Photo consent: one blanket question, `q35` (2026-09-25)
 The user asked whether any photo the client has given us can be used - the worry is consent. **Not
 yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Get involved`,

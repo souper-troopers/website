@@ -1539,11 +1539,17 @@ underneath, so the content sits exactly in the middle of the photo below the hea
   off (37vh) was tried first and cropped Our Work's two people too tightly; the user called 42vh
   "the perfect height". Phones and bands unchanged. Who We Are's photo moved to `center 58%` (was
   78%) so the faces show above/beside the words. Contrast: 1,216 lines, none failing.
-- **IMG_8600 was tried for Donate and rejected** (`Extra/Images/Mix`, two visitors at the Hub). Three
-  faces fill the middle of the frame, and the words cover the left ~60%, so at every zoom and position
-  measured one face sat under the text or was cut off. If it is used, it belongs in a card, not a hero.
-  ⚠ Crop it above the seated man on the right before using it anywhere - it's unclear whether he is
-  the man from IMG_9953 we must not show.
+- **Donate's hero is IMG_8600 since 25 September** (`src/assets/images/hub-visit.jpg`, from
+  `Extra/Images/Mix`: two visitors meeting a group at the Hub, the art wall behind), replacing
+  `partner-visit` (still used on Get Involved and Corporate partnership). `center 30%`, no zoom.
+  - ⚠ **Kept knowingly with faces near the words - the user's call** ("I still prefer it"). Three
+    faces fill the middle of the frame and the words cover the left ~60%, so no zoom or position
+    tried kept every face clear at every width; measured, one face overlaps a line of text at each
+    width. Don't "fix" it by swapping the photo back without asking.
+  - ⚠ **The file is cropped to the top 2150px of the original**, ending above the seated man on the
+    right and the head in the foreground: it's unclear whether he is the man from IMG_9953 we must not
+    show. Keep that crop if the asset is ever regenerated.
+  - Contrast: 1,216 lines, none failing; Donate's worst body 5.23:1.
 
 ### The design brief, phase 2: surfaces and components (2026-09-25)
 `docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. Reviewed and published 2026-09-25 (`32a66f7`).

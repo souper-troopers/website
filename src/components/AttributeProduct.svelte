@@ -94,12 +94,18 @@
 
 	.attribute-field {
 		display: grid;
+		min-width: 0;
 		gap: 0.35rem;
 		font-weight: 600;
 		font-size: 0.9rem;
 	}
 
+	/* Width-bound: the longest option ("250g, Ground Espresso/Moka Pot - R145") otherwise sets the
+	   select's width and pushed the card 3px past a 360px screen. */
 	.attribute-field select {
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
 		font: inherit;
 		padding: 0.6rem 0.75rem;
 		border-radius: 10px;

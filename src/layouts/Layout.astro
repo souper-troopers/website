@@ -2665,9 +2665,11 @@ const structuredData = {
 
 			/* Ink, not a teal: a static figure at this size doesn't need a colour to stand out, and any
 			   teal on static *text* competes with the buttons and links the teal family is reserved for. */
+			/* 3vw, not 5vw (25 September): "Workshops" at 5vw was ~267px in a 216px column at 1024 and
+			   pushed the page 31px sideways; at wider widths it spilled into the page margin. */
 			.impact-stat strong {
 				display: block;
-				font-size: clamp(2.5rem, 5vw, 3.5rem);
+				font-size: clamp(2rem, 3vw, 3.5rem);
 				font-weight: 700;
 				color: var(--st-ink);
 				line-height: 1;

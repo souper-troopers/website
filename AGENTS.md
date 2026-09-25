@@ -1801,8 +1801,10 @@ the final design**. That brief is with Brad's designer friend (2 September minut
   to light), titles under the letters, a climbing staircase (still there as `--rise`, set to 0), hops and wobbles in the line, outline rings round each letter (then four
   distinct hand-drawn flash rings), and paint splashes behind the letters (fading fully, then faintly
   persistent).
-- **Found nearby, not fixed:** `.impact-stats` in the impact band overflows the page by ~30px at
-  901–1100px, on the committed version too.
+- ~~**Found nearby, not fixed:** `.impact-stats` in the impact band overflows the page by ~30px at
+  901–1100px, on the committed version too.~~ **Fixed 2026-09-25**: the figures are
+  `clamp(2rem, 3vw, 3.5rem)` (was 5vw), because "Workshops" at 5vw was ~267px in a 216px column. It
+  now fits its column at every width from 390 to 1440.
 
 ### Our Work: the Humanity Hub services as photo cards (2026-09-13) — placeholders, not settled
 The user is **not fully sure about this yet**; it was committed so it isn't lost. Seven identical cards,

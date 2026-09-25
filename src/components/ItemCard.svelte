@@ -40,8 +40,8 @@
 	}
 </script>
 
-<!-- A product card (25 September): the name, then the price, then the photo on its own backdrop,
-     with "View" on the site's .card-cta wedge overlapping the photo's foot. The card takes the
+<!-- A product card (25 September): the price, the photo on its own backdrop, and the name with an
+     arrow on the site's .card-cta wedge overlapping the photo's foot. The card takes the
      photo's backdrop colour, so there is no white panel anywhere. The whole card is one link to the
      product page; Add to cart lives there only. The photo's alt is empty because the name is in the
      same link - otherwise the link reads the product's name twice. -->
@@ -52,13 +52,6 @@
 	style={`--card-colour:${cardColour}`}
 >
 	<div class="item-card-head">
-		<h3>
-			{#if shortName && shortName !== name}
-				<span class="visually-hidden">{name}</span><span aria-hidden="true">{shortName}</span>
-			{:else}
-				{name}
-			{/if}
-		</h3>
 		{#if soldOut}
 			<span class="item-card-pill is-soldout">Sold out</span>
 		{:else}
@@ -81,14 +74,21 @@
 			/>
 		{/if}
 	</div>
-	{#if href}
-		<span class="card-cta-label item-card-view">
-			View
+	<!-- The name is the footer label, in place of "View" (25 September): it says where the link goes. -->
+	<div class="card-cta-label item-card-view">
+		<h3>
+			{#if shortName && shortName !== name}
+				<span class="visually-hidden">{name}</span><span aria-hidden="true">{shortName}</span>
+			{:else}
+				{name}
+			{/if}
+		</h3>
+		{#if href}
 			<svg class="card-cta-arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
 				<path d="M4 12h15M13 6l6 6-6 6" />
 			</svg>
-		</span>
-	{/if}
+		{/if}
+	</div>
 </svelte:element>
 
 <style>
@@ -151,9 +151,38 @@
 		background: #c6e1e3;
 	}
 
-	/* "View" sits over the photo's foot, on the wedge. */
+	/* The name and arrow sit over the photo's foot, on the wedge. A long name wraps on a phone, so
+	   the arrow stays beside its last line and the text keeps its right alignment. */
 	.item-card-view {
+		align-items: flex-end;
 		margin: calc(-1 * var(--space-6, 1.5rem)) var(--space-5, 1.25rem) var(--space-4, 1rem);
+		text-align: right;
+	}
+
+	.item-card-view .card-cta-arrow {
+		flex-shrink: 0;
+		margin-bottom: 0.2em;
+	}
+
+	.item-card-view h3 {
+		text-wrap: balance;
+	}
+
+	/* Narrow cards (two across on a phone, ~165px): smaller type and less side margin, so "Hans
+	   Moolman (pack of 3)" takes two lines rather than three. */
+	.card.item-card {
+		container-type: inline-size;
+	}
+
+	@container (max-width: 299px) {
+		.item-card-view {
+			margin-left: var(--space-3, 0.75rem);
+			margin-right: var(--space-3, 0.75rem);
+		}
+
+		.item-card .item-card-view h3 {
+			font-size: 0.95rem;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -166,7 +195,7 @@
 		}
 	}
 
-	/* The price, as a white pill under the name. Ink and bold: a static figure, not a control, so
+	/* The price, as a white pill at the top of the card. Ink and bold: a static figure, not a control, so
 	   not teal. */
 	.item-card-pill {
 		padding: 0.3rem 0.75rem;
@@ -188,7 +217,8 @@
 
 	.item-card h3 {
 		margin: 0;
-		font-size: 1.1rem;
+		font-size: 1.05rem;
+		line-height: 1.3;
 		color: var(--st-ink, #24232b);
 	}
 

@@ -1028,8 +1028,11 @@ treating it as settled.
   card one link with no nested controls, labels 16px off the card's foot, teal focus ring.
 - **Later the same day, reworked with the user** (no white behind the name; room above the image;
   the wedge looked "half above, half beneath"; title above the price). Final shape in
-  `ItemCard.svelte`: **name, then the price pill, then the photo, then "View" on the wedge**, which
-  now overlaps the photo's foot and is opaque and a shade darker (`#d5e7e8`, hover `#c6e1e3`) - at
+  `ItemCard.svelte`: **the price pill, then the photo, then the product's name and arrow on the
+  wedge in place of "View"** (the user's idea, same day: the label says where the link goes, like
+  "Visit the shop →" elsewhere). On cards under 300px wide (phones) the name drops to 0.95rem with
+  12px side margins and balanced wrapping, so the longest ("Hans Moolman (pack of 3)") takes two
+  lines, not three. The wedge now overlaps the photo's foot and is opaque and a shade darker (`#d5e7e8`, hover `#c6e1e3`) - at
   20% the dolls' feet showed through it. The photo sits at z-index -2 so the wedge (-1) is above it.
   - **The card takes the photo's own backdrop colour**, read at build time by `src/lib/backdrop.ts`
     (per-channel median of the top 12 rows of the *unpadded* photo: dolls `#fefefe`, gift tags

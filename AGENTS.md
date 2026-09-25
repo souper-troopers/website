@@ -239,6 +239,17 @@ Not in the brief; asked for before the 30 September call.
   1600px photo shown ~2,200px wide at 1280); the photo was already the brief's softest.
 - Hero contrast re-run after: 1,123 lines, none failing. No sideways scroll at 390 or 1280.
 
+## Get Involved has its own hero photo (2026-09-25)
+The user noticed Get Involved and Our Work shared a banner (`support-conversation`, per the brief's
+photo table). Get Involved, and by the brief's parent/child rule Volunteer and Donate goods, now use
+**`src/assets/images/stall-kerry.jpg`**: Kerry and a colleague at the doll and coffee stall, a 2400px
+copy of the Drive original `Content/Our Work/Social Enterprise/19-IMG_9524.jpg` (4985×3065). Chosen
+because it was already published (the Our Work social-enterprises card uses a 1600px copy), shows
+staff rather than participants (no consent question), and suits the page's routes (buy, volunteer,
+give). `center 25%`; both faces sit right of the words at 1024-1440 without `zoom`. Contrast: 238
+lines on the three pages at 8 widths, worst body 5.4:1. Our Work is now the only page with the
+two-people photo; Corporate partnership keeps `partner-visit` as the brief assigned.
+
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch

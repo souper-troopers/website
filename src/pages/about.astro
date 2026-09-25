@@ -8,6 +8,8 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 import { getTeamMembers, getPartners, getSupporters, getPressMentions, urlFor } from "../lib/sanity";
 
 const team = await getTeamMembers();
+// The founder, for "How we began". Matched by name rather than by position in the team order.
+const kerry = team.find((person) => person.name.startsWith("Kerry"));
 const partners = await getPartners();
 // One lead partner, shown first and larger (the 2 September review: Woolworths at the top, with a
 // larger banner). Set with "Lead partner" in the Studio - currently Woolworths, using their public
@@ -49,28 +51,39 @@ const pressMentions = await getPressMentions();
 	</section>
 
 	{/* A plain section since 2026-09-24 (design brief phase 2): the teal-red gradient band behind it
-	    is retired site-wide. */}
-	<section class="section wrap">
-		<div class="section-intro">
+	    is retired site-wide. Since 25 September the story reads in full, three paragraphs in order
+	    (the middle one had been behind a "More"), beside Kerry's portrait - the founder the story is
+	    about. It is her team-card photo from Sanity, so it shows twice on the page; q36 on the status
+	    page asks for an early photo or a larger portrait. Photo first in the DOM, so it leads when
+	    stacked on a phone. */}
+	<section class="section wrap began">
+		{kerry?.photo && (
+			<figure class="began-photo">
+				<img
+					src={urlFor(kerry.photo).width(900).auto("format").url()}
+					srcset={`${urlFor(kerry.photo).width(600).auto("format").url()} 600w, ${urlFor(kerry.photo).width(900).auto("format").url()} 900w`}
+					sizes="(min-width: 761px) 440px, calc(100vw - 32px)"
+					alt="Kerry Hoffman"
+					width="900"
+					height="600"
+					loading="lazy"
+				/>
+				<figcaption>{kerry.name}, {kerry.role}</figcaption>
+			</figure>
+		)}
+		<div class="section-intro began-text">
 			<h2>How we began</h2>
-			{/* The opening line stays in view; the rest of Kerry's origin story opens on click rather
-			    than being cut - the words stay in the page for search and for anyone who wants them. */}
 			<p>
 				In June 2014, Kerry Hoffman spent a day sharing soup and sandwiches with people living on
 				the street.
 			</p>
-			<details class="card-more">
-				<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about how we began</span></summary>
-				<div>
-					<p>
-						That relaxed social gathering - and the regular monthly events that followed for the
-						next five years - helped us understand the complexity of homelessness and the
-						inadequacies of existing interventions. Those early years cemented Souper Troopers in
-						the social capital of the streets, and taught us that every person has their own story
-						and needs individualised support to move forward.
-					</p>
-				</div>
-			</details>
+			<p>
+				That relaxed social gathering - and the regular monthly events that followed for the
+				next five years - helped us understand the complexity of homelessness and the
+				inadequacies of existing interventions. Those early years cemented Souper Troopers in
+				the social capital of the streets, and taught us that every person has their own story
+				and needs individualised support to move forward.
+			</p>
 			<p>Kerry still leads Souper Troopers today - <a href="#team">meet the team</a>.</p>
 		</div>
 	</section>
@@ -329,6 +342,50 @@ const pressMentions = await getPressMentions();
 </script>
 
 <style>
+	/* "How we began": Kerry's portrait beside the story, 5/12 to 7/12 from 761px, stacked below with
+	   the photo first. Her face sits ~37% across a 3:2 photo, so a 4:5 crop anchored at 50% would
+	   trim her hair; 38% keeps her centred. */
+	.began-photo {
+		margin: 0;
+	}
+
+	.began-photo img {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		object-position: 38% 30%;
+		border-radius: var(--radius);
+	}
+
+	.began-photo figcaption {
+		margin-top: var(--space-2);
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	@media (max-width: 760px) {
+		.began {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-5);
+		}
+	}
+
+	@media (min-width: 761px) {
+		.began {
+			display: grid;
+			grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+			align-items: center;
+			gap: 48px;
+		}
+
+		.began-photo img {
+			aspect-ratio: 4 / 5;
+		}
+	}
+
 	/* The lead partner: the same white card, full width, logo larger beside the words. */
 	.partner-featured {
 		display: grid;

@@ -1216,9 +1216,21 @@ it is ~40 lines and takes a second.
       in Safari**, where 3D flips most often misbehave (`-webkit-backface-visibility` is set).
     - ⚠ The dev server once kept serving the old scoped CSS after this edit - if a change to a
       page's `<style>` shows no effect, touch the file and reload before debugging.
-  - **The supporters list is a `<details>`** behind its existing heading; **How we began** shows
-    its first sentence and puts the rest in a `.card-more` (white summary on the gradient band); **How
+  - **The supporters list is a `<details>`** behind its existing heading; ~~**How we began** shows
+    its first sentence and puts the rest in a `.card-more`~~ (reversed 2026-09-25, see below); **How
     we work** ends on the CAST link alone.
+  - **How we began, since 2026-09-25**: all three paragraphs in order (the middle one no longer behind a
+    "More"; no wording changed), beside Kerry's portrait. `.began` is a 5fr / 7fr grid from 761px,
+    48px gap, vertically centred; stacked below with the photo first. The text column reuses
+    `.section-intro` so its heading and colour match the page's other sections.
+    - The photo is her `teamMember` portrait (found by name, not position), 900×600, so it shows twice
+      on the page and is soft on large screens. `q36` asks Shan for a 2014 soup-days photo and a
+      larger portrait; an early photo is the better fix, since Meet the team keeps the portrait.
+    - Cropped 4:5 on laptops, 4:3 on phones, at `object-position: 38% 30%` rather than the 50% asked
+      for: her face sits ~37% across the 3:2 photo, so 50% trims her hair on the left. Face checked at
+      1280, 761, 390 and 360; no sideways scroll.
+    - Caption comes from the team card (`name, role`): "Kerry Hoffman, Founder and Executive
+      Director". It's ink at 0.7, above the 0.65 floor.
 - **Kept, deliberately** - don't "fix" these on a future pass:
   - FAQ answers restating facts on each giving page (PBO, 18A, the address). Each answer has to make
     sense extracted alone - the LLM rule above - and they are collapsed now, so a reader meets them

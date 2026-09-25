@@ -113,7 +113,18 @@ const jsonLd = attributeProductJsonLd
 		<section class="section wrap">
 			{category.displayMode === "items" ? (
 				<div class="section-intro category-intro">
-					<PortableText value={category.description} />
+					{/* Only the first paragraph shows; the rest opens on click (25 September - the Worry
+					    Dolls intro read as long-winded). No words changed, and a closed <details> is still
+					    in the page, so search engines read all of it. */}
+					<PortableText value={category.description.slice(0, 1)} />
+					{category.description.length > 1 && (
+						<details class="card-more">
+							<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about {category.name}</span></summary>
+							<div>
+								<PortableText value={category.description.slice(1)} />
+							</div>
+						</details>
+					)}
 				</div>
 			) : (
 				<div class="prose">
@@ -222,7 +233,7 @@ const jsonLd = attributeProductJsonLd
 		margin: 0;
 	}
 
-	.category-intro :global(p:first-child) {
+	.category-intro > :global(p:first-child) {
 		font-size: 1.2rem;
 		line-height: 1.5;
 		color: var(--st-ink);

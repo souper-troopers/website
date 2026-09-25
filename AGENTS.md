@@ -1017,6 +1017,11 @@ treating it as settled.
   `.item-card` is excluded from `.card-cta`'s phone padding rule, since its padding is on the body.
 - **Items-mode category intro**: the description in a `.section-intro` at 46rem, first paragraph a
   1.2rem ink lead, the rest muted. Coffee (attributes mode) keeps plain prose.
+- **Only the description's first paragraph shows; the rest is behind a `.card-more`** (25 September,
+  the user: the Worry Dolls intro read long-winded; option 1 of four discussed). No words changed.
+  Discussed for later: leading with Shan's "whispered to and tucked under a pillow" line, and
+  rewriting the Souper Squad paragraph once `q38` says whether the Squad still exists - both change
+  her copy, so they go to her first.
 - **Worry Dolls' handmade note is a centred `.section-intro.statement`** above the grid: "Every doll is
   handmade, so yours will be one of a kind." as the h2, "The photos show each style, not the exact doll
   you'll receive." beneath. Same words, no callout rule. (The product pages keep their own note.)

@@ -219,6 +219,29 @@ Three questions briefly carried a Netlify-Forms-backed "Mark as done" button. **
 
 The Netlify form `task-done` and `src/components/MarkDone.svelte` are gone with it. `src/lib/people.ts` outlived it as the comment picker's name list, and went when that did (2026-08-15).
 
+## RFC page: "Needed before launch" (added 2026-09-25)
+Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
+September** - the 30th, the day of the next review call. So the status page now marks what launch
+depends on.
+- **A flag, not a ranking** (`launch?: boolean` on `Question`): one question per item - can the site
+  go live without this? Ours to set, theirs to overrule; unflagged means "can follow launch". It
+  shows as a "Needed before launch" tag beside the status chip (ink on a light red tint with a red
+  rule - words first; the red itself is only 4.0:1 on white) and **drops by itself once the question
+  is settled**, so nothing needs clearing by hand. The intro counts the open ones and links each
+  (`#ask-<threadId>`, ids on every card) - it replaced "Nothing urgent - take your time".
+- Flagged: `q8`, `q27` (both already settled, so no tag shows), `q30` (Woolworths - if not approved
+  in time, hide the lead-partner card at launch rather than wait), `q33` (the Worry Dolls details),
+  and **new `q34`: who controls the soupertroopers.org domain, and who provides the email**. It had
+  never been asked, and it is the biggest launch blocker: the org's email almost certainly runs on the
+  same domain, and repointing it at Netlify without keeping the mail (MX) records stops email. The
+  question asks for *who* holds the login, never the password, and says so.
+- `askedOn?: string` on `Question` dates a question's first timeline entry; without it every question
+  reads as asked on `ASKED_ON` (9 August). Only `q34` sets it - **q26-q33 still show 9 August**, which
+  is wrong but pre-existing.
+- **Our own launch jobs are not on that page** (they aren't the client's): the "Before real launch"
+  checklist above - noindex flag, robots.txt, the `llms.txt` last line, the Cloudflare token, the
+  sitemap hostname, and the Safari / real-iPhone check - none done yet.
+
 ## RFC page: length, and why it isn't split into pages (2026-08-15)
 It reached 7,900 words. Measured rather than eyeballed — `visible on load` is the number that matters, and it was **4,911 words (~25 min)**, of which **1,670 were the answer blocks added that same morning**. Those had ignored the page's own convention (context collapses, everything else doesn't) and put up to three permanent paragraphs on each of twelve questions. Now **2,459 visible (~12 min)**, 69% of the page collapsed.
 

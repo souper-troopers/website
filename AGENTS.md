@@ -1481,8 +1481,8 @@ homepage is still the least resolved part") and q28's first try at three pillars
 - **Photos, per the brief's table**: mural (home), Hub exterior (Who We Are, Contact - crops from the
   right to keep the 66), `support-conversation` (Our Work, Get Involved, Volunteer, Donate goods),
   `partner-visit` (Donate, Corporate partnership), `shop-products` (shop, category, product, order
-  pages). ⚠ `partner-visit` is 1600px, so on a retina laptop it is upscaled ~1.6x; soft under the
-  tint rather than broken, but the first to replace.
+  pages). `partner-visit` was a 1600px copy; regenerated at 2400px from Shan's 5472px original
+  (`Extra/Images/Events/22-IMG_9554.jpg`) on 25 September - same frame, sharper.
 - **Inner heroes have a 12% overhang and a 0.1 parallax, not the homepage's 35% / 0.3.** At rest a
   hero shows the photo *below* its overhang, and at 35% a wide inner hero cut both people's heads
   off on Our Work. `support-conversation` is also anchored `center 5%`.

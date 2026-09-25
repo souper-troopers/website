@@ -445,6 +445,16 @@ Reasoning: if these accounts are created under the user's personal logins, the c
 ## Before real launch (pointing soupertroopers.org at this site)
 - [ ] Set `PRE_LAUNCH_NOINDEX = false` in `src/layouts/Layout.astro` — added 2026-08-08 so search engines don't index the pre-launch preview URL under the wrong domain. **It's a flag rather than a line to delete (changed 2026-08-12):** `Layout` also takes a per-page `noindex` prop, used by the internal `/request-for-comment` and `/google-listing` pages, and both feed the *same* meta tag so no page emits two. Deleting the blanket instead of flipping the flag would have published both internal pages.
 - [ ] **Remove the standing `mcp__Sanity` allow rule from `.claude/settings.local.json`** (added 2026-09-13 at the user's request). While the site is pre-launch it lets Claude write to the production Sanity dataset without pausing, which the user judged low-risk; after launch the same write changes the public site, so it should go back to asking. The file is gitignored, so nothing in the repo will show it is still there.
+- [ ] **Videos on a personal YouTube channel - check at handover (noted 2026-09-25).** On hold for now:
+  the plan is Shan adding us as an **Editor** on the Souper Troopers channel (`q39`). If she hasn't by the
+  time the videos matter, the user may upload short cuts **unlisted to his own YouTube account as a
+  temporary stopgap** - only with Shan's or Kerry's OK and with consent confirmed for everyone shown
+  (`q39`, `q32`). If that happens, list every such video here with its Sanity field, and **before
+  handover re-upload each one to their channel and swap the link in Sanity** (`successStory.video` or
+  wherever it's used). YouTube can't move single videos between channels, so the links change; views
+  on the old links don't carry over. Why it can't stay: the charity wouldn't own its own videos, the
+  player shows the uploader's name rather than Souper Troopers', and the Capital International Group
+  film is partly the partner's.
 - [ ] Point the real domain at Netlify and update DNS.
 - [ ] Transfer the Sanity project from the user's personal account to a Sanity Organization.
 - [ ] Update `site:` in `astro.config.mjs` from `souper-troopers.netlify.app` to the real domain (used for canonical/Open Graph URLs — see "SEO/AEO basics" below). Also remove the `Disallow: /` rule in `public/robots.txt` at the same time as the noindex meta tag above.

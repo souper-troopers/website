@@ -1200,11 +1200,22 @@ it is ~40 lines and takes a second.
   - ⚠ **`.section-intro.statement` is the centred, larger variant** - the mission uses it. It was
     removed by mistake earlier the same day on the claim it had no styles; a grep for `^\.statement`
     misses the compound selector.
-  - **Partners are a logo wall**: every partner except the lead one is a `<details>` tile (logo +
-    name; what they give opens on click), flex-wrapped and centred like `.team-grid`, so five to a
-    row at 1100px and part-rows centre whatever the count. Names reserve two lines (three below
-    481px) so closed tiles are one height. Tile logos are `alt=""` - the name is beside them - and a
-    partner's website link goes inside the opened tile, since the tile is itself a control.
+  - ~~**Partners are a logo wall** of `<details>` tiles~~ **Flip cards since 2026-09-25** (the user's
+    call: opening a tile grew it alone and pushed every row down). Every partner but the lead one is a
+    card - logo and name on the front; the name again, the blurb and any website link on the back -
+    turned over by a 32px ⋯ button in its corner (✕ on the back). A grid the same width as the lead
+    card: 5 across, 3 below 901px, 2 below 561px, `grid-auto-rows: 1fr` so the wall is even.
+    - Both faces share one grid cell, so a card is as tall as its taller face and turning it moves
+      nothing. The button is outside both faces, so it stays on top and the back's link never nests
+      in a control.
+    - Both faces stay in the page (search reads every blurb); the back is `inert` while it faces
+      away, the button carries `aria-expanded`. Buttons ship `hidden` and the script unhides them.
+      Reduced motion: the back fades in, no rotation.
+    - The flip card was weighed against showing the blurbs outright and against logos only; it won
+      on keeping the section light on text while keeping the detail one click away. **Not yet seen
+      in Safari**, where 3D flips most often misbehave (`-webkit-backface-visibility` is set).
+    - ⚠ The dev server once kept serving the old scoped CSS after this edit - if a change to a
+      page's `<style>` shows no effect, touch the file and reload before debugging.
   - **The supporters list is a `<details>`** behind its existing heading; **How we began** shows
     its first sentence and puts the rest in a `.card-more` (white summary on the gradient band); **How
     we work** ends on the CAST link alone.

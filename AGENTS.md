@@ -393,6 +393,15 @@ depends on.
   never been asked, and it is the biggest launch blocker: the org's email almost certainly runs on the
   same domain, and repointing it at Netlify without keeping the mail (MX) records stops email. The
   question asks for *who* holds the login, never the password, and says so.
+- **Reviewed 2026-09-25 (the user asked for the flags to be current).** Rule applied: can the site
+  go live without it? Now flagged and open: `q34` (domain), `q29` (the board's name decision - the
+  header lockup is live), `q38` (Souper Squad - the site would describe something that has ended),
+  and **`q40` (bracelets price, newly flagged - once the shop is live people buy at it)**. **`q30`
+  (Woolworths) unflagged**: its own text already says the card is hidden at launch if Woolworths
+  hasn't replied, so launch doesn't wait on it. **`q33` closed**: all four doll details were done and
+  its last follow-up was only "say if you'd like the Our Work wording changed" (the Squad part moved
+  to `q38`), so that text went into the answer's `outcome` rather than staying an open follow-up.
+  Production threads checked first (`netlify blobs:list rfc-comments`): nothing newer than 25 Sept.
 - `askedOn?: string` on `Question` dates a question's first timeline entry; without it every question
   reads as asked on `ASKED_ON` (9 August). Only `q34` sets it - **q26-q33 still show 9 August**, which
   is wrong but pre-existing.

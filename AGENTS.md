@@ -1279,8 +1279,8 @@ homepage is still the least resolved part") and q28's first try at three pillars
   its ink partners band (`.dark-band`, unchanged).
 - **Cards: one white card, one photo card.** Homepage "How to get involved" is three equal white cards
   (the 4px teal top rule they first had was removed on 25 September - plain white is the site's
-  one card style; the Donate page's EFT card keeps its rule as the page's lead) (the solid-teal and pale-teal tiles and their BrushRings went -
-  `BrushRing.astro` deleted, unused). Photo cards are photo on top, words on white beneath, never
+  one card style; the Donate page's EFT card keeps its rule as the page's lead). The solid-teal and pale-teal tiles and their BrushRings went
+  (`BrushRing.astro` deleted, unused). Photo cards are photo on top, words on white beneath, never
   words on the photo: Our Work's service cards, Donate's "What your donation funds" tiles (and Get
   Involved's goods tiles, same `.goods-tile` class), Donate's "Other ways to help". That retires three
   per-photo contrast measurements. On a phone, service cards put the photo beside the words and goods

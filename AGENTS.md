@@ -1093,6 +1093,21 @@ August she confirmed they're a real product at R40. Added at the user's call:
     bags touching the top and the beans the bottom. The original cut-out
     (`image-d17a8812...-600x600-png`) is kept in the media library, unreferenced. The coffee's own
     page takes the centre square of this, so its bags are smaller there than before.
+  - ⚠ **Superseded later the same day: all four tiles are now on pure white** (the user wanted the
+    bracelets and gift tags whiter, not off-white, and filling the tile like the coffee and dolls).
+    Both were rebuilt from the originals with a **whitening pass**: near-neutral pixels (saturation
+    under ~22-24) have their lightness stretched so anything above ~208-222 becomes 255 and darker
+    greys ramp up (the soft product shadows survive, which grounds them as the dolls' shadows do);
+    saturated pixels - beads, artwork - are untouched.
+    - **Gift tags**: `Dolls/Tags/DSC_7519` (India Harris) and `DSC_7525` (Hans Moolman), each whitened,
+      cropped 1260px wide from row 1300 with its whole shadow, scaled 0.76 and placed at 30% / 68.5%
+      across a 1600x1200 white canvas with a `darken` blend (so the crops can overlap without seams).
+      Every canvas edge measures 255. Cards fill ~72% of the height.
+    - **Bracelets**: the stand fade below, then whitening (LO 160, HI 208), then a 1560px-wide 4:3
+      frame around the stack scaled to 1600x1200. The stack is wide, so it fills ~66% of the *width*,
+      ~50% of the height. A faint trace of the stand remains behind the right-hand ends.
+    - All four tiles now read `#ffffff`, so `backdrop.ts`'s bottom-corner reading is a no-op here
+      until someone uploads a photo on a coloured backdrop - it stays for that case.
   - **Bracelets**: a 1800x1350 crop of `DSC_7515`, with the display stand faded out above and below
     the bracelets. Per row, the backdrop behind the stand is rebuilt by blending between the sweep
     either side (columns 90px in from each edge), and blended over the stand with a smoothstep ramp

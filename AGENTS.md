@@ -1057,19 +1057,25 @@ the form's usual 480px.
 
 ### The header's Donate / Shop control: two links, not a menu (2026-09-14)
 ⚠ **Replaced 2026-09-25: two separate controls, not one pill.** Donate is `.btn-primary` (teal fill,
-ink label); Shop is an outlined ghost (transparent, 1.5px `rgba(255,255,255,.7)` border, white label)
-that fills to `rgba(255,255,255,.12)` on hover and on `/shop` routes - its current-page marker now,
-replacing the underline. 8px apart, both 52px tall (`--header-height` unchanged). The cart sits beside
-Shop. Details worth keeping:
+ink label); Shop is an outlined ghost (transparent, 1.5px `rgba(255,255,255,.7)` border, white label,
+`rgba(255,255,255,.12)` on hover). 8px apart, both **44px** tall, side padding 18px on laptops and 14px
+below 761px. `--header-height` is built from the 44px, so the laptop row is **68px** (plus the header's
+1px border); the 64px phone header is unchanged. The cart sits beside Shop. Details worth keeping:
+- **Current page: an underline under the label, inside the pill** - ink under Donate on `/donate`, teal
+  under Shop on `/shop` and `/shop/...` (`aria-current="page"` on both links). Same 4px gap and 2px rule
+  as the nav's underline, but drawn as a `::after` on `.support-label` so it **takes no space and the
+  word stays centred in the pill** (the user's call: a layout-box underline pushed the text 3px up and
+  looked off). So the pill underline sits ~3px below the nav's rather than on its line - accepted.
+- **Labels use the nav's type, 0.95rem / 1.5.** The spec said "1rem / 24px, the nav's size"; the nav
+  is actually 0.95rem, so the labels follow the nav. If 1rem is wanted, change both together.
 - **All three sit in `.header-actions`**, so they wrap as one group: loose, the cart dropped onto a row
   of its own at 962-1019px. `.header-actions` carries the laptop `margin-left: auto` (the slack before
   Donate) and the phone `order: 1`; on phones its gap is `--space-3`, the row's own, or the menu button
   falls off at 320px. The homepage's hide-until-scrolled rule still targets `.support-menu` (a
   descendant selector), so it hides Donate and Shop together and **the cart stays**.
-- **Width is budgeted to the old pill**: 84 + 8 + 68 = 160px against 162, hence side padding of 12px
-  (Donate) and 10px (Shop), tighter than `.btn`. At 18/16 the row only fitted on one line from
-  1,044px; at 14/12 from 1,028. Now: one row from **1,014px** (was 1,020), 145px 778-1013, 198px
-  762-777 (was 204). Re-measure in 2px steps after any change.
+- **Width**: 93 + 8 + 76px at 1280. The row fits on one line from **~1,037px**; below that the
+  `.header-inner` is 136px at 778-1036 and 189px at 762-776, which is what `--hero-clearance`'s
+  137 / 190 overrides are fitted to. Re-measure in 2px steps after any change.
 - **`.support-menu .header-shop`, not `.header-shop`**: the site-wide `.btn` rule comes later in the sheet
   and at equal specificity replaced the white border with its transparent one.
 - The 1.5px border renders 1px on standard-density screens (Chrome rounds down); fine on retina.
@@ -1413,12 +1419,12 @@ pill, the cart. The nav is now **Home, Who We Are, Our Work, Get Involved, Conta
 `Layout.astro`). The pill's Shop half carries `aria-current="page"` on `/shop` and every
 `/shop/...` route, shown as a 2px underline (the nav's old current-page cue); the nav link only ever
 matched `/shop` exactly. The cart icon is untouched: it is state, not navigation.
-- **The wrap band narrowed**, measured on `/about/` and `/shop/` in 2px steps: three rows (204px) now
+- ~~**The wrap band narrowed**~~ (superseded 2026-09-25 by the 44px controls: one row from ~1,037px, 137 / 190px clearance to 1045 / 785 - see "The header's Donate / Shop control"), measured on `/about/` and `/shop/` in 2px steps: three rows (204px) now
   762-777px (was to 833); two rows (145px) 778-1019px (was to 1077); one row from **1,020px** (was
   1,078). `--hero-clearance`'s media queries follow (rounded outward to 785 / 1025). Verified at ten
   widths across both boundaries that Volunteer's breadcrumbs start 69-141px below the header, and the
   full hero contrast check passes (1,123 lines).
-- The Donate half has no current-page marker on `/donate` - the brief only asked for Shop, and Donate
+- ~~The Donate half has no current-page marker on `/donate`~~ (it has one since 2026-09-25) - the brief only asked for Shop, and Donate
   was never in the nav. A one-line change if wanted.
 
 ### Our Work: the CAST prototype (2026-09-13)

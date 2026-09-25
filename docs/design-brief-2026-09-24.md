@@ -223,7 +223,10 @@ Contact; the handmade-doll note on the Worry Dolls pages.
 
 ## 6. Out of scope
 
-The hero video (Brad), the CAST infographic (Brad's designer; the current prototype stays), the
+The hero video (Brad), the CAST infographic (Brad's designer; the current prototype stays - on a
+white stage since 25 September; **tell the designer the yellow A is low-contrast on white**, about
+1.9:1 against a 3:1 floor for graphics, accepted because it is decorative: the word is carried by
+its tail and by visually-hidden text), the
 Humanity Hub naming (Kerry's board, 28 September), the shop's per-variation carousels and copy, the
 donate rails, fonts (off, Kerry: "I'm not attached to it"), and anything under `/internal`.
 

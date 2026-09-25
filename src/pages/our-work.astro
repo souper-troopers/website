@@ -248,13 +248,16 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		gap: var(--space-8);
 		padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
 		border-radius: var(--radius);
-		background: var(--st-ink);
-		color: var(--st-white);
+		/* White since 25 September - the site's white card and its shadow - so Our Work has no dark
+		   band besides the footer. Was ink. */
+		background: var(--st-white);
+		color: var(--st-ink);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 		overflow: hidden;
 	}
 
 	.cast-stage .section-intro h2 {
-		color: var(--st-white);
+		color: var(--st-ink);
 	}
 
 	.cast2-wrap {
@@ -273,18 +276,19 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 
 	.cast2-trail {
 		fill: none;
-		stroke: var(--st-teal-light);
+		/* Teal-dark on the white stage (was teal-light at half opacity on ink). */
+		stroke: var(--st-teal-dark);
 		stroke-width: 5;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-		opacity: 0.5;
+		opacity: 0.8;
 		stroke-dasharray: var(--trail, 0);
 	}
 
 	.cast2-dot {
-		fill: #fff;
+		fill: var(--st-teal-dark);
 		opacity: 0;
-		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+		filter: drop-shadow(0 0 6px rgba(20, 130, 148, 0.45));
 	}
 
 	.cast2 {
@@ -327,14 +331,14 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		letter-spacing: -0.02em;
 	}
 
-	/* The outline: a stroke painted *under* a fill in the stage's own ink. The system font builds
+	/* The outline: a stroke painted *under* a fill in the stage's own colour (white since 25 September). The system font builds
 	   some letters from overlapping shapes (the A's crossbar and apex), and a bare stroke outlines
 	   every one of them, so the A showed its seams inside the letter (fixed 25 September). With
 	   the fill on top, those inner lines are covered and only the outer edge shows. The stroke is
 	   doubled to 4px because the fill covers its inner half, leaving the same 2px outline. */
 	.cast2-outline {
 		display: block;
-		color: var(--st-ink);
+		color: var(--st-white);
 		-webkit-text-stroke: 4px var(--c);
 		paint-order: stroke fill;
 		transform-origin: 50% 60%;
@@ -351,7 +355,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 	   1280), the T's crossbar left a gap (-5px). */
 	.cast2-rest {
 		margin-left: var(--kern, 0.04em);
-		color: var(--st-white);
+		color: var(--st-ink);
 		font-size: clamp(1.1rem, 1.7vw, 1.4rem);
 		font-weight: 700;
 		letter-spacing: 0.01em;
@@ -371,7 +375,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 
 	.cast2 p {
 		margin: 0;
-		color: rgba(255, 255, 255, 0.78);
+		color: rgba(36, 35, 43, 0.75);
 	}
 
 	@media (max-width: 900px) {

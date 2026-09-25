@@ -1389,7 +1389,7 @@ homepage is still the least resolved part") and q28's first try at three pillars
   added there); the "Some of the people below…" line went with the other two stories. Who We Are:
   "How we began" is a plain section.
 - **One dark band per page besides the footer, and the hero photo doesn't count**: Our Work keeps the
-  CAST stage; `.impact-band` is now white with ink figures on Our Work and Donate. Who We Are keeps
+  CAST stage (~~then~~ - white since 2026-09-25, so Our Work now has none); `.impact-band` is now white with ink figures on Our Work and Donate. Who We Are keeps
   its ink partners band (`.dark-band`, unchanged).
 - **Cards: one white card, one photo card.** Homepage "How to get involved" is three equal white cards
   (the 4px teal top rule they first had was removed on 25 September - plain white is the site's
@@ -1507,11 +1507,20 @@ the final design**. That brief is with Brad's designer friend (2 September minut
   - **Per-letter spacing before the tail** is `--kern` on each step, in the tail's own ems so it
     scales: the A and S need a little more room (+4px at 1280), the T's crossbar needs the tail tucked
     under it (-4px).
-- ⚠ **The outline is a 4px stroke painted under an ink fill** (`paint-order: stroke fill`), not a bare
+- **The stage is white since 2026-09-25** (was ink): the site's white card and shadow, ink heading and
+  tails, descriptions at muted ink (0.75). The letters keep their brand colours; the line and the dot
+  are `--st-teal-dark` (the line at 0.8 opacity, the dot with a soft teal glow). The animation is
+  unchanged. With it, Our Work has no dark band besides the footer.
+  - ⚠ **The yellow A is low-contrast on white** (~1.9:1, under the 3:1 floor for graphics). Accepted
+    knowingly: it is decorative - the word is read from its tail ("ssess") and the visually-hidden
+    "Assess". Noted in `docs/design-brief-2026-09-24.md` §6 for Brad's designer. Don't "fix" it by
+    darkening the brand yellow without asking.
+  - Checked at 1280 and 390 (the line runs down the left margin there): no sideways scroll.
+- ⚠ **The outline is a 4px stroke painted under a fill in the stage colour** (`paint-order: stroke fill`; white since the stage went white), not a bare
   2px stroke on transparent text (fixed 2026-09-25). The system font builds the A from overlapping
   shapes, and a bare stroke outlined each one, so the unfilled A showed seams at its apex and
-  crossbar. The ink fill covers the inner half of the stroke and every inner seam. If the stage
-  background ever changes colour, change the outline's `color` with it.
+  crossbar. The fill covers the inner half of the stroke and every inner seam. The outline's `color` must match
+  the stage background.
 - ⚠ **The line runs under the letters, never through them.** Straight through their middles it showed
   through the letters' counters (the C's gap, the A's triangle) and read as a strike-through. The path
   is computed at runtime from where the letters actually are, so one script serves the row and the

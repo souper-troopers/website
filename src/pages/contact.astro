@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
-import { Image } from "astro:assets";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
@@ -25,7 +25,6 @@ const emailDirectory = [
 
 // The Hub photo: half the row in two columns. A photo stretched taller than 3:2 renders wider than
 // its card, hence the cap above the column width.
-const photoSizes = "(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 600px";
 
 const shopBrands = [
 	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
@@ -74,40 +73,26 @@ const faqItems: FaqItem[] = [
 	title="Contact us at the Humanity Hub, Woodstock"
 	description="Get in touch with Souper Troopers at the Humanity Hub, our service centre in Woodstock, Cape Town - address, email, opening hours and a contact form."
 	jsonLd={[faqPageJsonLd(faqItems)]}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Contact Us</h1>
-			<p>We'd love to hear from you - whether you're donating, volunteering, or partnering with us.</p>
-		</div>
-	</section>
+	{/* The building, from the pavement opposite - the shared photo hero since 24 September (it was the
+	    Visit us card's photo). Described rather than decorative here: visits are by appointment, so
+	    the real question on the day is "is this the right door", which a street number painted a metre
+	    high answers better than any address line. Cropped from the right only to keep the 66. */}
+	<PhotoHero
+		image={hubExterior}
+		position="left center"
+		alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
+	>
+		<h1>Contact Us</h1>
+		<p>We'd love to hear from you - whether you're donating, volunteering, or partnering with us.</p>
+	</PhotoHero>
 
 	{/* Visit us on the left; the two channels - email, and the shop's own accounts - stacked on the
-	    right, plain cards. The Hub photo is the page's one image. Its title sits below it, so it reads
-	    like the cards beside it: title, then content. */}
+	    right. All plain cards since the Hub photo moved up into the hero (24 September). */}
 	<section class="section wrap">
 		<div class="contact-cards">
-			<div class="card photo-card visit-card" data-name="visit">
-				<div class="photo-card-media">
-					{/* The building, from the pavement opposite. Not decoration: visits here are by
-					    appointment, so everyone arriving has arranged it in advance and the only real question on
-					    the day is "is this the right door" - which a street number painted a metre high answers
-					    better than any address line. */}
-					{/* Above the fold at both breakpoints (measured) and the largest thing on the page, so not
-					    lazy - see the note on the homepage hero in index.astro. `width` is set as well as
-					    `widths`, or Astro points the plain `src` at the full 2400px source as the fallback. */}
-					<Image
-						src={hubExterior}
-						alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
-						width={1200}
-						height={800}
-						widths={[480, 800, 1200]}
-						sizes={photoSizes}
-						loading="eager"
-						fetchpriority="high"
-						class="photo-card-img visit-photo"
-					/>
-				</div>
+			<div class="card visit-card" data-name="visit">
 				<div class="photo-card-body">
 					<div class="card-heading">
 						<h2 class="contact-title">Visit us</h2>
@@ -203,8 +188,7 @@ const faqItems: FaqItem[] = [
 </Layout>
 
 <style>
-	/* Two cards per row from 701px, one below. Stretched, so the photo in the shorter card grows to meet
-	   its neighbour and both cards' text ends level (see .photo-card-media). */
+	/* Two cards per row from 701px, one below. Stretched, so the two columns end level. */
 	.contact-cards {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -240,55 +224,14 @@ const faqItems: FaqItem[] = [
 		text-wrap: pretty;
 	}
 	
-	/* A photo card is a frame: no padding of its own, so the photo runs flush to its edges, and the
-	   body restores the padding the global .card rule would have given. */
-	.photo-card {
-		padding: 0;
-		gap: 0;
-		overflow: hidden;
-	}
-	
-	/* Grows into whatever height the row gives the card, so the text ends at the card's foot and the
-	   photo takes the slack - otherwise it lands as empty white under the last line. `aspect-ratio`
-	   is the floor, not the shape: it reserves the photo's 3:2 before it loads, so nothing shifts,
-	   and it is what the photo falls back to wherever there is no slack (one column). */
-	.photo-card-media {
-		position: relative;
-		align-self: stretch;
-		flex: 1 0 auto;
-		aspect-ratio: 3 / 2;
-	}
-	
-	.photo-card-img {
-		position: absolute;
-		inset: 0;
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-	
-	/* ⚠ The Hub photo crops from the RIGHT only. The 66 is at the very left edge of the frame (about
-	   2-9% across), so a centred crop takes the first 6 off; the right is street and parked cars. */
-	.visit-photo {
-		object-position: left center;
-	}
-	
+	/* The body of Visit us - a column like the cards beside it. */
 	.photo-card-body {
 		align-self: stretch;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
-		padding: var(--space-6);
 	}
-	
-	@media (max-width: 700px) {
-		/* Mirrors the global .card padding at this width. */
-		.photo-card-body {
-			padding: var(--space-4);
-		}
-	}
-	
+
 	/* The email directory and the shop card, stacked opposite the Hub. */
 	.contact-reach {
 		display: flex;

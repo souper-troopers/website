@@ -879,6 +879,9 @@ the form's usual 480px.
   "Follow us" is the footer's label for the organisation's own.
 
 ### The shop landing page — one lead card, edge-to-edge tiles (2026-09-13)
+- ⚠ **Superseded 2026-09-24 (design brief phase 1)**: the promise card is gone. Its photo is the page's
+  hero and its heading and paragraph are a plain section below, word for word; `ShopPromise.astro` was
+  deleted. See "The design brief, phase 1: one photo hero".
 - **The banner photo and "Every purchase pays a wage" are one card** (`.shop-promise`), drawn like
   Get Involved's audience banners at the user's request: the photo fills the card, a tint darkens it,
   and the heading and paragraph sit on it in white. The photo keeps `loading="eager"` +
@@ -1026,6 +1029,8 @@ it is ~40 lines and takes a second.
   the old How we work title - now opens that section's paragraph; nothing else on the page says it,
   so don't trim it away. The Squad section's title no longer names Shmiley (decision 1).
 - **Who We Are, second pass the same day** (815 → 563 visible words, 5,752 → 5,230px at 1280):
+  - ⚠ **The opening card and `.about-top` were replaced on 2026-09-24** by the shared photo hero
+    (design brief phase 1); the two bullets below are history.
   - **Opens on a card like the shop's** "Every purchase pays a wage": the Hub exterior fills a
     rounded card (3:1 from 701px, 16:9 below), tinted on the left, "Who We Are" and the opening line
     in white. Its own markup and styles rather than `ShopPromise.astro`, because the tint is measured
@@ -1106,8 +1111,8 @@ Two things from the 2 September transcript that the minutes' actions had not car
   with Donate / Shop always in the header too. Stephen had flagged it himself on the call ("calls to
   action to donate are kind of littered throughout"). ⚠ **The hero's Donate button must stay**: the
   mobile header's Donate appears only once that button has scrolled away.
-- ⚠ **Superseded 2026-09-24**: the shop band left the homepage for the pillars row (next section);
-  `ShopPromise` is now used by the shop page only.
+- ⚠ **Superseded 2026-09-24**: the shop band left the homepage for the pillars row (next section),
+  and later the same day `ShopPromise.astro` was deleted when the shop's photo became its hero.
 - **`src/components/ShopPromise.astro` is shared by the shop and the homepage** — one component, so
   the measured tint (see "The shop landing page") can't drift between copies. `eager` only on the
   shop, where it is the LCP image; lazy on the homepage. ⚠ **Each page passes its own paragraph**
@@ -1136,6 +1141,52 @@ homepage is still the least resolved part") and q28's first try at three pillars
 - Checked at 390, 760 and 1280: no sideways scroll; the three cards are one height (451px at 1280).
   Phone page height 4,506px. **If it reads long on a phone**, 16:9 phone photos is the first lever.
 - It is a draft: q28 now says so and asks for a reaction rather than a list.
+
+### The design brief, phase 1: one photo hero (2026-09-24)
+`docs/design-brief-2026-09-24.md` §3.1 and §7 step 1. Built while the user was away, stopped for review
+as the brief says; **not published**. Phases 2-4 are not started.
+- **`src/components/PhotoHero.astro`** is now every public page's hero, with `<Layout heroOverlay>`:
+  the photo full-bleed behind the transparent header, the tint, the words bottom-left in white. The
+  parallax and header-fade script moved into it from `index.astro`. Sizes: `home` (natural height,
+  unchanged), `page` (`max(360px, 56vh)`, `max(300px, 45svh)` on a phone - 504px at 1280x900) and
+  `band` (220px below the header, 180px on a phone) for child, product and order pages. `.page-hero`
+  is left for internal pages only; the 404 keeps no hero on purpose (see its comment).
+- **Photos, per the brief's table**: mural (home), Hub exterior (Who We Are, Contact - crops from the
+  right to keep the 66), `support-conversation` (Our Work, Get Involved, Volunteer, Donate goods),
+  `partner-visit` (Donate, Corporate partnership), `shop-products` (shop, category, product, order
+  pages). ⚠ `partner-visit` is 1600px, so on a retina laptop it is upscaled ~1.6x; soft under the
+  tint rather than broken, but the first to replace.
+- **Inner heroes have a 12% overhang and a 0.1 parallax, not the homepage's 35% / 0.3.** At rest a
+  hero shows the photo *below* its overhang, and at 35% a wide inner hero cut both people's heads
+  off on Our Work. `support-conversation` is also anchored `center 5%`.
+- **The tint was re-measured and strengthened** - the homepage's own tint failed the check
+  (paragraph 2.3:1 on a phone, nav 2.7:1). Two layers: a top band behind the floating header, and the
+  ink-to-teal sweep kept at 0.72+ across the text column; below 900px a near-even 0.74-0.8. Result:
+  **1,207 lines of hero and header text on 14 pages at 8 widths (360-1440), zero below threshold** -
+  worst body 4.72:1, worst h1 4.41:1 (the yellow "human"), worst nav 4.71:1. The check is
+  `scripts/check-hero-contrast.playwright.js` (a Playwright MCP snippet - see its header); re-run it
+  for any tint or photo change.
+- **On a photo, the current nav link is white with its teal underline**, not teal text: teal text
+  measured 1.6-2.8:1 there. Breadcrumbs (0.85 / 0.92), the category back-link and the homepage's
+  secondary link were raised for the same reason.
+- **`--hero-clearance`** (in `:root`) is how far hero text starts below the top. It equals
+  `--header-height` except in the 761-1085px wrap band, where the header is 204px (to 833) or 145px
+  (to 1077) and, now floating over the hero, covered the breadcrumbs. Boundaries rounded outward, so
+  a mistake costs space rather than overlap. `--header-height` itself is untouched.
+- **The mobile Donate/Shop hide-until-scrolled is homepage-only now**, via `<Layout heroDonate>` →
+  `.hero-has-donate`. Without the scope every inner page would have hidden it on phones.
+- **Contact's Visit us card lost its photo** (it moved into the hero, with its descriptive alt text).
+- **Hero `srcset` is 640/800/1280/1600/2400w.** 480 made the homepage mural smaller than a pillar
+  photo in LCP's sums, so the lazy pillar became the LCP element (868 → 1,352ms at 390); 1280 stops a
+  1280 screen being sent 1600.
+- **Measured** on production builds of `HEAD` vs this (1.5Mbps / 150ms / 4x CPU, 3 runs interleaved,
+  6s window): LCP `/` 860 → 796ms (390), 780 → 784 (1280); `/about/` 912 → 896, 916 → 904; `/shop/`
+  1,580 → 776 (390), 1,608 → 1,660 (1280, run ranges overlap). CLS 0 everywhere. Header height
+  identical on all 12 pages at 390 and 1280. No sideways scroll.
+- **Known, not fixed**: without JavaScript the floating header stays transparent after the hero, so
+  the white nav sits on the light page - true of the homepage since it had this header, now of every
+  page. Hero lines over 20 words (the brief's cap) were left as they are, since cutting them is a
+  copy change: Who We Are (22) and Donate (23).
 
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not

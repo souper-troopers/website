@@ -1,20 +1,21 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import ShopPromise from "../../components/ShopPromise.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import shopPhoto from "../../assets/images/shop-products.jpg";
 import { getProductCategories, urlFor } from "../../lib/sanity";
 
 const categories = await getProductCategories();
 ---
 
-<Layout title="Handmade gifts and coffee from Cape Town" description="Troopers Coffee and African Worry Dolls - handmade in Cape Town by Souper Troopers. Every purchase creates work for people leaving homelessness.">
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Shop with purpose</h1>
-			{/* Says what is for sale, not why: the card below already says who makes it and where the money
-			    goes, and this line used to say it first, in nearly the same words. */}
-			<p>Troopers Coffee, African Worry Dolls and gift tags.</p>
-		</div>
-	</section>
+<Layout heroOverlay title="Handmade gifts and coffee from Cape Town" description="Troopers Coffee and African Worry Dolls - handmade in Cape Town by Souper Troopers. Every purchase creates work for people leaving homelessness.">
+	{/* The shop photo that used to fill the "Every purchase pays a wage" card is the hero now (design
+	    brief, 24 September); the promise itself stays word for word, directly below. */}
+	<PhotoHero image={shopPhoto} position="center 55%">
+		<h1>Shop with purpose</h1>
+		{/* Says what is for sale, not why: the card below already says who makes it and where the money
+		    goes, and this line used to say it first, in nearly the same words. */}
+		<p>Troopers Coffee, African Worry Dolls and gift tags.</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		{/* Was "Products by Shmiley", explaining the trading company. Adrian's point on the
@@ -28,14 +29,15 @@ const categories = await getProductCategories();
 		    ⚠ Don't reintroduce Shmiley here without checking `/shmiley-decision` - the decision is
 		    recorded there, on the RFC's Shmiley question, and in AGENTS.md, and all three have to
 		    move together. */}
-		{/* The promise on its photograph - see ShopPromise.astro, which the homepage shares. */}
-		<ShopPromise heading="Every purchase pays a wage" eager>
+		{/* The promise, now without its photograph (that is the hero above). Same heading and words. */}
+		<div class="section-intro">
+			<h2>Every purchase pays a wage</h2>
 			<p>
 				Made in Cape Town by people the CAST programme has supported. All proceeds go straight
 				back into the work - their wages, the training behind them, and the Humanity Hub where it
 				happens.
 			</p>
-		</ShopPromise>
+		</div>
 	</section>
 
 	<section class="section wrap">

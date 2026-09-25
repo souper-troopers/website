@@ -1,5 +1,7 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import PhotoHero from "../../../components/PhotoHero.astro";
+import shopPhoto from "../../../assets/images/shop-products.jpg";
 import { getAllShopItems, shortProductName, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
 import ItemCard from "../../../components/ItemCard.svelte";
@@ -89,13 +91,12 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	ogType="product"
 	ogImage={photoUrl}
 	jsonLd={[productJsonLd, breadcrumbJsonLd]}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<Breadcrumbs crumbs={crumbs} />
-			<h1>{item.name}</h1>
-		</div>
-	</section>
+	<PhotoHero image={shopPhoto} size="band" position="center 55%">
+		<Breadcrumbs crumbs={crumbs} />
+		<h1>{item.name}</h1>
+	</PhotoHero>
 
 	<section class="section wrap">
 		<div class="product">

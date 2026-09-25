@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import shopPhoto from "../../assets/images/shop-products.jpg";
 import { PortableText } from "astro-portabletext";
 import { getProductCategories, getShopItems, shortProductName, urlFor } from "../../lib/sanity";
 import AttributeProduct from "../../components/AttributeProduct.svelte";
@@ -82,14 +84,13 @@ const jsonLd = attributeProductJsonLd
 	jsonLd={jsonLd}
 	ogType={attributeProductJsonLd ? "product" : "website"}
 	ogImage={categoryPhotoUrl}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<a class="back-link" href="/shop">&larr; All products</a>
-			<h1>{category.name}</h1>
-			<p>{category.blurb}</p>
-		</div>
-	</section>
+	<PhotoHero image={shopPhoto} size="band" position="center 55%">
+		<a class="back-link" href="/shop">&larr; All products</a>
+		<h1>{category.name}</h1>
+		<p>{category.blurb}</p>
+	</PhotoHero>
 
 	{category.description && (
 		<section class="section wrap">
@@ -171,7 +172,7 @@ const jsonLd = attributeProductJsonLd
 	.back-link {
 		display: inline-block;
 		margin-bottom: 1rem;
-		color: rgba(255, 255, 255, 0.75);
+		color: rgba(255, 255, 255, 0.92);
 		font-size: 0.9rem;
 		font-weight: 600;
 	}

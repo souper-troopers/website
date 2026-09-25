@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
+import supportPhoto from "../assets/images/support-conversation.jpg";
 import CountUp from "../components/CountUp.svelte";
 import { Image } from "astro:assets";
 import essentialsPhoto from "../assets/images/services/essential-needs.jpg";
@@ -54,13 +56,11 @@ const hubServices = [
 ];
 ---
 
-<Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from the Humanity Hub, our service centre in Cape Town.">
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Our Work</h1>
-			<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
-		</div>
-	</section>
+<Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from the Humanity Hub, our service centre in Cape Town." heroOverlay>
+	<PhotoHero image={supportPhoto} size="page" position="center 5%">
+		<h1>Our Work</h1>
+		<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		{/* PROTOTYPE (2026-09-13): a proposal for the CAST infographic, not the final

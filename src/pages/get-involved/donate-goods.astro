@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import supportPhoto from "../../assets/images/support-conversation.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -88,14 +90,13 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	title="Donate goods in Cape Town"
 	description="Donate clothing, food, toiletries, bedding and household goods to Souper Troopers in Woodstock, Cape Town - what we can use, where to bring it, and how to arrange a drop-off."
 	jsonLd={jsonLd}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<Breadcrumbs crumbs={crumbs} />
-			<h1>Donate goods</h1>
-			<p>What we can use, where to bring it, and how to arrange it.</p>
-		</div>
-	</section>
+	<PhotoHero image={supportPhoto} size="band" position="center 5%">
+		<Breadcrumbs crumbs={crumbs} />
+		<h1>Donate goods</h1>
+		<p>What we can use, where to bring it, and how to arrange it.</p>
+	</PhotoHero>
 
 	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
 	    organisation, the city, the street and how a drop-off is arranged. */}

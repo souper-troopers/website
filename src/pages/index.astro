@@ -6,6 +6,7 @@ import hubPhoto from "../assets/images/humanity-hub-exterior.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import BrushRing from "../components/BrushRing.astro";
+import PhotoHero from "../components/PhotoHero.astro";
 import StoryVideo from "../components/StoryVideo.astro";
 import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
 
@@ -58,40 +59,21 @@ const heroLqip =
 	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAMABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAUCAwb/xAAjEAACAQUAAAcBAAAAAAAAAAABAgMABBESIQUGFCIxQWGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABcRAQEBAQAAAAAAAAAAAAAAAAIAAVH/2gAMAwEAAhEDEQA/ALL0TWXjFqi66tIN9EAD5yf5TBL4TGUBu7kYOBjlZWBnVGcOwPM9+alFI4bYMQfyjQ5Jj7MfLrJFPP6yQRLnIMhxt9czRStLqYTySs+7DnvAPKKU5Elf/9k=";
 ---
 
-<Layout title="Souper Troopers - homelessness charity in Cape Town" rawTitle description="A Cape Town charity for people experiencing homelessness, based at our Humanity Hub service centre in Woodstock. Donate, volunteer or shop with us." heroOverlay>
-	<section class="hero hero-photo">
-		<div class="hero-bg blur-up" style={`background-image:url(${heroLqip})`}>
-			{/* eager + high, against Astro's lazy default. This is the page's LCP element, and a
-			    lazy LCP image is self-defeating: the browser will not even queue it until layout has
-			    proved it is in the viewport, and it then arrives behind every eagerly-fetched asset.
-			    Cloudflare RUM measured LCP P90/P99 at 3,636ms attributed to exactly this <img>, while
-			    the same page's H1 painted at ~2.2s - i.e. the hero was arriving last and dragging the
-			    metric out behind it. fetchpriority="high" additionally lifts it above the three font
-			    preloads, which are only ~47KB total and were otherwise winning the whole pipe first. */}
-			<Image
-				src={heroPhoto}
-				alt=""
-				role="presentation"
-				width={2400} widths={[800, 1600, 2400]}
-				sizes="100vw"
-				loading="eager"
-				fetchpriority="high"
-				onload="this.classList.add('is-loaded')"
-			/>
+<Layout title="Souper Troopers - homelessness charity in Cape Town" rawTitle description="A Cape Town charity for people experiencing homelessness, based at our Humanity Hub service centre in Woodstock. Donate, volunteer or shop with us." heroOverlay heroDonate>
+	{/* The shared hero (PhotoHero.astro), at its natural height until the video lands. The mural is
+	    the page's LCP image, so the component loads it eager + fetchpriority high (Cloudflare RUM had
+	    measured LCP P90/P99 at 3,636ms when it was lazy). */}
+	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip}>
+		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
+		<p>
+			The Humanity Hub is where Souper Troopers helps people move from crisis to dignity -
+			through the CAST programme and a community that meets people halfway.
+		</p>
+		<div class="actions">
+			<a class="btn btn-primary" href="/donate">Donate now</a>
 		</div>
-		<div class="hero-scrim"></div>
-		<div class="wrap hero-content">
-			<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
-			<p>
-				The Humanity Hub is where Souper Troopers helps people move from crisis to dignity -
-				through the CAST programme and a community that meets people halfway.
-			</p>
-			<div class="actions">
-				<a class="btn btn-primary" href="/donate">Donate now</a>
-			</div>
-			<a href="#get-involved" class="hero-secondary-link">Or see how else you can help &darr;</a>
-		</div>
-	</section>
+		<a href="#get-involved" class="hero-secondary-link">Or see how else you can help &darr;</a>
+	</PhotoHero>
 
 	{/* The CAST section and the shop band were folded into these cards on 2026-09-24 (the draft for
 	    the 30 September review): each had its own full section, and the page said the same three
@@ -293,52 +275,3 @@ const heroLqip =
 	}
 </style>
 
-<script>
-	const heroImg = document.querySelector<HTMLElement>(".hero-bg");
-	const header = document.querySelector<HTMLElement>(".site-header-overlay");
-	const hero = document.querySelector<HTMLElement>(".hero-photo");
-	const heroDonateBtn = document.querySelector<HTMLElement>(".hero .btn-primary");
-	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-	const parallaxRate = 0.3;
-	let ticking = false;
-
-	function update() {
-		const heroHeight = hero?.offsetHeight ?? 0;
-
-		if (heroImg && !prefersReducedMotion) {
-			// No cap: the CSS overhang on .hero-bg (35%) is sized to comfortably cover a full
-			// heroHeight * parallaxRate shift, so the image keeps drifting for as long as any
-			// part of the hero is still in view instead of freezing partway through.
-			const shift = window.scrollY * parallaxRate;
-			heroImg.style.transform = `translateY(${shift}px)`;
-		}
-		// Fade the header from transparent to solid ink continuously as the hero scrolls by,
-		// reaching fully solid right as the hero's bottom edge reaches the header - instead of
-		// snapping at that threshold, which read as a sudden jump rather than a scroll effect.
-		if (header && hero) {
-			const threshold = Math.max(heroHeight - header.offsetHeight, 1);
-			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
-			header.style.setProperty("--header-fade", String(progress));
-
-			// Mobile only (see .site-header-overlay .support-menu in Layout.astro): the header's own
-			// Donate / Shop control stays hidden - redundant right next to the hero's - until the hero's
-			// button has actually scrolled out from under the header, at which point it's the only
-			// Donate CTA left on screen and needs to reappear.
-			const heroDonateHidden = heroDonateBtn ? heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight : window.scrollY > 0;
-			header.classList.toggle("show-header-donate", heroDonateHidden);
-		}
-		ticking = false;
-	}
-
-	update();
-	window.addEventListener(
-		"scroll",
-		() => {
-			if (!ticking) {
-				requestAnimationFrame(update);
-				ticking = true;
-			}
-		},
-		{ passive: true },
-	);
-</script>

@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
+import partnerPhoto from "../assets/images/partner-visit.jpg";
 import CountUp from "../components/CountUp.svelte";
 import EmailLink from "../components/EmailLink.svelte";
 import CopyButton from "../components/CopyButton.svelte";
@@ -97,18 +99,17 @@ const otherWays = [
 	title="Donate to support our work in Cape Town"
 	description="Donate to Souper Troopers by EFT, SnapScan, PayPal or monthly debit order, and help people experiencing homelessness in Cape Town."
 	jsonLd={[faqPageJsonLd(faqItems)]}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Donate</h1>
-			<p>Every donation funds a step in someone's CAST journey at the Humanity Hub - from a first conversation to a first pay cheque.</p>
-			<a class="hero-jump" href="#ways-to-give">Jump to ways to give &darr;</a>
-			<p id="payfast-thanks" class="payfast-thanks" hidden>
-				Thank you - your PayFast payment is on its way to us. If it doesn't reflect within a day or
-				two, email <EmailLink client:visible address="info@soupertroopers.org" />.
-			</p>
-		</div>
-	</section>
+	<PhotoHero image={partnerPhoto} size="page" position="center 40%">
+		<h1>Donate</h1>
+		<p>Every donation funds a step in someone's CAST journey at the Humanity Hub - from a first conversation to a first pay cheque.</p>
+		<a class="hero-jump" href="#ways-to-give">Jump to ways to give &darr;</a>
+		<p id="payfast-thanks" class="payfast-thanks" hidden>
+			Thank you - your PayFast payment is on its way to us. If it doesn't reflect within a day or
+			two, email <EmailLink client:visible address="info@soupertroopers.org" />.
+		</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		<div class="section-intro">

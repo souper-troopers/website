@@ -6,9 +6,9 @@ import type { Crumb } from "../lib/breadcrumbs";
  * passed to `Layout`'s `jsonLd` prop, so the trail a reader sees and the one a search engine reads
  * are built from one array.
  *
- * Designed to sit inside `.page-hero`, which is dark — hence the white-on-dark colours. It has no
- * other home today; if one is ever needed on a light background this needs a variant rather than a
- * global colour change.
+ * Designed to sit in a hero - `PhotoHero.astro`'s tinted photo on public pages, `.page-hero`'s ink
+ * slab on internal ones - both dark, hence the white-on-dark colours. If one is ever needed on a
+ * light background this needs a variant rather than a global colour change.
  */
 interface Props {
 	crumbs: Crumb[];
@@ -38,7 +38,8 @@ const { crumbs } = Astro.props;
 		padding: 0;
 		list-style: none;
 		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.7);
+		/* 0.85 rather than 0.7 since the trail moved onto a photo hero: measured on real pixels. */
+		color: rgba(255, 255, 255, 0.85);
 	}
 
 	.breadcrumbs li + li::before {
@@ -50,7 +51,7 @@ const { crumbs } = Astro.props;
 	/* Underlined, inheriting the global link decoration — the non-colour cue that this is a link.
 	   The "/" separators are not links and stay undecorated, which is what makes the trail readable. */
 	.breadcrumbs a {
-		color: rgba(255, 255, 255, 0.8);
+		color: rgba(255, 255, 255, 0.92);
 		font-weight: 600;
 	}
 

@@ -1,0 +1,114 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+/**
+ * One hero for every public page (design brief, 24 September, phase 1): a full-bleed photo behind
+ * the transparent header, the homepage's tint, and the words in white on the left. Before this the
+ * site had three hero systems - the homepage's photo, a flat ink slab on every other page, and a
+ * photo card on Who We Are - so Home → Our Work went from photograph to black wall.
+ *
+ * Pair it with `<Layout heroOverlay>` so the header floats over the photo; the script below fades
+ * the header to ink as the hero scrolls away and runs the parallax.
+ *
+ * Sizes:
+ *  - `home`: natural height (the full-screen version waits for the video - see AGENTS.md).
+ *  - `page`: top-level pages. About 56% of the screen, 360px at least; ~45% on a phone.
+ *  - `band`: child and product pages. A slim strip, ~220px below the header, with the parent's photo.
+ *
+ * ⚠ The tint is measured, not assumed: white text on each photo, on real pixels, under every line,
+ * at 360-1440px. A new photo is a new measurement; if one fails, pass a darker `scrim` for it rather
+ * than darkening every page.
+ *
+ * Content (the slot): the `h1`, one line of at most 20 words, at most one control. Breadcrumbs go
+ * above the `h1` on child pages.
+ */
+interface Props {
+	image: ImageMetadata;
+	/** "" by default: the hero is a backdrop. Give a description only where the photo carries
+	 *  information the page doesn't say in words (Contact: which door to look for). */
+	alt?: string;
+	size?: "home" | "page" | "band";
+	/** CSS object-position for the photo - e.g. "left center" keeps the painted 66 on the Hub. */
+	position?: string;
+	/** A tiny inline preview shown while the photo loads (the homepage has one). */
+	lqip?: string;
+	/** An alternative tint (a CSS background) for a photo the default fails on. */
+	scrim?: string;
+}
+
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim } = Astro.props;
+
+// The hero is the page's LCP image everywhere but on product pages, where the product photo is
+// larger - so the band loads eagerly (it is in the first screen) but without jumping the queue.
+const highPriority = size !== "band";
+---
+
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax={size === "home" ? "0.3" : "0.1"}>
+	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
+		<Image
+			src={image}
+			alt={alt}
+			role={alt ? undefined : "presentation"}
+			width={Math.min(image.width, 2400)}
+			widths={[640, 800, 1280, 1600, Math.min(image.width, 2400)].filter((w, i, a) => a.indexOf(w) === i && w <= image.width)}
+			sizes="100vw"
+			loading="eager"
+			fetchpriority={highPriority ? "high" : undefined}
+			style={`object-position: ${position}`}
+			onload="this.classList.add('is-loaded')"
+		/>
+	</div>
+	<div class="hero-scrim" style={scrim ? `background: ${scrim}` : undefined}></div>
+	<div class="wrap hero-content">
+		<slot />
+	</div>
+</section>
+
+<script>
+	// Parallax on the photo, and the transparent header fading to solid ink as the hero scrolls
+	// away (continuously, not snapping - a snap read as a jump). Moved here from index.astro when
+	// every page got a photo hero; bundled once however many pages use it.
+	const hero = document.querySelector<HTMLElement>(".photo-hero");
+	const heroImg = hero?.querySelector<HTMLElement>(".hero-bg");
+	const header = document.querySelector<HTMLElement>(".site-header-overlay");
+	// Homepage only: on a phone the header's Donate / Shop hides while the hero's own Donate button
+	// is on screen (see `.hero-has-donate` in Layout.astro), and reappears once it has scrolled away.
+	const heroDonateBtn = header?.classList.contains("hero-has-donate")
+		? hero?.querySelector<HTMLElement>(".btn-primary")
+		: null;
+	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	// 0.3 on the homepage; 0.1 elsewhere, matching the smaller overhang there (see Layout.astro).
+	const parallaxRate = Number(hero?.dataset.parallax ?? 0.3);
+	let ticking = false;
+
+	function update() {
+		if (!hero) return;
+		if (heroImg && !prefersReducedMotion) {
+			// No cap: .hero-bg's overhang (35% on the homepage, 12% elsewhere) covers a full hero height
+			// times the rate, so no gap ever opens above the photo.
+			heroImg.style.transform = `translateY(${window.scrollY * parallaxRate}px)`;
+		}
+		if (header) {
+			const threshold = Math.max(hero.offsetHeight - header.offsetHeight, 1);
+			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
+			header.style.setProperty("--header-fade", String(progress));
+			if (heroDonateBtn) {
+				header.classList.toggle("show-header-donate", heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight);
+			}
+		}
+		ticking = false;
+	}
+
+	update();
+	window.addEventListener(
+		"scroll",
+		() => {
+			if (!ticking) {
+				requestAnimationFrame(update);
+				ticking = true;
+			}
+		},
+		{ passive: true },
+	);
+</script>

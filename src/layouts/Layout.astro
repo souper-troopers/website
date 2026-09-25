@@ -134,8 +134,10 @@ const fontFaceCSS =
 interface Props {
 	title: string;
 	description?: string;
-	/** Float the header transparently over the page's own hero, instead of sitting in normal flow above it. Only meaningful for pages whose hero is a photo (currently just the homepage) — the hero must supply its own darkening scrim for nav legibility. */
+	/** Float the header transparently over the page's own hero, instead of sitting in normal flow above it. Every public page since 2026-09-24, paired with `PhotoHero.astro`, whose scrim keeps the nav legible. */
 	heroOverlay?: boolean;
+	/** The hero carries its own Donate button (the homepage), so on a phone the header's Donate / Shop waits until that button has scrolled away. */
+	heroDonate?: boolean;
 	/** Override the default og:image — pass an absolute URL. Product pages use the product photo so a shared link previews the actual item. */
 	ogImage?: string;
 	/** Open Graph type. Defaults to "website"; product pages pass "product". */
@@ -158,6 +160,7 @@ const {
 	title,
 	description = "Souper Troopers helps people move from crisis to dignity through food, work, and community in Cape Town.",
 	heroOverlay = false,
+	heroDonate = false,
 	ogImage: ogImageOverride,
 	ogType = "website",
 	jsonLd = [],
@@ -370,7 +373,7 @@ const structuredData = {
 		<!-- End Cloudflare Web Analytics -->
 	</head>
 	<body>
-		<header class:list={["site-header", { "site-header-overlay": heroOverlay }]}>
+		<header class:list={["site-header", { "site-header-overlay": heroOverlay, "hero-has-donate": heroOverlay && heroDonate }]}>
 			<div class="wrap header-inner">
 				{/* The label names the link once. With the logo's alt text and the visible words both
 				    counted, it used to read "Souper Troopers Souper Troopers"; and on phones, where the
@@ -518,6 +521,11 @@ const structuredData = {
 				   ~1085px, where no single value can be right. That is a pre-existing responsive gap,
 				   not something this fixes. */
 				--header-height: calc(52px + var(--space-3) * 2);
+				/* How far a photo hero's words must start below the top of the page, clearing the header that
+				   floats over it. Equal to --header-height except in the 761-1085px band, where the header row
+				   wraps (see the media blocks after :root) - measured 204px to 833px, 145px to 1077px. The
+				   boundaries are rounded outward, so an error costs a little extra space, never overlap. */
+				--hero-clearance: var(--header-height);
 
 				/* Spacing scale — the only padding/margin/gap values used across the site (mobile
 				   included). Keeps every gap/padding drawing from the same finite, standard 4px-based
@@ -537,6 +545,18 @@ const structuredData = {
 
 				/* Set from `fontStack` in the frontmatter, so USE_CUSTOM_FONT can change it. */
 				font-family: var(--st-font-stack);
+			}
+
+			@media (min-width: 761px) and (max-width: 1085px) {
+				:root {
+					--hero-clearance: 145px;
+				}
+			}
+
+			@media (min-width: 761px) and (max-width: 840px) {
+				:root {
+					--hero-clearance: 204px;
+				}
 			}
 
 			/* Standard mobile breakpoint — every narrow-screen override in this file uses this same
@@ -826,6 +846,14 @@ const structuredData = {
 				border-bottom-color: var(--st-teal);
 			}
 
+			/* Over a photo hero, the current page is marked by its teal underline alone and the word
+			   stays white: teal text needs a near-black backdrop to reach 4.5:1, and on the photo it
+			   measured 1.6-2.8:1 (Contact, Shop, Get Involved). Once the header fades to ink it could be
+			   teal again, but a colour that changes mid-scroll reads as a glitch. */
+			.site-header-overlay nav[aria-label="Primary"] a[aria-current="page"] {
+				color: var(--st-white);
+			}
+
 			/* The internal update page, before launch only. Deliberately not styled like the six real
 			   nav items: it is scaffolding for Kerry and Shan, not part of the site, and it should
 			   read that way at a glance rather than being discovered by clicking.
@@ -953,18 +981,19 @@ const structuredData = {
 					display: flex;
 				}
 
-				/* Homepage only (.site-header-overlay): the hero has its own "Donate now" button right
+				/* Homepage only (.hero-has-donate; every page's header is an overlay since 2026-09-24,
+				   but only the homepage hero has its own Donate): the hero's "Donate now" button sits right
 				   below, so the header's copy is redundant at rest and the two visibly crowd each other.
 				   Hard display toggle (not opacity/visibility) — those still reserve layout space while
 				   fading, which leaves a dead gap between the cart and hamburger icons; display:none
 				   removes it from the flex row entirely so its share of the `gap` closes up too. Toggled
 				   by index.astro's scroll script once the hero's own button has scrolled out of view. */
-				.site-header-overlay .support-menu {
+				.site-header-overlay.hero-has-donate .support-menu {
 					display: none;
 				}
 
 				/* inline-flex, not inline-block: the two halves sit side by side in a flex row. */
-				.site-header-overlay.show-header-donate .support-menu {
+				.site-header-overlay.hero-has-donate.show-header-donate .support-menu {
 					display: inline-flex;
 				}
 
@@ -2055,7 +2084,7 @@ const structuredData = {
 			   with the video - commit 37ab492 has it. */
 			.hero-photo {
 				position: relative;
-				padding: calc(var(--space-20) + var(--header-height)) 0 var(--space-20);
+				padding: calc(var(--space-20) + var(--hero-clearance)) 0 var(--space-20);
 				overflow: hidden;
 				background: var(--st-ink);
 			}
@@ -2075,16 +2104,39 @@ const structuredData = {
 				object-position: center 30%;
 			}
 
+			/* Measured, not assumed (design brief, 24 September): white text against every pixel of photo +
+			   tint under every line, on all twelve public pages at 360-1440px - body 4.5:1 at the worst
+			   pixel, h1 3:1. The old homepage tint (0.92 -> 0.75 at 40% -> teal 0.55) failed that on its own
+			   page: its paragraph reached 2.3:1 on a phone and the nav 2.7:1, because the words and links
+			   ran onto the light half. Two layers now:
+			   - a top band behind the floating header, so the nav reads on any photo;
+			   - the familiar ink-to-teal sweep, kept at 0.7 or darker across the text column (which ends
+			     near 62% of the width) before it opens up to teal on the right.
+			   On a phone or small tablet the words span most of the photo, so the tint is near-even there. Change a stop
+			   and re-run the check (scripts/check-hero-contrast.playwright.js). */
 			.hero-scrim {
 				position: absolute;
 				inset: 0;
-				background: linear-gradient(
-					100deg,
-					rgba(24, 23, 31, 0.92) 0%,
-					rgba(24, 23, 31, 0.75) 40%,
-					rgba(27, 171, 190, 0.55) 100%
-				);
+				background:
+					linear-gradient(180deg, rgba(24, 23, 31, 0.7) 0, rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+					linear-gradient(
+						100deg,
+						rgba(24, 23, 31, 0.9) 0%,
+						rgba(24, 23, 31, 0.8) 40%,
+						rgba(24, 23, 31, 0.72) 62%,
+						rgba(27, 171, 190, 0.5) 100%
+					);
 				z-index: 1;
+			}
+
+			/* To 900px, not 760: at 768 the text column runs to ~73% of the width, past where the sweep
+			   opens up (measured 3.2:1 there before this). */
+			@media (max-width: 900px) {
+				.hero-scrim {
+					background:
+						linear-gradient(180deg, rgba(24, 23, 31, 0.7) 0, rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+						linear-gradient(180deg, rgba(24, 23, 31, 0.74) 0%, rgba(24, 23, 31, 0.8) 100%);
+				}
 			}
 
 			.hero-content {
@@ -2124,7 +2176,7 @@ const structuredData = {
 			.hero-secondary-link {
 				display: inline-block;
 				margin-top: var(--space-5);
-				color: rgba(255, 255, 255, 0.8);
+				color: rgba(255, 255, 255, 0.92);
 				font-weight: 600;
 				font-size: 0.9rem;
 				text-decoration: underline;
@@ -2159,6 +2211,72 @@ const structuredData = {
 			.page-hero p {
 				max-width: 60ch;
 				opacity: 0.85;
+			}
+
+			/* PhotoHero.astro (design brief, 24 September): one hero on every public page. The image
+			   rules used to arrive with .blur-up; the component only adds that class when it has an
+			   LQIP, so they are stated here. */
+			.hero-bg img {
+				display: block;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			/* A smaller overhang than the homepage's 35%, with a gentler parallax to match (0.1, set
+			   by PhotoHero's script): at rest the hero shows the part of the photo below the overhang,
+			   and at 35% a wide inner hero showed only the lower half of a photo - the two people on
+			   Our Work lost their heads. 12% is still more than the 0.1 rate can ever uncover. */
+			.photo-hero--page .hero-bg,
+			.photo-hero--band .hero-bg {
+				top: -12%;
+				height: 124%;
+			}
+
+			/* Top-level inner pages: most of a laptop screen, words at the foot of the photo. */
+			.hero-photo.photo-hero--page {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				min-height: max(360px, 56vh);
+				padding: calc(var(--space-12) + var(--hero-clearance)) 0 var(--space-12);
+			}
+
+			/* Child and product pages: a slim strip with the parent's photo. */
+			.hero-photo.photo-hero--band {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				min-height: calc(220px + var(--hero-clearance));
+				padding: calc(var(--space-8) + var(--hero-clearance)) 0 var(--space-8);
+			}
+
+			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
+			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break
+			   into three lines at 20. */
+			.photo-hero--page h1,
+			.photo-hero--band h1 {
+				font-size: clamp(2rem, 4vw, 2.8rem);
+				max-width: 24ch;
+				margin-bottom: var(--space-2);
+			}
+
+			.photo-hero--page p,
+			.photo-hero--band p {
+				max-width: 60ch;
+				margin-bottom: 0;
+			}
+
+			@media (max-width: 760px) {
+				.hero-photo.photo-hero--page {
+					min-height: max(300px, 45svh);
+					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-8);
+				}
+
+				.hero-photo.photo-hero--band {
+					min-height: calc(180px + var(--header-height));
+					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-6);
+				}
 			}
 
 			.quote {

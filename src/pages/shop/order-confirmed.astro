@@ -1,15 +1,15 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import shopPhoto from "../../assets/images/shop-products.jpg";
 import EmailLink from "../../components/EmailLink.svelte";
 ---
 
-<Layout title="Order confirmed" description="Thank you for your order.">
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Thank you</h1>
-			<p>Your payment went through. We'll be in touch about collection or courier arrangements.</p>
-		</div>
-	</section>
+<Layout heroOverlay title="Order confirmed" description="Thank you for your order.">
+	<PhotoHero image={shopPhoto} size="band" position="center 55%">
+		<h1>Thank you</h1>
+		<p>Your payment went through. We'll be in touch about collection or courier arrangements.</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		<div class="card">

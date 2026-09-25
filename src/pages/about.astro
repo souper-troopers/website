@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
 import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
@@ -19,38 +20,18 @@ const supporters = await getSupporters();
 const pressMentions = await getPressMentions();
 ---
 
-<Layout title="Who we are, and the Humanity Hub" description="Souper Troopers' mission, values and approach, and the Humanity Hub - the service centre in Woodstock, Cape Town where the work actually happens.">
-	{/* The page opens on a card drawn like the shop's "Every purchase pays a wage"
-	    (ShopPromise.astro): the photo fills a rounded card, a tint darkens its left side, and the
-	    words sit there in white. Its own markup rather than that component, because the tint is
-	    measured against each photo and this is a different photo.
-	    The building, not people: consent to show anyone (q19) is unsettled, and it is what the
-	    opening line names. alt="" because it is a backdrop here; Contact carries the described
-	    version of the same photo. It is the page's LCP image, hence eager + high. */}
-	<section class="section wrap about-top">
-		<div class="card about-card">
-			<div class="about-card-media">
-				<Image
-					class="about-card-img"
-					src={hubExterior}
-					alt=""
-					width={1600}
-					widths={[600, 1100, 1600]}
-					sizes="(min-width: 1100px) 1060px, 100vw"
-					loading="eager"
-					fetchpriority="high"
-				/>
-				<div class="about-card-scrim" aria-hidden="true"></div>
-				<div class="about-card-text">
-					<h1>Who We Are</h1>
-					<p>
-						At the Humanity Hub in Woodstock, Cape Town, we help people move from life on the street
-						to independence, through the CAST programme. Est. 2014.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
+<Layout heroOverlay title="Who we are, and the Humanity Hub" description="Souper Troopers' mission, values and approach, and the Humanity Hub - the service centre in Woodstock, Cape Town where the work actually happens.">
+	{/* The shared photo hero (design brief, 24 September). The building, not people: consent to show
+	    anyone (q19) is unsettled, and it is what the opening line names. Cropped from the right only,
+	    so the painted 66 stays in frame. alt="" because it is a backdrop here; Contact carries the
+	    described version of the same photo. */}
+	<PhotoHero image={hubExterior} position="left center">
+		<h1>Who We Are</h1>
+		<p>
+			At the Humanity Hub in Woodstock, Cape Town, we help people move from life on the street
+			to independence, through the CAST programme. Est. 2014.
+		</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		{/* Section titles on this page say what the section is; the old chips above them did that,
@@ -530,97 +511,4 @@ const pressMentions = await getPressMentions();
 		}
 	}
 
-	/* The opening card, drawn to match ShopPromise.astro: same shapes, text column and type. The card
-	   grows if the words need more height than the ratio gives - `aspect-ratio` is a floor here,
-	   because the text is in normal flow and the photo is laid behind it. */
-	/* Sections are spaced by `main`'s gap, which puts nothing above the first one - so this card sat
-	   flush against the header. Pages that open on an ink .page-hero never showed it. A little less
-	   than the gap below (64px, 48px on phones), so the card belongs to the top of the page. */
-	.about-top {
-		padding-top: var(--space-12);
-	}
-
-	@media (max-width: 700px) {
-		.about-top {
-			padding-top: var(--space-8);
-		}
-	}
-
-	.about-card {
-		padding: 0;
-		gap: 0;
-		overflow: hidden;
-	}
-
-	.about-card-media {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		width: 100%;
-		aspect-ratio: 16 / 9;
-	}
-
-	@media (min-width: 701px) {
-		.about-card-media {
-			aspect-ratio: 3 / 1;
-		}
-	}
-
-	.about-card-media :global(.about-card-img) {
-		position: absolute;
-		inset: 0;
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center 65%;
-	}
-
-	/* ⚠ Measured against this photo's real pixels under every line of text (tint2.mjs in the session
-	   scratchpad) - the shop's stops were the starting point, and this photo is bright sky and pale
-	   wall where the words sit. Change the stops and re-run that check. */
-	.about-card-scrim {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(180deg, rgba(24, 23, 30, 0.74) 0%, rgba(24, 23, 30, 0.68) 100%);
-	}
-
-	@media (min-width: 701px) {
-		.about-card-scrim {
-			background: linear-gradient(
-				100deg,
-				rgba(24, 23, 30, 0.86) 0%,
-				rgba(24, 23, 30, 0.78) 45%,
-				rgba(24, 23, 30, 0.66) 62%,
-				rgba(24, 23, 30, 0.14) 86%,
-				rgba(24, 23, 30, 0) 100%
-			);
-		}
-
-		.about-card-text {
-			max-width: min(34rem, 56%);
-		}
-	}
-
-	.about-card-text {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: var(--space-2);
-		padding: var(--space-5);
-	}
-
-	.about-card-text h1 {
-		margin: 0;
-		color: #fff;
-		font-size: clamp(1.6rem, 3.4vw, 2.3rem);
-		line-height: 1.1;
-	}
-
-	.about-card-text p {
-		margin: 0;
-		color: #fff;
-	}
 </style>

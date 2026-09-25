@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import partnerPhoto from "../../assets/images/partner-visit.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -85,16 +87,15 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	title="Corporate partnership & CSI, Cape Town"
 	description="Partner with Souper Troopers, a B-BBEE Level 1 homelessness charity in Cape Town - CSI partnerships, socio-economic development spend, Section 18A certificates, team workshops, and office coffee."
 	jsonLd={jsonLd}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<Breadcrumbs crumbs={crumbs} />
-			<h1>Corporate partnership</h1>
-			<p>
-				Work with a Cape Town charity where the outcomes are people, named and countable.
-			</p>
-		</div>
-	</section>
+	<PhotoHero image={partnerPhoto} size="band" position="center 40%">
+		<Breadcrumbs crumbs={crumbs} />
+		<h1>Corporate partnership</h1>
+		<p>
+			Work with a Cape Town charity where the outcomes are people, named and countable.
+		</p>
+	</PhotoHero>
 
 	{/* Answer-first, and deliberately self-contained: retrieval hands an assistant a paragraph
 	    without the page around it, so this one has to name the organisation, the city and what is on

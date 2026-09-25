@@ -1,5 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import supportPhoto from "../../assets/images/support-conversation.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -93,14 +95,13 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	title="Volunteer in Cape Town"
 	description="Volunteer with Souper Troopers at the Humanity Hub in Woodstock, Cape Town - sorting donations, organising the Hub, or teaching a skill. Individuals and groups, one-off or regular."
 	jsonLd={jsonLd}
+	heroOverlay
 >
-	<section class="page-hero">
-		<div class="wrap">
-			<Breadcrumbs crumbs={crumbs} />
-			<h1>Volunteer</h1>
-			<p>What volunteers actually do here, how much time it takes, and how to arrange it.</p>
-		</div>
-	</section>
+	<PhotoHero image={supportPhoto} size="band" position="center 5%">
+		<Breadcrumbs crumbs={crumbs} />
+		<h1>Volunteer</h1>
+		<p>What volunteers actually do here, how much time it takes, and how to arrange it.</p>
+	</PhotoHero>
 
 	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
 	    organisation, the city, the street, and what a volunteer would be doing. */}

@@ -1,14 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import shopPhoto from "../../assets/images/shop-products.jpg";
 ---
 
-<Layout title="Order cancelled" description="Your order was not completed.">
-	<section class="page-hero">
-		<div class="wrap">
-			<h1>Payment cancelled</h1>
-			<p>No payment was taken. Your cart is still saved if you'd like to try again.</p>
-		</div>
-	</section>
+<Layout heroOverlay title="Order cancelled" description="Your order was not completed.">
+	<PhotoHero image={shopPhoto} size="band" position="center 55%">
+		<h1>Payment cancelled</h1>
+		<p>No payment was taken. Your cart is still saved if you'd like to try again.</p>
+	</PhotoHero>
 
 	<section class="section wrap">
 		<div class="card">

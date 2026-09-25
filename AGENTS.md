@@ -270,6 +270,22 @@ route links, on white - side by side from 761px, stacked below.
   below the hero. The route links are always visible now (they used to hide while a banner was open).
 - Page height with both closed: 1,297px at 1280 (two cards 518×529), 1,669px at 390.
 
+## Photo consent: one blanket question, `q35` (2026-09-25)
+The user asked whether any photo the client has given us can be used - the worry is consent. **Not
+yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Get involved`,
+`Extra/Images`, `Home` - 26 photos) found only two without recognisable people: the shop display
+(already the shop's hero) and the yoga close-up. Everything else shows faces, mostly people at the Hub.
+- **`q35` "May we use the photos you've given us?"** - flagged "Needed before launch" at the user's
+  request (the flag is the page's only priority marker). One blanket yes, or "yes except these",
+  instead of photo-by-photo asks. It names `IMG_9953` (`Extra/Images/Mix`, three people on the Hub
+  couch) as the photo wanted for Who We Are, and says it also answers the photo part of `q33`.
+  It refers to other questions **by title, not number** - the visible numbers are positional.
+- Until it is answered: only photos with no recognisable faces, or staff (the rule `stall-kerry.jpg`
+  and `partner-visit.jpg` already follow). `q19` covered names, not faces.
+- **Who We Are** tried a mirrored yoga close-up (`440204b`) and the user found it a puzzling choice;
+  reverted (`06f0c32`), so Who We Are shares the Hub exterior with Contact until `IMG_9953` is cleared.
+  `IMG_9953` is 4032×3024 HEIC - convert with `sips` (sharp here lacks HEVC) when it is.
+
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch

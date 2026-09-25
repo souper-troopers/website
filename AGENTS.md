@@ -270,6 +270,16 @@ route links, on white - side by side from 761px, stacked below.
   below the hero. The route links are always visible now (they used to hide while a banner was open).
 - Page height with both closed: 1,297px at 1280 (two cards 518×529), 1,669px at 390.
 
+## `q34` (domain): Shan and Kerry replied by WhatsApp (2026-09-25)
+Recorded as `answers` with `text` (off-page replies). **Webtimes manages the website - and very likely
+the email ("a better support structure for our website and emails") - and Kerry has logins**, which
+she says Webtimes recently changed after someone tried to break in. Kerry has "no attachments to
+Webtimes". Still open (`followUp`): whether Kerry's login is the website backend or the domain
+registrar/DNS account, and whether Webtimes runs the email. **Advice given: keep email with Webtimes for
+launch and change only the website's DNS records; move email as its own step later.** Once launched,
+the old WordPress site can be switched off, which removes the thing being attacked. Nothing from the
+screenshot beyond their words was recorded (it showed a phone number).
+
 ## `q29` rewritten: the board's decision and the logo file (2026-09-25)
 `q29` asked "who should design a Humanity Hub logo, if the board agrees" - written before the 21 September
 call, where Kerry framed it as "the Humanity Hub by Souper Troopers", said soupertroopers.org stays, and

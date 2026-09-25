@@ -5,7 +5,6 @@ import supportPhoto from "../../assets/images/support-conversation.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
-import AddressLink from "../../components/AddressLink.svelte";
 import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
 import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
 import { displayHours } from "../../lib/opening-hours";
@@ -99,19 +98,16 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	</PhotoHero>
 
 	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
-	    organisation, the city, the street and how a drop-off is arranged. */}
+	    organisation, the city, and that goods earn a Section 18A certificate. */}
 	<section class="section wrap">
 		<div class="prose">
 			<p class="lede">
-				Souper Troopers takes donated goods at the Humanity Hub in Woodstock, Cape Town.
-				Clothing, non-perishable food, toiletries, bedding, household goods, cleaning products
-				and electronics are all useful, and Section 18A tax certificates are available for
-				donated goods as well as for money.
+				Souper Troopers takes donated goods at the Humanity Hub in Woodstock, Cape Town, and
+				Section 18A tax certificates are available for donated goods as well as for money.
 			</p>
-			{/* On its own line, not mid-sentence: `AddressLink` renders a copy button after the text,
-			    so a sentence continuing past it reads as "…Cape Town, 7925 ⧉ . Clothing…". The
-			    contact page uses the same standalone-paragraph pattern for the same reason. */}
-			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+			{/* A link, not the address (design brief phase 3: the address lives on Contact and in the
+			    footer). The list of goods was here and again in "Nine things worth bringing" below. */}
+			<p class="lede-address"><a href="/contact">Address and opening hours &rarr;</a></p>
 			<p>
 				{/* The why, and collection for large items, are in the questions below - this used to
 				    say both again. */}

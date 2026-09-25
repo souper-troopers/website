@@ -1191,7 +1191,7 @@ homepage is still the least resolved part") and q28's first try at three pillars
   copy change: Who We Are (22) and Donate (23).
 
 ### The design brief, phase 2: surfaces and components (2026-09-25)
-`docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. On `dev`, stopped for review; not published.
+`docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. Reviewed and published 2026-09-25 (`32a66f7`).
 - **Section chips are gone from every public page** (Home, Our Work, the three Get Involved child
   pages were the last). The 404's "Error 404" pill is left.
 - **The teal-red gradient (`.stories-band`) is retired.** Homepage: one story (the first featured) in
@@ -1227,6 +1227,35 @@ homepage is still the least resolved part") and q28's first try at three pillars
   per route in Get Involved's banners), which are phase 3.
 - Page heights at 390: Home 3,404 (was 4,192 before phase 1), Donate 4,749 (5,032), Our Work 5,757
   (5,383 - the service-card photos), Who We Are 8,488 (8,751). No sideways scroll on any of the 12.
+
+### The design brief, phase 3: the copy pass (2026-09-25)
+`docs/design-brief-2026-09-24.md` §3.4-3.5 and §4. On `dev`, stopped for review; not published.
+**Only cuts, moves and links - no sentence was reworded** except where a cut clause had to be closed
+up (three sentences, below). The user saw the full before/after text diff before it went live.
+- **Children lose their opening restatement**: Volunteer's opening no longer lists the four things
+  volunteers do (the cards below do); Donate goods' no longer lists the goods (its "Nine things worth
+  bringing" does); Corporate's no longer names the four ways (its cards do). The organisation and
+  "at the Humanity Hub in Woodstock, Cape Town" stay in each opening.
+- **The address has one home, Contact (plus the footer).** On Volunteer and Donate goods the address
+  line became "Address and opening hours →" (to `/contact`) - the one new phrase in this phase.
+  Elsewhere the address words stay and become a link to Contact: Who We Are's Hub paragraph, Get
+  Involved's goods line, `/shop`'s collection line, order-confirmed. FAQ answers keep it (they must
+  survive extraction alone).
+- **Get Involved routes people while closed**: one line of links under each banner (`.gi-routes`),
+  labelled with the section's own headings, hidden once that banner is open. Outside the `<summary>`
+  on purpose - links inside it are unreachable for some screen readers. Visible words 57 → 75.
+- **Word budgets by moving, not cutting**: the second paragraph opens on click (`.card-more`) for Who
+  We Are's Hub and Squad intros, the four Corporate cards, and two Volunteer cards (first sentence
+  visible). Visible words: Who We Are 542 → 475, Volunteer 319 → 261, Corporate 562 → 455, Donate goods
+  347 → 330. Total words in the page barely change (the More/Less labels add a few).
+- **Deliberately not done, and why**:
+  - Who We Are's three "How we work" cards are **principles** ("A hand up, not a handout"…), not the
+    CAST steps the brief took them for, and appear nowhere else - cutting them would lose content.
+  - Link cards over 25 words (Get Involved's MyDifference, workshops, coffee; the Woolworths lead
+    card): a "More" can't sit inside a link, so shortening them means rewording - the client's.
+  - Our Mission (33), `/shop`'s promise (33), the Souper Squad service card (32): within a few words.
+  - Donate's "Section 18A" stat card is Sanity content; removing it is an unpublish, not an edit.
+  - Contact's Visit us (address and hours stay visible, by rule) and the success stories.
 
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not

@@ -110,16 +110,23 @@ const pressMentions = await getPressMentions();
 		<div class="grid grid-2" style="align-items:center;">
 			<div class="section-intro">
 				<h2>The Humanity Hub</h2>
+				{/* The address is a link to Contact, its one home (design brief phase 3); the second
+				    paragraph opens on click, to keep the intro inside the 30-word budget. */}
 				<p>
-					Our service centre at 66 Newmarket Street, Woodstock, is where all of this happens - a
+					Our service centre at <a href="/contact">66 Newmarket Street, Woodstock</a>, is where all of this happens - a
 					permanent address in a life where very little is permanent. Somewhere to be expected.
 					Somewhere to come back to.
 				</p>
-				<p>
-					Everything from a shower and a hot meal to counselling, ID documents, and job-readiness
-					support runs out of the Hub. <a href="/our-work">See what that support looks like</a> on
-					Our Work.
-				</p>
+				<details class="card-more">
+					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about the Humanity Hub</span></summary>
+					<div>
+						<p>
+							Everything from a shower and a hot meal to counselling, ID documents, and job-readiness
+							support runs out of the Hub. <a href="/our-work">See what that support looks like</a> on
+							Our Work.
+						</p>
+					</div>
+				</details>
 			</div>
 			<div class="figure shimmer-up">
 				<Image
@@ -152,12 +159,17 @@ const pressMentions = await getPressMentions();
 					More than twenty Troopers earn a stipend through the Souper Squad. It is real work, with
 					real income, building a real CV.
 				</p>
-				<p>
-					What they make - Troopers Coffee and African Worry Dolls&trade; - is sold through Shmiley
-					(Pty) Ltd, our own social enterprise. The income creates the jobs and reduces our reliance
-					on donor funding - so <a href="/shop">buying something from the shop</a> is itself a way
-					of supporting the work.
-				</p>
+				<details class="card-more">
+					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about the Souper Squad</span></summary>
+					<div>
+						<p>
+							What they make - Troopers Coffee and African Worry Dolls&trade; - is sold through Shmiley
+							(Pty) Ltd, our own social enterprise. The income creates the jobs and reduces our reliance
+							on donor funding - so <a href="/shop">buying something from the shop</a> is itself a way
+							of supporting the work.
+						</p>
+					</div>
+				</details>
 			</div>
 		</div>
 	</section>

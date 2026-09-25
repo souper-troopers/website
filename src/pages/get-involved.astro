@@ -117,7 +117,7 @@ const goodsCategories = [
 					</div>
 			{/* Same order as the partnership line below: context, then the way on, then the address to
 			    write to. The link is the low-commitment step and belongs before the email. */}
-			<p>Every item helps - drop off at 66 Newmarket Street, Woodstock, Cape Town, and Section 18A certificates are available for donated goods. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
+			<p>Every item helps - drop off at <a href="/contact">66 Newmarket Street, Woodstock, Cape Town</a>, and Section 18A certificates are available for donated goods. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">
@@ -171,6 +171,17 @@ const goodsCategories = [
 
 				</div>
 			</details>
+			{/* One line of routes under the closed banner (design brief phase 3: "closed banners still
+			    route people"). Outside the <summary> on purpose - links inside what is effectively a
+			    button are unreachable for some screen readers - and hidden once the banner is open,
+			    where the full content says the same. Labels are the section's own headings. */}
+			<nav class="gi-routes" aria-label="Ways to help, person to person">
+				<a href="/donate">Donate money</a>
+				<a href="/get-involved/donate-goods/">Donate goods</a>
+				<a href="/get-involved/volunteer/">Volunteer</a>
+				<a href="/shop">Buy products</a>
+				<a href="#fundraise">Fundraise for us</a>
+			</nav>
 		</div>
 	</section>
 
@@ -285,6 +296,11 @@ const goodsCategories = [
 
 				</div>
 			</details>
+			<nav class="gi-routes" aria-label="Ways to work with us">
+				<a href="/get-involved/corporate-partnership/">Corporate partnership</a>
+				<a href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Corporate workshops</a>
+				<a href="/shop">Coffee for your workplace</a>
+			</nav>
 		</div>
 	</section>
 
@@ -547,6 +563,18 @@ const goodsCategories = [
 		color: #fff;
 		font-weight: 700;
 		font-size: 0.95rem;
+	}
+
+	.gi-routes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		margin-top: var(--space-4);
+		font-weight: 600;
+	}
+
+	.gi-group-box[open] + .gi-routes {
+		display: none;
 	}
 
 	.gi-group-cue-text {

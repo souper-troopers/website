@@ -5,11 +5,8 @@ import supportPhoto from "../../assets/images/support-conversation.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
-import AddressLink from "../../components/AddressLink.svelte";
 import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
 import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
-import { displayAddress } from "../../lib/address";
-import { getSiteSettings } from "../../lib/sanity";
 
 /**
  * Deliberately not built until now. The whole of the site's volunteering content was "give time or
@@ -30,7 +27,6 @@ import { getSiteSettings } from "../../lib/sanity";
  * will come and speak to a company or school. The last two are in Kerry's list of what people ask,
  * which makes them worth answering - but they need her answer first, not our guess.
  */
-const settings = await getSiteSettings();
 
 const crumbs: Crumb[] = [
 	{ name: "Get Involved", path: "/get-involved/" },
@@ -41,11 +37,13 @@ const crumbs: Crumb[] = [
  *  AGENTS.md about `manager@` and `kerry@` being an existing, unresolved contradiction. */
 const volunteerEmail = "manager@soupertroopers.org";
 
-/** Shan's four, in her order. Nothing added. */
-const ways = [
+/** Shan's four, in her order. Nothing added. `more` is the part past the brief's 25-word card
+ * budget (phase 3), opened on click - the words are unchanged, only split. */
+const ways: { title: string; body: string; more?: string }[] = [
 	{
 		title: "Sorting and packing donations",
-		body: "Everything that arrives has to be gone through, checked and packed before it reaches anybody. It is the least glamorous job here and the one that most directly decides whether a donation is any use.",
+		body: "Everything that arrives has to be gone through, checked and packed before it reaches anybody.",
+		more: "It is the least glamorous job here and the one that most directly decides whether a donation is any use.",
 	},
 	{
 		title: "Organising the Hub itself",
@@ -53,7 +51,8 @@ const ways = [
 	},
 	{
 		title: "Teaching a skill, or running a workshop",
-		body: "Volunteers teach the Souper Squad and the team something they know, or run a workshop. If you have a trade, a craft or a professional skill, this is the one that tends to be worth the most.",
+		body: "Volunteers teach the Souper Squad and the team something they know, or run a workshop.",
+		more: "If you have a trade, a craft or a professional skill, this is the one that tends to be worth the most.",
 	},
 	{
 		title: "Helping on whatever is running",
@@ -104,16 +103,16 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	</PhotoHero>
 
 	{/* Self-contained on purpose - an assistant retrieving this paragraph alone still learns the
-	    organisation, the city, the street, and what a volunteer would be doing. */}
+	    organisation, the city and who can volunteer; each card below names one thing they do. */}
 	<section class="section wrap">
 		<div class="prose">
 			<p class="lede">
-				Souper Troopers takes volunteers at the Humanity Hub in Woodstock, Cape Town. Volunteers
-				sort and pack donated goods, help keep the Hub organised, teach the Souper Squad a skill
-				or run a workshop, and help with whatever project is running. Individuals and groups are
-				both welcome, and it can be a single morning or a regular arrangement.
+				Souper Troopers takes volunteers at the Humanity Hub in Woodstock, Cape Town. Individuals and
+				groups are both welcome, and it can be a single morning or a regular arrangement.
 			</p>
-			<p class="lede-address"><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+			{/* A link, not the address (design brief phase 3: the address lives on Contact and in the
+			    footer). The four things volunteers do were listed here and again in the cards below. */}
+			<p class="lede-address"><a href="/contact">Address and opening hours &rarr;</a></p>
 			{/* How to arrange it is said once, in the first question below, and the closing card
 			    carries the address to write to. This paragraph used to say it a third time. */}
 		</div>
@@ -129,6 +128,12 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 				<div class="way">
 					<h3>{way.title}</h3>
 					<p>{way.body}</p>
+					{way.more && (
+						<details class="card-more">
+							<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> - {way.title}</span></summary>
+							<div><p>{way.more}</p></div>
+						</details>
+					)}
 				</div>
 			))}
 		</div>

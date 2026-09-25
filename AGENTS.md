@@ -270,20 +270,6 @@ route links, on white - side by side from 761px, stacked below.
   below the hero. The route links are always visible now (they used to hide while a banner was open).
 - Page height with both closed: 1,297px at 1280 (two cards 518×529), 1,669px at 390.
 
-## Who We Are has its own hero photo (2026-09-25)
-Who We Are and Contact both opened on the Hub exterior. Contact keeps it - there the photo does a job
-(which door to look for). Who We Are now uses **`src/assets/images/hub-yoga.jpg`**, a 2400px copy of the
-Drive original `Content/Our Work/Recovery support/IMG_8218 (1).JPG` (5472×3648): a yoga session at the
-Hub, already published as Our Work's recovery-support card and showing no faces, so no consent
-question. It carries no "recovery" label here, which is kinder to whoever is in it.
-- **Mirrored** (`PhotoHero`'s new `mirror` prop, `transform: scaleX(-1)` on the image): the woman sat on
-  the left, under the words; flipped, open floor is under them. Only for photos with no signs or text.
-- `center 0%` shows the room and the other mats rather than a close-up of one torso.
-- Rejected: `IMG_8701` in the same folder (recognisable people in a counselling setting - q19/q33).
-  Better options when they exist: Shan's `Who we are/The Humanity Hub` photos once q33 point 5
-  confirms consent, or a still from Brad's drone footage of the building.
-- Contrast on Who We Are and Contact: 151 lines, worst body 5.69:1.
-
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch

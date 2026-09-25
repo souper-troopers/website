@@ -66,7 +66,10 @@ partnership each end on a closing CTA row although Donate / Shop is in the heade
   `prefers-reduced-motion`), the tint measured on real pixels.
 - **Heights:** homepage stays at its natural height until the video lands (commit `670d452`, and the
   full-screen CSS is in `37ab492` for when it does). Top-level inner pages: roughly 52–60vh at 1280,
-  `min-height` 360px; on a phone about 45svh. Child and product pages: a slim band, about 220px,
+  `min-height` 360px; on a phone about 45svh. **Shortening these to ~40vh / 34svh was tried and
+  reverted on 25 September**: with the photo anchored to its top, a shorter box shows a thinner
+  slice and the pictures became too cropped. The height is the price of the photo; don't re-propose
+  it without a different photo treatment. Child and product pages: a slim band, about 220px,
   same photo as the parent, cropped and tinted the same way.
 - **Content in the hero:** the `h1`, one line of at most 20 words, and at most one control. Nothing
   else. Breadcrumbs stay on child pages, above the `h1`.

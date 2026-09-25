@@ -419,20 +419,20 @@ const goodsCategories = [
 		display: block;
 	}
 
-	/* Left-weighted so the text sits on the darkest part and the photograph survives on the right.
-	   The heroes' ink-to-teal sweep, kept at 0.72+ across the text (at most ~52% of the banner) and
-	   under the "See how" cue at the bottom right. Measured on real pixels; re-run after changing. */
+	/* Held to the text side and fading to nothing (design brief, tint bullet, 25 September): 0.72+
+	   across the text (at most ~52% of the banner), clear photo on the right. A short band along the
+	   bottom-right keeps the "See how" cue readable. Measured on real pixels; re-run after changing. */
 	.gi-band-scrim {
 		position: absolute;
 		inset: 0;
 		background:
-			linear-gradient(0deg, rgba(24, 23, 31, 0.85) 0, rgba(24, 23, 31, 0.7) 3.5rem, rgba(24, 23, 31, 0) 6.5rem),
+			radial-gradient(ellipse 22rem 7rem at 100% 100%, rgba(24, 23, 31, 0.85) 0%, rgba(24, 23, 31, 0.6) 45%, rgba(24, 23, 31, 0) 100%),
 			linear-gradient(
 				100deg,
 				rgba(24, 23, 31, 0.9) 0%,
 				rgba(24, 23, 31, 0.8) 40%,
-				rgba(24, 23, 31, 0.72) 58%,
-				rgba(27, 171, 190, 0.45) 100%
+				rgba(24, 23, 31, 0.72) 56%,
+				rgba(24, 23, 31, 0) 82%
 			);
 	}
 
@@ -460,43 +460,9 @@ const goodsCategories = [
 		max-width: 32ch;
 	}
 
-	/* TRIAL (2026-09-24), switched OFF the same day by design brief phase 2 - one tint direction
-	   site-wide, and the light version is judged as a whole in phase 4. Kept dormant for that.
-	   From Adrian on the 21 September review: the site sits on a lot of black, so
-	   try a pale tint with ink text instead. The page's own off-white (--st-bg, 250,249,246) fades out
-	   left to right, so the words sit on light and the photo survives on the right. Remove the
-	   `gi-tint-light` class from the two banners to go back to the dark version - nothing else
-	   changes. Stops measured against the real photo pixels; change them and re-run that check. */
-	.gi-tint-light .gi-band-scrim {
-		background: linear-gradient(
-			100deg,
-			rgba(250, 249, 246, 0.92) 0%,
-			rgba(250, 249, 246, 0.8) 40%,
-			rgba(250, 249, 246, 0.2) 74%,
-			rgba(250, 249, 246, 0) 100%
-		);
-	}
-
-	.gi-tint-light .gi-band-text h2 {
-		color: var(--st-ink);
-	}
-
-	.gi-tint-light .gi-band-text p {
-		color: rgba(36, 35, 43, 0.85);
-	}
-
-	.gi-tint-light + .gi-group-cue,
-	.gi-group-summary:has(.gi-tint-light) .gi-group-cue {
-		background: rgba(255, 255, 255, 0.92);
-		border-color: rgba(36, 35, 43, 0.2);
-		color: var(--st-ink);
-	}
-
-	.gi-group-summary:has(.gi-tint-light):hover .gi-group-cue,
-	.gi-group-summary:has(.gi-tint-light):focus-visible .gi-group-cue {
-		background: #fff;
-		border-color: var(--st-ink);
-	}
+	/* The pale-wash trial (`gi-tint-light`, 2026-09-24) was dropped on 25 September - see the design
+	   brief's tint bullet: it erased the photo where the eye lands and read as faded, not lit. Its CSS
+	   is in git history if the question is ever reopened. */
 
 	/* --- Folds ---------------------------------------------------------------------------------
 	   Adrian asked for the detail to expand rather than all of it being on screen at once, and this

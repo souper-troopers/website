@@ -757,8 +757,8 @@ the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` 
   scroll, buttons 35px tall, Add to cart still adds.
 
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
-⚠ **Switched off 2026-09-25 by design brief phase 2** (one tint direction site-wide; the light
-version is judged as a whole in phase 4). The CSS is still there, dormant - see the next section.
+⚠ **Switched off 2026-09-25 by design brief phase 2, then dropped for good the same day** (the
+brief's tint bullet): the class and its CSS are gone. See "The tint: dark, held to the text side".
 Adrian, 21 September: the site sits on a lot of black. The two audience banners now use a pale tint
 (the page's own off-white, 0.92 -> 0 left to right) with ink text and a solid white "See how" pill -
 all behind a `gi-tint-light` class on the two `.gi-band-media` elements, so **deleting that class
@@ -1256,6 +1256,23 @@ up (three sentences, below). The full before/after text diff went to the user wi
   - Our Mission (33), `/shop`'s promise (33), the Souper Squad service card (32): within a few words.
   - Donate's "Section 18A" stat card is Sanity content; removing it is an unpublish, not an edit.
   - Contact's Visit us (address and hours stay visible, by rule) and the success stories.
+
+### The tint: dark, held to the text side, fading to nothing (2026-09-25)
+The design brief changed on 25 September (`24b2d75`, tint bullet in §3.1): **the pale wash is
+dropped and there is no phase 4**. Adrian's "too dark" was the *ground* - ink slabs, dark bands,
+dark-tinted cards - which phases 1-2 removed; the wash erased the photo where the eye lands and read
+as faded. Where no text needs a photo behind it, the photo-top card is the answer.
+- The hero tint (`.hero-scrim`, desktop) is now an ink sweep held at 0.72+ to 68% of the width and
+  fading to **nothing** by 92% - the teal wash that sat on the right is gone. The top band behind
+  the floating header stays (the nav is text on the photo too). Phones and tablets to 900px keep the
+  near-even tint, since the words span the photo there. Get Involved's banners: the same sweep
+  (to 0 by 82%) plus a small radial darkening under the bottom-right "See how" cue.
+- Measured: 1,207 hero/header lines on 14 pages at 8 widths, none failing (worst body 4.92:1,
+  worst h1 4.47:1 - the yellow "human"); banners 62 lines, worst 4.67:1. The first try faded from
+  62% and failed one line: Volunteer's hero line runs to ~70% of the width at 1024px.
+- The dormant `gi-tint-light` CSS was deleted. The pale-wash build (header on off-white, dark logo,
+  one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
+  passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not

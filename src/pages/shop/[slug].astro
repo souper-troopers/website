@@ -7,6 +7,7 @@ import { getProductCategories, getShopItems, shortProductName, urlFor } from "..
 import AttributeProduct from "../../components/AttributeProduct.svelte";
 import ItemCard from "../../components/ItemCard.svelte";
 import CardCtaLabel from "../../components/CardCtaLabel.astro";
+import { backdropColour } from "../../lib/backdrop";
 
 export async function getStaticPaths() {
 	const categories = await getProductCategories();
@@ -18,6 +19,16 @@ export async function getStaticPaths() {
 
 const { category } = Astro.props;
 const items = category.displayMode === "items" ? await getShopItems(category.slug) : [];
+// Each card's photo, and the colour of its own backdrop for the room above it (see backdrop.ts).
+const cardPhotos = await Promise.all(
+	items.map(async (item) => {
+		const url = item.photo ? urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined;
+		const backdrop = item.photo
+			? await backdropColour(urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").url())
+			: undefined;
+		return { url, backdrop };
+	}),
+);
 
 // Trailing slashes match Astro's canonical/sitemap URLs — see the same note on [item].astro.
 const shopUrl = new URL("/shop/", Astro.site).href;
@@ -131,7 +142,7 @@ const jsonLd = attributeProductJsonLd
 				</div>
 			)}
 			<div class="product-grid">
-				{items.map((item) => (
+				{items.map((item, i) => (
 					<ItemCard
 						client:load
 						id={item._id}
@@ -142,7 +153,8 @@ const jsonLd = attributeProductJsonLd
 						description={item.description}
 						soldOut={item.soldOut}
 						href={`/shop/${category.slug}/${item.slug}`}
-						photoUrl={item.photo ? urlFor(item.photo).width(500).height(500).fit("fill").bg("ffffff").auto("format").url() : undefined}
+						photoUrl={cardPhotos[i].url}
+						backdrop={cardPhotos[i].backdrop}
 						photoLqip={item.photoLqip}
 					/>
 				))}

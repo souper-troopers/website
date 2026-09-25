@@ -1026,6 +1026,26 @@ treating it as settled.
   appointment and we'll send prices." The left-rule callout styles went with it.
 - Checked at 390 and 1280 on Worry Dolls, Gift Tags and a product page: no sideways scroll, every
   card one link with no nested controls, labels 16px off the card's foot, teal focus ring.
+- **Later the same day, the photo's backdrop runs the whole card** (the user: no white behind the
+  name; room above the image; the wedge "half above, half beneath"). In `ItemCard.svelte`:
+  - `.item-card-img` is an absolute box filling the card (z -2, under the wedge's -1), holding the
+    square photo (`.item-card-photo`) after `--photo-top` of room (32px on wide cards, 16px narrow).
+    The body's top padding is a percentage of the card's width, so it tracks the square.
+  - **The box's colour is the photo's own backdrop, read at build time** by `src/lib/backdrop.ts`:
+    the per-channel median of the top 12 rows of the exact image the card shows (dolls #fefefe, gift
+    tags #e8e8e8). Sanity's palette was tried first and is useless here - it describes the product's
+    colours, not the backdrop - and sharp's `dominant` is quantised enough to leave a faint seam. A
+    top-edge fade was tried and removed: it washed out the dolls' heads, which touch the top edge.
+  - **On cards 300px or wider** (container query on the card) the text starts 44px above the photo's
+    foot, so the name overlays the photo beside the doll, with a 72px fade into the backdrop colour
+    under it. **Narrower cards (phones) don't overlap** - the dolls fill too much of a ~165px card
+    and names ran across them - so the name sits just under the photo, still on the backdrop.
+  - **Measured on real pixels** (names hidden, 9 widths 360-1440, 99 names): all pass, lowest 5.67:1
+    at the 5th percentile (Christmas Angel, which failed at ~3.2:1 before the fade). ⚠ When
+    re-measuring, switch transitions off - the name's colour transition otherwise gets screenshotted
+    mid-fade and every result reads 1.0.
+  - **The wedge is opaque on these cards** (`#dfecec`, hover `#d2e9ea` - the colours the 20% tint makes
+    over the stage wash), because at 20% the dolls' feet showed through it.
 
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
 ⚠ **Switched off 2026-09-25 by design brief phase 2, then dropped for good the same day** (the

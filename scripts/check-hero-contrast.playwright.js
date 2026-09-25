@@ -6,6 +6,7 @@
 // nav link over it, it hides the text, screenshots, and compares the text's effective colour
 // against every pixel under that line - so a pass means the worst pixel passes, not the average.
 // Body 4.5:1, large text 3:1. Re-run after changing the hero tint or adding a hero photo.
+// Also measures the header's outlined Shop label (white on the photo) since 25 September.
 
 async (page) => {
   // For every line of text in each hero (and the nav links sitting over it): record the line boxes
@@ -28,7 +29,7 @@ async (page) => {
         const out = [];
         const hero = document.querySelector(".photo-hero");
         const roots = [...hero.querySelectorAll(".hero-content h1, .hero-content p, .hero-content a:not(.btn), .hero-content li")];
-        document.querySelectorAll(".site-header #primary-nav a, .site-header .brand span").forEach((el) => {
+        document.querySelectorAll(".site-header #primary-nav a, .site-header .brand span, .site-header .header-shop").forEach((el) => {
           const r = el.getBoundingClientRect();
           if (r.width && r.height && getComputedStyle(el).visibility !== "hidden" && r.bottom > 0 && r.top < hero.getBoundingClientRect().bottom) roots.push(el);
         });
@@ -39,7 +40,9 @@ async (page) => {
           while ((n = walker.nextNode())) {
             if (!n.textContent.trim()) continue;
             const el = n.parentElement;
-            if (el.closest(".btn") || el.closest("[hidden]")) continue;
+            // Buttons are skipped (filled, so their label sits on their own fill) - except the header's
+            // outlined Shop, whose white label sits on the photo.
+            if ((el.closest(".btn") && !el.closest(".header-shop")) || el.closest("[hidden]")) continue;
             const cs = getComputedStyle(el);
             let op = 1;
             for (let a = el; a && a !== document.body; a = a.parentElement) op *= Number(getComputedStyle(a).opacity);
@@ -54,13 +57,13 @@ async (page) => {
               const id = `${Math.round(r.x)},${Math.round(r.y)}`;
               if (seen.has(id)) continue;
               seen.add(id);
-              out.push({ tag: el.closest("#primary-nav, .brand") ? "nav" : el.tagName.toLowerCase() + (el.className ? "." + String(el.className).split(" ")[0] : ""), text: n.textContent.trim().slice(0, 24), x: r.x, y: r.y, w: r.width, h: r.height, rgb: m.slice(0, 3), alpha, large });
+              out.push({ tag: el.closest(".header-shop") ? "shop-btn" : el.closest("#primary-nav, .brand") ? "nav" : el.tagName.toLowerCase() + (el.className ? "." + String(el.className).split(" ")[0] : ""), text: n.textContent.trim().slice(0, 24), x: r.x, y: r.y, w: r.width, h: r.height, rgb: m.slice(0, 3), alpha, large });
             }
           }
         }
         return out;
       });
-      await page.addStyleTag({ content: ".photo-hero .hero-content *, .site-header #primary-nav a, .site-header .brand span { color: transparent !important; text-decoration-color: transparent !important; text-shadow: none !important; } .photo-hero .hero-content li::before { color: transparent !important; }" });
+      await page.addStyleTag({ content: ".photo-hero .hero-content *, .site-header #primary-nav a, .site-header .brand span, .site-header .header-shop { color: transparent !important; text-decoration-color: transparent !important; text-shadow: none !important; } .photo-hero .hero-content li::before { color: transparent !important; }" });
       await page.waitForTimeout(150);
       const shot = await page.screenshot({ type: "png" });
       const res = await page.evaluate(async ({ b64, lines }) => {

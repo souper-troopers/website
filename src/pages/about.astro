@@ -343,15 +343,15 @@ const pressMentions = await getPressMentions();
 	}
 
 	@media (max-width: 700px) {
+		/* minmax(0, ...), not 1fr: a grid column won't shrink below its content, so the 320px logo
+		   frame pushed the page 4px sideways at 360px and 44px at 320 (found 2026-09-25). */
 		.partner-featured {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 			gap: var(--space-4);
 			padding: var(--space-6);
 		}
 	}
 
-	/* How we began sits on the teal-to-red band, where the site's teal-dark "More" would vanish.
-	   White, like the band's text around it. */
 	/* The logo wall. Flex rather than a grid, like .team-grid, so a part-filled last row centres
 	   itself: the partner count comes from Sanity and will change when Kerry revises the list.
 	   190px tiles give five to a row at the 1100px cap. align-items: flex-start so an opened tile

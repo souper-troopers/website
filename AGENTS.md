@@ -1046,6 +1046,28 @@ the form's usual 480px.
   workflow runs when `studio/**` changes).
 
 ### The header's Donate / Shop control: two links, not a menu (2026-09-14)
+⚠ **Replaced 2026-09-25: two separate controls, not one pill.** Donate is `.btn-primary` (teal fill,
+ink label); Shop is an outlined ghost (transparent, 1.5px `rgba(255,255,255,.7)` border, white label)
+that fills to `rgba(255,255,255,.12)` on hover and on `/shop` routes - its current-page marker now,
+replacing the underline. 8px apart, both 52px tall (`--header-height` unchanged). The cart sits beside
+Shop. Details worth keeping:
+- **All three sit in `.header-actions`**, so they wrap as one group: loose, the cart dropped onto a row
+  of its own at 962-1019px. `.header-actions` carries the laptop `margin-left: auto` (the slack before
+  Donate) and the phone `order: 1`; on phones its gap is `--space-3`, the row's own, or the menu button
+  falls off at 320px. The homepage's hide-until-scrolled rule still targets `.support-menu` (a
+  descendant selector), so it hides Donate and Shop together and **the cart stays**.
+- **Width is budgeted to the old pill**: 84 + 8 + 68 = 160px against 162, hence side padding of 12px
+  (Donate) and 10px (Shop), tighter than `.btn`. At 18/16 the row only fitted on one line from
+  1,044px; at 14/12 from 1,028. Now: one row from **1,014px** (was 1,020), 145px 778-1013, 198px
+  762-777 (was 204). Re-measure in 2px steps after any change.
+- **`.support-menu .header-shop`, not `.header-shop`**: the site-wide `.btn` rule comes later in the sheet
+  and at equal specificity replaced the white border with its transparent one.
+- The 1.5px border renders 1px on standard-density screens (Chrome rounds down); fine on retina.
+- `scripts/check-hero-contrast.playwright.js` now measures the Shop label too (white on the photo):
+  1,233 lines, none failing.
+- Known and pre-existing (the pill did it too): at 320-340px the menu button wraps below the row.
+
+The notes below describe the pill.
 The review made the header CTA Donate / Shop (Adrian: people should see the word "Shop"). It was built
 as a `<details>` menu whose panel offered the two destinations; the user pointed out that a menu which
 only ever chooses between two places costs a click for nothing. It is now **two links sharing one teal

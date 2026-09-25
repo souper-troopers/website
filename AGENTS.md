@@ -1084,10 +1084,21 @@ August she confirmed they're a real product at R40. Added at the user's call:
   `edge: "bottom"`, from the 4:3 crop the tile actually shows, and **only from the outer 15% of the
   bottom edge each side** - the coffee's beans and the bracelets' stand run to the bottom and
   skewed a whole-row reading (the coffee tile went brown). Result: coffee and dolls `#ffffff`, gift
-  tags `#f4f3f1`, bracelets `#e5e5e3`. The tile blurb is ink at 0.75 (was 0.65, 4.49:1 on the
-  bracelets' grey; now 6.0:1 or better). Known: a soft line under the bracelets photo, where the
-  cream stand ends against the grey - a fade would hide it, but the user found fades odd on the
-  product cards; a photo where the stand ends inside the frame is the real fix.
+  tags `#f4f3f1`, bracelets `#e6e5e3`. The tile blurb is ink at 0.75 (was 0.65, 4.49:1 on the
+  bracelets' grey; now 6.0:1 or better).
+- **Two category photos were rebuilt as 4:3 composites, in the images themselves** (not CSS, so
+  they stay swappable in the Studio; the user asked for no gradients in code):
+  - **Coffee**: the 600px cut-out on pure white, placed on a 1600x1200 white canvas at 800px tall
+    (~66% of the height), matching the dolls composite's proportions. It was a tight square with the
+    bags touching the top and the beans the bottom. The original cut-out
+    (`image-d17a8812...-600x600-png`) is kept in the media library, unreferenced. The coffee's own
+    page takes the centre square of this, so its bags are smaller there than before.
+  - **Bracelets**: a 1800x1350 crop of `DSC_7515`, with the display stand faded out above and below
+    the bracelets. Per row, the backdrop behind the stand is rebuilt by blending between the sweep
+    either side (columns 90px in from each edge), and blended over the stand with a smoothstep ramp
+    (rows 330-130 above, 1010-1230 below, in the crop's coordinates); the bracelets themselves are
+    untouched. Without it the cream stand ran off the photo's foot and left a line against the grey
+    card. Script not kept - a sharp raw-pixel pass, easy to redo.
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
   across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.
 

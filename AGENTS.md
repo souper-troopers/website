@@ -334,7 +334,28 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   - **Donate, "Course & skills training fees" tile**: `donation-funds/training.jpg` is now `IMG_7406`
     (a young man at a table), replacing stock.
   - Still stock, with no real equivalent in the Drive: Documentation (its Drive images are
-    AI-generated), and Donate's transport, ID documents and care packs tiles.
+    AI-generated), and Donate's transport and ID documents tiles.
+- **A due-diligence pass over all 52 of Shan's non-shop photos, 25 September** (the user: use her
+  folders as a guide, not a directive, but make sure nothing good was overlooked). 16 were already
+  on the site. Four more went in, each checked at full size for the man from `IMG_9953` first:
+  - **Donate, "Care packs" tile**: `donation-funds/care-packs.jpg` is now `Our Work/Essential
+    needs/10-IMG_9779` (hands packing towels and toiletries, no faces), replacing stock tins.
+  - **Homepage Humanity Hub pillar**: `hub-haircut.jpg` (`Extra/Images/Mix/IMG_7099.heic`, a haircut
+    at the Hub), `center 35%`, replacing the building (which Contact's hero shows).
+  - **Homepage CAST pillar**: `hub-lounge.jpg` (`Mix/IMG_0923.HEIC`, two people talking in the
+    lounge), replacing `support-conversation`, which stays as Our Work's hero.
+  - **Who We Are, the Humanity Hub section**: `hub-table-tennis.jpg` (`Who we are/The Humanity
+    Hub/5-IMG_9931`), `object-position: center 12%` so his head stays in the 460px-high frame,
+    replacing `dignity-moment.jpg` (#31), which is now unused on the site (the file stays; the
+    share-card comment in `Layout.astro` refers to it).
+  - **Held, the user's call**: `Our Work/Employment/IMG_3512` (someone filling in a form with a staff
+    member) for the Documentation card and the ID documents tile - Documentation says something
+    about the person pictured, so it waits until the user is comfortable; and two visitor photos
+    (`Get involved/Individuals/IMG_1839`, `Mix/1-IMG_0446`-era visitors at the doll wall) until we
+    know who they are. The eight goods tiles stay stock on purpose: they show items, not people.
+  - ⚠ **Dev-server gotcha**: replacing an image with one of the same dimensions keeps the same
+    `/_image` URL, so the browser shows the old one from cache. Fetch it fresh (curl) or use a new
+    browser context before deciding the swap didn't work.
 - ⚠ **The Squad is mentioned elsewhere** - the dolls' description in Sanity ("made by members of the
   Souper Squad"), Who We Are's "A business, not just a charity", Volunteer, Get Involved, Donate goods,
   Corporate partnership. `q38` ("Is the Souper Squad finished altogether?", flagged for launch) asks

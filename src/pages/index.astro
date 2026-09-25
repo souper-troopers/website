@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
-import supportPhoto from "../assets/images/support-conversation.jpg";
-import hubPhoto from "../assets/images/humanity-hub-exterior.jpg";
+import hubPhoto from "../assets/images/hub-haircut.jpg";
+import castPhoto from "../assets/images/hub-lounge.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import PhotoHero from "../components/PhotoHero.astro";
@@ -34,8 +34,8 @@ const leadStat = impactStats.find((stat) => stat.value != null);
 // The three pillars - the first try put to Kerry on the status page (q28), and the answer to "what
 // is this?" before the page asks for anything. Every line is built from wording the site already
 // uses. Photo on top, text on white beneath: Adrian's "too dark" point from the 21 September
-// review, and no text ever sits on a photo, so there is no contrast to tune per image. The Hub
-// photo is the building, not people (q19); the CAST one is the photo this page already used.
+// review, and no text ever sits on a photo, so there is no contrast to tune per image. Both people photos are
+// Shan's, cleared by her blanket consent (q35).
 const pillars = [
 	{
 		title: "The Humanity Hub",
@@ -43,18 +43,20 @@ const pillars = [
 		href: "/about#humanity-hub",
 		cta: "Visit the Hub",
 		photo: hubPhoto,
-		// Mirrors contact.astro: the 66 sits at the photo's left edge, so crop from the right only.
-		position: "left center",
-		alt: "The Humanity Hub on Newmarket Street, Woodstock, with Table Mountain behind",
+		// A haircut at the Hub (Shan's photos, 25 September; was the building, which Contact's
+		// hero already shows). Portrait, so anchored on the two faces.
+		position: "center 35%",
+		alt: "A haircut at the Humanity Hub",
 	},
 	{
 		title: "The CAST programme",
 		text: "From a first conversation to a first pay cheque - rooted in dignity, love and respect.",
 		href: "/our-work",
 		cta: "See the CAST journey",
-		photo: supportPhoto,
-		position: "center",
-		alt: "A Souper Troopers social worker in conversation with a CAST participant",
+		photo: castPhoto,
+		// Two people talking in the Hub's lounge (Shan's photos, 25 September; was Our Work's hero).
+		position: "center 45%",
+		alt: "Two people talking in the lounge at the Humanity Hub",
 	},
 	{
 		title: "Every purchase pays a wage",

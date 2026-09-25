@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
 import { Image } from "astro:assets";
-import dignityPhoto from "../assets/images/dignity-moment.jpg";
+import tableTennisPhoto from "../assets/images/hub-table-tennis.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
 import hubWorkshop from "../assets/images/hub-workshop.jpg";
 import CardCtaLabel from "../components/CardCtaLabel.astro";
@@ -145,8 +145,9 @@ const pressMentions = await getPressMentions();
 			</div>
 			<div class="figure shimmer-up">
 				<Image
-					src={dignityPhoto}
-					alt="A member of the Souper Troopers community smiling"
+					src={tableTennisPhoto}
+					alt="A game of table tennis at the Humanity Hub"
+					style="object-position: center 12%"
 					width={800} widths={[400, 800]}
 					sizes="(min-width: 700px) 500px, 100vw"
 					onload="this.classList.add('is-loaded')"

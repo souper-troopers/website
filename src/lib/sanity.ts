@@ -67,6 +67,8 @@ export interface ShopItem {
 	price: number;
 	photo?: SanityImageSource;
 	photoLqip?: string;
+	/** The main photo's pixel size - the product page's carousel takes its shape from it. */
+	photoDims?: { width: number; height: number };
 	/** Extra photos for the product page's carousel, after the main photo. */
 	gallery?: SanityImageSource[];
 	description?: string;
@@ -78,6 +80,9 @@ export interface ShopItem {
 export interface ShopItemWithCategory extends ShopItem {
 	categoryName: string;
 	categorySlug: string;
+	/** The category's Portable Text description; the product page takes its first sentence when the
+	 *  item has no `details` of its own. */
+	categoryDescription?: { _type: string; children?: { text?: string }[] }[];
 }
 
 /**
@@ -104,6 +109,7 @@ const SHOP_ITEM_PROJECTION = `
 	price,
 	photo,
 	"photoLqip": photo.asset->metadata.lqip,
+	"photoDims": photo.asset->metadata.dimensions { width, height },
 	"gallery": gallery[defined(asset)],
 	description,
 	details,
@@ -225,6 +231,7 @@ export async function getAllShopItems(): Promise<ShopItemWithCategory[]> {
 			${SHOP_ITEM_PROJECTION}
 			"categoryName": category->name,
 			"categorySlug": category->slug.current,
+			"categoryDescription": category->description,
 		}`
 	);
 	return items.map(withSlug);

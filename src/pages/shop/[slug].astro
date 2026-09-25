@@ -66,11 +66,11 @@ const breadcrumbJsonLd = {
 
 /**
  * Worry dolls only, from the 21 September review: each is handmade, so the photos show a style, not
- * the doll you'll get; bespoke dolls and bulk orders go to a person rather than the cart. The minimum
- * of 10 and the inbox are what the call floated - confirming both is `q33` on the status page.
+ * the doll you'll get; bespoke dolls and bulk orders go to a person rather than the cart. Shan
+ * confirmed both on 25 September (`q33`): the minimum is 10, and these enquiries go to sales@.
  */
 const isDolls = category.slug === "worry-dolls";
-const ordersEmail = "manager@soupertroopers.org";
+const ordersEmail = "sales@soupertroopers.org";
 const customHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Custom African Worry Dolls")}`;
 const wholesaleHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Wholesale African Worry Dolls")}`;
 

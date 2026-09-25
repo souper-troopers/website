@@ -2514,11 +2514,15 @@ const structuredData = {
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
 			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break
 			   into three lines at 20. */
+			/* text-wrap: balance (25 September) so a product name doesn't strand its last word -
+			   "(pack of 3)" split across lines. Inner heroes only: the homepage headline's breaks are
+			   Kerry's copy and a question with her (q37). */
 			.photo-hero--page h1,
 			.photo-hero--band h1 {
 				font-size: clamp(2rem, 4vw, 2.8rem);
 				max-width: 24ch;
 				margin-bottom: 28px;
+				text-wrap: balance;
 			}
 
 			/* Less on the slimmer band. (Both were 8px until 25 September - too tight; the page size

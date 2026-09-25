@@ -42,8 +42,23 @@ const handmade = item.categorySlug === "worry-dolls";
 // disagrees with the canonical tag on the same page reads as two URLs for one product.
 const pageUrl = new URL(`/shop/${item.categorySlug}/${item.slug}/`, Astro.site).href;
 
-// The short card blurb is the fallback when nobody has written the longer page copy yet.
+// The short card blurb is the fallback when nobody has written the longer page copy yet. Used for
+// the meta description and structured data (unchanged 25 September).
 const bodyCopy = item.details || item.description;
+
+// What the details card shows under the price (25 September): the item's own `details`, else the
+// first sentence of its category's description - and nothing at all when neither exists, rather
+// than a placeholder.
+const categoryFirstSentence = (() => {
+	const block = item.categoryDescription?.find((b) => b._type === "block");
+	const text = block?.children?.map((child) => child.text ?? "").join("").trim();
+	return text ? text.split(/(?<=[.!?])\s/)[0] : undefined;
+})();
+const leadCopy = item.details || categoryFirstSentence;
+
+// The carousel takes its shape from the lead photo (Sanity's image metadata) rather than a fixed
+// 3:4: the dolls stay 3:4, the square gift tags fill their box. Every slide shares that shape.
+const slideRatio = item.photoDims ? `${item.photoDims.width} / ${item.photoDims.height}` : "3 / 4";
 
 const productJsonLd = {
 	"@context": "https://schema.org",
@@ -92,7 +107,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	<section class="section wrap">
 		<div class="product">
 			{slides.length > 0 && (
-				<div class="carousel" data-carousel>
+				<div class="carousel" data-carousel style={`--slide-ratio: ${slideRatio}`}>
 					{/* A scroll-snap track: swipes on a phone and scrolls with a trackpad with no script at all.
 					    The script below only adds the buttons and the counter. */}
 					<ul class="carousel-track" tabindex="0" aria-label={`Photos of ${item.name}`}>
@@ -104,7 +119,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 									sizes="(min-width: 721px) 520px, 100vw"
 									alt={slides.length > 1 ? `${item.name}, example ${i + 1} of ${slides.length}` : item.name}
 									width="900"
-									height="1200"
+									height={item.photoDims ? Math.round(900 * item.photoDims.height / item.photoDims.width) : 1200}
 									loading={i === 0 ? "eager" : "lazy"}
 									fetchpriority={i === 0 ? "high" : undefined}
 								/>
@@ -121,14 +136,17 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 				</div>
 			)}
 
-			<div class="product-detail">
-				<div class="product-price">{rand(item.price)}</div>
+			{/* The site's white card (25 September), aligned to the top of the photo: the price as its
+			    heading line, then the copy, the handmade note, the action, and the collection note
+			    under a hairline. */}
+			<div class="card product-detail">
+				<p class="product-price">{rand(item.price)}</p>
 
-				{bodyCopy && <p class="product-body">{bodyCopy}</p>}
+				{leadCopy && <p class="product-body">{leadCopy}</p>}
 
 				{handmade && (
 					<p class="product-handmade">
-						Every doll is handmade, so yours will be one of a kind. The photos show the style, not the
+						Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
 						exact doll you'll receive.
 					</p>
 				)}
@@ -179,8 +197,8 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		}
 	}
 
-	/* One slide per view, all the shape of the doll shots (3:4) so nothing jumps between photos;
-	   `contain` on white keeps an odd-shaped photo whole rather than cropping it. */
+	/* One slide per view, all the shape of the lead photo (--slide-ratio, from Sanity's metadata) so
+	   nothing jumps between photos; cover, so a gallery shot of a different shape fills the box. */
 	.carousel {
 		display: grid;
 		gap: 0.75rem;
@@ -217,8 +235,8 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		display: block;
 		width: 100%;
 		height: auto;
-		aspect-ratio: 3 / 4;
-		object-fit: contain;
+		aspect-ratio: var(--slide-ratio, 3 / 4);
+		object-fit: cover;
 	}
 
 	.carousel-controls {
@@ -263,40 +281,55 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		}
 	}
 
-	.product-handmade {
-		margin: 0 0 1.5rem;
-		padding: 0.75rem 1rem;
-		border-left: 3px solid var(--st-teal);
-		background: #fff;
-		border-radius: 0 8px 8px 0;
-		font-size: 0.95rem;
-		line-height: 1.55;
+	.product-detail {
+		gap: 0;
+		align-items: stretch;
 	}
 
-	/* Ink, not teal-dark: the teal family is reserved for things you can act on. As the largest
-	   teal text on the page this read as the primary link. Also fixes contrast — teal-dark on
-	   --st-bg is 4.29:1, under AA. */
+	/* Ink, not teal-dark: the teal family is reserved for things you can act on. The card's heading
+	   line. */
 	.product-price {
-		font-weight: 700;
-		font-size: 1.6rem;
+		margin: 0;
+		font-size: 1.9rem;
+		font-weight: 800;
+		line-height: 1.1;
 		color: var(--st-ink, #24232b);
 	}
 
 	.product-body {
-		margin: 1rem 0 1.75rem;
+		margin: var(--space-3) 0 0;
 		line-height: 1.65;
 		white-space: pre-line;
 	}
 
+	/* Plain muted text now, no callout rule - the same words as the category page's statement. */
+	.product-handmade {
+		margin: var(--space-3) 0 0;
+		font-size: 0.95rem;
+		line-height: 1.55;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.product-detail :global(button),
 	.sold-out {
+		margin-top: var(--space-5);
+	}
+
+	.product-detail :global(button) {
+		align-self: flex-start;
+	}
+
+	.sold-out {
+		margin-bottom: 0;
 		font-weight: 600;
-		margin: 0 0 1rem;
 	}
 
 	.product-note {
-		margin-top: 1.5rem;
+		margin: var(--space-5) 0 0;
+		padding-top: var(--space-4);
+		border-top: 1px solid rgba(36, 35, 43, 0.1);
 		font-size: 0.85rem;
-		color: rgba(36, 35, 43, 0.65);
+		color: rgba(36, 35, 43, 0.68);
 		line-height: 1.6;
 	}
 

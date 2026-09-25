@@ -304,6 +304,23 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   reverted (`06f0c32`), so Who We Are shares the Hub exterior with Contact until `IMG_9953` is cleared.
   `IMG_9953` is 4032×3024 HEIC - convert with `sips` (sharp here lacks HEVC) when it is.
 
+## Shan's replies of 25 September: photos, Our Work, and the Souper Squad
+- **Photo consent is a blanket yes** (`q33` point 5) **with one hard exception** (`q35`): the man in
+  the wheelchair in `IMG_9953` - something terrible happened to him on 24 September. **Never use that
+  photo or any image of him.** Checked the same day: none of the site's 28 local photos shows him; the
+  team headshots in Sanity can't be checked for a wheelchair, so ask Shan if in doubt. Before
+  publishing any new Drive photo of people, rule him out first.
+- **Our Work changes asked for, not yet made** - wording drafted for the user to approve:
+  Recovery support -> **Holistic support** (drop "addiction rehabilitation"; trauma counselling,
+  wellness such as yoga and art therapy), Housing assistance -> **Family Reunification** (new photos
+  in Shan's folder), and the **Souper Squad card removed** - the project no longer exists.
+- ⚠ **The Squad is mentioned elsewhere** - the dolls' description in Sanity ("made by members of the
+  Souper Squad"), Who We Are's "A business, not just a charity", Volunteer, Get Involved, Donate goods,
+  Corporate partnership. `q38` ("Is the Souper Squad finished altogether?", flagged for launch) asks
+  who makes the dolls now before any of that copy changes.
+- Shan quotes the page's *visible* numbers, which shift when questions are added (she said "10, 19 and
+  35"; the replies were in `q33` and `q35`). Refer her to questions by title.
+
 ## RFC page: "Needed before launch" (added 2026-09-25)
 Shan said (via the user, 25 September) the client would ideally like the site live **by the end of
 September** - the 30th, the day of the next review call. So the status page now marks what launch
@@ -833,6 +850,17 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   inline script only adds ←/→ buttons (44px), a live "n / N" counter and arrow keys, and the controls
   stay `hidden` without it. Slides are fixed 3:4 with `object-fit: contain` on white, so nothing jumps
   between photos. All slides go into the `Product` JSON-LD `image`.
+- **Product pages, 25 September**: the carousel's shape comes from the **lead photo's own
+  dimensions** (`photoDims`, from Sanity's image metadata, set as `--slide-ratio`), not a fixed 3:4,
+  with `object-fit: cover` - dolls stay 3:4, the square gift tags fill their box, every slide of a
+  product shares the lead's shape. The details column is **the site's white card**, top-aligned with
+  the photo: price as the heading line (1.9rem / 800), then `details` or else the **first sentence of
+  the category's description** (`categoryDescription`, now in `getAllShopItems`), left out entirely
+  when neither exists; the handmade note as plain muted text in the category page's wording ("The
+  photos show each style"); Add to cart or the sold-out line; the collection note under a hairline.
+  The meta description and `Product` data still use `details || description` - unchanged. Inner hero
+  `h1`s have `text-wrap: balance` (page and band only - the homepage headline is Kerry's copy, `q37`),
+  so "(pack of 3)" no longer splits.
 - **Cards and share images pad instead of crop** (`fit("fill").bg("ffffff")`). The doll shots are 3:4
   portrait, and the old square crop clipped hats and feathers. The only other items (two gift tags)
   are already square, so the change is a no-op for them.
@@ -845,8 +873,12 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
 - **On the category page, for `worry-dolls` only**: the handmade note above the grid, a dashed
   **Custom dolls** card after the products ("batches of 10 or more, priced on request"), and a
   **wholesale by appointment** line — both `mailto:manager@` with a subject. The note repeats on each
-  doll's product page. ⚠ The price, minimum, inbox and the two double-filed photos are unconfirmed:
-  `q33` on the status page.
+  doll's product page. ~~⚠ The price, minimum, inbox and the two double-filed photos are unconfirmed:
+  `q33` on the status page.~~ **Confirmed by Shan on 2026-09-25 (`q33`)**: General is R225 (was R250,
+  changed in Sanity), custom orders from 10, custom and wholesale enquiries go to
+  **sales@soupertroopers.org** (the shop's "Ask about an order" card still goes to manager@), and the
+  two double-filed photos belong to General (`6.png`) and Magnet (`8.png`) - both removed from
+  Female's gallery.
 - **Same day, tidy-ups**: General moved to third (after Female, Male), and the Worry Dolls **category
   photo** (the `/shop` landing tile) is now a composed 1600×1200 of three new shots side by side
   (Female 24, Brooch 37, Literary 35) - one portrait doll in a landscape tile would lose its head to

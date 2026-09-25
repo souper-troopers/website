@@ -1066,6 +1066,22 @@ below 761px. `--header-height` is built from the 44px, so the laptop row is **68
   as the nav's underline, but drawn as a `::after` on `.support-label` so it **takes no space and the
   word stays centred in the pill** (the user's call: a layout-box underline pushed the text 3px up and
   looked off). So the pill underline sits ~3px below the nav's rather than on its line - accepted.
+- **The current-page underline slides between pages** (asked for 25 September), by CSS alone. Every
+  page has at most one `.current-marker` - a real `<span>` under the current nav link or inside
+  Donate / Shop's label - and it carries `view-transition-name: current-marker` everywhere, so the
+  existing cross-document `@view-transition` moves and stretches it from the old page's position to
+  the new one's (0.35s) over the page cross-fade. Teal to ink (Donate) cross-fades as it goes.
+  - **A span, not the border or an `::after`**: pseudo-elements can't be named. The nav link's border
+    is now transparent and only holds the space; the marker sits exactly on it (bottom 48.39px at 1280,
+    as before).
+  - **Laptop only (≥761px)**: below that the nav is a hidden drop-down, its marker is `display: none`
+    and the stacked menu keeps its own hairline. Where only one side has a marker (a Get Involved
+    child page matches no nav item) it just fades. Firefox has no cross-document transitions yet and
+    simply switches; reduced motion switches the whole transition off.
+  - ⚠ **Only one element per page may carry the name** - if two do, the browser skips the whole
+    transition. Anything new that marks "current" should reuse `.current-marker`, not add a second.
+  - Verified in Chromium at 1280: `::view-transition-group(current-marker)` animates on About → Our
+    Work → Shop → Donate → Contact. Not yet seen in real Safari (18.2+ supports it).
 - **Labels use the nav's type, 0.95rem / 1.5.** The spec said "1rem / 24px, the nav's size"; the nav
   is actually 0.95rem, so the labels follow the nav. If 1rem is wanted, change both together.
 - **All three sit in `.header-actions`**, so they wrap as one group: loose, the cart dropped onto a row

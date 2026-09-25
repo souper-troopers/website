@@ -71,11 +71,18 @@ partnership each end on a closing CTA row although Donate / Shop is in the heade
 - **Content in the hero:** the `h1`, one line of at most 20 words, and at most one control. Nothing
   else. Breadcrumbs stay on child pages, above the `h1`.
 - **Tint:** the homepage's dark tint with white text, on every hero, measured per photo (body
-  ≥4.5:1, `h1` ≥3:1). **One direction site-wide**; a light hero on one page and a dark one on the
-  next is the inconsistency we are removing. The light direction Adrian asked for (the Get Involved
-  trial, `gi-tint-light`, ink text on a pale wash) is **not decided** and is a separate experiment
-  after the rest of this brief has landed (phase 4), so it is judged against a consistent site
-  rather than mixed into the rebuild.
+  ≥4.5:1, `h1` ≥3:1). Hold the tint to the side the text sits on and fade it to nothing, so most of
+  the photo stays at full colour. **One direction site-wide**; a light hero on one page and a dark
+  one on the next is the inconsistency we are removing.
+- **The pale wash is dropped (decided 25 September).** The Get Involved trial (`gi-tint-light`, ink
+  text on an off-white wash) answered Adrian's "too dark" at the wrong layer. The dark he sees is
+  the *ground*: ink hero slabs, dark mid-page bands, dark-tinted cards, over half of Our Work by
+  height. Phases 1 and 2 remove that. The wash, by contrast, erases the photo where the eye lands
+  (0.92 opacity under the text) and reads as faded rather than lit; a dark gradient needed only
+  ~0.66 for the same legibility on the shop photo. So: **remove the `gi-tint-light` class in phase 1**
+  (the banners return to the dark version with no other change), and where no text needs to sit on
+  a photo, use the photo-top / text-below card, which needs no tint at all. Show Adrian phase 1 on
+  the 30th and ask whether it still reads dark before anyone revisits this.
 - **Photos.** Only four landscape photos on the site are banner-grade, and all are already
   published (so no new consent exposure, see `q19`):
 
@@ -218,9 +225,7 @@ donate rails, fonts (off, Kerry: "I'm not attached to it"), and anything under `
    page. Stop and show.
 3. **Copy pass** under the one-fact-one-page table and the word budgets, with a before/after word
    count per page in the report.
-4. **Light-tint experiment**, only once 1–3 are in. Switch every hero and the Get Involved banners
-   to the pale wash with ink text on one branch, measure contrast per photo, screenshot the same
-   twelve pages, and show both versions side by side. Kept or dropped as a whole, not per page.
+There is no light-tint phase: see the tint bullet in 3.1 (decided 25 September).
 
 Each stop: screenshots at 390 and 1280 for all twelve public pages, the word counts, and the
 contrast measurement for every hero.
@@ -229,5 +234,5 @@ contrast measurement for every hero.
 
 The next review call with Kerry, Adrian, Brad and Hilton is **Wednesday 30 September at 16:00**.
 **Phase 1 (the hero system) is to be on `dev` and showable at that call, earlier if possible**
-(decided 24 September). Phases 2 to 4 follow on their own clock after it. Publishing to `main` is
+(decided 24 September). Phases 2 and 3 follow on their own clock after it. Publishing to `main` is
 Stephen's call, not part of the phase.

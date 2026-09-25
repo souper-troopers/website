@@ -6,11 +6,10 @@ import CountUp from "../components/CountUp.svelte";
 import { Image } from "astro:assets";
 import essentialsPhoto from "../assets/images/services/essential-needs.jpg";
 import recoveryPhoto from "../assets/images/services/recovery-support.jpg";
-import housingPhoto from "../assets/images/services/housing.jpg";
+import familyPhoto from "../assets/images/services/family-reunification.jpg";
 import documentationPhoto from "../assets/images/services/documentation.jpg";
 import employmentPhoto from "../assets/images/services/employment.jpg";
 import socialPhoto from "../assets/images/services/social-enterprises.jpg";
-import squadPhoto from "../assets/images/services/souper-squad.jpg";
 import StoryVideo from "../components/StoryVideo.astro";
 import { getImpactStats, getSuccessStories } from "../lib/sanity";
 
@@ -45,15 +44,18 @@ const castSteps = [
 // src/assets/images/services/SOURCES.md) until the shoot provides real ones - decorative, alt="", so
 // nobody is presented as a Souper Troopers participant. Copy unchanged; Documentation sits with the
 // other basics.
-// `more` opens on click (the card-text budget); only Souper Squad, the one card well over it.
+// `more` opens on click (the card-text budget) - unused since the Souper Squad card went.
+// 25 September, from Shan (q33): Recovery support became Holistic support (no "addiction
+// rehabilitation"), Housing assistance became Family reunification (so nobody reads it as a housing
+// service; her photo), and the Souper Squad card came off - the project has ended (q38 asks about
+// the Squad's other mentions).
 const hubServices: { title: string; body: string; more?: string; photo: ImageMetadata }[] = [
 	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts.", photo: essentialsPhoto },
-	{ title: "Recovery support", body: "Assistance with addiction rehabilitation and trauma counselling.", photo: recoveryPhoto },
-	{ title: "Housing assistance", body: "Shelter placements and family reunification.", photo: housingPhoto },
+	{ title: "Holistic support", body: "Trauma counselling and wellness - yoga, art therapy and more.", photo: recoveryPhoto },
+	{ title: "Family reunification", body: "Reconnecting people with their families.", photo: familyPhoto },
 	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting.", photo: documentationPhoto },
 	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments.", photo: employmentPhoto },
 	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers.", photo: socialPhoto },
-	{ title: "Souper Squad", body: "A stipended employment initiative (via Khulisa Social Solutions).", more: "Members work the community garden, make Worry Dolls, sell coffee, and take on community projects - alongside workshops and skills training toward independent work.", photo: squadPhoto },
 ];
 ---
 
@@ -478,13 +480,12 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 	}
 
 	/* PROTOTYPE: the Humanity Hub services as identical photo cards - see the note on `hubServices`.
-	   An 8-column grid with every card two columns wide, so four sit on a row and the fifth can start
-	   one column in: the last three are then centred with no extra wrapper. Rows size to their own
-	   content (2026-09-25): `grid-auto-rows: 1fr` made every row as tall as the tallest card, which
-	   once the photos went on top left ~180px of empty white in six of the seven. */
+	   Six cards since 25 September (the Souper Squad card went): three to a row on laptops, two on
+	   tablets, so every row is full and the old 8-column offset for a stranded seventh card is gone.
+	   Rows size to their own content (2026-09-25). */
 	.svc-cards {
 		display: grid;
-		grid-template-columns: repeat(8, 1fr);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: var(--space-5);
 		margin: 0;
 		padding: 0;
@@ -494,17 +495,12 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 	/* Photo on top, words on white beneath (design brief phase 2) - the homepage pillars' shape.
 	   The words used to sit on the photo under a dark tint measured per photo; now nothing does. */
 	.svc-card {
-		grid-column: span 2;
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
 		border-radius: var(--radius);
 		background: var(--st-white);
 		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
-	}
-
-	.svc-card:nth-child(5) {
-		grid-column: 2 / span 2;
 	}
 
 	.svc-card-media {
@@ -538,18 +534,10 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		font-size: 0.95rem;
 	}
 
-	/* Two per row: a 4-column grid, and the seventh card (alone on the last row) starts one column in. */
+	/* Two per row on tablets. */
 	@media (max-width: 1023px) {
 		.svc-cards {
-			grid-template-columns: repeat(4, 1fr);
-		}
-
-		.svc-card:nth-child(5) {
-			grid-column: span 2;
-		}
-
-		.svc-card:nth-child(7) {
-			grid-column: 2 / span 2;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 
@@ -558,13 +546,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 			grid-template-columns: 1fr;
 		}
 
-		.svc-card,
-		.svc-card:nth-child(5),
-		.svc-card:nth-child(7) {
-			grid-column: auto;
-		}
-
-		/* Photo beside the words on a phone: seven cards with a full-width 4:3 photo each added
+		/* Photo beside the words on a phone: six cards with a full-width 4:3 photo each would add
 		   ~1,500px to the page. */
 		.svc-card {
 			flex-direction: row;

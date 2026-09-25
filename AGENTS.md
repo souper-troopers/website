@@ -310,10 +310,13 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   photo or any image of him.** Checked the same day: none of the site's 28 local photos shows him; the
   team headshots in Sanity can't be checked for a wheelchair, so ask Shan if in doubt. Before
   publishing any new Drive photo of people, rule him out first.
-- **Our Work changes asked for, not yet made** - wording drafted for the user to approve:
-  Recovery support -> **Holistic support** (drop "addiction rehabilitation"; trauma counselling,
-  wellness such as yoga and art therapy), Housing assistance -> **Family Reunification** (new photos
-  in Shan's folder), and the **Souper Squad card removed** - the project no longer exists.
+- **Our Work changes, made the same day** (wording approved by the user, posted on `q33` for Shan):
+  Recovery support -> **Holistic support**, "Trauma counselling and wellness - yoga, art therapy and
+  more."; Housing assistance -> **Family reunification**, "Reconnecting people with their families.",
+  with Shan's photo at an Intercape coach (`services/family-reunification.jpg`, a 4:3 crop of a
+  960×1280 WhatsApp image); the **Souper Squad card removed** - the project no longer exists. Six
+  cards now: a plain 3-column grid (2 on tablets, 1 on phones), so the old 8-column offset for a
+  stranded seventh card is gone. `housing.jpg` and `souper-squad.jpg` were deleted.
 - ⚠ **The Squad is mentioned elsewhere** - the dolls' description in Sanity ("made by members of the
   Souper Squad"), Who We Are's "A business, not just a charity", Volunteer, Get Involved, Donate goods,
   Corporate partnership. `q38` ("Is the Souper Squad finished altogether?", flagged for launch) asks

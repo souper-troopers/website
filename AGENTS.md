@@ -351,7 +351,7 @@ yet.** A scan of every landscape photo ≥2400px in the Drive (`Who we are`, `Ge
   - **Held, the user's call**: `Our Work/Employment/IMG_3512` (someone filling in a form with a staff
     member) for the Documentation card and the ID documents tile - Documentation says something
     about the person pictured, so it waits until the user is comfortable; and two visitor photos
-    (`Get involved/Individuals/IMG_1839`, `Mix/1-IMG_0446`-era visitors at the doll wall) until we
+    (`Get involved/Individuals/IMG_1839`, `Mix/IMG_0641.heic`, Kerry with a visitor at the doll wall) until we
     know who they are. The eight goods tiles stay stock on purpose: they show items, not people.
   - ⚠ **Dev-server gotcha**: replacing an image with one of the same dimensions keeps the same
     `/_image` URL, so the browser shows the old one from cache. Fetch it fresh (curl) or use a new

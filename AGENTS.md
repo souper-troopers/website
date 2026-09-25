@@ -1093,6 +1093,17 @@ August she confirmed they're a real product at R40. Added at the user's call:
     bags touching the top and the beans the bottom. The original cut-out
     (`image-d17a8812...-600x600-png`) is kept in the media library, unreferenced. The coffee's own
     page takes the centre square of this, so its bags are smaller there than before.
+  - ⚠ **Final, later again the same day: natural grey with a white fade baked into the bottom.**
+    The whitening below was "directionally right" but too intense - the gift tags' card borders
+    disappeared into the white. Both images now keep the photos' own soft grey and fade to pure
+    white over their bottom 20-22% (smoothstep, baked into the pixels, so the file stays a plain
+    swappable Sanity image and the tile still reads `#ffffff` from its bottom corners).
+    - **Gift tags**: 1300x1500 crops of `DSC_7519` / `DSC_7525` from row 1260, scaled 0.68, each with
+      a 200px soft alpha edge, on a canvas of the photos' own edge grey (median `#eeedec`), centres at
+      30% / 69%; fade from 78% of the height. Cards ~70% of the height, borders visible.
+    - **Bracelets**: the stand-faded (not whitened) frame, 1560px-wide 4:3 around the stack, fade from
+      80%. The stand shows as a soft cream column that dissolves above and below.
+    - Assets: tags `image-fb964aa9...`, bracelets `image-2bb02fd4...`; the whitened pair was deleted.
   - ⚠ **Superseded later the same day: all four tiles are now on pure white** (the user wanted the
     bracelets and gift tags whiter, not off-white, and filling the tile like the coffee and dolls).
     Both were rebuilt from the originals with a **whitening pass**: near-neutral pixels (saturation

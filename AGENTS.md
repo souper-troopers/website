@@ -1088,8 +1088,8 @@ August she confirmed they're a real product at R40. Added at the user's call:
   bracelets' grey; now 6.0:1 or better).
 - **Two category photos were rebuilt as 4:3 composites, in the images themselves** (not CSS, so
   they stay swappable in the Studio; the user asked for no gradients in code):
-  - **Coffee**: the 600px cut-out on pure white, placed on a 1600x1200 white canvas at 800px tall
-    (~66% of the height), matching the dolls composite's proportions. It was a tight square with the
+  - **Coffee**: the 600px cut-out on pure white, placed on a 1600x1200 white canvas at 940px tall
+    (~78% of the height, centred; 58% and then 66% were tried and read too small beside the dolls). It was a tight square with the
     bags touching the top and the beans the bottom. The original cut-out
     (`image-d17a8812...-600x600-png`) is kept in the media library, unreferenced. The coffee's own
     page takes the centre square of this, so its bags are smaller there than before.

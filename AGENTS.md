@@ -1274,6 +1274,20 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
   one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
   passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
+### The nav's Shop link is gone; the pill carries it (2026-09-25)
+Design brief §3.3 (`d0913a6`). "Shop" was in the header three times - nav link, the Donate / Shop
+pill, the cart. The nav is now **Home, Who We Are, Our Work, Get Involved, Contact** (`navLinks` in
+`Layout.astro`). The pill's Shop half carries `aria-current="page"` on `/shop` and every
+`/shop/...` route, shown as a 2px underline (the nav's old current-page cue); the nav link only ever
+matched `/shop` exactly. The cart icon is untouched: it is state, not navigation.
+- **The wrap band narrowed**, measured on `/about/` and `/shop/` in 2px steps: three rows (204px) now
+  762-777px (was to 833); two rows (145px) 778-1019px (was to 1077); one row from **1,020px** (was
+  1,078). `--hero-clearance`'s media queries follow (rounded outward to 785 / 1025). Verified at ten
+  widths across both boundaries that Volunteer's breadcrumbs start 69-141px below the header, and the
+  full hero contrast check passes (1,123 lines).
+- The Donate half has no current-page marker on `/donate` - the brief only asked for Shop, and Donate
+  was never in the nav. A one-line change if wanted.
+
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not
 the final design**. That brief is with Brad's designer friend (2 September minutes); Kerry asked for it

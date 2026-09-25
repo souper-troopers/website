@@ -189,7 +189,8 @@ const navLinks = [
 	{ href: "/", label: "Home" },
 	{ href: "/about", label: "Who We Are" },
 	{ href: "/our-work", label: "Our Work" },
-	{ href: "/shop", label: "Shop" },
+	// No "Shop" here (design brief §3.3, 25 September): it was in the header three times - this link,
+	// the Donate / Shop pill and the cart. The pill carries it, and marks /shop routes as current.
 	{ href: "/get-involved", label: "Get Involved" },
 	{ href: "/contact", label: "Contact" },
 ];
@@ -391,11 +392,11 @@ const structuredData = {
 					</span>
 				</a>
 				{/* data-astro-prefetch="load" overrides the site-wide `viewport` default (astro.config.mjs)
-				    for these six links only. Under 760px this nav is translate-Y'd fully above the
+				    for these five links only. Under 760px this nav is translate-Y'd fully above the
 				    viewport until the hamburger opens it, so an IntersectionObserver never sees it and
 				    `viewport` would not fire until the menu is already open — on the exact device where
 				    the delay was noticed. `load` prefetches at idle regardless of position. Affordable
-				    precisely because it is the fixed nav: six documents at ~10KB gzipped each, less than
+				    precisely because it is the fixed nav: five documents at ~10KB gzipped each, less than
 				    one hero photo, and the same six on every page so they are cache hits after the first. */}
 				<nav aria-label="Primary" id="primary-nav">
 					{/* Sits before Home and is separated by a rule, so it reads as "not part of this
@@ -425,7 +426,7 @@ const structuredData = {
 				    here?" for nothing. No JavaScript at all. */}
 				<div class="support-menu">
 					<a href="/donate" data-astro-prefetch="load">Donate</a>
-					<a href="/shop" data-astro-prefetch="load">Shop</a>
+					<a href="/shop" data-astro-prefetch="load" aria-current={currentPath === "/shop" || currentPath.startsWith("/shop/") ? "page" : undefined}>Shop</a>
 				</div>
 				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu">
 					<span class="nav-toggle-bar"></span>
@@ -523,7 +524,8 @@ const structuredData = {
 				--header-height: calc(52px + var(--space-3) * 2);
 				/* How far a photo hero's words must start below the top of the page, clearing the header that
 				   floats over it. Equal to --header-height except in the 761-1085px band, where the header row
-				   wraps (see the media blocks after :root) - measured 204px to 833px, 145px to 1077px. The
+				   wraps (see the media blocks after :root) - measured 204px to 777px, 145px to 1019px (since
+				   the nav's Shop link went, 2026-09-25; it was 833 / 1077 before). The
 				   boundaries are rounded outward, so an error costs a little extra space, never overlap. */
 				--hero-clearance: var(--header-height);
 
@@ -547,13 +549,13 @@ const structuredData = {
 				font-family: var(--st-font-stack);
 			}
 
-			@media (min-width: 761px) and (max-width: 1085px) {
+			@media (min-width: 761px) and (max-width: 1025px) {
 				:root {
 					--hero-clearance: 145px;
 				}
 			}
 
-			@media (min-width: 761px) and (max-width: 840px) {
+			@media (min-width: 761px) and (max-width: 785px) {
 				:root {
 					--hero-clearance: 204px;
 				}
@@ -719,6 +721,14 @@ const structuredData = {
 				background: var(--st-teal-secondary);
 			}
 
+			/* The current-page marker the nav's Shop link used to carry (an underline, as on the nav),
+			   now that the pill's Shop half is the header's only route to the shop. */
+			.support-menu a[aria-current="page"] {
+				text-decoration: underline;
+				text-decoration-thickness: 2px;
+				text-underline-offset: 5px;
+			}
+
 			.support-menu a:focus-visible {
 				outline: 2px solid var(--st-ink);
 				outline-offset: -4px;
@@ -854,7 +864,7 @@ const structuredData = {
 				color: var(--st-white);
 			}
 
-			/* The internal update page, before launch only. Deliberately not styled like the six real
+			/* The internal update page, before launch only. Deliberately not styled like the five real
 			   nav items: it is scaffolding for Kerry and Shan, not part of the site, and it should
 			   read that way at a glance rather than being discovered by clicking.
 
@@ -871,7 +881,7 @@ const structuredData = {
 				padding-right: 1rem;
 				border-right: 1px solid rgba(255, 255, 255, 0.25);
 				/* Smaller than the real items, which reinforces "not part of this menu" and, more
-				   practically, keeps it affordable: `.wrap` caps the header at 1100px and the six real
+				   practically, keeps it affordable: `.wrap` caps the header at 1100px and the five real
 				   links plus the brand, cart and Donate already use most of it. At the full 0.95rem
 				   with a two-word label this pushed Donate onto a second row at 1280px. A temporary
 				   link must not cost the permanent header its layout. */

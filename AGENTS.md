@@ -1057,6 +1057,25 @@ treating it as settled.
   product share image). The trade: a crop set in the Studio is ignored there too, which for padded
   product photos is what we want.
 
+### Bracelets: a fourth shop category (2026-09-25)
+Shan's bracelet photos (`Content/Shop/Bracelets/DSC_7515-7517`) were raised on `q2` in August; on 25
+August she confirmed they're a real product at R40. Added at the user's call:
+- **They're five bracelets, one word each** - Souper, Trooper, Dignity, Love, Respect - not one
+  bracelet reading the phrase, which is how `q2` described it. So `productCategory-bracelets` is an
+  **`attributes`** category like Coffee: five options at R40 each, one page, Add to cart. `q40` asks
+  whether R40 is per bracelet or for the set, and for material, maker and sizes; if it's the set,
+  it becomes one option at R40.
+- Blurb (approved word for word): "Beaded bracelets spelling out Souper, Trooper, Dignity, Love and
+  Respect." No description until Shan sends details. `order: 4`.
+- Photo: a 1500px square crop of `DSC_7515` (all five), tight on the bracelets - the first, looser
+  crop left them small in both the tile and the page. The other two shots are wide and unused.
+- Written by a `sanity exec` script (not kept); ⚠ it must run from inside `studio/`, since the
+  script imports `sanity/cli` and a script in the scratchpad can't resolve it. The dev server
+  needed the `[slug].astro` file touched before `/shop/bracelets/` stopped 404ing - its route list
+  was built before the category existed.
+- **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
+  across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.
+
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
 ⚠ **Switched off 2026-09-25 by design brief phase 2, then dropped for good the same day** (the
 brief's tint bullet): the class and its CSS are gone. See "The tint: dark, held to the text side".

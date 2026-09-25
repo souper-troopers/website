@@ -42,7 +42,9 @@ const categories = await getProductCategories();
 	</section>
 
 	<section class="section wrap">
-		<div class="grid grid-3">
+		{/* Two by two (25 September, when Bracelets made four categories): three across left the
+		    fourth alone on a row, and four across made each tile too narrow for its photo and blurb. */}
+		<div class="grid grid-2 category-grid">
 			{categories.map((category) => (
 				<a class="card card-cta category-tile" href={`/shop/${category.slug}`}>
 					{category.photo && (
@@ -55,8 +57,8 @@ const categories = await getProductCategories();
 							    Gift Tags composites. */}
 							<img
 								src={urlFor(category.photo).width(800).auto("format").url()}
-								srcset={`${urlFor(category.photo).width(400).auto("format").url()} 400w, ${urlFor(category.photo).width(800).auto("format").url()} 800w`}
-								sizes="(max-width: 700px) 100vw, 360px"
+								srcset={`${urlFor(category.photo).width(400).auto("format").url()} 400w, ${urlFor(category.photo).width(800).auto("format").url()} 800w, ${urlFor(category.photo).width(1200).auto("format").url()} 1200w`}
+								sizes="(max-width: 700px) 100vw, 540px"
 								alt={category.name}
 								width="800"
 								height="600"
@@ -95,3 +97,12 @@ const categories = await getProductCategories();
 		</div>
 	</section>
 </Layout>
+
+<style>
+	/* Two by two from 701px: .grid-2's auto-fit would fit three tracks at 1280 and strand the fourth. */
+	@media (min-width: 701px) {
+		.category-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+</style>

@@ -110,10 +110,11 @@ const heroLqip =
 		<div class="section-intro gi-intro">
 			<h2>How to get involved</h2>
 		</div>
-		{/* Three equal white cards with a teal top rule (design brief phase 2): the solid-teal Donate
-		    tile and the two pale-teal ones were two of the site's ten card styles. Whole-card links; the
-		    hero's Donate button stays the page's one filled button. No eyebrow labels (removed
-		    2026-09-25): two cards had one and Donate didn't, so the titles sat at different heights. */}
+		{/* Three equal plain white cards, the site's one card style (design brief phase 2). They
+		    replaced a solid-teal Donate tile and two pale-teal ones; a 4px teal top rule they had at
+		    first went on 25 September. Whole-card links; the hero's Donate button stays the page's one
+		    filled button. No eyebrow labels (removed 2026-09-25): two cards had one and Donate didn't,
+		    so the titles sat at different heights. */}
 		<div class="grid grid-3 ways-grid">
 			<a href="/donate" class="card way-card">
 				<h3>Donate</h3>
@@ -269,9 +270,9 @@ const heroLqip =
 		font-size: clamp(2rem, 4.5vw, 2.8rem);
 	}
 
-	/* White card, teal top rule - the Donate page's EFT card shape. */
+	/* The site's one card style: plain white, no top rule (the 4px teal rule was removed on
+	   25 September). Whole-card links, so they carry their own text colour. */
 	.card.way-card {
-		border-top: 4px solid var(--st-teal);
 		color: var(--st-ink);
 		text-decoration: none;
 		gap: var(--space-2);

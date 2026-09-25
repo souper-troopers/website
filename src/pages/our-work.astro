@@ -327,10 +327,16 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		letter-spacing: -0.02em;
 	}
 
+	/* The outline: a stroke painted *under* a fill in the stage's own ink. The system font builds
+	   some letters from overlapping shapes (the A's crossbar and apex), and a bare stroke outlines
+	   every one of them, so the A showed its seams inside the letter (fixed 25 September). With
+	   the fill on top, those inner lines are covered and only the outer edge shows. The stroke is
+	   doubled to 4px because the fill covers its inner half, leaving the same 2px outline. */
 	.cast2-outline {
 		display: block;
-		color: transparent;
-		-webkit-text-stroke: 2px var(--c);
+		color: var(--st-ink);
+		-webkit-text-stroke: 4px var(--c);
+		paint-order: stroke fill;
 		transform-origin: 50% 60%;
 	}
 

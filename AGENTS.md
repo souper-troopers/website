@@ -1507,6 +1507,11 @@ the final design**. That brief is with Brad's designer friend (2 September minut
   - **Per-letter spacing before the tail** is `--kern` on each step, in the tail's own ems so it
     scales: the A and S need a little more room (+4px at 1280), the T's crossbar needs the tail tucked
     under it (-4px).
+- ⚠ **The outline is a 4px stroke painted under an ink fill** (`paint-order: stroke fill`), not a bare
+  2px stroke on transparent text (fixed 2026-09-25). The system font builds the A from overlapping
+  shapes, and a bare stroke outlined each one, so the unfilled A showed seams at its apex and
+  crossbar. The ink fill covers the inner half of the stroke and every inner seam. If the stage
+  background ever changes colour, change the outline's `color` with it.
 - ⚠ **The line runs under the letters, never through them.** Straight through their middles it showed
   through the letters' counters (the C's gap, the A's triangle) and read as a strike-through. The path
   is computed at runtime from where the letters actually are, so one script serves the row and the

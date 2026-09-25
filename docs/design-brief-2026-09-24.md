@@ -130,6 +130,14 @@ partnership each end on a closing CTA row although Donate / Shop is in the heade
   `.btn-outline` for a secondary beside it, `.btn-outline-teal` for a group of equal actions. The
   white hero pill becomes `.btn-primary`; "See how" becomes `.btn-outline` on a light tint.
 - **Section chips go, everywhere.** The heading says it.
+- **The nav's "Shop" link goes (decided 25 September).** "Shop" is in the header three times: the nav
+  link, the right half of the Donate / Shop pill, and the cart icon. The pill is the one the
+  2 September review asked for, and on phones the nav link is behind the hamburger anyway, so
+  nothing visible is lost there. The nav becomes Home, Who We Are, Our Work, Get Involved, Contact.
+  Give the pill's Shop half an `aria-current="page"` treatment on `/shop` routes, since the nav
+  underline was the only current-page marker. Leave the cart icon exactly as it is: it is state, not
+  navigation, and hiding it when empty would move the header. Re-measure the header at 761–1085px
+  afterwards; this is the first width the row has gained, and it should narrow the wrap band.
 - **Closing CTA rows go** on pages where Donate / Shop is in the header, which is all of them. A page
   ends on its last section and the footer.
 - Success stories: one shape (Our Work's white card with the teal-rule quote), used on both pages.

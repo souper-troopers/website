@@ -1471,6 +1471,201 @@ const structuredData = {
 				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 			}
 
+			/* Card actions (decided 25 September): one motif for every card that *navigates*. The card
+			   is the link; a teal wedge rises from its foot and the label sits over it, right-aligned,
+			   with an arrow (src/components/CardCtaLabel.astro). On hover the wedge climbs and deepens
+			   and the arrow slides. Cards that *act* - Add to cart, donate buttons, FAQ chevrons,
+			   .card-more - don't use it.
+			   The wedge is a ::after at z-index -1 inside an isolated card, so it paints over the
+			   card's white but under every word: a paragraph that runs close to the foot is never
+			   tinted over. */
+			.card-cta {
+				position: relative;
+				isolation: isolate;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+				color: var(--st-ink);
+				text-decoration: none;
+				/* A hairline edge as well as the card shadow: with a tinted foot, the soft shadow alone
+				   left the bottom of the card with no edge against the page. */
+				box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
+			}
+
+			.card-cta::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: -1;
+				height: 96px;
+				/* --st-teal-light, kept faint: a quiet tone rather than a loud one (revised 25 September,
+				   from the brand teal at 0.14). A gentler slope too: 20% of the wedge's height across
+				   the card, down from 40%. The right edge stays put, so the label's clearance doesn't change. */
+				background: rgba(141, 213, 223, 0.2);
+				clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+				pointer-events: none;
+				transition: clip-path 0.25s ease, background-color 0.25s ease;
+			}
+
+			.card-cta:hover::after {
+				background: rgba(141, 213, 223, 0.32);
+				clip-path: polygon(0 46%, 100% 26%, 100% 100%, 0 100%);
+			}
+
+			.card-cta:focus-visible {
+				outline: 3px solid var(--st-teal);
+				outline-offset: 3px;
+			}
+
+			.card-cta-label {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4em;
+				align-self: flex-end;
+				margin-top: auto;
+				/* A guaranteed 24px above the label, so whatever sits above it (a headline, a
+				   paragraph) always ends above the wedge's top edge - without it, short cards on
+				   phones ran their last line into the wedge. Padding rather than margin, because
+				   margin-top is already auto. */
+				padding-top: var(--space-6);
+				/* Nudged 8px into the card's bottom padding, so there is more room between the wedge's
+				   top edge and the words (asked for 25 September). */
+				margin-bottom: -8px;
+				color: var(--st-ink);
+				font-weight: 700;
+				text-decoration: none;
+			}
+
+			.card-cta-arrow {
+				flex-shrink: 0;
+				fill: none;
+				stroke: currentColor;
+				stroke-width: 2.2;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+				transition: transform 0.25s ease;
+			}
+
+			.card-cta:hover .card-cta-arrow {
+				transform: translateX(4px);
+			}
+
+			/* A card that can't itself be a link (it holds a form, or a "More" toggle) keeps the wedge,
+			   but only its own action - the label, a button or a link - moves it: hovering the rest of
+			   the card does nothing, as clicking it does nothing. */
+			.card-cta:not(a):hover::after {
+				background: rgba(141, 213, 223, 0.2);
+				clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+			}
+
+			.card-cta:not(a):hover .card-cta-arrow {
+				transform: none;
+			}
+
+			.card-cta:not(a):has(.card-cta-action:hover, .card-cta-action:focus-visible)::after {
+				background: rgba(141, 213, 223, 0.32);
+				clip-path: polygon(0 46%, 100% 26%, 100% 100%, 0 100%);
+			}
+
+			.card-cta .card-cta-action:hover .card-cta-arrow,
+			.card-cta .card-cta-action:focus-visible .card-cta-arrow {
+				transform: translateX(4px);
+			}
+
+			/* The action keeps its 24px above as the previous element's margin rather than its own
+			   padding, so its focus ring and hit area stay the size of the words - and its own
+			   margin-top stays auto, which is what holds it at the card's foot. */
+			.card-cta :has(+ .card-cta-action) {
+				margin-bottom: var(--space-6);
+			}
+
+			.card-cta-action {
+				padding: 0;
+				color: var(--st-ink);
+				text-decoration: none;
+			}
+
+			.card-cta-button {
+				border: 0;
+				background: none;
+				font: inherit;
+				font-weight: 700;
+				cursor: pointer;
+			}
+
+			.card-cta-action:focus-visible {
+				outline: 3px solid var(--st-teal);
+				outline-offset: 3px;
+				border-radius: 4px;
+			}
+
+			/* Wide cards (the Woolworths card, the shop's fulfilment card): the wedge at a fixed *angle*
+			   rather than .card-cta's percentages, which are relative to the card and go nearly flat on
+			   a card several times wider than its neighbours. A band tilted by --wedge-angle about the
+			   bottom-right corner, 60px tall at the right edge like every other wedge; the overflow
+			   clips the rest, so on a very wide card it starts partway across. Set --wedge-angle to the
+			   slope of the cards it sits with (about 5.5deg beside the partner cards, 3.3deg beside
+			   the shop tiles, at laptop width). Hover lifts it by the same 12px as the clip-path
+			   wedge. */
+			.card-cta.card-cta-wide::after,
+			.card-cta.card-cta-wide:not(a):hover::after {
+				height: 100px;
+				bottom: -40px;
+				clip-path: none;
+				transform: skewY(calc(-1 * var(--wedge-angle, 5.5deg)));
+				transform-origin: 100% 100%;
+				transition: transform 0.25s ease, background-color 0.25s ease;
+			}
+
+			a.card-cta.card-cta-wide:hover::after,
+			.card-cta.card-cta-wide:not(a):has(.card-cta-action:hover, .card-cta-action:focus-visible)::after {
+				clip-path: none;
+				transform: translateY(-12px) skewY(calc(-1 * var(--wedge-angle, 5.5deg)));
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.card-cta.card-cta-wide::after {
+					transition: none;
+				}
+
+				a.card-cta.card-cta-wide:hover::after,
+				.card-cta.card-cta-wide:not(a):has(.card-cta-action:hover, .card-cta-action:focus-visible)::after {
+					transform: skewY(calc(-1 * var(--wedge-angle, 5.5deg)));
+				}
+			}
+
+			/* On phones a plain .card has 16px of padding, so the label's 8px nudge left it 8px off the
+			   card's edge. 24px below keeps it 16px up, as on laptops. Pillars, shop tiles, the Get
+			   Involved audience cards and product cards carry their padding on an inner body instead, so they are left alone. */
+			@media (max-width: 700px) {
+				.card.card-cta:not(.pillar, .category-tile, .gi-card, .item-card) {
+					padding-bottom: var(--space-6);
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.card-cta::after,
+				.card-cta-arrow {
+					transition: none;
+				}
+
+				.card-cta:hover::after {
+					clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+				}
+
+				.card-cta:hover .card-cta-arrow,
+				.card-cta .card-cta-action:hover .card-cta-arrow,
+				.card-cta .card-cta-action:focus-visible .card-cta-arrow {
+					transform: none;
+				}
+
+				.card-cta:not(a):has(.card-cta-action:hover, .card-cta-action:focus-visible)::after {
+					clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+				}
+			}
+
 			.card[hidden] {
 				display: none;
 			}
@@ -1661,15 +1856,15 @@ const structuredData = {
 
 			/* A frame: no padding of its own, so the photo runs flush to the card's edges, and the body
 			   restores the padding the global .card rule would have given. */
-			/* Shop landing tiles - no card box since 2026-09-24, to match the product grid (Adrian on the
-			   21 September review: larger images, no card borders). The photo is the tile's only shape;
-			   name, blurb and link sit on the page beneath it. Whole-tile link. */
-			.category-tile {
-				text-decoration: none;
-				color: inherit;
-				display: flex;
-				flex-direction: column;
+			/* Shop landing tiles - the white card box is back since 25 September (it went on 2026-09-24),
+			   with the .card-cta wedge and "Shop" label: the three landing tiles only; the product grids
+			   inside each category stay cardless, per the 21 September review. The photo bleeds to the
+			   card's edges, as the homepage pillars do. Whole-card link. Doubled class because the
+			   ≤700px `.card { padding }` rule sits later at the same specificity. */
+			.card.category-tile {
 				gap: 0;
+				padding: 0;
+				align-items: stretch;
 			}
 
 			.blur-up {
@@ -1741,22 +1936,35 @@ const structuredData = {
 				animation: none;
 			}
 
-			/* A fixed 4:3 now that there is no card box to fill - the old "grow into the card's spare
-			   height" rule existed only to stop white showing under the link. The image is requested
-			   uncropped from Sanity, so object-fit cover decides the crop here. */
+			/* A fixed 4:3, flush to the card's top and sides (the card's own radius and overflow round
+			   it). The image is requested uncropped from Sanity, so object-fit cover decides the crop. */
 			.category-tile-img {
 				position: relative;
 				width: 100%;
 				aspect-ratio: 4 / 3;
-				border-radius: calc(var(--radius) - 6px);
 				overflow: hidden;
-				margin-bottom: var(--space-4);
 			}
 
 			.category-tile-img img {
 				position: absolute;
 				inset: 0;
 				transition: transform 0.3s ease, opacity 0.4s ease;
+			}
+
+			/* One shared "stage" behind every tile photo (25 September). The coffee and doll shots are on
+			   pure white and melted into the white card, while the gift tags are on a warm light grey
+			   with a visible edge. A wash in that grey, multiplied over the photo, turns white to
+			   #f3f2ef, barely moves the gift tags' own grey, and shifts product colours by ~5% - so all
+			   three end in the same soft edge above the white text. An overlay rather than a background
+			   under the <img>: the blur-up LQIP lives in that background, and multiplying onto it
+			   would double the image. */
+			.category-tile-img::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: #f3f2ef;
+				mix-blend-mode: multiply;
+				pointer-events: none;
 			}
 
 			.category-tile:hover .category-tile-img img {
@@ -1773,6 +1981,7 @@ const structuredData = {
 				display: flex;
 				flex-direction: column;
 				flex: 1;
+				padding: var(--space-6);
 			}
 
 			.category-tile h2 {
@@ -1780,25 +1989,11 @@ const structuredData = {
 				margin-bottom: var(--space-2);
 			}
 
+			/* No bottom margin: the .card-cta label brings its own 24px above it. */
 			.category-tile p {
 				color: rgba(36, 35, 43, 0.65);
 				font-size: 0.92rem;
-				margin-bottom: var(--space-3);
-			}
-
-			/* Ink and underlined, not teal-dark: off the white card, teal-dark on --st-bg is 4.28:1, under
-			   AA at this size. Matches the product names in the grid, which are ink and underlined. */
-			.category-tile-cta {
-				margin-top: auto;
-				font-weight: 700;
-				color: var(--st-ink);
-				text-decoration: underline;
-				text-underline-offset: 3px;
-				font-size: 0.95rem;
-			}
-
-			.category-tile:hover .category-tile-cta {
-				color: var(--st-teal-dark);
+				margin-bottom: 0;
 			}
 
 			.payment-method-header {
@@ -2239,19 +2434,6 @@ const structuredData = {
 				flex-wrap: wrap;
 			}
 
-			.hero-secondary-link {
-				display: inline-block;
-				margin-top: var(--space-5);
-				color: rgba(255, 255, 255, 0.92);
-				font-weight: 600;
-				font-size: 0.9rem;
-				text-decoration: underline;
-			}
-
-			.hero-secondary-link:hover {
-				color: var(--st-white);
-			}
-
 			.hero .btn-secondary {
 				background: rgba(255, 255, 255, 0.15);
 				color: var(--st-white);
@@ -2303,22 +2485,30 @@ const structuredData = {
 				}
 			}
 
-			/* Top-level inner pages: most of a laptop screen, words at the foot of the photo. */
+			/* Top-level inner pages: most of a laptop screen. Since 25 September the words are centred in
+			   the photo below the header (they sat low and tight at the foot): the header's clearance
+			   plus half a header's height above, and the same half below, so the content is exactly
+			   centred in the space under the header with breathing room either side. Half the
+			   *header height*, not half the clearance: in the 761-1045px wrap band the clearance is
+			   137-190px, and half of that again pushed the words far down. The extra 80px on top moves
+			   the words 40px below that centre - tried on About first and approved the same day ("the
+			   words sit too high"). */
 			.hero-photo.photo-hero--page {
 				display: flex;
 				flex-direction: column;
-				justify-content: flex-end;
+				justify-content: center;
 				min-height: max(360px, 56vh);
-				padding: calc(var(--space-12) + var(--hero-clearance)) 0 var(--space-12);
+				padding: calc(var(--hero-clearance) + var(--header-height) * 0.5 + 80px) 0 calc(var(--header-height) * 0.5);
 			}
 
-			/* Child and product pages: a slim strip with the parent's photo. */
+			/* Child and product pages: a slim strip with the parent's photo, words at its foot - with
+			   56px under them since 25 September (was 32), so they no longer sit tight on the edge. */
 			.hero-photo.photo-hero--band {
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-end;
 				min-height: calc(220px + var(--hero-clearance));
-				padding: calc(var(--space-8) + var(--hero-clearance)) 0 var(--space-8);
+				padding: calc(var(--space-8) + var(--hero-clearance)) 0 56px;
 			}
 
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
@@ -2328,7 +2518,13 @@ const structuredData = {
 			.photo-hero--band h1 {
 				font-size: clamp(2rem, 4vw, 2.8rem);
 				max-width: 24ch;
-				margin-bottom: var(--space-2);
+				margin-bottom: 28px;
+			}
+
+			/* Less on the slimmer band. (Both were 8px until 25 September - too tight; the page size
+			   went 18 -> 28px the same day, after the About trial.) */
+			.photo-hero--band h1 {
+				margin-bottom: 14px;
 			}
 
 			.photo-hero--page p,
@@ -2340,12 +2536,12 @@ const structuredData = {
 			@media (max-width: 760px) {
 				.hero-photo.photo-hero--page {
 					min-height: max(300px, 45svh);
-					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-8);
+					padding: calc(var(--header-height) * 1.5 + 80px) 0 calc(var(--header-height) * 0.5);
 				}
 
 				.hero-photo.photo-hero--band {
 					min-height: calc(180px + var(--header-height));
-					padding: calc(var(--space-6) + var(--header-height)) 0 var(--space-6);
+					padding: calc(var(--space-6) + var(--header-height)) 0 56px;
 				}
 			}
 

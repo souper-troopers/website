@@ -7,6 +7,7 @@ import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import PhotoHero from "../components/PhotoHero.astro";
 import StoryVideo from "../components/StoryVideo.astro";
+import CardCtaLabel from "../components/CardCtaLabel.astro";
 import { getImpactStats, getFeaturedSuccessStories, getTeamMembers, urlFor } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
@@ -78,14 +79,15 @@ const heroLqip =
 	    measured LCP P90/P99 at 3,636ms when it was lazy). */}
 	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip}>
 		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
-		<p>
-			The Humanity Hub is where Souper Troopers helps people move from crisis to dignity -
-			through the CAST programme and a community that meets people halfway.
-		</p>
+		{/* Cut at the dash on 25 September (no rewording): CAST and "meets people halfway" are said by the
+		    pillar cards just below. The "Or see how else you can help" link went the same day - the
+		    "How to get involved" cards are one scroll away. The Donate button stays: the mobile
+		    header's Donate appears only once it has scrolled away. The headline's middle sentence is
+		    a question for Kerry (q37 on the status page) - don't change it until she answers. */}
+		<p>The Humanity Hub is where Souper Troopers helps people move from crisis to dignity.</p>
 		<div class="actions">
 			<a class="btn btn-primary" href="/donate">Donate now</a>
 		</div>
-		<a href="#get-involved" class="hero-secondary-link">Or see how else you can help &darr;</a>
 	</PhotoHero>
 
 	{/* The CAST section and the shop band were folded into these cards on 2026-09-24 (the draft for
@@ -95,7 +97,7 @@ const heroLqip =
 		<h2 class="visually-hidden">What we do</h2>
 		<div class="pillar-grid">
 			{pillars.map((p) => (
-				<a class="card pillar" href={p.href}>
+				<a class="card card-cta pillar" href={p.href}>
 					<div class="pillar-img shimmer-up">
 						<Image
 							src={p.photo}
@@ -109,7 +111,7 @@ const heroLqip =
 					<div class="pillar-body">
 						<h3>{p.title}</h3>
 						<p>{p.text}</p>
-						<span class="pillar-cta">{p.cta} &rarr;</span>
+						<CardCtaLabel>{p.cta}</CardCtaLabel>
 					</div>
 				</a>
 			))}
@@ -129,7 +131,7 @@ const heroLqip =
 		    filled button. No eyebrow labels (removed 2026-09-25): two cards had one and Donate didn't,
 		    so the titles sat at different heights. */}
 		<div class="grid grid-3 ways-grid">
-			<a href="/donate" class="card way-card">
+			<a href="/donate" class="card card-cta way-card">
 				<h3>Donate</h3>
 				{leadStat && (
 					<p class="way-fact">{leadStat.value?.toLocaleString("en-US")}{leadStat.suffix}</p>
@@ -138,17 +140,17 @@ const heroLqip =
 					people supported since 2014 - your donation funds the next one, from a first
 					conversation to a job.
 				</p>
-				<span class="way-cta">Donate now &rarr;</span>
+				<CardCtaLabel>Donate now</CardCtaLabel>
 			</a>
-			<a href="/get-involved#individuals" class="card way-card">
+			<a href="/get-involved#individuals" class="card card-cta way-card">
 				<h3>Volunteer</h3>
 				<p>Give time, skills, or goods. Both make the Humanity Hub run.</p>
-				<span class="way-cta">Get involved &rarr;</span>
+				<CardCtaLabel>Get involved</CardCtaLabel>
 			</a>
-			<a href="/get-involved#businesses" class="card way-card">
+			<a href="/get-involved#businesses" class="card card-cta way-card">
 				<h3>Partner with us</h3>
 				<p>Corporate giving, B-BBEE points, and sponsorship with measurable impact.</p>
-				<span class="way-cta">Partner with us &rarr;</span>
+				<CardCtaLabel>Partner with us</CardCtaLabel>
 			</a>
 		</div>
 	</section>
@@ -242,16 +244,9 @@ const heroLqip =
 		margin-bottom: var(--space-2);
 	}
 
+	/* No bottom margin: the .card-cta label brings its own 24px above it. */
 	.pillar-body p {
-		margin-bottom: var(--space-5);
-	}
-
-	/* The whole card is the link; this is its visible label, underlined like every link here. */
-	.pillar-cta {
-		margin-top: auto;
-		font-weight: 700;
-		color: var(--st-teal-dark);
-		text-decoration: underline;
+		margin-bottom: 0;
 	}
 
 	@media (max-width: 900px) and (min-width: 561px) {
@@ -328,15 +323,9 @@ const heroLqip =
 	}
 
 	.way-card p {
-		margin-bottom: var(--space-3);
+		margin-bottom: 0;
 	}
 
-	.way-cta {
-		margin-top: auto;
-		font-weight: 700;
-		color: var(--st-teal-dark);
-		text-decoration: underline;
-	}
 
 	/* The featured quote: portrait left, words right from 761px; stacked below with a smaller
 	   portrait on top. No card box - the quote is the shape. */

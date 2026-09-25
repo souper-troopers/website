@@ -1,0 +1,216 @@
+---
+/**
+ * A card that turns over (25 September): something to recognise on the front, the explanation on
+ * the back, turned by a text label in the corner over the site's .card-cta wedge. Used for the
+ * partner wall on Who We Are and the B-BBEE scorecard cards on Get Involved.
+ *
+ * - Both faces share one grid cell, so the card is as tall as its taller face and turning it never
+ *   moves anything around it. Put it in a grid with `grid-auto-rows: 1fr` for an even wall.
+ * - Both faces stay in the page, so search reads every word. The back is `inert` while it faces
+ *   away; the button carries `aria-expanded`. The button ships `hidden` and the script unhides it,
+ *   so without JavaScript nobody meets a control that does nothing.
+ * - The button sits outside both faces, so it is on top either way and a link on the back never
+ *   nests inside a control.
+ * - Reduced motion: the back fades in, no rotation.
+ *
+ * Slots: `front` and `back` (use <Fragment slot="...">). The page styles what it puts in them.
+ */
+interface Props {
+	/** Unique on the page - the back face's id, which the button controls. */
+	id: string;
+	/** The front label, e.g. "How they help". The back always reads "Back". */
+	label: string;
+	/** Who or what the card is about, for screen readers: "How they help - Boldr". */
+	name: string;
+	/** `li` inside a list, `div` otherwise. */
+	as?: "li" | "div";
+}
+
+const { id, label, name, as: Tag = "div" } = Astro.props;
+---
+
+<Tag class="flip-card">
+	<div class="flip-inner">
+		<div class="flip-face flip-front"><slot name="front" /></div>
+		<div class="flip-face flip-back" id={id}><slot name="back" /></div>
+	</div>
+	<button class="flip-btn" type="button" aria-expanded="false" aria-controls={id} hidden>
+		<span class="flip-label-front">{label}</span><span class="flip-label-back">Back</span><span class="visually-hidden"> - {name}</span>
+		<svg class="card-cta-arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+	</button>
+</Tag>
+
+<script>
+	for (const card of document.querySelectorAll<HTMLElement>(".flip-card")) {
+		const button = card.querySelector<HTMLButtonElement>(".flip-btn");
+		const back = card.querySelector<HTMLElement>(".flip-back");
+		if (!button || !back || !button.hidden) continue;
+		back.inert = true;
+		button.hidden = false;
+		button.addEventListener("click", () => {
+			const flipped = card.classList.toggle("is-flipped");
+			button.setAttribute("aria-expanded", String(flipped));
+			back.inert = !flipped;
+		});
+	}
+</script>
+
+<style>
+	.flip-card {
+		position: relative;
+		perspective: 900px;
+		list-style: none;
+	}
+
+	.flip-inner {
+		display: grid;
+		height: 100%;
+		transform-style: preserve-3d;
+		transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.flip-card.is-flipped .flip-inner {
+		transform: rotateY(180deg);
+	}
+
+	.flip-face {
+		grid-area: 1 / 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		/* The bottom padding keeps words clear of the wedge and the label over it. */
+		padding: var(--space-4) var(--space-3) 64px;
+		border-radius: var(--radius);
+		background: var(--st-white);
+		/* The .card-cta edge and shadow, so the card holds its outline on the light page ground
+		   (invisible, and harmless, on Who We Are's dark band). */
+		box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
+		color: var(--st-ink);
+		text-align: center;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	.flip-back {
+		transform: rotateY(180deg);
+		font-size: 0.88rem;
+	}
+
+	/* The site's .card-cta wedge on each face - same shape and tint as Layout.astro's, kept in step
+	   by hand, since a face is not a .card-cta itself. */
+	.flip-face::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -1;
+		height: 96px;
+		background: rgba(141, 213, 223, 0.2);
+		clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+		pointer-events: none;
+		transition: clip-path 0.25s ease, background-color 0.25s ease;
+	}
+
+	.flip-card:has(.flip-btn:hover, .flip-btn:focus-visible) .flip-face::after {
+		background: rgba(141, 213, 223, 0.32);
+		clip-path: polygon(0 46%, 100% 26%, 100% 100%, 0 100%);
+	}
+
+	.flip-btn {
+		position: absolute;
+		right: var(--space-3);
+		bottom: var(--space-3);
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35em;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--st-ink);
+		font: inherit;
+		font-size: 0.88rem;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.flip-btn[hidden] {
+		display: none;
+	}
+
+	.flip-btn:focus-visible {
+		outline: 3px solid var(--st-teal);
+		outline-offset: 3px;
+		border-radius: 4px;
+	}
+
+	.flip-btn .card-cta-arrow {
+		width: 16px;
+		height: 16px;
+	}
+
+	.flip-btn:hover .card-cta-arrow,
+	.flip-btn:focus-visible .card-cta-arrow {
+		transform: translateX(4px);
+	}
+
+	.flip-card.is-flipped .flip-btn .card-cta-arrow {
+		transform: rotate(180deg);
+	}
+
+	.flip-card.is-flipped .flip-btn:hover .card-cta-arrow,
+	.flip-card.is-flipped .flip-btn:focus-visible .card-cta-arrow {
+		transform: rotate(180deg) translateX(4px);
+	}
+
+	.flip-label-back,
+	.flip-card.is-flipped .flip-label-front {
+		display: none;
+	}
+
+	.flip-card.is-flipped .flip-label-back {
+		display: inline;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.flip-inner,
+		.flip-card.is-flipped .flip-inner {
+			transform: none;
+			transition: none;
+		}
+
+		.flip-back {
+			transform: none;
+			opacity: 0;
+			transition: opacity 0.2s ease;
+		}
+
+		.flip-card.is-flipped .flip-back {
+			opacity: 1;
+		}
+
+		.flip-face::after {
+			transition: none;
+		}
+
+		.flip-card:has(.flip-btn:hover, .flip-btn:focus-visible) .flip-face::after {
+			clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%);
+		}
+
+		.flip-btn:hover .card-cta-arrow,
+		.flip-btn:focus-visible .card-cta-arrow {
+			transform: none;
+		}
+
+		.flip-card.is-flipped .flip-btn:hover .card-cta-arrow,
+		.flip-card.is-flipped .flip-btn:focus-visible .card-cta-arrow {
+			transform: rotate(180deg);
+		}
+	}
+</style>

@@ -147,8 +147,10 @@ const faqItems: FaqItem[] = [
 		</div>
 	</section>
 
-	{/* A plain section, not a card, on the same column as the questions above: its heading shares
-	    their left edge, and the fields keep the form's comfortable 480px. */}
+	{/* A plain section, not a card, on the same column as the questions above. Since 25 September the
+	    form is as wide as that column too (it was 480px): name and email side by side, the message
+	    full width beneath - so no single-line field is stretched to 736px, which would suggest far
+	    more to type than a name. */}
 	<section class="section wrap">
 		<div class="message-column">
 			<div class="card-heading">
@@ -162,12 +164,12 @@ const faqItems: FaqItem[] = [
 				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
 			</label>
 
-			<label>
+			<label class="field-half">
 				Your name
 				<input type="text" name="name" required />
 			</label>
 
-			<label>
+			<label class="field-half">
 				Your email
 				<input type="email" name="email" required />
 			</label>
@@ -269,9 +271,23 @@ const faqItems: FaqItem[] = [
 		margin: 0 auto;
 	}
 	
-	/* The global form is a centred 480px block; here it keeps the width and starts at the column's edge. */
+	/* The global form is a centred 480px block; here it fills the column, so its edges match the
+	   questions above: two columns, with name and email sharing the first row and everything else
+	   (message, button, error note) spanning both. One column on phones. */
 	.message-column .contact-form {
+		max-width: none;
 		margin: 0;
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	@media (min-width: 561px) {
+		.message-column .contact-form {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.message-column .contact-form > :not(.field-half) {
+			grid-column: 1 / -1;
+		}
 	}
 	
 	.faq-column {

@@ -1,4 +1,6 @@
 ---
+import FlipCard from "../components/FlipCard.astro";
+import CardCtaLabel from "../components/CardCtaLabel.astro";
 import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
 import stallPhoto from "../assets/images/stall-kerry.jpg";
@@ -53,7 +55,7 @@ const goodsCategories = [
 	    card, body, so on a phone the content opens right under its card and the heading outline stays
 	    h2 > h3. No JavaScript needed to open or close; the script below only handles anchors. */}
 	<section class="section wrap gi-groups">
-		<div class="card gi-card" id="individuals-band">
+		<div class="card card-cta gi-card" id="individuals-band">
 			<details class="gi-group-box" id="gi-individuals">
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
@@ -75,11 +77,11 @@ const goodsCategories = [
 			<div class="gi-card-text">
 				<p>Give time, goods or money - and every route starts with something you already have.</p>
 				<nav class="gi-routes" aria-label="Ways to help, person to person">
-					<a href="/donate">Donate money</a>
-					<a href="/get-involved/donate-goods/">Donate goods</a>
-					<a href="/get-involved/volunteer/">Volunteer</a>
-					<a href="/shop">Buy products</a>
-					<a href="#fundraise">Fundraise for us</a>
+					<a class="card-cta-action" href="/donate">Donate money</a>
+					<a class="card-cta-action" href="/get-involved/donate-goods/">Donate goods</a>
+					<a class="card-cta-action" href="/get-involved/volunteer/">Volunteer</a>
+					<a class="card-cta-action" href="/shop">Shop</a>
+					<a class="card-cta-action" href="#fundraise">Fundraise</a>
 				</nav>
 			</div>
 		</div>
@@ -90,25 +92,25 @@ const goodsCategories = [
 			<h3>Ways to help, person to person</h3>
 		</div>
 		<div class="grid grid-3 action-grid">
-			<a class="card action-card" href="/donate">
+			<a class="card card-cta action-card" href="/donate">
 				<h3>Donate money</h3>
 				<p>Fund the CAST programme directly - from a first conversation to a first pay cheque.</p>
-				<span class="action-cta">Donate &rarr;</span>
+				<CardCtaLabel>Donate</CardCtaLabel>
 			</a>
-			<a class="card action-card" href="#goods">
+			<a class="card card-cta action-card" href="#goods">
 				<h3>Donate goods</h3>
 				<p>Food, toiletries, clothing, bedding, and more. Drop-offs welcome at the Humanity Hub.</p>
-				<span class="action-cta">See what we need &rarr;</span>
+				<CardCtaLabel>See what we need</CardCtaLabel>
 			</a>
-			<a class="card action-card" href="/get-involved/volunteer">
+			<a class="card card-cta action-card" href="/get-involved/volunteer">
 				<h3>Volunteer</h3>
 				<p>Sort donations, help run the Hub, or teach a skill. Individuals and groups, one-off or regular.</p>
-				<span class="action-cta">What volunteers do &rarr;</span>
+				<CardCtaLabel>What volunteers do</CardCtaLabel>
 			</a>
-			<a class="card action-card" href="/shop">
+			<a class="card card-cta action-card" href="/shop">
 				<h3>Buy products</h3>
 				<p>Troopers Coffee and African Worry Dolls&trade; - every order funds a job.</p>
-				<span class="action-cta">Visit the shop &rarr;</span>
+				<CardCtaLabel>Visit the shop</CardCtaLabel>
 			</a>
 			<!-- MySchool no longer exists: Woolworths merged it into MyDifference and stopped accepting
 			     MySchool cards on 30 June 2026 (confirmed by Shan, 2026-08-25). The card previously here
@@ -116,15 +118,15 @@ const goodsCategories = [
 			     at the till rather than producing a complaint anyone can act on. Linked to Woolworths'
 			     own MyDifference page rather than to a sign-up that names Souper Troopers, because no
 			     such link has been confirmed to exist yet; the wording promises a search, not one tap. -->
-			<a class="card action-card" href="https://www.woolworths.co.za/mydifference" target="_blank" rel="noopener">
+			<a class="card card-cta action-card" href="https://www.woolworths.co.za/mydifference" target="_blank" rel="noopener">
 				<h3>Choose us on Woolworths MyDifference</h3>
 				<p>Pick Souper Troopers as one of your causes in the Woolies app, and a share of what you already spend comes to us - at no cost to you.</p>
-				<span class="action-cta">How it works &rarr;</span>
+				<CardCtaLabel>How it works</CardCtaLabel>
 			</a>
-			<a class="card action-card" href="#fundraise">
+			<a class="card card-cta action-card" href="#fundraise">
 				<h3>Fundraise for us</h3>
 				<p>Turn a birthday, a race, or a workplace challenge into support for the Hub.</p>
-				<span class="action-cta">See how &rarr;</span>
+				<CardCtaLabel>See how</CardCtaLabel>
 			</a>
 		</div>
 	</section>
@@ -188,7 +190,7 @@ const goodsCategories = [
 	</section>
 
 		</div>
-		<div class="card gi-card" id="businesses-band">
+		<div class="card card-cta gi-card" id="businesses-band">
 			<details class="gi-group-box" id="gi-businesses">
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
@@ -210,9 +212,9 @@ const goodsCategories = [
 			<div class="gi-card-text">
 				<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
 				<nav class="gi-routes" aria-label="Ways to work with us">
-					<a href="/get-involved/corporate-partnership/">Corporate partnership</a>
-					<a href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Corporate workshops</a>
-					<a href="/shop">Coffee for your workplace</a>
+					<a class="card-cta-action" href="/get-involved/corporate-partnership/">Partnership</a>
+					<a class="card-cta-action" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Workshops</a>
+					<a class="card-cta-action" href="/shop">Coffee</a>
 				</nav>
 			</div>
 		</div>
@@ -247,7 +249,7 @@ const goodsCategories = [
 				anyway - the difference is where the money goes afterwards.
 			</p>
 		<div class="grid grid-2">
-			<a class="card action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
+			<a class="card card-cta action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
 				<h3>Corporate workshops</h3>
 				{/* Trimmed from 74 words on 2026-09-13. The full version - what a workshop covers and
 				    exactly what it funds - is on /get-involved/corporate-partnership/, linked from the
@@ -257,15 +259,15 @@ const goodsCategories = [
 					counsellor on our staff. Voltalia hosted one recently, and every workshop funds the work
 					at the Humanity Hub.
 				</p>
-				<span class="action-cta">Enquire about a workshop &rarr;</span>
+				<CardCtaLabel>Enquire about a workshop</CardCtaLabel>
 			</a>
-			<a class="card action-card" href="/shop">
+			<a class="card card-cta action-card" href="/shop">
 				<h3>Coffee for your workplace</h3>
 				<p>
 					Our Dignity Blend as a standing order for your office or guesthouse. It pays the Souper
 					Squad who pack it, and counts as preferential procurement on your B-BBEE scorecard.
 				</p>
-				<span class="action-cta">See the coffee &rarr;</span>
+				<CardCtaLabel>See the coffee</CardCtaLabel>
 			</a>
 		</div>
 	</section>
@@ -279,20 +281,30 @@ const goodsCategories = [
 					Souper Troopers is a B-BBEE Level 1 contributor and a registered PBO, so working with us
 					is measurable on both your scorecard and your tax return.
 				</p>
-			<div class="grid grid-4">
-				{bbbeeBenefits.map((benefit) => (
-					<div class="card">
-						{benefit.value && <span class="benefit-value">{benefit.value}</span>}
-						<h3>{benefit.title}</h3>
-						{benefit.body && (
-							<details class="card-more">
-								<summary><span class="card-more-show">How it counts</span><span class="card-more-hide">Less</span><span class="visually-hidden"> - {benefit.title}</span></summary>
-								<div><p>{benefit.body}</p></div>
-							</details>
-						)}
-					</div>
+			{/* Flip cards, like the partner wall on Who We Are (25 September): the figure and title on
+			    the front, how it counts on the back, turned by "How it counts" over the wedge. Was a
+			    "How it counts" <details> that grew one card and pushed the row down. */}
+			<ul class="benefit-grid">
+				{bbbeeBenefits.map((benefit, i) => (
+					benefit.body ? (
+						<FlipCard as="li" id={`benefit-back-${i}`} label="How it counts" name={benefit.title}>
+							<Fragment slot="front">
+								{benefit.value && <span class="benefit-value">{benefit.value}</span>}
+								<h3 class="benefit-title">{benefit.title}</h3>
+							</Fragment>
+							<Fragment slot="back">
+								<p class="benefit-back-title" aria-hidden="true">{benefit.title}</p>
+								<p class="benefit-body">{benefit.body}</p>
+							</Fragment>
+						</FlipCard>
+					) : (
+						<li class="card benefit-plain">
+							{benefit.value && <span class="benefit-value">{benefit.value}</span>}
+							<h3 class="benefit-title">{benefit.title}</h3>
+						</li>
+					)
 				))}
-			</div>
+			</ul>
 			{(settings?.bbbeeNote || bbbeeVerified) && (
 				<p class="benefit-note">
 					{settings?.bbbeeNote}
@@ -453,9 +465,10 @@ const goodsCategories = [
 
 	.gi-card-text {
 		display: flex;
+		flex: 1;
 		flex-direction: column;
 		gap: var(--space-3);
-		padding: var(--space-3) var(--space-6) var(--space-6);
+		padding: var(--space-3) var(--space-6) var(--space-4);
 	}
 
 	.gi-card-text p {
@@ -587,11 +600,32 @@ const goodsCategories = [
 		}
 	}
 
+	/* The route links sit in the card's .card-cta footer (25 September), right-aligned over the
+	   wedge. Several links rather than one label, so no arrows (five would be clutter) and the
+	   underline stays as the link cue; ink, like every label on a wedge. Short labels so the row
+	   fits on one line on laptops - the nav's aria-label gives screen readers the context. */
 	.gi-routes {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-2) var(--space-5);
-		font-weight: 600;
+		justify-content: flex-end;
+		gap: var(--space-2) var(--space-3);
+		margin-top: auto;
+		padding-top: var(--space-6);
+		font-size: 0.92rem;
+		font-weight: 700;
+	}
+
+	/* Margins zeroed: the shared "24px above an action" rule would otherwise space each link off
+	   the next; the nav's own padding-top does that job for the row. */
+	.gi-routes a {
+		margin: 0;
+		color: var(--st-ink);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.gi-routes a:hover {
+		color: var(--st-teal-dark);
 	}
 
 	@media (min-width: 780px) {
@@ -626,21 +660,13 @@ const goodsCategories = [
 
 	.action-card:hover {
 		transform: translateY(-3px);
-		box-shadow: 0 18px 36px rgba(0, 0, 0, 0.09);
+		/* The hairline edge stays with the lifted shadow (see .card-cta in Layout.astro). */
+		box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 18px 36px rgba(0, 0, 0, 0.09);
 	}
 
+	/* No bottom margin: the .card-cta label brings its own 24px above it. */
 	.action-card p {
-		margin-bottom: var(--space-4);
-	}
-
-	.action-cta {
-		margin-top: auto;
-		font-weight: 700;
-		color: var(--st-teal-dark);
-	}
-
-	.action-card:hover .action-cta {
-		text-decoration: underline;
+		margin-bottom: 0;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -663,6 +689,48 @@ const goodsCategories = [
 		background: var(--st-teal);
 		color: var(--st-white);
 		font-weight: 700;
+	}
+
+	/* Four across, two on tablets, one on phones (the backs carry up to 35 words); every row as tall
+	   as its tallest card, so the wall is even whichever side is showing. */
+	.benefit-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		grid-auto-rows: 1fr;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	@media (max-width: 900px) {
+		.benefit-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 560px) {
+		.benefit-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	.benefit-title {
+		margin: 0;
+		font-size: 1.05rem;
+		line-height: 1.3;
+	}
+
+	/* The title again on the back, so you know which card you're reading. aria-hidden: the front's
+	   h3 already names it. */
+	.benefit-back-title {
+		margin: 0;
+		font-weight: 700;
+	}
+
+	.benefit-body {
+		margin: 0;
+		color: rgba(36, 35, 43, 0.8);
 	}
 
 	/* Ink, not teal-dark — a static figure, not something you can act on. */

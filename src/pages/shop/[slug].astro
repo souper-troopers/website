@@ -6,6 +6,7 @@ import { PortableText } from "astro-portabletext";
 import { getProductCategories, getShopItems, shortProductName, urlFor } from "../../lib/sanity";
 import AttributeProduct from "../../components/AttributeProduct.svelte";
 import ItemCard from "../../components/ItemCard.svelte";
+import CardCtaLabel from "../../components/CardCtaLabel.astro";
 
 export async function getStaticPaths() {
 	const categories = await getProductCategories();
@@ -92,11 +93,20 @@ const jsonLd = attributeProductJsonLd
 		<p>{category.blurb}</p>
 	</PhotoHero>
 
+	{/* Items-mode categories (25 September): the description as a section intro at the site's 46rem
+	    measure, its first paragraph a lead in ink and the rest muted. Coffee (attributes mode) keeps
+	    the plain prose. */}
 	{category.description && (
 		<section class="section wrap">
-			<div class="prose">
-				<PortableText value={category.description} />
-			</div>
+			{category.displayMode === "items" ? (
+				<div class="section-intro category-intro">
+					<PortableText value={category.description} />
+				</div>
+			) : (
+				<div class="prose">
+					<PortableText value={category.description} />
+				</div>
+			)}
 		</section>
 	)}
 
@@ -112,11 +122,13 @@ const jsonLd = attributeProductJsonLd
 			/>
 		) : (
 			<>
+			{/* A centred statement above the grid (25 September; was a left-rule callout). Same words,
+			    split into a heading line and the line beneath. */}
 			{isDolls && (
-				<p class="handmade-note">
-					Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
-					exact doll you'll receive.
-				</p>
+				<div class="section-intro statement handmade-statement">
+					<h2>Every doll is handmade, so yours will be one of a kind.</h2>
+					<p>The photos show each style, not the exact doll you'll receive.</p>
+				</div>
 			)}
 			<div class="product-grid">
 				{items.map((item) => (
@@ -135,31 +147,34 @@ const jsonLd = attributeProductJsonLd
 					/>
 				))}
 			</div>
-			{/* Custom and wholesale share one box under the grid (2026-09-24). As a card inside the grid,
-			    "Custom dolls" sat alone on the last row once the products lost their card boxes, with
-			    the wholesale line trailing under it. Both are "talk to a person" routes, so they read
-			    as one thing, apart from the products. */}
-			{isDolls && (
-				<div class="dolls-orders">
-					<div>
-						<h3>Custom dolls</h3>
-						<p>
-							Your colours, a theme, or dolls for an event. Made to order in batches of 10 or more,
-							priced on request.
-						</p>
-						<a href={customHref}>Ask about a custom order &rarr;</a>
-					</div>
-					<div>
-						<h3>Wholesale</h3>
-						<p>
-							Buying for a shop or a corporate gift? Wholesale is by appointment - <a href={wholesaleHref}>email us</a> and we'll send prices.
-						</p>
-					</div>
-				</div>
-			)}
 			</>
 		)}
 	</section>
+
+	{/* Two white .card-cta cards under their own heading (25 September; they were one left-rule
+	    callout). Each is a whole-card mailto link with the subjects the callout used. */}
+	{isDolls && (
+		<section class="section wrap">
+			<div class="section-intro">
+				<h2>Custom orders and wholesale</h2>
+			</div>
+			<div class="orders-grid">
+				<a class="card card-cta" href={customHref}>
+					<h3>Custom dolls</h3>
+					<p>
+						Your colours, a theme, or dolls for an event. Made to order in batches of 10 or more,
+						priced on request.
+					</p>
+					<CardCtaLabel>Ask about a custom order</CardCtaLabel>
+				</a>
+				<a class="card card-cta" href={wholesaleHref}>
+					<h3>Wholesale</h3>
+					<p>Buying for a shop or a corporate gift? Wholesale is by appointment and we'll send prices.</p>
+					<CardCtaLabel>Email us for prices</CardCtaLabel>
+				</a>
+			</div>
+		</section>
+	)}
 </Layout>
 
 <style>
@@ -181,48 +196,46 @@ const jsonLd = attributeProductJsonLd
 		color: var(--st-teal);
 	}
 
-	.handmade-note {
-		margin: 0 0 var(--space-2);
-		padding: 0.75rem 1rem;
-		max-width: 60ch;
-		border-left: 3px solid var(--st-teal);
-		background: #fff;
-		border-radius: 0 8px 8px 0;
-		line-height: 1.55;
+	/* The category intro: the site's 46rem measure, the first paragraph a lead in ink. */
+	.category-intro {
+		max-width: 46rem;
+		gap: var(--space-3);
 	}
 
-	/* The site's one callout style - the handmade note's left rule (design brief phase 2; it was a
-	   dashed box). Two columns on a laptop, stacked below 700px. */
-	.dolls-orders {
+	.category-intro :global(p) {
+		max-width: none;
+		margin: 0;
+	}
+
+	.category-intro :global(p:first-child) {
+		font-size: 1.2rem;
+		line-height: 1.5;
+		color: var(--st-ink);
+	}
+
+	.handmade-statement {
+		margin-bottom: var(--space-8);
+	}
+
+	.orders-grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--space-8);
-		margin-top: var(--space-12);
-		padding: var(--space-5) var(--space-6);
-		border-left: 3px solid var(--st-teal);
-		border-radius: 0 8px 8px 0;
-		background: #fff;
+		gap: var(--space-5);
 	}
 
-	.dolls-orders h3 {
+	.orders-grid h3 {
+		margin: 0;
 		font-size: 1.1rem;
-		margin-bottom: var(--space-2);
 	}
 
-	.dolls-orders p {
+	.orders-grid p {
+		margin: 0;
 		color: rgba(36, 35, 43, 0.75);
-		margin-bottom: var(--space-3);
-	}
-
-	.dolls-orders > div > a {
-		font-weight: 700;
 	}
 
 	@media (max-width: 700px) {
-		.dolls-orders {
-			grid-template-columns: 1fr;
-			gap: var(--space-6);
-			padding: var(--space-5);
+		.orders-grid {
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

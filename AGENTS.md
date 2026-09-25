@@ -522,6 +522,36 @@ Prompted by the user finding the donate page's teal buttons "quite bold". The au
 - **`.btn-outline-teal`** — transparent fill, `--st-teal-dark` border and label, hovering to a filled teal-dark with a white label. **4.52:1 on a white card in both states** (it does *not* clear AA on `--st-bg`, so keep it on cards). For a group of **equal-weight controls that all act rather than navigate** — currently the donate page's five payment handoffs (six until Zapper went, 2026-09-14). Restores the colour affordance a bare ink outline lacks without a saturated fill competing with the header's one primary CTA.
 - **`.btn-secondary`** — white on `--st-green`, **2.42:1, still failing**, and genuinely a brand decision rather than a label swap since the green carries no dark-label option that stays legible.
 
+### Card actions: the `.card-cta` wedge (25 September)
+One motif for every card that **navigates**: the card is the link, a faint teal wedge rises from its
+foot, and the label sits over it, right-aligned in ink with an 18px arrow
+(`src/components/CardCtaLabel.astro`; styles global in `Layout.astro`). Cards that **act** keep their
+own controls - Add to cart, EFT's Copy bank details, FAQ chevrons, `.card-more`.
+- **Look, as tuned with the user**: `--st-teal-light` at 0.2 (0.32 on hover), not the brand teal -
+  "a lighter, subtle tone"; `clip-path: polygon(0 58%, 100% 38%, 100% 100%, 0 100%)`, a 20% slope,
+  rising 12% on hover; the arrow slides 4px; no motion under reduced motion. `.card-cta` cards carry a
+  1px `rgba(36,35,43,.07)` hairline with the shadow, because the tinted foot had no edge against the
+  page. Ink on the wedge measures 12.6:1 at worst.
+- **The wedge is `::after` at `z-index: -1` in an isolated card**, so it paints over the card's white
+  but under every word. The label has 24px `padding-top` (so text above always clears the wedge) and
+  an 8px negative bottom margin (16px off the card's foot). On phones plain `.card-cta` cards get 24px
+  bottom padding so that holds; cards whose padding is on an inner body are excluded by class
+  (`.pillar`, `.category-tile`, `.gi-card`, `.item-card`).
+- **Cards that can't be one link** (a form, a "More" toggle, a row of links) keep the wedge, and only
+  their own action moves it: `CardCtaLabel as="button"` (PayFast's submit) or `as="a"` (Corporate
+  partnership's four cards; the shop's fulfilment card), or `.card-cta-action` links (Get Involved's
+  audience cards, whose route links sit in the footer, underlined, with no arrows). The 24px above an
+  action is the previous element's margin (`:has(+ .card-cta-action)`).
+- **Wide cards: `.card-cta-wide`** draws the wedge as a band tilted by `--wedge-angle` (skewY about the
+  bottom-right), so the slope matches the cards beside it: 5.5deg for Woolworths, 3.3deg for the
+  shop's fulfilment card. Percentages go nearly flat on a card five times wider.
+- **Where it is**: homepage pillars and "How to get involved"; Who We Are's news, Woolworths and the
+  flip cards (`FlipCard.astro`); Get Involved's action cards, audience-card footers and scorecard
+  flip cards; Donate's PayPal, debit order, SnapScan, PayFast and "Other ways to help"; /shop's tiles
+  (white card box back, with a shared `#f3f2ef` photo stage) and fulfilment card; product cards;
+  Corporate partnership. Get Involved's two audience cards themselves are **not** whole-card links -
+  they open a panel.
+
 ⚠ **`.btn` carries `border: 2px solid transparent`, and nothing may override it to `none`.** It does two jobs: strips the UA border a `<button class="btn">` would otherwise draw, and gives every variant one border box so filled and outlined buttons are the same height. **This is not theoretical** — `.payfast-form button { border: none }`, written when that button was a filled pill, silently flattened it to bare unboxed text the moment it was demoted to an outline, and only a screenshot caught it. The same override was removed from `.contact-form .btn`, `AddToCartButton.svelte` and `CopyQuestionsButton.svelte` so the base rule actually holds. It also fixed a pre-existing 4px height mismatch between the paired buttons on the closing CTA rows.
 
 **Buttons commit, links navigate — the donate page deliberately uses both** (asked 2026-08-19: should the "Ways to give" CTAs match the plainer underlined links in "Goods and products also help"?). Kept different, because the two sets differ in kind: the goods cards *navigate* to another page on this site, while the payment cards *act* — four hand off to an external payment provider, one submits a rand amount, one writes to the clipboard. A control about to move money should not look identical to one that opens a list. There is also a hard constraint: PayFast's is a genuine `<form>` submit and "Copy bank details" navigates nowhere, so **at least two of the six cannot be links whatever is decided** — making the other four links would put the inconsistency *inside* one grid, where it is actually visible.
@@ -877,6 +907,28 @@ the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` 
 - Checked at 390 and 1280 on the Worry Dolls, Gift Tags, a product page and `/shop`: no sideways
   scroll, buttons 35px tall, Add to cart still adds.
 
+### The shop grid gets its cards back (2026-09-25) - to show Adrian on the 30th
+⚠ **This reverses "The shop grid, decluttered" above** (Adrian's cardless grid, 21 September), at the
+user's call, in step with the site-wide `.card-cta` motif. Show it to Adrian on the 30th rather than
+treating it as settled.
+- **`ItemCard.svelte` is the site's white card with the wedge**: photo edge to edge (the shop tiles'
+  `#f3f2ef` stage wash, multiplied, so white-backed shots don't melt into the card), the price as a
+  white pill over the photo's top-left (ink, 700, soft shadow; "Sold out" in muted ink on `#eeedea`
+  replaces it), the name in ink with no underline, "View" over the wedge. The whole card is one link;
+  still no Add to cart in the grid. Worry Dolls and Gift Tags; the coffee page is untouched.
+  `.item-card` is excluded from `.card-cta`'s phone padding rule, since its padding is on the body.
+- **Items-mode category intro**: the description in a `.section-intro` at 46rem, first paragraph a
+  1.2rem ink lead, the rest muted. Coffee (attributes mode) keeps plain prose.
+- **Worry Dolls' handmade note is a centred `.section-intro.statement`** above the grid: "Every doll is
+  handmade, so yours will be one of a kind." as the h2, "The photos show each style, not the exact doll
+  you'll receive." beneath. Same words, no callout rule. (The product pages keep their own note.)
+- **Custom dolls and Wholesale are two white `.card-cta` mailto cards** under a new h2 "Custom orders
+  and wholesale" ("Ask about a custom order", "Email us for prices"; subjects unchanged). The
+  wholesale line lost its inline link: "Buying for a shop or a corporate gift? Wholesale is by
+  appointment and we'll send prices." The left-rule callout styles went with it.
+- Checked at 390 and 1280 on Worry Dolls, Gift Tags and a product page: no sideways scroll, every
+  card one link with no nested controls, labels 16px off the card's foot, teal focus ring.
+
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
 ⚠ **Switched off 2026-09-25 by design brief phase 2, then dropped for good the same day** (the
 brief's tint bullet): the class and its CSS are gone. See "The tint: dark, held to the text side".
@@ -1213,6 +1265,12 @@ it is ~40 lines and takes a second.
   - ⚠ **`.section-intro.statement` is the centred, larger variant** - the mission uses it. It was
     removed by mistake earlier the same day on the claim it had no styles; a grep for `^\.statement`
     misses the compound selector.
+  - **The flip card is a shared component since 2026-09-25: `src/components/FlipCard.astro`**
+    (props `id`, `label`, `name`, `as`; `front` / `back` slots), used by the partner wall and by Get
+    Involved's four B-BBEE scorecard cards ("How it counts"; 4 across, 2 below 901px, 1 below 561px -
+    their backs carry up to 35 words). The ⋯ button became a text label over the `.card-cta` wedge,
+    and the faces gained the `.card-cta` hairline edge and shadow so they hold on the light page.
+    The details below describe the first version.
   - ~~**Partners are a logo wall** of `<details>` tiles~~ **Flip cards since 2026-09-25** (the user's
     call: opening a tile grew it alone and pushed every row down). Every partner but the lead one is a
     card - logo and name on the front; the name again, the blurb and any website link on the back -
@@ -1379,6 +1437,24 @@ homepage is still the least resolved part") and q28's first try at three pillars
   the white nav sits on the light page - true of the homepage since it had this header, now of every
   page. Hero lines over 20 words (the brief's cap) were left as they are, since cutting them is a
   copy change: Who We Are (22) and Donate (23).
+
+### Inner heroes: words centred, and a little more air (2026-09-25)
+Brief §3.1, "Where the words sit". `size="page"` heroes are `justify-content: center` with padding
+`calc(var(--hero-clearance) + var(--header-height) * 0.5)` on top and `var(--header-height) * 0.5`
+underneath, so the content sits exactly in the middle of the photo below the header; `h1` margin 18px.
+`size="band"` keeps the foot anchoring with 56px padding below and a 14px `h1` margin.
+- **Then 40px lower, with more air under the title** (same day, trialled on About and approved): an
+  extra 80px of top padding, so the words sit 40px below centre, and the page `h1` margin 18 -> 28px.
+  At 1280: 192px of photo above the words, 113px below (Shop 205 / 126, Donate 174 / 95). On phones
+  the words end 32-61px above the photo's foot - Donate is the tightest.
+- ⚠ **Half the *header height*, not half the clearance.** In the 761-1045px wrap band the clearance is
+  137-190px, and 1.5x of it pushed the words far down the photo.
+- Measured at 1280: equal space above and below the words on every page hero (e.g. /about/ 157 /
+  158px); bands 56px under the words at 390 and 1280. No sideways scroll on the twelve pages.
+- **Faces**: moving the words to the middle put Donate's paragraph under her chin at 1280, so Donate
+  gained `zoom={1.9}` (Corporate partnership uses 1.7). Clear at 1024-1440; at 901 the line's end
+  meets her hair, not her face. Our Work, Get Involved and its children were already clear.
+- Hero contrast after: 1,216 lines, none failing.
 
 ### The design brief, phase 2: surfaces and components (2026-09-25)
 `docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. Reviewed and published 2026-09-25 (`32a66f7`).

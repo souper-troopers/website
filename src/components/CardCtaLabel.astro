@@ -1,0 +1,39 @@
+---
+/**
+ * The label at the foot of a card in the `.card-cta` motif (25 September): the words, right-aligned
+ * in ink, and an 18px arrow that slides on hover. Usually the card itself is the link and this is a
+ * plain span. On a card that can't be one link - it holds a form, or a "More" toggle - the label is
+ * the card's one action instead: `as="button"` (a form's submit button, like the donate page's card
+ * payment) or `as="a"` with `href` (a link of its own). Styles are global, in Layout.astro, beside
+ * `.card-cta`.
+ */
+interface Props {
+	as?: "span" | "button" | "a";
+	href?: string;
+}
+
+const { as = "span", href } = Astro.props;
+---
+
+{as === "button" ? (
+	<button type="submit" class="card-cta-label card-cta-action card-cta-button">
+		<slot />
+		<svg class="card-cta-arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+			<path d="M4 12h15M13 6l6 6-6 6" />
+		</svg>
+	</button>
+) : as === "a" ? (
+	<a class="card-cta-label card-cta-action" href={href}>
+		<slot />
+		<svg class="card-cta-arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+			<path d="M4 12h15M13 6l6 6-6 6" />
+		</svg>
+	</a>
+) : (
+	<span class="card-cta-label">
+		<slot />
+		<svg class="card-cta-arrow" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+			<path d="M4 12h15M13 6l6 6-6 6" />
+		</svg>
+	</span>
+)}

@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PhotoHero from "../../components/PhotoHero.astro";
+import CardCtaLabel from "../../components/CardCtaLabel.astro";
 import shopPhoto from "../../assets/images/shop-products.jpg";
 import { getProductCategories, urlFor } from "../../lib/sanity";
 
@@ -43,7 +44,7 @@ const categories = await getProductCategories();
 	<section class="section wrap">
 		<div class="grid grid-3">
 			{categories.map((category) => (
-				<a class="category-tile" href={`/shop/${category.slug}`}>
+				<a class="card card-cta category-tile" href={`/shop/${category.slug}`}>
 					{category.photo && (
 						<div
 							class="category-tile-img blur-up"
@@ -68,7 +69,7 @@ const categories = await getProductCategories();
 						<h2>{category.name}</h2>
 						<p>{category.blurb}</p>
 						{/* Not "Shop {name}": the whole card is the link and the name is its heading, one line up. */}
-						<span class="category-tile-cta">Shop &rarr;</span>
+						<CardCtaLabel>Shop</CardCtaLabel>
 					</div>
 				</a>
 			))}
@@ -77,7 +78,9 @@ const categories = await getProductCategories();
 
 	<section class="section wrap">
 		{/* No "Collection & delivery" chip - the heading says it. */}
-		<div class="card">
+		{/* The .card-cta wedge at the shop tiles' slope (about 3.3deg at laptop width) - a wide card,
+		    so the fixed-angle variant. Its label is a link of its own ("More" sits inside the card). */}
+		<div class="card card-cta card-cta-wide fulfil-card" style="--wedge-angle: 3.3deg">
 			<h2>How orders are fulfilled</h2>
 			<p>All orders are collected in person from <a href="/contact">66 Newmarket Street, Woodstock, Cape Town</a>.</p>
 			<details class="card-more">
@@ -88,6 +91,7 @@ const categories = await getProductCategories();
 					<p>Bulk or corporate orders: email us before ordering so we can plan ahead.</p>
 				</div>
 			</details>
+			<CardCtaLabel as="a" href="mailto:manager@soupertroopers.org?subject=Shop%20order">Ask about an order</CardCtaLabel>
 		</div>
 	</section>
 </Layout>

@@ -71,6 +71,15 @@ partnership each end on a closing CTA row although Donate / Shop is in the heade
   slice and the pictures became too cropped. The height is the price of the photo; don't re-propose
   it without a different photo treatment. Child and product pages: a slim band, about 220px,
   same photo as the parent, cropped and tinted the same way.
+- **Where the words sit (decided 25 September).** Top-level inner pages (`size="page"`): the
+  content is **vertically centred in the photo below the header** - the header's clearance plus half
+  a header height above, the same half below - not anchored to the foot, where it read low and
+  tight. Then nudged 40px below that centre, with 28px under the `h1` (trialled on About, approved
+  the same day). Child and product pages (`size="band"`): still anchored to the
+  foot, with 56px under the words (was 32) and 14px under the `h1`; the band grows a little. The
+  homepage keeps its own layout. Moving the words onto the photo's middle means checking faces
+  again: Donate now uses `zoom={1.9}`, like Corporate partnership, so the line clears her face at
+  1024-1440; the other heroes needed nothing.
 - **Content in the hero:** the `h1`, one line of at most 20 words, and at most one control. Nothing
   else. Breadcrumbs stay on child pages, above the `h1`.
 - **Tint:** the homepage's dark tint with white text, on every hero, measured per photo (body

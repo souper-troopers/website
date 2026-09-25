@@ -5,6 +5,8 @@ import { Image } from "astro:assets";
 import dignityPhoto from "../assets/images/dignity-moment.jpg";
 import workshopPhoto from "../assets/images/workshop-craft.jpg";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
+import CardCtaLabel from "../components/CardCtaLabel.astro";
+import FlipCard from "../components/FlipCard.astro";
 import { getTeamMembers, getPartners, getSupporters, getPressMentions, urlFor } from "../lib/sanity";
 
 const team = await getTeamMembers();
@@ -225,7 +227,8 @@ const pressMentions = await getPressMentions();
 			</div>
 			{featuredPartner && (
 				<FeaturedTag
-					class="card partner-featured"
+					class:list={["card partner-featured", featuredPartner.url && "card-cta card-cta-wide"]}
+					style="--wedge-angle: 5.5deg"
 					{...(featuredPartner.url ? { href: featuredPartner.url, target: "_blank", rel: "noopener" } : {})}
 				>
 					{featuredPartner.logo && (
@@ -236,49 +239,43 @@ const pressMentions = await getPressMentions();
 					<div class="partner-featured-text">
 						<h3>{featuredPartner.name}</h3>
 						<p>{featuredPartner.blurb}</p>
-						{featuredPartner.url && <span class="partner-visit">Visit their site &rarr;</span>}
+						{featuredPartner.url && <CardCtaLabel>Visit their site</CardCtaLabel>}
 					</div>
 				</FeaturedTag>
 			)}
 			{/* A logo wall: the brands are what the section is for ("credible brands backing
 			    everything", the 2 September review), so each card shows logo and name, and what the
-			    partner gives is on the back, turned over by the small button in its corner (tried
-			    25 September, in place of a <details> that grew one tile and pushed every row down).
+			    partner gives is on the back, turned over by the "How they help" label in its
+			    corner, over the site's .card-cta wedge (a ⋯ icon button until later on 25 September;
+			    before that a <details> that grew one tile and pushed every row down).
 			    Both faces are in the page, so search still reads every word; the back is `inert`
 			    while it faces away. The button sits outside both faces so it is on top either way,
 			    and a partner's website link can live on the back without nesting in a control.
 			    The logo's alt is empty because the name sits right beside it. */}
 			<ul class="partner-wall">
 				{otherPartners.map((partner, i) => (
-					<li class="partner-card">
-						<div class="partner-flip">
-							<div class="partner-face partner-front">
-								{partner.logo && (
-									<span class:list={["partner-logo-frame", partner.logoOnDark && "on-dark"]}>
-										<img
-											class="partner-logo"
-											src={urlFor(partner.logo).width(300).url()}
-											alt=""
-											width="96"
-											height="72"
-											loading="lazy"
-										/>
-									</span>
-								)}
-								<h3>{partner.name}</h3>
-							</div>
-							<div class="partner-face partner-back" id={`partner-back-${i}`}>
-								<p class="partner-back-name" aria-hidden="true">{partner.name}</p>
-								<p>{partner.blurb}</p>
-								{partner.url && <a href={partner.url} target="_blank" rel="noopener">Visit their site &rarr;</a>}
-							</div>
-						</div>
-						<button class="partner-flip-btn" type="button" aria-expanded="false" aria-controls={`partner-back-${i}`} hidden>
-							<span class="visually-hidden">How {partner.name} helps</span>
-							<svg class="icon-more" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" /></svg>
-							<svg class="icon-back" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-						</button>
-					</li>
+					<FlipCard as="li" id={`partner-back-${i}`} label="How they help" name={partner.name}>
+						<Fragment slot="front">
+							{partner.logo && (
+								<span class:list={["partner-logo-frame", partner.logoOnDark && "on-dark"]}>
+									<img
+										class="partner-logo"
+										src={urlFor(partner.logo).width(300).url()}
+										alt=""
+										width="96"
+										height="72"
+										loading="lazy"
+									/>
+								</span>
+							)}
+							<h3 class="partner-name">{partner.name}</h3>
+						</Fragment>
+						<Fragment slot="back">
+							<p class="partner-back-name" aria-hidden="true">{partner.name}</p>
+							<p class="partner-blurb">{partner.blurb}</p>
+							{partner.url && <a class="partner-link" href={partner.url} target="_blank" rel="noopener">Visit their site &rarr;</a>}
+						</Fragment>
+					</FlipCard>
 				))}
 			</ul>
 
@@ -309,13 +306,18 @@ const pressMentions = await getPressMentions();
 			</div>
 			<div class="grid grid-3">
 				{pressMentions.map((mention) => (
-					<div class="card">
-						<span class="press-publication">{mention.publication}</span>
-						<h3>{mention.headline}</h3>
-						{mention.url && (
-							<a href={mention.url} target="_blank" rel="noopener">Read the article &rarr;</a>
-						)}
-					</div>
+					mention.url ? (
+						<a class="card card-cta" href={mention.url} target="_blank" rel="noopener">
+							<span class="press-publication">{mention.publication}</span>
+							<h3>{mention.headline}</h3>
+							<CardCtaLabel>Read the article</CardCtaLabel>
+						</a>
+					) : (
+						<div class="card">
+							<span class="press-publication">{mention.publication}</span>
+							<h3>{mention.headline}</h3>
+						</div>
+					)
 				))}
 			</div>
 		</section>
@@ -323,23 +325,6 @@ const pressMentions = await getPressMentions();
 
 </Layout>
 
-<script>
-	// Turning a partner card over. The buttons ship `hidden`, so without JavaScript nobody meets a
-	// control that does nothing; the back stays `inert` (out of the tab order and the accessibility
-	// tree) while it faces away.
-	for (const card of document.querySelectorAll<HTMLElement>(".partner-card")) {
-		const button = card.querySelector<HTMLButtonElement>(".partner-flip-btn");
-		const back = card.querySelector<HTMLElement>(".partner-back");
-		if (!button || !back) continue;
-		back.inert = true;
-		button.hidden = false;
-		button.addEventListener("click", () => {
-			const flipped = card.classList.toggle("is-flipped");
-			button.setAttribute("aria-expanded", String(flipped));
-			back.inert = !flipped;
-		});
-	}
-</script>
 
 <style>
 	/* "How we began": Kerry's portrait beside the story, 5/12 to 7/12 from 761px, stacked below with
@@ -414,15 +399,20 @@ const pressMentions = await getPressMentions();
 		font-size: 1.05rem;
 	}
 
-	/* The link cue: teal-dark and underlined, the site's mark for "you can act on this". */
-	.partner-visit {
-		margin-top: auto;
-		padding-top: var(--space-2);
-		font-size: 0.9rem;
-		font-weight: 700;
-		color: var(--st-teal-dark);
-		text-decoration: underline;
-		text-underline-offset: 3px;
+	/* This card has 32px of padding, so the shared 8px nudge left "Visit their site" 24px up and
+	   ~10px under the wedge's top edge. 16px up, like every other card-cta label (25 September).
+	   Laptops only: below 701px the card's padding is 24px, and the shared nudge already gives 16. */
+	@media (min-width: 701px) {
+		.partner-featured :global(.card-cta-label) {
+			margin-bottom: -16px;
+		}
+	}
+
+	/* The words column is a flex column so the .card-cta label sits at its foot, right-aligned. */
+	.partner-featured-text {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
 	}
 
 	@media (max-width: 700px) {
@@ -448,65 +438,28 @@ const pressMentions = await getPressMentions();
 		list-style: none;
 	}
 
-	.partner-card {
-		position: relative;
-		perspective: 900px;
-	}
-
-	/* Both faces share one grid cell, so a card is as tall as its taller face and turning it over
-	   never moves anything around it. Rows stretch, so a row's cards are one height. */
-	.partner-flip {
-		display: grid;
-		height: 100%;
-		transform-style: preserve-3d;
-		transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.partner-card.is-flipped .partner-flip {
-		transform: rotateY(180deg);
-	}
-
-	.partner-face {
-		grid-area: 1 / 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: var(--space-2);
-		/* The bottom padding keeps words clear of the corner button. */
-		padding: var(--space-4) var(--space-3) calc(32px + var(--space-3));
-		border-radius: var(--radius);
-		background: var(--st-white);
-		color: var(--st-ink);
-		text-align: center;
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-	}
-
-	.partner-back {
-		transform: rotateY(180deg);
-		font-size: 0.88rem;
-	}
-
-	.partner-front h3 {
+	/* The cards themselves are src/components/FlipCard.astro (shared with Get Involved's scorecard
+	   cards); these style what the partner wall puts on each face. */
+	.partner-name {
 		margin: 0;
 		font-size: 0.95rem;
 		line-height: 1.3;
 	}
 
-	.partner-back p {
+	.partner-blurb {
 		margin: 0;
 		color: rgba(36, 35, 43, 0.8);
 	}
 
 	/* The name again on the back, so you still know whose card you're reading once the logo is
 	   face down. aria-hidden: the front's h3 already names it. */
-	.partner-back .partner-back-name {
+	.partner-back-name {
+		margin: 0;
 		font-weight: 700;
 		color: var(--st-ink);
 	}
 
-	.partner-back a {
+	.partner-link {
 		font-weight: 700;
 		color: var(--st-teal-dark);
 	}
@@ -514,67 +467,6 @@ const pressMentions = await getPressMentions();
 	.partner-wall .partner-logo-frame {
 		width: 96px;
 		height: 72px;
-	}
-
-	/* The corner button: a small circle, teal-dark icon (the site's colour for things you can act
-	   on). Dots on the front, a cross on the back. 32px, over WCAG's 24px target minimum. */
-	.partner-flip-btn {
-		position: absolute;
-		right: var(--space-2);
-		bottom: var(--space-2);
-		z-index: 1;
-		display: grid;
-		place-items: center;
-		width: 32px;
-		height: 32px;
-		padding: 0;
-		border: 1.5px solid rgba(36, 35, 43, 0.15);
-		border-radius: 50%;
-		background: var(--st-white);
-		color: var(--st-teal-dark);
-		cursor: pointer;
-		transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-	}
-
-	.partner-flip-btn[hidden] {
-		display: none;
-	}
-
-	.partner-flip-btn:hover {
-		background: var(--st-teal-dark);
-		border-color: var(--st-teal-dark);
-		color: var(--st-white);
-	}
-
-	.partner-flip-btn:focus-visible {
-		outline: 3px solid var(--st-teal);
-		outline-offset: 2px;
-	}
-
-	.partner-flip-btn svg {
-		grid-area: 1 / 1;
-		width: 16px;
-		height: 16px;
-	}
-
-	.partner-flip-btn .icon-more {
-		fill: currentColor;
-	}
-
-	.partner-flip-btn .icon-back {
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 2.2;
-		stroke-linecap: round;
-		visibility: hidden;
-	}
-
-	.partner-card.is-flipped .icon-more {
-		visibility: hidden;
-	}
-
-	.partner-card.is-flipped .icon-back {
-		visibility: visible;
 	}
 
 	@media (max-width: 900px) {
@@ -587,25 +479,6 @@ const pressMentions = await getPressMentions();
 		.partner-wall {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			gap: var(--space-3);
-		}
-	}
-
-	/* Reduced motion: no turning, the back simply fades in over the front. */
-	@media (prefers-reduced-motion: reduce) {
-		.partner-flip,
-		.partner-card.is-flipped .partner-flip {
-			transform: none;
-			transition: none;
-		}
-
-		.partner-back {
-			transform: none;
-			opacity: 0;
-			transition: opacity 0.2s ease;
-		}
-
-		.partner-card.is-flipped .partner-back {
-			opacity: 1;
 		}
 	}
 

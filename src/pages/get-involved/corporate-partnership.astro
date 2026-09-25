@@ -4,6 +4,7 @@ import PhotoHero from "../../components/PhotoHero.astro";
 import partnerPhoto from "../../assets/images/partner-visit.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
+import CardCtaLabel from "../../components/CardCtaLabel.astro";
 import EmailLink from "../../components/EmailLink.svelte";
 import { breadcrumbList, type Crumb } from "../../lib/breadcrumbs";
 import { faqPageJsonLd, type FaqItem } from "../../lib/faq";
@@ -121,7 +122,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 			<h2>Four shapes a partnership takes</h2>
 		</div>
 		<div class="grid grid-2 partner-grid">
-			<div class="card">
+			<div class="card card-cta">
 				<h3>Fund a programme</h3>
 				<p>
 					A long-term collaboration on a shared outcome, rather than a donation into general
@@ -139,8 +140,9 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 						</p>
 					</div>
 				</details>
+				<CardCtaLabel as="a" href={`mailto:${partnershipEmail}?subject=Programme%20partnership`}>Talk to us about a programme</CardCtaLabel>
 			</div>
-			<div class="card">
+			<div class="card card-cta">
 				<h3>Give what your business already does</h3>
 				<p>
 					Skills and services go as far as cash, and often further, because they replace a cost
@@ -157,8 +159,9 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 						</p>
 					</div>
 				</details>
+				<CardCtaLabel as="a" href={`mailto:${partnershipEmail}?subject=Offering%20a%20skill%20or%20service`}>Offer a skill or service</CardCtaLabel>
 			</div>
-			<div class="card">
+			<div class="card card-cta">
 				<h3>Book a team workshop</h3>
 				<p>
 					Our Reconnection Workshops bring a team together around identity, reflection and
@@ -174,8 +177,9 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 						</p>
 					</div>
 				</details>
+				<CardCtaLabel as="a" href={`mailto:${partnershipEmail}?subject=Corporate%20workshop%20enquiry`}>Ask about a workshop</CardCtaLabel>
 			</div>
-			<div class="card">
+			<div class="card card-cta">
 				<h3>Put Troopers Coffee in your office</h3>
 				<p>
 					Our Dignity Blend is available as a standing order for offices, guesthouses and
@@ -187,6 +191,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 					and because we are a {settings.bbbeeLevel} contributor it counts as preferential procurement
 					spend on your scorecard rather than as a donation.
 				</p>
+				<CardCtaLabel as="a" href="/shop/coffee">See the coffee</CardCtaLabel>
 			</div>
 		</div>
 	</section>

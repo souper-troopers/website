@@ -2485,20 +2485,16 @@ const structuredData = {
 				}
 			}
 
-			/* Top-level inner pages: most of a laptop screen. Since 25 September the words are centred in
-			   the photo below the header (they sat low and tight at the foot): the header's clearance
-			   plus half a header's height above, and the same half below, so the content is exactly
-			   centred in the space under the header with breathing room either side. Half the
-			   *header height*, not half the clearance: in the 761-1045px wrap band the clearance is
-			   137-190px, and half of that again pushed the words far down. The extra 80px on top moves
-			   the words 40px below that centre - tried on About first and approved the same day ("the
-			   words sit too high"). */
+			/* Top-level inner pages. 42vh since 25 September (was 56vh: a quarter shorter, the user's
+			   call - "taking a little too much vertical space"; a third off cropped Our Work's two
+			   people too tightly). 378px at 1440x900. The words are centred in the photo below the
+			   header, nudged down a little (40px above, 24px below). Phones keep their own rule. */
 			.hero-photo.photo-hero--page {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				min-height: max(360px, 56vh);
-				padding: calc(var(--hero-clearance) + var(--header-height) * 0.5 + 80px) 0 calc(var(--header-height) * 0.5);
+				min-height: max(260px, 42vh);
+				padding: calc(var(--hero-clearance) + 40px) 0 24px;
 			}
 
 			/* Child and product pages: a slim strip with the parent's photo, words at its foot - with

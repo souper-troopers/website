@@ -1532,6 +1532,18 @@ underneath, so the content sits exactly in the middle of the photo below the hea
   gained `zoom={1.9}` (Corporate partnership uses 1.7). Clear at 1024-1440; at 901 the line's end
   meets her hair, not her face. Our Work, Get Involved and its children were already clear.
 - Hero contrast after: 1,216 lines, none failing.
+- ⚠ **Superseded later the same day: page heroes are a quarter shorter** (the user: they took "a
+  little too much vertical space"). Laptops (761px up): `min-height: max(260px, 42vh)` (was
+  `max(360px, 56vh)`) and padding `hero-clearance + 40px` / `24px`, so the 80px nudge and the
+  half-header padding above are gone. 378px at 1440x900 (was 504), 336 at 1280x800 (was 448). A third
+  off (37vh) was tried first and cropped Our Work's two people too tightly; the user called 42vh
+  "the perfect height". Phones and bands unchanged. Who We Are's photo moved to `center 58%` (was
+  78%) so the faces show above/beside the words. Contrast: 1,216 lines, none failing.
+- **IMG_8600 was tried for Donate and rejected** (`Extra/Images/Mix`, two visitors at the Hub). Three
+  faces fill the middle of the frame, and the words cover the left ~60%, so at every zoom and position
+  measured one face sat under the text or was cut off. If it is used, it belongs in a card, not a hero.
+  ⚠ Crop it above the seated man on the right before using it anywhere - it's unclear whether he is
+  the man from IMG_9953 we must not show.
 
 ### The design brief, phase 2: surfaces and components (2026-09-25)
 `docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. Reviewed and published 2026-09-25 (`32a66f7`).

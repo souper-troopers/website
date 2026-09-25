@@ -1419,6 +1419,19 @@ homepage is still the least resolved part") and q28's first try at three pillars
 - Page heights at 390: Home 3,404 (was 4,192 before phase 1), Donate 4,749 (5,032), Our Work 5,757
   (5,383 - the service-card photos), Who We Are 8,488 (8,751). No sideways scroll on any of the 12.
 
+### Homepage: "People, not just statistics" is one featured quote (2026-09-25)
+Replaced the single story card. No card box: a round portrait (240px, 160px stacked below 761px)
+beside the h2 at 1.5rem, the quote as a `<blockquote>` at `clamp(1.6rem, 3.2vw, 2.4rem)` / 600, then
+"**name** - story line" (`body`) and "More stories on Our Work →". No wording changed.
+- **Story**: the first featured `successStory`. **Portrait**: the matching `teamMember`'s photo,
+  matched on first name plus surname when the story gives one - the story says "Odette Sue Oliver",
+  the team card "Odette Oliver". Cropped square from Sanity (480px for retina); Odette's is a 600×600
+  original and already public on Meet the team.
+- **Fallbacks**: a story with a `video` shows the `StoryVideo` still in the circle instead (its 16:9
+  box and margin are overridden to fill it, play button centred) - **not yet seen with a real
+  video**, since no story has one; no video and no portrait gives the quote alone, one column.
+- Checked at 390 and 1280: no sideways scroll.
+
 ### The design brief, phase 3: the copy pass (2026-09-25)
 `docs/design-brief-2026-09-24.md` §3.4-3.5 and §4. On `dev`, stopped for review; not published.
 **Only cuts, moves and links - no sentence was reworded** except where a cut clause had to be closed

@@ -7,11 +7,24 @@ import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/mandela-mural.png";
 import PhotoHero from "../components/PhotoHero.astro";
 import StoryVideo from "../components/StoryVideo.astro";
-import { getImpactStats, getFeaturedSuccessStories } from "../lib/sanity";
+import { getImpactStats, getFeaturedSuccessStories, getTeamMembers, urlFor } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
 // The homepage shows one story (the first featured one); Our Work has them all.
 const [story] = await getFeaturedSuccessStories();
+
+// The story's person, if they are also on the team (Odette is: the story says "Odette Sue Oliver",
+// the team card "Odette Oliver"). Matched on first name, and on surname too when the story gives
+// one, so a middle name doesn't stop the match and two people sharing a first name don't cross.
+const storyPerson = story
+	? (await getTeamMembers()).find((person) => {
+			const [first, ...rest] = story.name.trim().split(/\s+/);
+			const [pFirst, ...pRest] = person.name.trim().split(/\s+/);
+			if (first !== pFirst) return false;
+			return rest.length === 0 || rest.at(-1) === pRest.at(-1);
+		})
+	: undefined;
+const storyPortrait = storyPerson?.photo;
 
 // The Donate tile leads on the same headline number as the impact band, read from Sanity rather
 // than retyped here so the two can't drift apart when Kerry updates it.
@@ -140,25 +153,34 @@ const heroLqip =
 		</div>
 	</section>
 
-	{/* One story, in Our Work's card shape, on the page ground (design brief phase 2): the teal-red
-	    gradient band is retired site-wide, and the three stories in full are Our Work's to tell. */}
+	{/* One featured quote, no card box (decided 25 September): the first featured story's person as
+	    a round portrait beside their words. The portrait is their team-card photo when they are on
+	    the team; a story with a video shows the video's still instead, as the play button; with
+	    neither, the quote stands alone. The three stories in full are Our Work's to tell. */}
 	{story && (
 		<section class="section wrap">
-			<div class="section-intro">
-				<h2>People, not just statistics</h2>
-			</div>
-			<div class="card home-story">
-				{story.video && <StoryVideo url={story.video} title={`${story.name}'s story`} />}
-				{story.quote ? (
-					<p class="quote">
-						"{story.quote}"
-						<cite>- {story.name}</cite>
-					</p>
-				) : (
-					<h3>{story.name}</h3>
+			<div class:list={["home-quote", !(story.video || storyPortrait) && "no-portrait"]}>
+				{story.video ? (
+					<div class="home-quote-portrait is-video">
+						<StoryVideo url={story.video} title={`${story.name}'s story`} />
+					</div>
+				) : storyPortrait && (
+					<div class="home-quote-portrait">
+						<img
+							src={urlFor(storyPortrait).width(480).height(480).fit("crop").auto("format").url()}
+							alt={story.name}
+							width="240"
+							height="240"
+							loading="lazy"
+						/>
+					</div>
 				)}
-				<p>{story.body}</p>
-				<a href="/our-work#stories">More stories on Our Work &rarr;</a>
+				<div class="home-quote-text">
+					<h2>People, not just statistics</h2>
+					{story.quote && <blockquote><p>"{story.quote}"</p></blockquote>}
+					<p class="home-quote-who"><strong>{story.name}</strong> - {story.body}</p>
+					<a href="/our-work#stories">More stories on Our Work &rarr;</a>
+				</div>
 			</div>
 		</section>
 	)}
@@ -316,8 +338,94 @@ const heroLqip =
 		text-decoration: underline;
 	}
 
-	.home-story {
-		max-width: 46rem;
+	/* The featured quote: portrait left, words right from 761px; stacked below with a smaller
+	   portrait on top. No card box - the quote is the shape. */
+	.home-quote {
+		display: grid;
+		gap: var(--space-5);
+		justify-items: start;
+	}
+
+	.home-quote-portrait {
+		width: 160px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		overflow: hidden;
+		background: rgba(36, 35, 43, 0.06);
+	}
+
+	.home-quote-portrait img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* A video still is round too; StoryVideo's own 16:9 box and bottom margin are overridden so
+	   it fills the circle, and its play button stays centred. */
+	.home-quote-portrait.is-video :global(.story-video) {
+		width: 100%;
+		height: 100%;
+		aspect-ratio: auto;
+		margin: 0;
+	}
+
+	.home-quote-portrait.is-video :global(.story-video img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.home-quote-text {
+		max-width: 44rem;
+	}
+
+	.home-quote-text h2 {
+		margin: 0 0 var(--space-3);
+		font-size: 1.5rem;
+	}
+
+	.home-quote blockquote {
+		margin: 0 0 var(--space-4);
+		padding: 0;
+		border: 0;
+	}
+
+	.home-quote blockquote p {
+		margin: 0;
+		font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+		font-weight: 600;
+		line-height: 1.25;
+		color: var(--st-ink);
+	}
+
+	.home-quote-who {
+		margin: 0 0 var(--space-3);
+		color: rgba(36, 35, 43, 0.75);
+	}
+
+	.home-quote-who strong {
+		color: var(--st-ink);
+	}
+
+	.home-quote-text a {
+		font-weight: 700;
+	}
+
+	@media (min-width: 761px) {
+		.home-quote {
+			grid-template-columns: 240px minmax(0, 1fr);
+			align-items: center;
+			gap: var(--space-8);
+		}
+
+		.home-quote.no-portrait {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.home-quote-portrait {
+			width: 240px;
+		}
 	}
 </style>
 

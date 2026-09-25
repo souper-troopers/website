@@ -757,6 +757,8 @@ the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` 
   scroll, buttons 35px tall, Add to cart still adds.
 
 ### Trial: a light tint on Get Involved's banners (2026-09-24)
+⚠ **Switched off 2026-09-25 by design brief phase 2** (one tint direction site-wide; the light
+version is judged as a whole in phase 4). The CSS is still there, dormant - see the next section.
 Adrian, 21 September: the site sits on a lot of black. The two audience banners now use a pale tint
 (the page's own off-white, 0.92 -> 0 left to right) with ink text and a solid white "See how" pill -
 all behind a `gi-tint-light` class on the two `.gi-band-media` elements, so **deleting that class
@@ -1143,8 +1145,8 @@ homepage is still the least resolved part") and q28's first try at three pillars
 - It is a draft: q28 now says so and asks for a reaction rather than a list.
 
 ### The design brief, phase 1: one photo hero (2026-09-24)
-`docs/design-brief-2026-09-24.md` §3.1 and §7 step 1. Built while the user was away, stopped for review
-as the brief says; **not published**. Phases 2-4 are not started.
+`docs/design-brief-2026-09-24.md` §3.1 and §7 step 1. Built while the user was away and reviewed; published
+2026-09-25 (`10623cf`). Phase 2 follows below.
 - **`src/components/PhotoHero.astro`** is now every public page's hero, with `<Layout heroOverlay>`:
   the photo full-bleed behind the transparent header, the tint, the words bottom-left in white. The
   parallax and header-fade script moved into it from `index.astro`. Sizes: `home` (natural height,
@@ -1187,6 +1189,44 @@ as the brief says; **not published**. Phases 2-4 are not started.
   the white nav sits on the light page - true of the homepage since it had this header, now of every
   page. Hero lines over 20 words (the brief's cap) were left as they are, since cutting them is a
   copy change: Who We Are (22) and Donate (23).
+
+### The design brief, phase 2: surfaces and components (2026-09-25)
+`docs/design-brief-2026-09-24.md` §3.2-3.3 and §7 step 2. On `dev`, stopped for review; not published.
+- **Section chips are gone from every public page** (Home, Our Work, the three Get Involved child
+  pages were the last). The 404's "Error 404" pill is left.
+- **The teal-red gradient (`.stories-band`) is retired.** Homepage: one story (the first featured) in
+  Our Work's card shape on the page ground, with "More stories on Our Work →" (to `#stories`, an id
+  added there); the "Some of the people below…" line went with the other two stories. Who We Are:
+  "How we began" is a plain section.
+- **One dark band per page besides the footer, and the hero photo doesn't count**: Our Work keeps the
+  CAST stage; `.impact-band` is now white with ink figures on Our Work and Donate. Who We Are keeps
+  its ink partners band (`.dark-band`, unchanged).
+- **Cards: one white card, one photo card.** Homepage "How to get involved" is three equal white cards
+  with a 4px teal top rule (the solid-teal and pale-teal tiles and their BrushRings went -
+  `BrushRing.astro` deleted, unused). Photo cards are photo on top, words on white beneath, never
+  words on the photo: Our Work's service cards, Donate's "What your donation funds" tiles (and Get
+  Involved's goods tiles, same `.goods-tile` class), Donate's "Other ways to help". That retires three
+  per-photo contrast measurements. On a phone, service cards put the photo beside the words and goods
+  tiles go two across - one-per-row photo cards added 600-1,500px to those pages.
+- **Volunteer's "ways" are white cards** (were hairline boxes). **The Worry Dolls custom/wholesale box
+  is the left-rule callout** (was dashed) - the site's one callout style, as on the handmade note.
+- **Buttons: three styles.** The homepage hero's white pill is now `.btn-primary` (the `.hero
+  .btn-primary` white override is gone). Get Involved's "See how" was a translucent pill (a fifth
+  style); it is now an underlined white link with its chevron.
+- **Closing CTA rows are gone** - Who We Are's "Be part of someone's next chapter" card and the button
+  rows on Donate goods and Corporate partnership. ⚠ **Two closings stayed as plain sections**, because
+  they are the page's only email route: Volunteer's "Ready when you are" and Corporate's "Start with a
+  conversation" (its "other ways to get involved" words now link to `/get-involved`, since the button
+  that carried that link went). Donate goods' panel went entirely - its email is in the opening
+  paragraph.
+- **Get Involved's banners are back on the dark tint**, the heroes' sweep plus a bottom band under
+  the cue, near-even on phones. Measured (62 lines, 360-1440): worst body 5.89:1, headings 5.07:1.
+- Dead CSS removed with it: the `.path-*` tiles, `.stories-band`/`.story-card` family, `.btn-on-tile`.
+- **Not done here**: §3.4 typography and spacing (one h2 scale, one section gap) - the brief's
+  sequence doesn't assign it a phase; and the copy items in §4 (Who We Are's three CAST cards, one line
+  per route in Get Involved's banners), which are phase 3.
+- Page heights at 390: Home 3,404 (was 4,192 before phase 1), Donate 4,749 (5,032), Our Work 5,757
+  (5,383 - the service-card photos), Who We Are 8,488 (8,751). No sideways scroll on any of the 12.
 
 ### Our Work: the CAST prototype (2026-09-13)
 A proposal for the CAST infographic, built at the user's request "to see what else might work" — **not

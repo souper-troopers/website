@@ -191,16 +191,17 @@ const jsonLd = attributeProductJsonLd
 		line-height: 1.55;
 	}
 
-	/* Dashed, not a filled card: it should read as "something else" beside the product photos,
-	   not as another product. Two columns on a laptop, stacked below 700px. */
+	/* The site's one callout style - the handmade note's left rule (design brief phase 2; it was a
+	   dashed box). Two columns on a laptop, stacked below 700px. */
 	.dolls-orders {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--space-8);
 		margin-top: var(--space-12);
-		padding: var(--space-6) var(--space-8);
-		border: 2px dashed rgba(36, 35, 43, 0.2);
-		border-radius: var(--radius);
+		padding: var(--space-5) var(--space-6);
+		border-left: 3px solid var(--st-teal);
+		border-radius: 0 8px 8px 0;
+		background: #fff;
 	}
 
 	.dolls-orders h3 {

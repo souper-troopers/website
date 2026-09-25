@@ -123,7 +123,6 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">What we can use</span>
 			<h2>Nine things worth bringing</h2>
 		</div>
 		<dl class="goods-list">
@@ -152,25 +151,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Common questions</span>
 			<h2>Before you come</h2>
 		</div>
 		<Faq items={faqItems} collapsible />
 	</section>
 
-	<section class="section wrap">
-		<div class="cta-panel">
-			<h2>Arrange a drop-off</h2>
-			<p>
-				Send us a line saying roughly what you have and when suits you, and we will come back
-				with a time.
-			</p>
-			<p class="cta-links">
-				<a class="btn btn-primary" href={`mailto:${goodsEmail}?subject=Donation%20drop-off`}>Email to arrange a drop-off</a>
-				<a class="btn btn-outline" href="/get-involved">All ways to get involved</a>
-			</p>
-		</div>
-	</section>
 </Layout>
 
 <style>
@@ -245,17 +230,4 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		color: rgba(36, 35, 43, 0.65);
 	}
 
-	.cta-panel {
-		max-width: 46rem;
-		margin: 0 auto;
-		text-align: center;
-	}
-
-	.cta-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-		justify-content: center;
-		margin-top: var(--space-4);
-	}
 </style>

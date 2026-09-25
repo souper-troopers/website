@@ -1985,11 +1985,6 @@ const structuredData = {
 				}
 			}
 
-			.stories-lead {
-				color: rgba(255, 255, 255, 0.8);
-				margin-bottom: var(--space-6);
-			}
-
 			/* Muted ink, not teal-dark: this static eyebrow shared a card with the real
 			   "Read the article" link and wore the identical colour, so the card offered two
 			   apparent links and only one worked. */
@@ -2007,23 +2002,30 @@ const structuredData = {
 			}
 
 			/* Non-interactive category labels (donate + get-involved) — no hover lift, so they
-			   don't read as clickable now that the mailto wrapping has been removed. */
+			   don't read as clickable now that the mailto wrapping has been removed.
+			   Photo on top, label on white beneath since 2026-09-24 (design brief phase 2): the label
+			   used to sit on the photo under a dark gradient. */
 			.goods-tile {
-				position: relative;
 				display: flex;
-				align-items: flex-end;
-				aspect-ratio: 4 / 3;
+				flex-direction: column;
 				border-radius: var(--radius);
 				overflow: hidden;
+				background-color: var(--st-white);
+				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
+			}
+
+			/* The placeholder shimmer is a background on the whole tile; once the photo is in, the label
+			   area must be plain white rather than the shimmer's faint teal. */
+			.goods-tile:has(.goods-tile-img.is-loaded) {
+				background-image: none;
 			}
 
 			.goods-tile-img {
-				position: absolute;
-				inset: 0;
+				display: block;
 				width: 100%;
-				height: 100%;
+				height: auto;
+				aspect-ratio: 4 / 3;
 				object-fit: cover;
-				z-index: 0;
 				opacity: 0;
 				transition: opacity 0.4s ease;
 			}
@@ -2032,21 +2034,20 @@ const structuredData = {
 				opacity: 1;
 			}
 
-			.goods-tile-scrim {
-				position: absolute;
-				inset: 0;
-				background: linear-gradient(to top, rgba(24, 23, 31, 0.88) 0%, rgba(24, 23, 31, 0.25) 55%, rgba(24, 23, 31, 0) 78%);
-				z-index: 1;
+			/* Two across on a phone: with the label under the photo a tile reads fine at ~165px, and one
+			   per row made Donate ~600px longer. */
+			@media (max-width: 700px) {
+				.grid:has(> .goods-tile) {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
 			}
 
 			.goods-tile span {
-				position: relative;
-				z-index: 2;
-				color: var(--st-white);
+				color: var(--st-ink);
 				font-weight: 600;
 				font-size: 0.92rem;
 				line-height: 1.3;
-				padding: var(--space-4);
+				padding: var(--space-3) var(--space-4) var(--space-4);
 			}
 
 			.stat {
@@ -2184,11 +2185,6 @@ const structuredData = {
 
 			.hero-secondary-link:hover {
 				color: var(--st-white);
-			}
-
-			.hero .btn-primary {
-				background: var(--st-white);
-				color: var(--st-ink);
 			}
 
 			.hero .btn-secondary {
@@ -2343,165 +2339,16 @@ const structuredData = {
 			   other two are told apart by their brush ring, not by a background colour each. That
 			   keeps the section to two fills (teal, ink) and leaves --st-green/--st-red free to go on
 			   meaning success/error in the cart and copy components. */
-			/* Two columns since 2026-09-13, when the shop tile became its own band below the grid: with
-			   three columns the two remaining tiles left an empty slot beside them. */
-			.path-grid {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr);
-				gap: var(--space-5);
-			}
 
-			.path-lead {
-				grid-column: 1 / -1;
-			}
-
-			.path-tile {
-				position: relative;
-				isolation: isolate;
-				overflow: hidden;
-				display: flex;
-				flex-direction: column;
-				justify-content: flex-end;
-				min-height: 240px;
-				padding: var(--space-8);
-				border-radius: 24px;
-				color: var(--st-white);
-				text-decoration: none;
-				transition: transform 0.2s ease;
-			}
-
-			.path-lead {
-				min-height: 260px;
-			}
-
-			/* --st-teal-dark, not --st-teal: white body text on the lighter teal is only 2.76:1, which
-			   fails AA. The old teal→teal-dark gradient was hiding this by putting the dark end under
-			   the text; going flat means the fill itself has to carry the contrast. */
-			.path-lead {
-				background: var(--st-teal-dark);
-			}
-
-			/* Pale teal rather than ink: three ink tiles sat directly above the ink impact band and the
-			   two read as one dark mass, as though the tiles were part of that band. Keeping them in
-			   the teal family makes the whole section one idea, and the light/dark step against the
-			   lead tile is what carries the hierarchy. */
-			.path-support {
-				background: var(--st-teal-light);
-				color: var(--st-ink);
-			}
-
-			/* Ink rather than a teal: any of the brand teals as an eyebrow falls under 4.5:1 on this
-			   fill, and at 13px it doesn't qualify as large text. Opacity stays high enough to clear
-			   AA while still reading as secondary. */
-			.path-support .path-mini-fact {
-				color: var(--st-ink);
-				opacity: 0.8;
-			}
-
-			/* Flat fills, not gradients: the logo is flat unshaded teal, and the ring is already
-			   giving the surface somewhere for the eye to travel. Two soft effects on one small tile
-			   just blunt each other. */
-			.brush-ring {
-				position: absolute;
-				inset: 0;
-				z-index: -1;
-				width: 100%;
-				height: 100%;
-				pointer-events: none;
-			}
-
-			.path-tile-body {
-				position: relative;
-			}
-
-			.path-tile:hover {
-				transform: translateY(-4px);
-			}
-
-			@media (prefers-reduced-motion: reduce) {
-				.path-tile {
-					transition: none;
-				}
-
-				.path-tile:hover {
-					transform: none;
-				}
-			}
-
-			.path-tile h3 {
-				font-size: 1.45rem;
-				margin-bottom: var(--space-2);
-			}
-
-			.path-tile p {
-				opacity: 0.92;
-				margin-bottom: var(--space-5);
-				max-width: 38ch;
-			}
-
-			.path-cta {
-				font-weight: 700;
-				text-decoration: underline;
-			}
-
-			/* Lead tile — the headline figure comes from the same Sanity impactStat as the band below */
-			.path-chip {
-				display: inline-block;
-				font-size: 0.75rem;
-				font-weight: 700;
-				letter-spacing: 0.09em;
-				text-transform: uppercase;
-				background: rgba(255, 255, 255, 0.18);
-				padding: var(--space-1) var(--space-3);
-				border-radius: 999px;
-				margin-bottom: var(--space-4);
-			}
-
-			/* Deliberately white rather than --st-yellow: yellow on teal is 2.43:1, below the 3:1 that
-			   even large text needs. At this size the figure doesn't need a colour to stand out. */
-			.path-fact {
-				font-size: clamp(2.4rem, 6vw, 3.4rem);
-				font-weight: 700;
-				line-height: 1;
-				letter-spacing: -0.02em;
-				margin-bottom: var(--space-2);
-			}
-
-			/* Full opacity, unlike the other tile paragraphs: the inherited 0.92 is comfortable on ink
-			   but drops this to 4.08:1 on teal, just under AA. */
-			.path-lead .path-fact-label {
-				font-size: 1.05rem;
-				max-width: 36ch;
-				margin-bottom: var(--space-6);
-				opacity: 1;
-			}
-
-			.path-mini-fact {
-				display: block;
-				font-weight: 700;
-				font-size: 0.8rem;
-				letter-spacing: 0.05em;
-				text-transform: uppercase;
-				opacity: 0.85;
-				margin-bottom: var(--space-2);
-			}
-
-			/* A real button on the lead tile — the underlined text link is too quiet for the page's
-			   primary call to action. The supporting three keep the link treatment so the hierarchy
-			   reads. */
-			.btn-on-tile {
+			/* Impact — full-bleed band. Light since 2026-09-24 (design brief phase 2: at most one dark band
+			   per page besides the footer, and on Our Work that is the CAST stage). White against the
+			   off-white page, ink figures. .dark-band (Who We Are's partners) stays ink. */
+			.impact-band {
 				background: var(--st-white);
 				color: var(--st-ink);
-				align-self: flex-start;
-				transition: background 0.2s ease;
+				padding: var(--space-16) 0;
 			}
 
-			.path-tile:hover .btn-on-tile {
-				background: var(--st-bg);
-			}
-
-			/* Impact — full-bleed band */
-			.impact-band,
 			.dark-band {
 				background: var(--st-ink);
 				color: var(--st-white);
@@ -2513,10 +2360,12 @@ const structuredData = {
 				font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 			}
 
-			.impact-band .section-intro p,
-			.dark-band .section-intro p,
-			.stories-band .section-intro p {
+			.dark-band .section-intro p {
 				color: rgba(255, 255, 255, 0.75);
+			}
+
+			.impact-band .section-intro p {
+				color: rgba(36, 35, 43, 0.7);
 			}
 
 			.impact-band .wrap {
@@ -2543,102 +2392,19 @@ const structuredData = {
 				gap: var(--space-2);
 			}
 
-			/* White, not a teal: same call as .path-fact below — a static figure at this size doesn't
-			   need a colour to stand out, and any teal on static *text* competes with the buttons and
-			   links that the teal family is reserved for. 15.55:1 on ink. */
+			/* Ink, not a teal: a static figure at this size doesn't need a colour to stand out, and any
+			   teal on static *text* competes with the buttons and links the teal family is reserved for. */
 			.impact-stat strong {
 				display: block;
 				font-size: clamp(2.5rem, 5vw, 3.5rem);
 				font-weight: 700;
-				color: var(--st-white);
+				color: var(--st-ink);
 				line-height: 1;
 			}
 
 			.impact-stat span {
 				font-size: 0.95rem;
-				color: rgba(255, 255, 255, 0.75);
-			}
-
-			/* Success stories — gradient band, editorial quote */
-			.stories-band {
-				background: linear-gradient(135deg, var(--st-teal) 0%, var(--st-red) 100%);
-				color: var(--st-white);
-				padding: var(--space-16) 0;
-			}
-
-			.stories-band h2 {
-				font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-				margin-top: var(--space-2);
-			}
-
-			.stories-band .badge-on-dark {
-				background: rgba(255, 255, 255, 0.22);
-				color: var(--st-white);
-			}
-
-			/* The global `a` colour is --st-teal-dark, which lands on this band's own teal->red
-			   gradient at 1.1-1.6:1 — the link was effectively invisible. Inheriting the band's white
-			   (same approach as .supporter-list a on the ink band) brings it to parity with the body
-			   copy around it; the browser's default underline is what marks it as a link. */
-			.stories-band a {
-				color: inherit;
-			}
-
-			.stories-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-				gap: var(--space-8);
-				margin-top: var(--space-10);
-				align-items: stretch;
-			}
-
-			.story-card {
-				display: flex;
-				flex-direction: column;
-				gap: var(--space-5);
-				background: rgba(255, 255, 255, 0.14);
-				border: 1px solid rgba(255, 255, 255, 0.22);
-				border-radius: var(--radius);
-				padding: var(--space-8);
-				backdrop-filter: blur(6px);
-				-webkit-backdrop-filter: blur(6px);
-			}
-
-			.story-text {
-				font-size: 1.15rem;
-				font-style: italic;
-				font-weight: 600;
-				line-height: 1.5;
-				flex-grow: 1;
-			}
-
-			.story-name {
-				font-weight: 700;
-				font-size: 1rem;
-				letter-spacing: 0.02em;
-				opacity: 0.9;
-			}
-
-			/* Between the phone breakpoint and tablet width the supporting trio is still three across
-			   but genuinely narrow, and the headings start wrapping every couple of words. Trimming
-			   the padding and type buys back enough room without dropping to a fourth layout.
-			   Must sit after the base .path-* rules above (equal specificity — source order decides). */
-			@media (min-width: 701px) and (max-width: 900px) {
-				.path-tile {
-					padding: var(--space-6);
-				}
-
-				.path-support h3 {
-					font-size: 1.2rem;
-				}
-
-				.path-support .path-mini-fact {
-					font-size: 0.72rem;
-				}
-
-				.path-support p {
-					font-size: 0.95rem;
-				}
+				color: rgba(36, 35, 43, 0.7);
 			}
 
 			/* Narrow-screen tightening: vertical rhythm shrinks so there's less empty space to scroll
@@ -2714,15 +2480,6 @@ const structuredData = {
 					padding: var(--space-8) 0;
 				}
 
-				.path-grid {
-					grid-template-columns: 1fr;
-					gap: var(--space-5);
-				}
-
-				.path-tile {
-					padding: var(--space-6);
-				}
-
 				/* A band's own padding is what separates its content from the section boundary, so it
 				   belongs to the outer tier — not the --space-5 it shared with everything else, which
 				   left the heading almost touching the colour change that announces it. It can sit a
@@ -2730,8 +2487,7 @@ const structuredData = {
 				   as well, and that edge marks the boundary on its own; the padding here only has to
 				   stop the content crowding it. */
 				.impact-band,
-				.dark-band,
-				.stories-band {
+				.dark-band {
 					padding: var(--space-8) 0;
 				}
 
@@ -2748,14 +2504,6 @@ const structuredData = {
 					gap: var(--space-5);
 				}
 
-				.stories-grid {
-					gap: var(--space-5);
-					margin-top: var(--space-6);
-				}
-
-				.story-card {
-					padding: var(--space-6);
-				}
 			}
 		</style>
 

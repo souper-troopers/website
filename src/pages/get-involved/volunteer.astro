@@ -121,7 +121,6 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">What volunteers do</span>
 			<h2>Four ways people help</h2>
 			<p>All four are things volunteers do here now, rather than a wish list.</p>
 		</div>
@@ -137,14 +136,15 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Common questions</span>
 			<h2>Before you get in touch</h2>
 		</div>
 		<Faq items={faqItems} collapsible />
 	</section>
 
 	<section class="section wrap">
-		<div class="volunteer-cta">
+		{/* The page's email route, so it stays - as a plain section, not a boxed call to action
+		    (design brief phase 2). */}
+		<div class="section-intro volunteer-cta">
 			<h2>Ready when you are</h2>
 			<p>
 				Not sure what would be most useful? Say so - that is an easier question for us to answer
@@ -179,11 +179,12 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		gap: var(--space-3);
 	}
 
+	/* The site's white card (design brief phase 2) rather than a hairline box. */
 	.way {
-		background: #fff;
-		border: 1px solid rgba(36, 35, 43, 0.1);
-		border-radius: 14px;
-		padding: var(--space-4);
+		background: var(--st-white);
+		border-radius: var(--radius);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
+		padding: var(--space-5);
 	}
 
 	.way h3 {
@@ -196,26 +197,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		color: rgba(36, 35, 43, 0.72);
 	}
 
-	.volunteer-cta {
-		background: var(--st-bg);
-		border: 1px solid rgba(36, 35, 43, 0.1);
-		border-radius: 14px;
-		padding: var(--space-5);
-		text-align: center;
-	}
-
-	.volunteer-cta h2 {
-		margin: 0 0 var(--space-2);
-	}
-
 	.volunteer-cta p {
-		margin: 0 auto;
 		max-width: 58ch;
-		color: rgba(36, 35, 43, 0.72);
 	}
 
 	.volunteer-cta-email {
-		margin-top: var(--space-3);
 		font-weight: 600;
 	}
 

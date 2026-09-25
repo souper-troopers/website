@@ -128,7 +128,6 @@ const otherWays = [
 						sizes="(min-width: 700px) 260px, 45vw"
 						onload="this.classList.add('is-loaded')"
 					/>
-					<div class="goods-tile-scrim"></div>
 					<span>{item.label}</span>
 				</div>
 			))}
@@ -246,14 +245,15 @@ const otherWays = [
 		<div class="give-other">
 			{otherWays.map((way) => (
 				<a class="give-card" href={way.href}>
-					<Image
-						src={way.photo}
-						alt=""
-						class="give-card-img"
-						width={1100} widths={[550, 1100]}
-						sizes="(min-width: 701px) 540px, 100vw"
-					/>
-					<span class="give-card-scrim" aria-hidden="true"></span>
+					<span class="give-card-media">
+						<Image
+							src={way.photo}
+							alt=""
+							class="give-card-img"
+							width={1100} widths={[550, 1100]}
+							sizes="(min-width: 701px) 540px, 100vw"
+						/>
+					</span>
 					<span class="give-card-text">
 						<h3>{way.title}</h3>
 						<span class="give-card-body">{way.body}</span>
@@ -395,15 +395,24 @@ const otherWays = [
 		}
 	}
 
+	/* Photo on top, words on white beneath (design brief phase 2): the site's one photo-card shape.
+	   The words used to sit on the photo under a measured dark tint. */
 	.give-card {
-		position: relative;
 		display: flex;
-		align-items: flex-end;
-		aspect-ratio: 16 / 9;
+		flex-direction: column;
 		border-radius: var(--radius);
 		overflow: hidden;
-		color: var(--st-white);
+		background: var(--st-white);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
+		color: var(--st-ink);
 		text-decoration: none;
+	}
+
+	.give-card-media {
+		position: relative;
+		display: block;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
 	}
 
 	.give-card :global(.give-card-img) {
@@ -419,17 +428,7 @@ const otherWays = [
 		transform: scale(1.04);
 	}
 
-	/* The services cards' scrim. The text block never reaches above ~60% of the card's height,
-	   and the tint is at least 0.6 everywhere below 75% - so even a pure white pixel behind the
-	   text composites to 4.6:1 or better against white type. */
-	.give-card-scrim {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(to top, rgba(24, 23, 31, 0.92) 0%, rgba(24, 23, 31, 0.78) 45%, rgba(24, 23, 31, 0.45) 100%);
-	}
-
 	.give-card-text {
-		position: relative;
 		display: grid;
 		gap: var(--space-1);
 		padding: var(--space-6);
@@ -437,17 +436,17 @@ const otherWays = [
 
 	.give-card-text h3 {
 		margin: 0;
-		color: var(--st-white);
 	}
 
 	.give-card-body {
 		font-size: 0.95rem;
 	}
 
-	/* White and underlined: the link cue on a photograph, as on the shop's promise band. */
+	/* Teal-dark and underlined on white: the whole card is the link, this is its visible label. */
 	.give-card-cue {
 		margin-top: var(--space-2);
 		font-weight: 700;
+		color: var(--st-teal-dark);
 		text-decoration: underline;
 		text-underline-offset: 3px;
 	}

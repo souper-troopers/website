@@ -48,30 +48,30 @@ const pressMentions = await getPressMentions();
 		</div>
 	</section>
 
-	<section class="stories-band">
-		<div class="wrap">
-			<div class="section-intro">
-				<h2>How we began</h2>
-				{/* The opening line stays in view; the rest of Kerry's origin story opens on click rather
-				    than being cut - the words stay in the page for search and for anyone who wants them. */}
-				<p>
-					In June 2014, Kerry Hoffman spent a day sharing soup and sandwiches with people living on
-					the street.
-				</p>
-				<details class="card-more">
-					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about how we began</span></summary>
-					<div>
-						<p>
-							That relaxed social gathering - and the regular monthly events that followed for the
-							next five years - helped us understand the complexity of homelessness and the
-							inadequacies of existing interventions. Those early years cemented Souper Troopers in
-							the social capital of the streets, and taught us that every person has their own story
-							and needs individualised support to move forward.
-						</p>
-					</div>
-				</details>
-				<p>Kerry still leads Souper Troopers today - <a href="#team">meet the team</a>.</p>
-			</div>
+	{/* A plain section since 2026-09-24 (design brief phase 2): the teal-red gradient band behind it
+	    is retired site-wide. */}
+	<section class="section wrap">
+		<div class="section-intro">
+			<h2>How we began</h2>
+			{/* The opening line stays in view; the rest of Kerry's origin story opens on click rather
+			    than being cut - the words stay in the page for search and for anyone who wants them. */}
+			<p>
+				In June 2014, Kerry Hoffman spent a day sharing soup and sandwiches with people living on
+				the street.
+			</p>
+			<details class="card-more">
+				<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about how we began</span></summary>
+				<div>
+					<p>
+						That relaxed social gathering - and the regular monthly events that followed for the
+						next five years - helped us understand the complexity of homelessness and the
+						inadequacies of existing interventions. Those early years cemented Souper Troopers in
+						the social capital of the streets, and taught us that every person has their own story
+						and needs individualised support to move forward.
+					</p>
+				</div>
+			</details>
+			<p>Kerry still leads Souper Troopers today - <a href="#team">meet the team</a>.</p>
 		</div>
 	</section>
 
@@ -288,15 +288,6 @@ const pressMentions = await getPressMentions();
 		</section>
 	)}
 
-	<section class="section wrap">
-		<div class="card closing-cta" style="text-align:center; align-items:center;">
-			<h2>Be part of someone's next chapter</h2>
-			<div class="actions">
-				<a class="btn btn-primary" href="/donate">Donate now</a>
-				<a class="btn btn-outline" href="/get-involved">Other ways to help</a>
-			</div>
-		</div>
-	</section>
 </Layout>
 
 <style>
@@ -349,10 +340,6 @@ const pressMentions = await getPressMentions();
 
 	/* How we began sits on the teal-to-red band, where the site's teal-dark "More" would vanish.
 	   White, like the band's text around it. */
-	.stories-band .card-more > summary {
-		color: var(--st-white);
-	}
-
 	/* The logo wall. Flex rather than a grid, like .team-grid, so a part-filled last row centres
 	   itself: the partner count comes from Sanity and will change when Kerry revises the list.
 	   190px tiles give five to a row at the 1100px cap. align-items: flex-start so an opened tile

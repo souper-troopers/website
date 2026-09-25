@@ -119,7 +119,6 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">In practice</span>
 			<h2>Four shapes a partnership takes</h2>
 		</div>
 		<div class="grid grid-2 partner-grid">
@@ -180,7 +179,6 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Common questions</span>
 			<h2>What businesses ask us first</h2>
 		</div>
 		<Faq items={faqItems} collapsible />
@@ -193,16 +191,13 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	</section>
 
 	<section class="section wrap">
-		<div class="cta-panel">
+		{/* The page's only email route, so it stays - as a plain section without the button row
+		    (design brief phase 2: no closing CTA rows). */}
+		<div class="section-intro">
 			<h2>Start with a conversation</h2>
 			<p>
 				Tell us what your business does and we will tell you honestly whether we can use it.
-				Email <EmailLink client:visible address={partnershipEmail} />, or see the other ways
-				to get involved.
-			</p>
-			<p class="cta-links">
-				<a class="btn btn-primary" href={`mailto:${partnershipEmail}?subject=Corporate%20partnership%20enquiry`}>Email us about partnering</a>
-				<a class="btn btn-outline" href="/get-involved">All ways to get involved</a>
+				Email <EmailLink client:visible address={partnershipEmail} />, or see the <a href="/get-involved">other ways to get involved</a>.
 			</p>
 		</div>
 	</section>
@@ -245,17 +240,4 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		font-weight: 600;
 	}
 
-	.cta-panel {
-		max-width: 46rem;
-		margin: 0 auto;
-		text-align: center;
-	}
-
-	.cta-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-		justify-content: center;
-		margin-top: var(--space-4);
-	}
 </style>

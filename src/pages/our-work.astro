@@ -76,7 +76,6 @@ const hubServices = [
 		    The old `.cast-journey` styles in Layout.astro are untouched, so reverting is this file. */}
 		<div class="cast-stage">
 			<div class="section-intro">
-				<span class="badge badge-on-dark">The CAST journey</span>
 				<h2>They show up for themselves. We meet them halfway.</h2>
 			</div>
 			<div class="cast2-wrap">
@@ -171,15 +170,15 @@ const hubServices = [
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<span class="badge">What support looks like</span>
 			<h2>The Humanity Hub, in practice</h2>
 		</div>
 		{/* PROTOTYPE (2026-09-13) - see the note on `hubServices`. Cards are not links, so no hover lift. */}
 		<ul class="svc-cards" role="list">
 			{hubServices.map((item) => (
 				<li class="svc-card">
-					<Image src={item.photo} alt="" width={800} widths={[400, 800]} sizes="(max-width: 560px) 100vw, (max-width: 1023px) 50vw, 270px" class="svc-card-img" />
-					<div class="svc-card-scrim" aria-hidden="true"></div>
+					<div class="svc-card-media">
+						<Image src={item.photo} alt="" width={800} widths={[400, 800]} sizes="(max-width: 560px) 100vw, (max-width: 1023px) 50vw, 270px" class="svc-card-img" />
+					</div>
 					<div class="svc-card-text">
 						<h3>{item.title}</h3>
 						<p>{item.body}</p>
@@ -192,7 +191,6 @@ const hubServices = [
 	<section class="impact-band">
 		<div class="wrap">
 			<div class="section-intro">
-				<span class="badge badge-on-dark">Impact</span>
 				<h2>Outcomes from the latest CAST intake</h2>
 			</div>
 			<div class="impact-stats">
@@ -210,9 +208,8 @@ const hubServices = [
 		</div>
 	</section>
 
-	<section class="section wrap">
+	<section id="stories" class="section wrap">
 		<div class="section-intro">
-			<span class="badge">Success stories</span>
 			<h2>Real people, real outcomes</h2>
 		</div>
 		<div class="story-masonry">
@@ -478,21 +475,25 @@ const hubServices = [
 		list-style: none;
 	}
 
+	/* Photo on top, words on white beneath (design brief phase 2) - the homepage pillars' shape.
+	   The words used to sit on the photo under a dark tint measured per photo; now nothing does. */
 	.svc-card {
 		grid-column: span 2;
-		position: relative;
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-end;
-		min-height: 20rem;
 		overflow: hidden;
 		border-radius: var(--radius);
-		background: var(--st-ink);
+		background: var(--st-white);
 		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 	}
 
 	.svc-card:nth-child(5) {
 		grid-column: 2 / span 2;
+	}
+
+	.svc-card-media {
+		position: relative;
+		aspect-ratio: 4 / 3;
 	}
 
 	.svc-card-img {
@@ -504,21 +505,7 @@ const hubServices = [
 		object-fit: cover;
 	}
 
-	/* Darkest where the words sit (the foot of the card), lighter above so the photo still reads.
-	   Contrast is measured against the real photo pixels - change the stops and re-run that check. */
-	.svc-card-scrim {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to top,
-			rgba(24, 23, 30, 0.92) 0%,
-			rgba(24, 23, 30, 0.78) 45%,
-			rgba(24, 23, 30, 0.45) 100%
-		);
-	}
-
 	.svc-card-text {
-		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-2);
@@ -527,13 +514,11 @@ const hubServices = [
 
 	.svc-card h3 {
 		margin: 0;
-		color: var(--st-white);
 		font-size: 1.1rem;
 	}
 
 	.svc-card p {
 		margin: 0;
-		color: var(--st-white);
 		font-size: 0.95rem;
 	}
 
@@ -563,8 +548,21 @@ const hubServices = [
 			grid-column: auto;
 		}
 
+		/* Photo beside the words on a phone: seven cards with a full-width 4:3 photo each added
+		   ~1,500px to the page. */
 		.svc-card {
-			min-height: 16rem;
+			flex-direction: row;
 		}
+
+		.svc-card-media {
+			flex: 0 0 38%;
+			aspect-ratio: auto;
+			min-height: 9rem;
+		}
+
+		.svc-card-text {
+			padding: var(--space-4);
+		}
+
 	}
 </style>

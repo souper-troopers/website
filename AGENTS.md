@@ -1231,7 +1231,7 @@ homepage is still the least resolved part") and q28's first try at three pillars
 ### The design brief, phase 3: the copy pass (2026-09-25)
 `docs/design-brief-2026-09-24.md` §3.4-3.5 and §4. On `dev`, stopped for review; not published.
 **Only cuts, moves and links - no sentence was reworded** except where a cut clause had to be closed
-up (three sentences, below). The user saw the full before/after text diff before it went live.
+up (three sentences, below). The full before/after text diff went to the user with the phase report, before publishing.
 - **Children lose their opening restatement**: Volunteer's opening no longer lists the four things
   volunteers do (the cards below do); Donate goods' no longer lists the goods (its "Nine things worth
   bringing" does); Corporate's no longer names the four ways (its cards do). The organisation and

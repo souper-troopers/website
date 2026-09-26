@@ -176,13 +176,9 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		</div>
 	</section>
 
-	{/* "More from <category>" was removed on 25 September: the category page is one click back and
-	    already shows every sibling. The back link stays. */}
-	<section class="section wrap back-section">
-		<p class="back-to-category">
-			<a href={`/shop/${item.categorySlug}`}>&larr; All {item.categoryName}</a>
-		</p>
-	</section>
+	{/* No "More from <category>" (removed 25 September) and no "← All <category>" link beneath the
+	    box (removed 26 September): the hero's breadcrumbs already link to the category, which shows
+	    every sibling, and the lone link under the box read as a leftover. */}
 </Layout>
 
 <style>
@@ -383,17 +379,6 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		font-size: 0.85rem;
 		color: rgba(36, 35, 43, 0.68);
 		line-height: 1.6;
-	}
-
-	.back-to-category {
-		margin: 0;
-	}
-
-	/* Underline kept (no text-decoration: none): this had colour as its only affordance, with no
-	   hover underline either, so it was invisible as a link to anyone who can't pick out the teal. */
-	.back-to-category a {
-		font-weight: 600;
-		color: var(--st-teal-dark, #148294);
 	}
 </style>
 

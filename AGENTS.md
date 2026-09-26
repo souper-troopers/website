@@ -1018,6 +1018,11 @@ the product pages' "More from" row (both via `ItemCard.svelte`) and the `/shop` 
   already shows every sibling. The breadcrumbs and the "← All <category>" link stay; the back link
   now sits in its own short section. The `related` prop went with it. URLs and `Product` /
   `BreadcrumbList` data are unchanged.
+  - **The "← All <category>" link went too, on 2026-09-26** (the user's call): the hero's breadcrumbs
+    already link to the category, and once the product became one white box, a lone link between it
+    and the footer read as a leftover. The box now sits directly above the footer (64px at 1280,
+    48px at 390). Its `.back-to-category` styles were deleted with it; don't bring it back as a
+    phone convenience - the back gesture and the breadcrumb serve that.
 - Verified 2026-09-25 at 390 and 1280 on Worry Dolls, Gift Tags and a product page: no sideways
   scroll, no buttons left in the grid, tiles reachable by Tab with the ring showing, and Add to cart
   on the product page opens the drawer with the item in it.

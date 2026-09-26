@@ -648,7 +648,11 @@ own controls - Add to cart, EFT's Copy bank details, FAQ chevrons, `.card-more`.
 
 **Buttons commit, links navigate — the donate page deliberately uses both** (asked 2026-08-19: should the "Ways to give" CTAs match the plainer underlined links in "Goods and products also help"?). Kept different, because the two sets differ in kind: the goods cards *navigate* to another page on this site, while the payment cards *act* — four hand off to an external payment provider, one submits a rand amount, one writes to the clipboard. A control about to move money should not look identical to one that opens a list. There is also a hard constraint: PayFast's is a genuine `<form>` submit and "Copy bank details" navigates nowhere, so **at least two of the six cannot be links whatever is decided** — making the other four links would put the inconsistency *inside* one grid, where it is actually visible.
 
-~~**Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does.~~ **Handled by layout, 2026-09-14**: the EFT card now leads, larger and first, with a teal top rule. Its button deliberately stayed `.btn-outline-teal` like the other four, so the header's Donate is still the page's one filled primary. Promoting it to `.btn-primary` remains the stronger option if Kerry wants it.
+~~**Still open, and it's Kerry's**: with all six payment CTAs equal-weight, nothing on the page says EFT is preferred even though the copy does.~~ **Handled by layout, 2026-09-14**: the EFT card now leads, larger and first, with a teal top rule. Its button deliberately stayed `.btn-outline-teal` like the other four, so the header's Donate is still the page's one filled primary. Promoting it to `.btn-primary` remains the stronger option if Kerry wants it. **Since 26 September its action is the footer label too** (the user's call: no pill): `CopyButton`
+gained a `cta` prop rendering "Copy bank details" + copy icon as a `.card-cta-label .card-cta-button`
+over the standard wedge; the card is `card-cta card-cta-wide` at `--wedge-angle: 2deg`, which matches
+the slope the half-width cards get, and the footer row (`.pay-lead-cta`, grid area `cta`) has 24px
+above it so the bank details and email lines stay clear of the wedge.
 
 ## Fonts — the custom font is currently OFF, and everything we learned getting there (2026-08-23)
 

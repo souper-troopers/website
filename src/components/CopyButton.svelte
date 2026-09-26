@@ -1,8 +1,9 @@
 <script>
 	// `text` is optional. Without it this is the inline icon-only control (the account number
 	// beside its own copy icon); with it, it renders as a full labelled button in the site's
-	// normal .btn/.btn-outline system, for copying a whole block at once.
-	let { value, label, text = "" } = $props();
+	// normal .btn/.btn-outline system, for copying a whole block at once. With `cta` as well, it is
+	// the site's .card-cta footer label instead - bold ink text over the card's blue wedge, no pill.
+	let { value, label, text = "", cta = false } = $props();
 
 	let copied = $state(false);
 	let resetTimer;
@@ -45,7 +46,18 @@
 	{/if}
 {/snippet}
 
-{#if text}
+{#if text && cta}
+	<button
+		type="button"
+		class="card-cta-label card-cta-action card-cta-button copy-button-cta"
+		class:is-copied={copied}
+		onclick={copy}
+		aria-label={copied ? `${label} copied` : `Copy ${label}`}
+	>
+		{copied ? "Copied" : text}
+		{@render icon()}
+	</button>
+{:else if text}
 	<button
 		type="button"
 		class="btn btn-outline-teal copy-button-text"

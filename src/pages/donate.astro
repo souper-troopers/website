@@ -160,7 +160,7 @@ const otherWays = [
 		    layout used to give it the same weight as everything else. The emphasis is size and
 		    position only - its control stays the same outline button as the other four. */}
 		<div class="pay-grid">
-			<div class="card pay-card pay-card-lead">
+			<div class="card card-cta card-cta-wide pay-card pay-card-lead" style="--wedge-angle: 2deg">
 				<div class="pay-lead-intro">
 					<div class="payment-method-header">
 						<svg class="payment-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2 9h20L12 2zM3 10v8h2v-8H3zm4 0v8h2v-8H7zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zm4 0v8h2v-8h-2zM2 19v2h20v-2H2z" /></svg>
@@ -180,11 +180,15 @@ const otherWays = [
 					))}
 				</dl>
 				<div class="pay-action">
-					<CopyButton client:visible value={bankDetailsText} label="bank details" text="Copy bank details" />
 					<ul class="pay-notes">
 						<li>Proof of payment: <EmailLink client:visible address="info@soupertroopers.org" /></li>
 						<li>Section 18A certificates: <EmailLink client:visible address="accounts@soupertroopers.org" /></li>
 					</ul>
+				</div>
+				{/* The copy action as the card's footer label (26 September), like the other four cards'
+				    actions, rather than an outline pill. */}
+				<div class="pay-lead-cta">
+					<CopyButton client:visible value={bankDetailsText} label="bank details" text="Copy bank details" cta />
 				</div>
 			</div>
 			<div class="card card-cta pay-card">
@@ -307,7 +311,8 @@ const otherWays = [
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		grid-template-areas:
 			"intro details"
-			"action details";
+			"action details"
+			"cta cta";
 		align-items: start;
 		column-gap: var(--space-8);
 		row-gap: var(--space-4);
@@ -332,6 +337,15 @@ const otherWays = [
 	.pay-card-lead .pay-action {
 		grid-area: action;
 		align-self: end;
+	}
+
+	/* 2deg matches the slope the half-width cards below get from the standard wedge; the extra top
+	   margin keeps the bank details and the email lines clear of it. */
+	.pay-lead-cta {
+		grid-area: cta;
+		display: flex;
+		justify-content: flex-end;
+		margin-top: var(--space-6);
 	}
 
 	/* The QR beside its button rather than above it, so this card is no taller than its row. */
@@ -385,7 +399,8 @@ const otherWays = [
 			grid-template-areas:
 				"intro"
 				"details"
-				"action";
+				"action"
+				"cta";
 		}
 	}
 

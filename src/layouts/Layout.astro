@@ -1869,6 +1869,9 @@ const structuredData = {
 				   into the card and the words sit on its backdrop, not on a white panel - as on the
 				   product cards (25 September). */
 				background: var(--card-colour, #fff);
+				/* A true square (26 September): the near-square 4:3 and 3:2 versions read as "slightly off".
+				   The text keeps its natural height and the photo takes what is left above it. */
+				aspect-ratio: 1 / 1;
 			}
 
 			/* The wedge solid and a shade darker, as on the product cards, so it sits cleanly over
@@ -1971,14 +1974,16 @@ const structuredData = {
 				animation: none;
 			}
 
-			/* A fixed 3:2, flush to the card's top and sides (the card's own radius and overflow round
+			/* Flush to the card's top and sides (the card's own radius and overflow round
 			   it). The image is requested uncropped from Sanity, so object-fit cover decides the crop. */
 			.category-tile-img {
 				position: relative;
 				width: 100%;
-				/* 3:2 since 26 September (was 4:3): at 4:3 the cards were near-square (518x528 at 1280)
-				   and the 2x2 read as one heavy block. 3:2 gives 518x485 and every product still fits. */
-				aspect-ratio: 3 / 2;
+				/* Fills whatever the square card leaves above the text (26 September): 4:3, then 3:2, left
+				   the card near-square, which read as "slightly off". The photos are 16:9 files with spare
+				   width, so the crop never reaches the products. */
+				flex: 1 1 0;
+				min-height: 0;
 				overflow: hidden;
 			}
 
@@ -2001,7 +2006,9 @@ const structuredData = {
 			.category-tile-body {
 				display: flex;
 				flex-direction: column;
-				flex: 1;
+				/* Its natural height, not a share of the spare space: in the square card the photo takes
+				   whatever is left above the words. */
+				flex: 0 0 auto;
 				padding: var(--space-6);
 			}
 

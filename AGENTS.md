@@ -1148,6 +1148,25 @@ August she confirmed they're a real product at R40. Added at the user's call:
   3:2, so they have ~6% spare top and bottom. The backdrop read in `shop/index.astro` now samples a
   900x600 crop to match what the tile shows (gift tags `#fcfcfc`, bracelets `#f8f7f7` - just short of
   their baked fade's pure-white end, and matching the frame exactly).
+- ⚠ **Superseded the same day (26 September): the cards are true squares.** Principle behind it
+  (discussed with the user): a *near*-square reads as a mistake; commit to a square or to a clear
+  rectangle. The user chose squares, with the footer keeping its height.
+  - `.card.category-tile` is `aspect-ratio: 1 / 1`; `.category-tile-body` is `flex: 0 0 auto` (its
+    natural height); `.category-tile-img` is `flex: 1 1 0` and takes the rest of the square.
+  - **Equal footers**: side by side (701px up) every text body has `min-height: 161px` (182px from 701
+    to 900px, where titles wrap), so both photos in a row are the same height and the blue footers'
+    top edges line up although the Bracelets blurb runs to two lines. A subgrid version was tried and
+    collapsed the photo track to 12px (a grid-level `aspect-ratio` with an `fr` track resolves to the
+    minimum) - don't reach for it again.
+  - Measured: 518x518 at 1280/1440 (photo 357, text 161), 480x480 at 1024, 378x378 at 820, 319x319 at
+    701, 350x350 at 390. No sideways scroll.
+  - **The photos are now 2134x1200 (16:9) files in Sanity**, so the frame (wider than 4:3 on laptops,
+    ~1.85:1 on phones) crops only backdrop: dolls, gift tags and bracelets are the previous 4:3
+    composites with their outer columns copied outward (`sharp.extend({extendWith: 'copy'})`) - seamless
+    on a plain or smooth backdrop. The coffee was rebuilt at 810px tall so its bags keep headroom in the
+    shortest frames. Assets: coffee `image-60b4932d...`, dolls `image-adcec3f6...`, tags
+    `image-c72df349...`, bracelets `image-138635a3...`; the 4:3 versions are still in the media library.
+  - The Coffee and Bracelets pages take a centre square of the same photo; checked, both still read well.
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
   across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.
 

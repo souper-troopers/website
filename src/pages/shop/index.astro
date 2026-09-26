@@ -113,5 +113,19 @@ const tileColours = await Promise.all(
 		.category-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
+
+		/* Side by side, every text area gets the same minimum height - room for a two-line blurb (three
+		   between 701 and 900px, where the cards are narrower) - so in a square card both photos in a
+		   row are the same height and the blue footers' top edges line up. If a blurb ever runs longer
+		   the card stays square and only its own photo shortens. */
+		.category-grid :global(.category-tile-body) {
+			min-height: 161px;
+		}
+	}
+
+	@media (min-width: 701px) and (max-width: 900px) {
+		.category-grid :global(.category-tile-body) {
+			min-height: 182px;
+		}
 	}
 </style>

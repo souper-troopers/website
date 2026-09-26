@@ -11,7 +11,6 @@
 
 	let selectedIndex = $state(0);
 	let added = $state(false);
-	let photoLoaded = $state(false);
 
 	let selected = $derived(variants[selectedIndex]);
 
@@ -33,22 +32,26 @@
 	}
 </script>
 
-<div class="card attribute-product">
+<!-- The same one white box as an item's product page (26 September; this was a 700px card with a
+     320px photo): the photo flush on the left at its own 4:3, the details on the right - price as the
+     heading line, the option, Add to cart - and the collection note at the base. -->
+<div class="attribute-product">
 	{#if photoUrl}
 		<div class="attribute-product-img blur-up" style={photoLqip ? `background-image:url(${photoLqip})` : undefined}>
 			<img
 				src={photoUrl}
 				alt={categoryName}
-				width="700"
-				height="700"
-				loading="lazy"
-				class:is-loaded={photoLoaded}
-				onload={() => (photoLoaded = true)}
+				width="1100"
+				height="619"
+				loading="eager"
+				fetchpriority="high"
 			/>
 		</div>
 	{/if}
 
 	<div class="attribute-product-body">
+		<p class="attribute-product-price">{selected ? rand(selected.price) : ""}</p>
+
 		<label class="attribute-field">
 			Choose an option
 			<select bind:value={selectedIndex}>
@@ -58,43 +61,78 @@
 			</select>
 		</label>
 
-		<div class="attribute-product-price">{selected ? rand(selected.price) : ""}</div>
-
 		<button class="btn btn-primary" onclick={addToCart} disabled={!selected}>
 			{added ? "Added ✓" : "Add to cart"}
 		</button>
+
+		<p class="attribute-product-note">
+			Every purchase funds Souper Troopers' work with people experiencing homelessness in Cape Town.
+			Orders are collected in person or by a courier you arrange.
+		</p>
 	</div>
 </div>
 
 <style>
+	/* Matches .product in shop/[category]/[item].astro - keep the two in step. Not the site's .card:
+	   its phone padding rule would inset the photo. */
 	.attribute-product {
 		display: grid;
-		grid-template-columns: minmax(0, 320px) 1fr;
-		gap: 2rem;
-		align-items: start;
-		max-width: 700px;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: stretch;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--st-white);
+		box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 720px) {
 		.attribute-product {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 
+	/* A 4:3 box (the height of the details on a laptop) with the photo covering it. The coffee and
+	   bracelet category photos are 16:9 (2134x1200) with the product centred, so the sides this trims
+	   are backdrop only - checked at 1280, 900, 390 and 360. If the details ever run taller, the photo
+	   grows with the row and trims a little more. */
 	.attribute-product-img {
+		position: relative;
+		min-height: 100%;
+		aspect-ratio: 4 / 3;
+		background-color: #fff;
+		background-size: cover;
+	}
+
+	.attribute-product-img img {
+		position: absolute;
+		inset: 0;
 		width: 100%;
-		aspect-ratio: 1 / 1;
-		border-radius: calc(var(--radius, 18px) - 6px);
+		height: 100%;
+		object-fit: cover;
 	}
 
 	.attribute-product-body {
-		display: grid;
-		gap: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-5);
+		padding: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	/* Ink, not teal-dark - see .product-price in shop/[category]/[item].astro, which this matches. */
+	.attribute-product-price {
+		margin: 0;
+		font-size: 1.9rem;
+		font-weight: 800;
+		line-height: 1.1;
+		color: var(--st-ink, #24232b);
 	}
 
 	.attribute-field {
 		display: grid;
+		align-self: stretch;
 		min-width: 0;
+		max-width: 26rem;
 		gap: 0.35rem;
 		font-weight: 600;
 		font-size: 0.9rem;
@@ -113,17 +151,20 @@
 		background: white;
 	}
 
-	/* Ink, not teal-dark — see .product-price in shop/[category]/[item].astro. */
-	.attribute-product-price {
-		font-size: 1.4rem;
-		font-weight: 700;
-		color: var(--st-ink, #24232b);
-	}
-
+	/* No border override: .btn's transparent border keeps every button one height (AGENTS.md). */
 	.attribute-product-body button {
-		width: fit-content;
-		border: none;
 		cursor: pointer;
 		font: inherit;
+	}
+
+	/* The product page's footnote, pushed to the base the same way. */
+	.attribute-product-note {
+		margin: auto 0 0;
+		padding-top: var(--space-4);
+		border-top: 1px solid rgba(36, 35, 43, 0.1);
+		align-self: stretch;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.68);
+		line-height: 1.6;
 	}
 </style>

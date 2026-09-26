@@ -1101,6 +1101,17 @@ August she confirmed they're a real product at R40. Added at the user's call:
   it becomes one option at R40.
 - Blurb (approved word for word): "Beaded bracelets spelling out Souper, Trooper, Dignity, Love and
   Respect." No description until Shan sends details. `order: 4`.
+- **Coffee and Bracelets use the product pages' one white box since 2026-09-26** (the user: the card
+  should fill the width and the photo can be bigger). `AttributeProduct.svelte` was a 700px `.card`
+  with a 320px square photo; it is now the same full-width box as `shop/[category]/[item].astro`'s
+  `.product` (keep the two in step): the photo flush on the left, the price as the heading line
+  (1.9rem / 800), "Choose an option", Add to cart, and the product page's collection note pushed to
+  the base. Photo 530×398 at 1280 (was 320×320), full width stacked on a phone.
+  - The page now asks Sanity for the category photo **uncropped** (`width(1100)`, no height or
+    `fit("crop")`); the box is 4:3 and covers. The two photos are 16:9 (2134×1200) with the product
+    centred, so the trim is backdrop only - checked at 1280, 900, 390 and 360.
+  - The old `border: none` on its button was removed (the `.btn` border rule), and the photo is
+    `eager` + `fetchpriority="high"`, as on the product pages.
 - Photo: a 1500px square crop of `DSC_7515` (all five), tight on the bracelets - the first, looser
   crop left them small in both the tile and the page. The other two shots are wide and unused.
 - Written by a `sanity exec` script (not kept); ⚠ it must run from inside `studio/`, since the

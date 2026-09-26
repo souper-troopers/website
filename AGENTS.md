@@ -940,10 +940,17 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   hairline + shadow, `overflow: hidden`); the photo column runs to its top, left and bottom edges
   with no radius of its own, so a white-backed doll photo reads as part of the box. The gift tags'
   photos are on their grey sweep, so on those pages the photo shows as a grey panel inside it.
-  - **The details are spread down the box's height** (side by side only): `.detail-top` (price,
-    copy), `.detail-buy` (handmade note, Add to cart / sold out), then `.product-note` as a footnote,
-    with `justify-content: space-between`. The box's height comes from the photo, so the gaps scale
-    with it (doll at 1280: box 802px). Stacked on a phone they just follow one another.
+  - ~~The details are spread down the box's height with `justify-content: space-between`~~
+    (**changed the same day**: it left two ~200px voids that stranded Add to cart). Now
+    `.detail-top` (price, copy) and `.detail-buy` (handmade note, Add to cart / sold out) **stack from
+    the top** with a `--space-6` gap, and only `.product-note` is pushed to the base
+    (`margin-top: auto`). The white under the button on a laptop is the photo's height, not a gap to
+    fill - don't reach for `space-between` again. Stacked on a phone they follow one another.
+  - **The carousel controls sit over the photo's foot** (absolute, centred, in a near-white pill so
+    the counter reads on the gift tags' grey too). Beneath the photo they added ~60px to the left
+    column (doll box at 1280: 802 -> 730px). `.carousel-controls[hidden] { display: none }` is
+    load-bearing: the component's own `display: flex` beat the UA's `[hidden]`, so dead buttons
+    showed whenever the script hadn't run. Verified: arrows step 1 / 8 -> 2 / 8 and back.
 - **Cards and share images pad instead of crop** (`fit("fill").bg("ffffff")`). The doll shots are 3:4
   portrait, and the old square crop clipped hats and feathers. The only other items (two gift tags)
   are already square, so the change is a no-op for them.

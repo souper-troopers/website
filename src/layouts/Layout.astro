@@ -2143,11 +2143,19 @@ const structuredData = {
 
 			.contact-form input,
 			.contact-form textarea {
+				box-sizing: border-box;
 				font: inherit;
 				padding: var(--space-2) var(--space-3);
 				border-radius: 10px;
 				border: 1px solid rgba(0, 0, 0, 0.15);
 				background: var(--st-white);
+			}
+
+			/* A fixed height for single-line fields (26 September): with the height worked out from the
+			   text, a browser's autofill preview or a password-manager extension - which swap the font
+			   inside one field - made the name field a different height from the email field beside it. */
+			.contact-form input:not([type="checkbox"], [type="radio"], [type="hidden"]) {
+				height: 40px;
 			}
 
 			.contact-form .btn {

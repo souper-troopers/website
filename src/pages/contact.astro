@@ -16,19 +16,11 @@ import { faqPageJsonLd, type FaqItem } from "../lib/faq";
 const settings = await getSiteSettings();
 
 const emailDirectory = [
-	{ label: "Donations & drop-offs", address: "manager@soupertroopers.org" },
-	{ label: "Visits & appointments", address: "manager@soupertroopers.org" },
+	// One row for manager@ (26 September): it was two rows with the same address.
+	{ label: "Donations, drop-offs & visits", address: "manager@soupertroopers.org" },
 	{ label: "Section 18A certificates", address: "accounts@soupertroopers.org" },
 	{ label: "Programme & partnerships", address: "kerry@soupertroopers.org" },
 	{ label: "Anything else", address: "info@soupertroopers.org" },
-];
-
-// The Hub photo: half the row in two columns. A photo stretched taller than 3:2 renders wider than
-// its card, hence the cap above the column width.
-
-const shopBrands = [
-	{ handle: "@troopers_coffee", href: "https://instagram.com/troopers_coffee" },
-	{ handle: "@africanworrydolls", href: "https://instagram.com/africanworrydolls" },
 ];
 
 /**
@@ -86,13 +78,12 @@ const faqItems: FaqItem[] = [
 	>
 		<h1>Contact Us</h1>
 		<p>We'd love to hear from you - whether you're donating, volunteering, or partnering with us.</p>
+		<a class="hero-jump" href="#send-message">Send us a message &darr;</a>
 	</PhotoHero>
 
-	{/* Visit us and the shop's accounts stacked on the left, Email us on the right (2026-09-25): with
-	    the photo gone to the hero, Visit us is ~236px tall against Email us's 423, and stretched to
-	    match it showed ~350px of empty card. Stacking the shop card under it balances the columns
-	    (~404 against 423). A flat grid rather than wrappers, so a phone keeps the DOM order -
-	    Visit, Email, Shop. */}
+	{/* Visit us and Email us side by side (26 September). The shop's Instagram accounts moved to the
+	    foot of /shop - they aren't a way to contact the organisation - and with manager@'s two rows
+	    merged the two cards are close in height. */}
 	<section class="section wrap">
 		<div class="contact-cards">
 			<div class="card visit-card" data-name="visit">
@@ -102,6 +93,11 @@ const faqItems: FaqItem[] = [
 						<p>The Humanity Hub, Woodstock</p>
 					</div>
 					<p><AddressLink client:visible lines={[displayAddress(settings.address)]} /></p>
+					{/* Opens the address in Google Maps (26 September): no embedded map, so no third-party
+					    cookies on this page. */}
+					<p class="directions">
+						<a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayAddress(settings.address))}`} target="_blank" rel="noopener">Get directions</a>
+					</p>
 					<dl class="visit-hours">
 						{displayHours.map((entry) => (
 							<div>
@@ -124,16 +120,6 @@ const faqItems: FaqItem[] = [
 					))}
 				</dl>
 			</div>
-			<div class="card brand-card" data-name="shop">
-				<h2 class="contact-title">Follow the shop brands</h2>
-				<ul class="brand-list">
-					{shopBrands.map((brand) => (
-						<li>
-							<a href={brand.href} target="_blank" rel="noopener">{brand.handle}</a>
-						</li>
-					))}
-				</ul>
-			</div>
 		</div>
 	</section>
 	
@@ -151,7 +137,7 @@ const faqItems: FaqItem[] = [
 	    form is as wide as that column too (it was 480px): name and email side by side, the message
 	    full width beneath - so no single-line field is stretched to 736px, which would suggest far
 	    more to type than a name. */}
-	<section class="section wrap">
+	<section id="send-message" class="section wrap">
 		<div class="message-column">
 			<div class="card-heading">
 				<h2 class="contact-title">Send us a message</h2>
@@ -191,45 +177,33 @@ const faqItems: FaqItem[] = [
 </Layout>
 
 <style>
-	/* From 701px: Visit us over the shop card on the left, Email us spanning both rows on the right.
-	   `auto 1fr` puts any spare height in the second row - the shop card - never under Visit us's
-	   hours. One column below 701px, in DOM order. */
+	/* Two cards side by side from 701px, one column below. */
 	.contact-cards {
 		display: grid;
-		/* minmax(0, ...): a long email address must not widen its column (the old wrapper's min-width: 0). */
+		/* minmax(0, ...): a long email address must not widen its column. */
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-rows: auto 1fr;
-		grid-template-areas:
-			"visit email"
-			"shop email";
 		gap: var(--space-6);
-	}
-
-	.visit-card {
-		grid-area: visit;
-	}
-
-	.email-card {
-		grid-area: email;
-	}
-
-	.brand-card {
-		grid-area: shop;
 	}
 
 	@media (max-width: 700px) {
 		.contact-cards {
 			grid-template-columns: 1fr;
-			grid-template-rows: none;
-			grid-template-areas: none;
 			gap: var(--space-5);
 		}
+	}
 
-		.visit-card,
-		.email-card,
-		.brand-card {
-			grid-area: auto;
-		}
+	/* White on the hero photo, like Donate's "Jump to ways to give". */
+	.hero-jump {
+		display: inline-block;
+		margin-top: var(--space-3);
+		color: var(--st-white);
+		font-weight: 700;
+		text-underline-offset: 3px;
+	}
+
+	.directions {
+		margin: 0;
+		font-weight: 600;
 	}
 
 	/* One size for every title below the h1. The four cards and the questions are peers, and they had
@@ -261,14 +235,15 @@ const faqItems: FaqItem[] = [
 		gap: var(--space-3);
 	}
 
-	/* The questions' column: same width, same left edge. */
+	/* The questions' column: same width, and since 26 September the same left edge as the cards above
+	   (it was centred, so the page's left edge stepped in halfway down). */
 	.message-column {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-5);
 		width: 100%;
 		max-width: 46rem;
-		margin: 0 auto;
+		margin: 0;
 	}
 	
 	/* The global form is a centred 480px block; here it fills the column, so its edges match the
@@ -296,7 +271,7 @@ const faqItems: FaqItem[] = [
 		gap: var(--space-5);
 		width: 100%;
 		max-width: 46rem;
-		margin: 0 auto;
+		margin: 0;
 	}
 
 	.visit-hours {
@@ -359,15 +334,6 @@ const faqItems: FaqItem[] = [
 
 	.email-directory dd {
 		margin: 0;
-	}
-
-	.brand-list {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-2);
-		margin: 0;
-		padding: 0;
-		list-style: none;
 	}
 
 	.toast {

@@ -104,10 +104,19 @@ const tileColours = await Promise.all(
 			</details>
 			<CardCtaLabel as="a" href="mailto:manager@soupertroopers.org?subject=Shop%20order">Ask about an order</CardCtaLabel>
 		</div>
+		{/* The shop brands' Instagram accounts (26 September; they were a card on Contact). */}
+		<p class="shop-follow">
+			Follow the shop on Instagram:{" "}<a href="https://instagram.com/troopers_coffee" target="_blank" rel="noopener">@troopers_coffee</a>{" "}and{" "}<a href="https://instagram.com/africanworrydolls" target="_blank" rel="noopener">@africanworrydolls</a>
+		</p>
 	</section>
 </Layout>
 
 <style>
+	.shop-follow {
+		margin: var(--space-6) 0 0;
+		color: rgba(36, 35, 43, 0.75);
+	}
+
 	/* Two by two from 701px: .grid-2's auto-fit would fit three tracks at 1280 and strand the fourth. */
 	@media (min-width: 701px) {
 		.category-grid {

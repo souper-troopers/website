@@ -1331,6 +1331,23 @@ the form's usual 480px.
   deliberately stays**: those are the product accounts (they appear nowhere else on the site), and
   "Follow us" is the footer's label for the organisation's own.
 
+### The Contact page, second pass (26 September)
+Five changes at the user's go-ahead, from a layout review:
+- **manager@'s two directory rows are one**: "Donations, drop-offs & visits" (was "Donations &
+  drop-offs" and "Visits & appointments", both manager@).
+- **One left edge**: the FAQ and form columns keep their 46rem width but are no longer centred, so
+  they start on the cards' left edge (110px at 1280) instead of stepping in halfway down.
+- **"Follow the shop brands" left Contact** - it isn't a way to reach the organisation - and is now a
+  line at the foot of `/shop` ("Follow the shop on Instagram: @troopers_coffee and
+  @africanworrydolls"). Visit us and Email us sit side by side on their own; the grid areas and
+  `.brand-card` styles went with it. Visit us is ~100px shorter than Email us at 1280, so it shows
+  some empty card at its foot - accepted.
+- **"Get directions"** under the address: a Google Maps search link built from `displayAddress()`,
+  new tab. No embedded map, so no third-party cookies.
+- **"Send us a message ↓"** in the hero, jumping to `#send-message` (the form's section), styled like
+  Donate's "Jump to ways to give".
+- Page height 1,819 → 1,747px at 1280, 2,458 → 2,284 at 390. No sideways scroll.
+
 ### The shop landing page — one lead card, edge-to-edge tiles (2026-09-13)
 - ⚠ **Superseded 2026-09-24 (design brief phase 1)**: the promise card is gone. Its photo is the page's
   hero and its heading and paragraph are a plain section below, word for word; `ShopPromise.astro` was

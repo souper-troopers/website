@@ -1144,9 +1144,12 @@ const structuredData = {
 			   dark on it doesn't, which is most of why a grid of these felt shouty.
 			   Hover therefore has to brighten rather than darken. The old --st-teal-dark hover puts
 			   ink at 3.44:1, so hovering would have failed the check the rest state just passed. */
+			/* Pure black since 26 September (was --st-ink, 5.64:1): the user found the label soft, and
+			   black on the same brand teal is 7.62:1 - WCAG's enhanced (AAA) level - with the fill
+			   unchanged. Hover is 9.14:1. Only here: the rest of the site's text keeps the ink. */
 			.btn-primary {
 				background: var(--st-teal);
-				color: var(--st-ink);
+				color: #000;
 			}
 
 			.btn-primary:hover {

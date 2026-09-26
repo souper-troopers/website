@@ -235,14 +235,13 @@ const faqItems: FaqItem[] = [
 		gap: var(--space-3);
 	}
 
-	/* The questions' column: same width, and since 26 September the same left edge as the cards above
-	   (it was centred, so the page's left edge stepped in halfway down). */
+	/* The form's column: the full width of the page since 26 September (it was a centred 46rem). */
 	.message-column {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-5);
 		width: 100%;
-		max-width: 46rem;
+		max-width: none;
 		margin: 0;
 	}
 	
@@ -270,8 +269,19 @@ const faqItems: FaqItem[] = [
 		flex-direction: column;
 		gap: var(--space-5);
 		width: 100%;
-		max-width: 46rem;
+		max-width: none;
 		margin: 0;
+	}
+
+	/* Full width since 26 September, like the cards above, so the page has one width throughout. The
+	   question rows span it; each answer's text stays at a readable measure (~46rem) inside its row.
+	   Contact only - the other pages' FAQs keep the component's 46rem. */
+	.faq-column :global(.faq) {
+		max-width: none;
+	}
+
+	.faq-column :global(.faq-answer) {
+		max-width: 46rem;
 	}
 
 	.visit-hours {

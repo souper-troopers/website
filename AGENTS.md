@@ -1335,8 +1335,11 @@ the form's usual 480px.
 Five changes at the user's go-ahead, from a layout review:
 - **manager@'s two directory rows are one**: "Donations, drop-offs & visits" (was "Donations &
   drop-offs" and "Visits & appointments", both manager@).
-- **One left edge**: the FAQ and form columns keep their 46rem width but are no longer centred, so
-  they start on the cards' left edge (110px at 1280) instead of stepping in halfway down.
+- **One width**: the FAQ and form now fill the page width like the cards (first left-aligned at 46rem,
+  then full width the same day at the user's call). The FAQ rows span 1,060px at 1280 but each
+  answer's text is held to 46rem (`.faq-column :global(.faq-answer)`), so lines stay ~75 characters;
+  the form's name and email split the row at ~520px each. Contact only - the other four pages' FAQs
+  keep the component's 46rem.
 - **"Follow the shop brands" left Contact** - it isn't a way to reach the organisation - and is now a
   line at the foot of `/shop` ("Follow the shop on Instagram: @troopers_coffee and
   @africanworrydolls"). Visit us and Email us sit side by side on their own; the grid areas and

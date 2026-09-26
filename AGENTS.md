@@ -1846,6 +1846,10 @@ the final design**. That brief is with Brad's designer friend (2 September minut
   tails, descriptions at muted ink (0.75). The letters keep their brand colours; the line and the dot
   are `--st-teal-dark` (the line at 0.8 opacity, the dot with a soft teal glow). The animation is
   unchanged. With it, Our Work has no dark band besides the footer.
+  - **No card since 26 September (the user's call)**: the white box and shadow are gone and the
+    letters sit on the page ground (`--st-bg`). The outline's fill colour moved to `--st-bg` with it
+    (see the outline note below - it must match what's behind). Checked at 1280 and 390, no sideways
+    scroll.
   - ⚠ **The yellow A is low-contrast on white** (~1.9:1, under the 3:1 floor for graphics). Accepted
     knowingly: it is decorative - the word is read from its tail ("ssess") and the visually-hidden
     "Assess". Noted in `docs/design-brief-2026-09-24.md` §6 for Brad's designer. Don't "fix" it by

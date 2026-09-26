@@ -1140,6 +1140,14 @@ August she confirmed they're a real product at R40. Added at the user's call:
   edge over the photo's foot. Drawn by the body so it always fits the words, however long a blurb runs.
   Ink on it measures 12.2:1, the 0.75 blurb 6.0:1 (hover 11.3 / 5.7). Revert = restore the two
   `a.card-cta.category-tile::after` background rules and delete the body `::before` block.
+- **Tile photos are 3:2 since 26 September (were 4:3).** At 4:3 the cards were near-square (518x528
+  at 1280, taller than wide) and the 2x2 read as one heavy block - the user found the proportion
+  "a bit off". 3:2 gives 518x485 (1024: 480x459; phone: 350x395, was 350x424) and the grid is ~85px
+  shorter. 16:9 was compared and rejected: it clips the tall coffee bag's top and the gift-tag cards'
+  bottoms. The Sanity files stay 4:3 composites; the tile's `object-fit: cover` takes the middle
+  3:2, so they have ~6% spare top and bottom. The backdrop read in `shop/index.astro` now samples a
+  900x600 crop to match what the tile shows (gift tags `#fcfcfc`, bracelets `#f8f7f7` - just short of
+  their baked fade's pure-white end, and matching the frame exactly).
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
   across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.
 

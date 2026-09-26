@@ -1971,12 +1971,14 @@ const structuredData = {
 				animation: none;
 			}
 
-			/* A fixed 4:3, flush to the card's top and sides (the card's own radius and overflow round
+			/* A fixed 3:2, flush to the card's top and sides (the card's own radius and overflow round
 			   it). The image is requested uncropped from Sanity, so object-fit cover decides the crop. */
 			.category-tile-img {
 				position: relative;
 				width: 100%;
-				aspect-ratio: 4 / 3;
+				/* 3:2 since 26 September (was 4:3): at 4:3 the cards were near-square (518x528 at 1280)
+				   and the 2x2 read as one heavy block. 3:2 gives 518x485 and every product still fits. */
+				aspect-ratio: 3 / 2;
 				overflow: hidden;
 			}
 

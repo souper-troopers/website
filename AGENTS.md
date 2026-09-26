@@ -131,6 +131,10 @@ Four rules follow, and they drove everything below:
       browser's exclusive accordion - a shared `name` on each `<details>` (unique per FAQ instance so
       two FAQs on a page don't interact). No script; Chrome, Safari 17.2+ and Firefox 130+ support it,
       older browsers just allow several open. Verified by clicking: opening one closes the other.
+    - **Open and close animate (26 September, every collapsible FAQ)**: `::details-content` eases
+      `block-size` 0 → auto with `interpolate-size: allow-keywords`, 0.3s. Chrome/Edge animate; browsers
+      without those features open instantly. Off under reduced motion. Measured: opening grows
+      59 → 202px over ~300ms; switching closes one as the other opens.
     - **The question stays ink; the chevron is teal-dark.** Four teal underlined questions would read as four links elsewhere. The chevron carries the colour affordance and is visible without hover.
     - A `<details>` cannot live inside a `<dl>`, so collapsible mode renders a `<div>` of `<details>` rather than wrapping the existing markup.
   - **The component is alignment-neutral** (`max-width`, no auto margin) because `.section-intro` is left-aligned by default. Alignment is the page's call — a centred list under a left-aligned heading was the first thing a screenshot caught. (`/contact` centres the FAQ in a `.faq-column` with its heading inside the same box, so the two share a left edge. The earlier 480px intro box plus a `.faq-centred` wrapper had the heading starting 124px right of its own list.)

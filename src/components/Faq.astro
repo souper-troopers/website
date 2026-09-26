@@ -171,6 +171,31 @@ const groupName = oneAtATime ? `faq-${Math.random().toString(36).slice(2, 8)}` :
 		transition: transform 140ms ease;
 	}
 
+	/* Open and close animate (26 September): the answer's height eases between 0 and its natural
+	   size. Pure CSS - ::details-content plus interpolate-size - so browsers that lack either (Safari,
+	   Firefox as of this writing) simply open instantly, as before. */
+	.faq-collapsible {
+		interpolate-size: allow-keywords;
+	}
+
+	.faq-collapsible details::details-content {
+		block-size: 0;
+		overflow: hidden;
+		transition:
+			block-size 0.3s ease,
+			content-visibility 0.3s allow-discrete;
+	}
+
+	.faq-collapsible details[open]::details-content {
+		block-size: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.faq-collapsible details::details-content {
+			transition: none;
+		}
+	}
+
 	.faq-collapsible details[open] .faq-mark {
 		transform: rotate(-135deg) translate(-1px, -1px);
 	}

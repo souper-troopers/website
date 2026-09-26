@@ -1138,7 +1138,7 @@ August she confirmed they're a real product at R40. Added at the user's call:
   tile's words.** The card's own `::after` wedge is off for `.category-tile`; `.category-tile-body::before`
   draws the same solid `#d5e7e8` (hover `#c6e1e3`) behind the whole text body, with a 24px rising top
   edge over the photo's foot. Drawn by the body so it always fits the words, however long a blurb runs.
-  Ink on it measures 11.6:1, the 0.75 blurb 6.3:1 (hover 10.8 / 5.9). Revert = restore the two
+  Ink on it measures 12.2:1, the 0.75 blurb 6.0:1 (hover 11.3 / 5.7). Revert = restore the two
   `a.card-cta.category-tile::after` background rules and delete the body `::before` block.
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three
   across stranded the fourth tile; `.grid-2` alone would still fit three at 1280.

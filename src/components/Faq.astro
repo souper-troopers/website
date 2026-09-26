@@ -24,15 +24,20 @@ import type { FaqItem } from "../lib/faq";
 interface Props {
 	items: FaqItem[];
 	collapsible?: boolean;
+	/** Collapsible only: one answer open at a time. The browser's own exclusive accordion (a shared
+	 *  `name` on each <details>) - no script; browsers without it just allow several open. */
+	oneAtATime?: boolean;
 }
 
-const { items, collapsible = false } = Astro.props;
+const { items, collapsible = false, oneAtATime = false } = Astro.props;
+// Unique per instance, so two FAQs on one page don't close each other.
+const groupName = oneAtATime ? `faq-${Math.random().toString(36).slice(2, 8)}` : undefined;
 ---
 
 {collapsible ? (
 	<div class="faq faq-collapsible">
 		{items.map((item) => (
-			<details class="faq-item">
+			<details class="faq-item" name={groupName}>
 				<summary>
 					<span class="faq-question">{item.question}</span>
 					<span class="faq-mark" aria-hidden="true"></span>

@@ -136,34 +136,37 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 				</div>
 			)}
 
-			{/* The site's white card (25 September), aligned to the top of the photo: the price as its
-			    heading line, then the copy, the handmade note, the action, and the collection note
-			    under a hairline. */}
-			<div class="card product-detail">
-				<p class="product-price">{rand(item.price)}</p>
+			{/* The details sit in the same white box as the photo (26 September; they were a separate
+			    card beside it): the price as the heading line, then the copy, the handmade note, the
+			    action, and the collection note under a hairline. */}
+			<div class="product-detail">
+				<div class="detail-top">
+					<p class="product-price">{rand(item.price)}</p>
+					{leadCopy && <p class="product-body">{leadCopy}</p>}
+				</div>
 
-				{leadCopy && <p class="product-body">{leadCopy}</p>}
+				<div class="detail-buy">
+					{handmade && (
+						<p class="product-handmade">
+							Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
+							exact doll you'll receive.
+						</p>
+					)}
 
-				{handmade && (
-					<p class="product-handmade">
-						Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
-						exact doll you'll receive.
-					</p>
-				)}
-
-				{item.soldOut ? (
-					<p class="sold-out">
-						Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
-					</p>
-				) : (
-					<AddToCartButton
-						client:load
-						id={item._id}
-						categoryName={item.categoryName}
-						name={item.name}
-						price={item.price}
-					/>
-				)}
+					{item.soldOut ? (
+						<p class="sold-out">
+							Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
+						</p>
+					) : (
+						<AddToCartButton
+							client:load
+							id={item._id}
+							categoryName={item.categoryName}
+							name={item.name}
+							price={item.price}
+						/>
+					)}
+				</div>
 
 				<p class="product-note">
 					Every purchase funds Souper Troopers' work with people experiencing homelessness in Cape Town.
@@ -183,17 +186,21 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 </Layout>
 
 <style>
+	/* One white box holding the photo and the details (26 September): the product photos are shot
+	   on white, so the photo runs to the box's edges and reads as part of it. */
 	.product {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		gap: 2.5rem;
 		align-items: start;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--st-white);
+		box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
 	}
 
 	@media (max-width: 720px) {
 		.product {
 			grid-template-columns: minmax(0, 1fr);
-			gap: 1.5rem;
 		}
 	}
 
@@ -213,7 +220,6 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		margin: 0;
 		padding: 0;
 		list-style: none;
-		border-radius: var(--radius, 18px);
 		background: #fff;
 	}
 
@@ -240,6 +246,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	}
 
 	.carousel-controls {
+		padding-bottom: var(--space-4);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -281,9 +288,31 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		}
 	}
 
-	.product-detail {
-		gap: 0;
+	/* Three groups spread down the photo's full height (26 September): what it is and costs at the
+	   top, the handmade note with Add to cart in the middle, the collection note as a footnote at the
+	   base. Side by side only; stacked on a phone they simply follow one another. */
+	.product {
 		align-items: stretch;
+	}
+
+	.product-detail {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: var(--space-8);
+		padding: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	.detail-buy {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	@media (max-width: 720px) {
+		.product-detail {
+			gap: var(--space-5);
+		}
 	}
 
 	/* Ink, not teal-dark: the teal family is reserved for things you can act on. The card's heading
@@ -310,13 +339,16 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 		color: rgba(36, 35, 43, 0.72);
 	}
 
-	.product-detail :global(button),
-	.sold-out {
+	.detail-buy :global(button),
+	.detail-buy .sold-out {
 		margin-top: var(--space-5);
 	}
+	.detail-buy > :first-child {
+		margin-top: 0;
+	}
 
-	.product-detail :global(button) {
-		align-self: flex-start;
+	.detail-buy .product-handmade {
+		margin-top: 0;
 	}
 
 	.sold-out {
@@ -325,7 +357,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	}
 
 	.product-note {
-		margin: var(--space-5) 0 0;
+		margin: 0;
 		padding-top: var(--space-4);
 		border-top: 1px solid rgba(36, 35, 43, 0.1);
 		font-size: 0.85rem;

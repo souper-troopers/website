@@ -936,6 +936,14 @@ The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop
   The meta description and `Product` data still use `details || description` - unchanged. Inner hero
   `h1`s have `text-wrap: balance` (page and band only - the homepage headline is Kerry's copy, `q37`),
   so "(pack of 3)" no longer splits.
+- **One white box since 26 September (the user's call)**: `.product` is the box (white, radius,
+  hairline + shadow, `overflow: hidden`); the photo column runs to its top, left and bottom edges
+  with no radius of its own, so a white-backed doll photo reads as part of the box. The gift tags'
+  photos are on their grey sweep, so on those pages the photo shows as a grey panel inside it.
+  - **The details are spread down the box's height** (side by side only): `.detail-top` (price,
+    copy), `.detail-buy` (handmade note, Add to cart / sold out), then `.product-note` as a footnote,
+    with `justify-content: space-between`. The box's height comes from the photo, so the gaps scale
+    with it (doll at 1280: box 802px). Stacked on a phone they just follow one another.
 - **Cards and share images pad instead of crop** (`fit("fill").bg("ffffff")`). The doll shots are 3:4
   portrait, and the old square crop clipped hats and feathers. The only other items (two gift tags)
   are already square, so the change is a no-op for them.

@@ -1873,12 +1873,32 @@ const structuredData = {
 
 			/* The wedge solid and a shade darker, as on the product cards, so it sits cleanly over
 			   whatever it meets. */
+			/* EXPERIMENT (26 September): the blue footer raised to sit behind all of the tile's words,
+			   not just "Shop". It is drawn by the text body rather than the card's usual ::after, so it
+			   always covers exactly the words however long the blurb runs, with the same rising slope
+			   at its top edge reaching 24px up over the photo's foot. The card's own wedge is off. */
 			a.card-cta.category-tile::after {
-				background: #d5e7e8;
+				display: none;
 			}
 
-			a.card-cta.category-tile:hover::after,
-			a.card-cta.category-tile:focus-visible::after {
+			.category-tile-body {
+				position: relative;
+				isolation: isolate;
+			}
+
+			.category-tile-body::before {
+				content: "";
+				position: absolute;
+				inset: -24px 0 0 0;
+				z-index: -1;
+				background: #d5e7e8;
+				clip-path: polygon(0 24px, 100% 0, 100% 100%, 0 100%);
+				pointer-events: none;
+				transition: background-color 0.25s ease;
+			}
+
+			a.category-tile:hover .category-tile-body::before,
+			a.category-tile:focus-visible .category-tile-body::before {
 				background: #c6e1e3;
 			}
 

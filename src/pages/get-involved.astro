@@ -53,10 +53,13 @@ const goodsCategories = [
 	    what lets an opened card drop its content full width beneath the pair instead of growing one
 	    column - a <details> body cannot be positioned outside its own box. DOM order is card, body,
 	    card, body, so on a phone the content opens right under its card and the heading outline stays
-	    h2 > h3. No JavaScript needed to open or close; the script below only handles anchors. */}
+	    h2 > h3. No JavaScript needed to open or close; the script below only handles anchors.
+	    One open at a time (28 September): both <details> share name="gi-audience", the browser's
+	    exclusive accordion, so opening one closes the other - the anchor script's `open = true` too.
+	    Browsers without it (Safari < 17.2, Firefox < 130) just allow both open. */}
 	<section class="section wrap gi-groups">
 		<div class="card card-cta gi-card" id="individuals-band">
-			<details class="gi-group-box" id="gi-individuals">
+			<details class="gi-group-box" id="gi-individuals" name="gi-audience">
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
 						<Image
@@ -191,7 +194,7 @@ const goodsCategories = [
 
 		</div>
 		<div class="card card-cta gi-card" id="businesses-band">
-			<details class="gi-group-box" id="gi-businesses">
+			<details class="gi-group-box" id="gi-businesses" name="gi-audience">
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
 						<Image

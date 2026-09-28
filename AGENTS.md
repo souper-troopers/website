@@ -275,6 +275,8 @@ route links, on white - side by side from 761px, stacked below.
 - **DOM order is card, content, card, content.** On a phone each card's content opens straight under
   it, and the outline stays h2 > h3. From 761px a grid puts both cards in row 1 and each region across
   rows 2 and 3; row spacing is margins, not `gap`, since a closed region still holds an empty row.
+- **One open at a time (28 September)**: both `<details>` share `name="gi-audience"` (native exclusive
+  accordion, as on the Contact FAQ). Verified at 390 and 1280, including `#fundraise` opening Individuals.
 - **Anchors**: `#individuals`, `#businesses`, `#goods`, `#fundraise` are unchanged; the script opens the
   card named by the target's region `data-for` (as well as any ancestor `<details>`). Checked: each
   lands visible, just under the header.

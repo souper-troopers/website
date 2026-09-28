@@ -15,6 +15,8 @@ import {
 import CartWidget from "../components/CartWidget.svelte";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
+import { newsletterVisible } from "../lib/newsletter";
 import quicksand400 from "@fontsource/quicksand/files/quicksand-latin-400-normal.woff2?url";
 import quicksand600 from "@fontsource/quicksand/files/quicksand-latin-600-normal.woff2?url";
 import quicksand700 from "@fontsource/quicksand/files/quicksand-latin-700-normal.woff2?url";
@@ -462,6 +464,11 @@ const structuredData = {
 					))}
 				</div>
 			</div>
+			{newsletterVisible() && (
+				<div class="wrap footer-newsletter">
+					<NewsletterSignup variant="footer" />
+				</div>
+			)}
 			<p class="fine-print wrap">
 				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO {settings.npoNumber} &nbsp;|&nbsp; PBO {settings.pboNumber} &nbsp;|&nbsp; B-BBEE {settings.bbbeeLevel} &nbsp;|&nbsp; Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.
 			</p>
@@ -1240,6 +1247,10 @@ const structuredData = {
 			.social-links svg {
 				display: block;
 				fill: currentColor;
+			}
+
+			.footer-newsletter {
+				margin-top: var(--space-5);
 			}
 
 			.fine-print {

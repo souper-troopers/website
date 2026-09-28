@@ -1,4 +1,6 @@
 ---
+import NewsletterSignup from "../components/NewsletterSignup.astro";
+import { newsletterVisible } from "../lib/newsletter";
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import hubPhoto from "../assets/images/hub-haircut.jpg";
@@ -186,6 +188,14 @@ const heroLqip =
 					<a href="/our-work#stories">More stories on Our Work &rarr;</a>
 				</div>
 			</div>
+		</section>
+	)}
+
+	{/* Newsletter sign-up near the foot of the page (28 September, `q47`): Shan asked for a pop-up;
+	    she agreed to this and the footer instead. Hidden on a live build until Mailchimp is connected. */}
+	{newsletterVisible() && (
+		<section class="section wrap">
+			<NewsletterSignup variant="band" />
 		</section>
 	)}
 

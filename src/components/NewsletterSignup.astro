@@ -1,0 +1,114 @@
+---
+/**
+ * "Get news and updates" (28 September, `q47`). A plain form posting to Mailchimp - no script, no
+ * third-party code on our pages. Mailchimp's own page opens in a new tab to confirm, so the visitor
+ * keeps their place here. `variant="footer"` sits on the ink footer; `variant="band"` is the
+ * homepage's section. See src/lib/newsletter.ts for how it is switched on.
+ */
+import { newsletterForm, newsletterVisible } from "../lib/newsletter";
+
+interface Props {
+	variant: "footer" | "band";
+}
+const { variant } = Astro.props;
+const form = newsletterForm();
+const show = newsletterVisible();
+const id = `newsletter-${variant}`;
+---
+
+{show && (
+	<div class:list={["newsletter", `newsletter-${variant}`]}>
+		{variant === "band" ? (
+			<h2 id={`${id}-title`}>Get news and updates</h2>
+		) : (
+			<p class="newsletter-label" id={`${id}-title`}>Get news and updates</p>
+		)}
+		<form
+			class="newsletter-form"
+			action={form?.action ?? "#"}
+			method="post"
+			target="_blank"
+			aria-labelledby={`${id}-title`}
+		>
+			<label class="visually-hidden" for={`${id}-email`}>Your email</label>
+			<input
+				id={`${id}-email`}
+				type="email"
+				name="EMAIL"
+				required
+				autocomplete="email"
+				placeholder="Your email"
+			/>
+			{form && (
+				<div class="newsletter-trap" aria-hidden="true">
+					<input type="text" name={form.honeypot} tabindex="-1" value="" autocomplete="off" />
+				</div>
+			)}
+			<button class="btn btn-primary" type="submit">
+				Subscribe<span class="visually-hidden"> (opens in a new tab)</span>
+			</button>
+		</form>
+	</div>
+)}
+
+<style>
+	.newsletter-form {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		margin: 0;
+	}
+
+	.newsletter-form input[type="email"] {
+		box-sizing: border-box;
+		flex: 1 1 14rem;
+		min-width: 0;
+		height: 44px;
+		padding: 0 var(--space-3);
+		border-radius: 10px;
+		border: 1px solid rgba(36, 35, 43, 0.2);
+		background: var(--st-white);
+		color: var(--st-ink);
+		font: inherit;
+	}
+
+	.newsletter-form .btn {
+		height: 44px;
+		padding-top: 0;
+		padding-bottom: 0;
+		cursor: pointer;
+	}
+
+	/* Mailchimp's bot trap: off-screen, not display:none, which some bots detect and skip. */
+	.newsletter-trap {
+		position: absolute;
+		left: -5000px;
+	}
+
+	/* Footer: a label above the field, on the ink background. */
+	.newsletter-footer {
+		max-width: 30rem;
+	}
+
+	.newsletter-label {
+		margin: 0 0 var(--space-2);
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		opacity: 0.75;
+	}
+
+	.newsletter-footer .newsletter-form input[type="email"] {
+		border-color: transparent;
+	}
+
+	/* Homepage band: the heading, then the form, left-aligned like the page's other sections. */
+	.newsletter-band {
+		max-width: 36rem;
+	}
+
+	.newsletter-band h2 {
+		margin: 0 0 var(--space-4);
+	}
+</style>

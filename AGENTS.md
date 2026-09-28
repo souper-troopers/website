@@ -433,7 +433,7 @@ login), so the follow-up asks for the public Signup form URL.
 
 ## Newsletter sign-up (built and connected 28 September)
 `src/components/NewsletterSignup.astro` (`variant="footer"` in `Layout.astro`, on one row with the
-socials from 761px, wrapping below them on phones; the homepage `variant="band"` section was removed the
+socials from 900px, left-aligned after a thin divider, on its own row below that; the homepage `variant="band"` section was removed the
 same day - it sat directly above the footer and repeated it, the user's call; the variant is kept) is a plain `<form>` posting to Mailchimp's `/subscribe/post` in a new tab -
 no script, no Mailchimp code on our pages. **It is switched on by one constant**,
 `NEWSLETTER_FORM_URL` in `src/lib/newsletter.ts`: paste the long

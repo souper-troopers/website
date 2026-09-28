@@ -454,8 +454,8 @@ const structuredData = {
 				<AddressLink client:visible lines={[displayAddress(settings.address)]} copyable={false} />
 				<EmailLink client:visible address={settings.email} />
 			</div>
-			{/* Socials and the newsletter share one row on a laptop (28 September), with the sign-up
-			    pushed to the right; they wrap onto two rows when there isn't room. The homepage had its
+			{/* Socials and the newsletter share one row on a laptop (28 September), left-aligned with a
+			    thin divider between; below 900px they wrap onto two rows and the divider goes. The homepage had its
 			    own sign-up section too, which read as a repeat directly above this - removed. */}
 			<div class="wrap footer-row">
 				<div class="footer-social">
@@ -468,7 +468,12 @@ const structuredData = {
 						))}
 					</div>
 				</div>
-				{newsletterVisible() && <NewsletterSignup variant="footer" />}
+				{newsletterVisible() && (
+					<>
+						<span class="footer-row-divider" aria-hidden="true"></span>
+						<NewsletterSignup variant="footer" />
+					</>
+				)}
 			</div>
 			<p class="fine-print wrap">
 				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO {settings.npoNumber} &nbsp;|&nbsp; PBO {settings.pboNumber} &nbsp;|&nbsp; B-BBEE {settings.bbbeeLevel} &nbsp;|&nbsp; Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.
@@ -1253,9 +1258,33 @@ const structuredData = {
 				display: flex;
 				flex-wrap: wrap;
 				align-items: center;
-				justify-content: space-between;
-				gap: var(--space-4) var(--space-8);
+				gap: var(--space-4) var(--space-6);
 				margin-top: var(--space-4);
+			}
+
+			.footer-row-divider {
+				display: none;
+				width: 1px;
+				height: 20px;
+				background: rgba(255, 255, 255, 0.25);
+			}
+
+			/* Below 900px the sign-up always takes its own row, so there is never a one-row layout
+			   without the divider. */
+			@media (max-width: 899px) {
+				.footer-row .newsletter-footer {
+					flex-basis: 100%;
+				}
+			}
+
+			@media (min-width: 900px) {
+				.footer-row {
+					flex-wrap: nowrap;
+				}
+
+				.footer-row-divider {
+					display: block;
+				}
 			}
 
 			.fine-print {

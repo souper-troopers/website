@@ -2,8 +2,8 @@
  * The newsletter sign-up (28 September, `q47`): Shan agreed to a sign-up in the footer and near the
  * bottom of the homepage rather than a pop-up, headed "Get news and updates".
  *
- * `NEWSLETTER_FORM_URL` is Mailchimp's public "Signup form URL" (Audience > Signup forms > Form
- * builder). Paste the long form, `https://<account>.us13.list-manage.com/subscribe?u=...&id=...` -
+ * `NEWSLETTER_FORM_URL` is Mailchimp's public signup form URL (Forms > Forms settings > the link icon
+ * in the System forms table - checked against Mailchimp's help, 28 September 2026). Paste the long form, `https://<account>.us13.list-manage.com/subscribe?u=...&id=...` -
  * an eepurl.com short link only redirects to it, and the u and id in the long form are what the
  * form posts to. Until it is set, the sign-up shows in local development only, so nothing
  * unconnected reaches the live site.

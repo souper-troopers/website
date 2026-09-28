@@ -431,7 +431,7 @@ chip couldn't wrap - fixed with `max-width: 100%` on the chip and `minmax(0, 1fr
 28 September**, heading "Get news and updates"; she first sent a Mailchimp *admin* link (needs her
 login), so the follow-up asks for the public Signup form URL.
 
-## Newsletter sign-up (built 28 September, not yet connected)
+## Newsletter sign-up (built and connected 28 September)
 `src/components/NewsletterSignup.astro` (`variant="footer"` in `Layout.astro`, `variant="band"` near
 the foot of the homepage) is a plain `<form>` posting to Mailchimp's `/subscribe/post` in a new tab -
 no script, no Mailchimp code on our pages. **It is switched on by one constant**,
@@ -439,8 +439,11 @@ no script, no Mailchimp code on our pages. **It is switched on by one constant**
 `https://<account>.us13.list-manage.com/subscribe?u=...&id=...` form (follow an eepurl.com short link
 to get it); `newsletterForm()` derives the post URL and Mailchimp's `b_<u>_<id>` bot-trap field from
 it. **Until then it renders in `astro dev` only** - verified absent from a production build - so an
-unconnected form can never reach the live site. After connecting: one real test sign-up, then add a
-changelog line.
+unconnected form can never reach the live site. **Connected the same day** with Shan's
+`eepurl.com/gMxb9j` (the short link 403s to curl without a browser user agent; with one it 301s to the
+long form). Only email is required there; first/last name and a "Souper Mothers" group are optional.
+`q47` closed. Still worth one real test sign-up from the live site by someone whose address may join
+the list.
 
 ## RFC page: length, and why it isn't split into pages (2026-08-15)
 It reached 7,900 words. Measured rather than eyeballed — `visible on load` is the number that matters, and it was **4,911 words (~25 min)**, of which **1,670 were the answer blocks added that same morning**. Those had ignored the page's own convention (context collapses, everything else doesn't) and put up to three permanent paragraphs on each of twelve questions. Now **2,459 visible (~12 min)**, 69% of the page collapsed.

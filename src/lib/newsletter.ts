@@ -8,7 +8,10 @@
  * form posts to. Until it is set, the sign-up shows in local development only, so nothing
  * unconnected reaches the live site.
  */
-export const NEWSLETTER_FORM_URL: string | null = null;
+// From Shan, 28 September (eepurl.com/gMxb9j, followed to its long form). The form asks only for
+// an email address; first and last name and the "Souper Mothers" group are optional there.
+export const NEWSLETTER_FORM_URL: string | null =
+	"https://soupertroopers.us13.list-manage.com/subscribe?u=3df721daebc5c76c899c3e3d4&id=da88c4e011";
 
 export type NewsletterForm = { action: string; honeypot: string };
 

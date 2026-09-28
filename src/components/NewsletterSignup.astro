@@ -121,8 +121,28 @@ const id = `newsletter-${variant}`;
 		opacity: 0.6;
 	}
 
+	/* Outlined on the ink footer (28 September, the user's call, kept after a trial): a white-bordered
+	   field and a teal-bordered button, rather than a white field and a filled teal button, so the
+	   sign-up sits as quietly as the dimmed labels beside it. Label 0.85 white ~12:1, teal border ~6:1. */
 	.newsletter-footer .newsletter-form input[type="email"] {
-		border-color: transparent;
+		background: transparent;
+		border: 1px solid var(--st-white);
+		color: var(--st-white);
+	}
+
+	.newsletter-footer .newsletter-form input[type="email"]::placeholder {
+		color: rgba(255, 255, 255, 0.65);
+	}
+
+	.newsletter-footer .newsletter-form .btn {
+		background: transparent;
+		border-color: var(--st-teal);
+		color: rgba(255, 255, 255, 0.85);
+	}
+
+	.newsletter-footer .newsletter-form .btn:hover {
+		background: rgba(27, 171, 190, 0.18);
+		color: var(--st-white);
 	}
 
 	/* Homepage band: the heading, then the form, left-aligned like the page's other sections. */

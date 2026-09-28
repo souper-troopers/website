@@ -1117,6 +1117,22 @@ treating it as settled.
 - **`q17`: "using the word homeless or beneficiaries"** - ambiguous; asked whether that means the
   pages themselves too. Pages keep "people experiencing homelessness" until she answers.
 
+### Custom and wholesale dolls go to the contact form (28 September)
+From a second pass over the 21 September transcript: Adrian asked for these enquiries to reach a form
+"rather than you missing an email". The two cards under the Worry Dolls grid now link to
+`/contact/?topic=custom-dolls#send-message` / `?topic=wholesale-dolls`; a script in `contact.astro`
+starts the message and fills a hidden `topic` field (in the static HTML, since Netlify drops fields it
+didn't see at deploy). Unknown topics are ignored. Labels: "Ask about a custom order", "Ask for
+prices".
+- ⚠ **Submissions now go wherever the `contact` form's notification points**, not to sales@ (which
+  Shan named for these on 25 September). Add sales@ as a second notification in Netlify (Site
+  configuration → Forms → Form notifications), or accept the general inbox.
+- Same pass added `q41` (seasonal dolls: Kerry wanted Madiba kept and hidden out of season; Shan
+  called it a one-off, so it became General) and `q42` (photos of the dolls in use or being made).
+  Still for the 30 September call, not the status page: the seasonal shop banner, Adrian's unanswered
+  "will video slow the site down?", Kerry's soft-launch idea, and whether the board wants a building
+  appeal page.
+
 ### Bracelets: a fourth shop category (2026-09-25)
 Shan's bracelet photos (`Content/Shop/Bracelets/DSC_7515-7517`) were raised on `q2` in August; on 25
 August she confirmed they're a real product at R40. Added at the user's call:

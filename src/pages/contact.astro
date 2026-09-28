@@ -145,6 +145,10 @@ const faqItems: FaqItem[] = [
 			</div>
 			<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
 			<input type="hidden" name="form-name" value="contact" />
+			{/* Set by the script below when the shop's Custom dolls or Wholesale card sends someone here
+			    (`?topic=`), so the notification says which kind of enquiry it is. In the static HTML so
+			    Netlify registers the field at deploy - fields it hasn't seen are dropped. */}
+			<input type="hidden" name="topic" value="" />
 			<label class="honeypot-field" aria-hidden="true">
 				Leave this field blank
 				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
@@ -373,6 +377,34 @@ const faqItems: FaqItem[] = [
 
 <script>
 	const form = document.querySelector<HTMLFormElement>("#contact-form");
+
+	/**
+	 * Shop enquiries (28 September, from Adrian on the 21 September call: a form rather than an email
+	 * that could be missed). The Worry Dolls page's Custom dolls and Wholesale cards link here with
+	 * `?topic=`; the message is started for them and the topic travels with the submission. Unknown
+	 * topics are ignored, so a hand-edited URL can't put arbitrary text in the box.
+	 */
+	const topics: Record<string, { label: string; message: string }> = {
+		"custom-dolls": {
+			label: "Custom African Worry Dolls",
+			message:
+				"I'd like to ask about a custom order of African Worry Dolls.\n\nHow many:\nColours or theme:\nWhen I need them by:",
+		},
+		"wholesale-dolls": {
+			label: "Wholesale African Worry Dolls",
+			message: "I'd like to ask about wholesale prices for African Worry Dolls.\n\nBusiness name:\nRoughly how many:",
+		},
+	};
+	const topic = topics[new URLSearchParams(location.search).get("topic") ?? ""];
+	if (form && topic) {
+		const topicInput = form.querySelector<HTMLInputElement>("input[name='topic']");
+		const messageInput = form.querySelector<HTMLTextAreaElement>("textarea[name='message']");
+		if (topicInput) topicInput.value = topic.label;
+		if (messageInput) {
+			messageInput.value = topic.message;
+			messageInput.rows = 7;
+		}
+	}
 	const errorEl = document.querySelector<HTMLElement>("#contact-form-error");
 	const toastEl = document.querySelector<HTMLElement>("#contact-toast");
 	let toastTimer: ReturnType<typeof setTimeout>;

@@ -83,9 +83,11 @@ const breadcrumbJsonLd = {
  * confirmed both on 25 September (`q33`): the minimum is 10, and these enquiries go to sales@.
  */
 const isDolls = category.slug === "worry-dolls";
-const ordersEmail = "sales@soupertroopers.org";
-const customHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Custom African Worry Dolls")}`;
-const wholesaleHref = `mailto:${ordersEmail}?subject=${encodeURIComponent("Wholesale African Worry Dolls")}`;
+// To the contact form with the message started (28 September), not a mailto: Adrian's point on the
+// 21 September call was that an email to one inbox can be missed, and a mailto does nothing at all
+// for someone without a mail app set up. See the `topics` script in contact.astro.
+const customHref = "/contact/?topic=custom-dolls#send-message";
+const wholesaleHref = "/contact/?topic=wholesale-dolls#send-message";
 
 const jsonLd = attributeProductJsonLd
 	? [attributeProductJsonLd, breadcrumbJsonLd]
@@ -177,7 +179,7 @@ const jsonLd = attributeProductJsonLd
 	</section>
 
 	{/* Two white .card-cta cards under their own heading (25 September; they were one left-rule
-	    callout). Each is a whole-card mailto link with the subjects the callout used. */}
+	    callout). Each is a whole-card link to the contact form, with the message started. */}
 	{isDolls && (
 		<section class="section wrap">
 			<div class="section-intro">
@@ -195,7 +197,7 @@ const jsonLd = attributeProductJsonLd
 				<a class="card card-cta" href={wholesaleHref}>
 					<h3>Wholesale</h3>
 					<p>Buying for a shop or a corporate gift? Wholesale is by appointment and we'll send prices.</p>
-					<CardCtaLabel>Email us for prices</CardCtaLabel>
+					<CardCtaLabel>Ask for prices</CardCtaLabel>
 				</a>
 			</div>
 		</section>

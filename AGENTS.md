@@ -1103,6 +1103,18 @@ treating it as settled.
   product share image). The trade: a crop set in the Studio is ignored there too, which for padded
   product photos is what we want.
 
+### Shan's replies of 27 September
+- **`q38` settled: the Souper Squad continues** - it is the team that makes and packs the products;
+  what ended was the funded programme that started CAST (the Our Work card stays removed). Every other
+  Squad mention stays. Who We Are's line is now Shan's wording: "More than twenty people in our Souper
+  Squad earn a stipend through Souper Troopers social enterprise." No names - the Squad changes.
+- **`q40`: R40 per bracelet** (the shop was already right), beaded, adult and kids' sizes. The
+  bracelets category now has the description "Beaded bracelets, in adult and kids' sizes." Still open
+  (`followUp`, still flagged for launch): is the kids' size R40, and should buyers choose a size? If
+  yes, the attributes become word x size (10 variants), or a size note in the order.
+- **`q17`: "using the word homeless or beneficiaries"** - ambiguous; asked whether that means the
+  pages themselves too. Pages keep "people experiencing homelessness" until she answers.
+
 ### Bracelets: a fourth shop category (2026-09-25)
 Shan's bracelet photos (`Content/Shop/Bracelets/DSC_7515-7517`) were raised on `q2` in August; on 25
 August she confirmed they're a real product at R40. Added at the user's call:
@@ -1207,7 +1219,7 @@ August she confirmed they're a real product at R40. Added at the user's call:
     ~1.85:1 on phones) crops only backdrop: dolls, gift tags and bracelets are the previous 4:3
     composites with their outer columns copied outward (`sharp.extend({extendWith: 'copy'})`) - seamless
     on a plain or smooth backdrop. The coffee was rebuilt at 810px tall so its bags keep headroom in the
-    shortest frames. Assets: coffee `image-60b4932d...`, dolls `image-adcec3f6...`, tags
+    shortest frames. Assets: coffee `image-dc075d10...` (replaced `image-60b4932d...` when the coffee was made larger), dolls `image-adcec3f6...`, tags
     `image-c72df349...`, bracelets `image-138635a3...`; the 4:3 versions are still in the media library.
   - The Coffee and Bracelets pages take a centre square of the same photo; checked, both still read well.
 - **The shop landing page is 2x2 from 701px** (`.category-grid` in `shop/index.astro`), since three

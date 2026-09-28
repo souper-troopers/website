@@ -419,6 +419,17 @@ depends on.
   checklist above - noindex flag, robots.txt, the `llms.txt` last line, the Cloudflare token, the
   sitemap hostname, and the Safari / real-iPhone check - none done yet.
 
+## RFC page: links to one question (28 September)
+Each question has a copy-link button (`CopyButton`) beside its title, copying
+`<site>/request-for-comment/#ask-<threadId>` (built from `Astro.site`, so it follows the domain at
+launch). Arriving on such a link highlights the question (`.fk-ask:target`, amber) and opens its
+thread, so our reasoning is in view. Use these when messaging Kerry or Shan: the DM points at the
+question and the question does the asking (the user's preference). Found with it: the status page
+scrolled sideways on phones (484px at 390) because a long "Kerry, Shan, Adrian, Brad and Hilton replied"
+chip couldn't wrap - fixed with `max-width: 100%` on the chip and `minmax(0, 1fr)` on the question grid.
+`q47` (newsletter): a footer sign-up plus a homepage band rather than Shan's pop-up, pending her OK and
+the Mailchimp form link.
+
 ## RFC page: length, and why it isn't split into pages (2026-08-15)
 It reached 7,900 words. Measured rather than eyeballed — `visible on load` is the number that matters, and it was **4,911 words (~25 min)**, of which **1,670 were the answer blocks added that same morning**. Those had ignored the page's own convention (context collapses, everything else doesn't) and put up to three permanent paragraphs on each of twelve questions. Now **2,459 visible (~12 min)**, 69% of the page collapsed.
 

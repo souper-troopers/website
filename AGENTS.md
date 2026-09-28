@@ -1125,13 +1125,15 @@ starts the message and fills a hidden `topic` field (in the static HTML, since N
 didn't see at deploy). Unknown topics are ignored. Labels: "Ask about a custom order", "Ask for
 prices".
 - ⚠ **Submissions now go wherever the `contact` form's notification points**, not to sales@ (which
-  Shan named for these on 25 September). Add sales@ as a second notification in Netlify (Site
-  configuration → Forms → Form notifications), or accept the general inbox.
+  Shan named for these on 25 September). `q43` asks the client which; if sales@, add it as a second
+  notification in Netlify (Site configuration → Forms → Form notifications).
 - Same pass added `q41` (seasonal dolls: Kerry wanted Madiba kept and hidden out of season; Shan
   called it a one-off, so it became General) and `q42` (photos of the dolls in use or being made).
-  Still for the 30 September call, not the status page: the seasonal shop banner, Adrian's unanswered
-  "will video slow the site down?", Kerry's soft-launch idea, and whether the board wants a building
-  appeal page.
+  At the user's direction (they can't answer these for the client), the rest went on the page too:
+  `q43` (custom/wholesale enquiries to sales@ or the general inbox), `q44` (seasonal shop banner),
+  `q45` (quiet launch first), `q46` (a building page). Adrian's "will video slow the site down?" is
+  ours to answer, on the call: story videos load only on play; a hero loop would be ~2-3MB with a
+  poster still.
 
 ### Bracelets: a fourth shop category (2026-09-25)
 Shan's bracelet photos (`Content/Shop/Bracelets/DSC_7515-7517`) were raised on `q2` in August; on 25

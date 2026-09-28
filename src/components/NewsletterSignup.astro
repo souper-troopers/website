@@ -85,18 +85,40 @@ const id = `newsletter-${variant}`;
 		left: -5000px;
 	}
 
-	/* Footer: a label above the field, on the ink background. */
+	/* Footer: label, field and button on one row beside the socials, on the ink background; the
+	   label goes above the field once the row is too narrow. */
 	.newsletter-footer {
-		max-width: 30rem;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-2) var(--space-4);
+	}
+
+	.newsletter-footer .newsletter-form {
+		flex: 1 1 22rem;
+		max-width: 26rem;
+	}
+
+	/* From laptop widths the label stays beside the field; the whole group is one row with the
+	   socials, and wraps below them as a unit when the row runs out of room. */
+	@media (min-width: 761px) {
+		.newsletter-footer {
+			flex-wrap: nowrap;
+		}
+
+		.newsletter-footer .newsletter-form {
+			flex: 0 0 24rem;
+		}
 	}
 
 	.newsletter-label {
-		margin: 0 0 var(--space-2);
+		margin: 0;
 		font-size: 0.8rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
-		opacity: 0.75;
+		/* Matches "Follow us" beside it. */
+		opacity: 0.6;
 	}
 
 	.newsletter-footer .newsletter-form input[type="email"] {

@@ -432,8 +432,9 @@ chip couldn't wrap - fixed with `max-width: 100%` on the chip and `minmax(0, 1fr
 login), so the follow-up asks for the public Signup form URL.
 
 ## Newsletter sign-up (built and connected 28 September)
-`src/components/NewsletterSignup.astro` (`variant="footer"` in `Layout.astro`, `variant="band"` near
-the foot of the homepage) is a plain `<form>` posting to Mailchimp's `/subscribe/post` in a new tab -
+`src/components/NewsletterSignup.astro` (`variant="footer"` in `Layout.astro`, on one row with the
+socials from 761px, wrapping below them on phones; the homepage `variant="band"` section was removed the
+same day - it sat directly above the footer and repeated it, the user's call; the variant is kept) is a plain `<form>` posting to Mailchimp's `/subscribe/post` in a new tab -
 no script, no Mailchimp code on our pages. **It is switched on by one constant**,
 `NEWSLETTER_FORM_URL` in `src/lib/newsletter.ts`: paste the long
 `https://<account>.us13.list-manage.com/subscribe?u=...&id=...` form (follow an eepurl.com short link

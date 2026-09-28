@@ -454,21 +454,22 @@ const structuredData = {
 				<AddressLink client:visible lines={[displayAddress(settings.address)]} copyable={false} />
 				<EmailLink client:visible address={settings.email} />
 			</div>
-			<div class="wrap footer-social">
-				<span class="footer-social-label">Follow us</span>
-				<div class="social-links">
-					{socialLinks.map((social) => (
-						<a href={social.href} target="_blank" rel="noopener" aria-label={social.label}>
-							<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={social.path} /></svg>
-						</a>
-					))}
+			{/* Socials and the newsletter share one row on a laptop (28 September), with the sign-up
+			    pushed to the right; they wrap onto two rows when there isn't room. The homepage had its
+			    own sign-up section too, which read as a repeat directly above this - removed. */}
+			<div class="wrap footer-row">
+				<div class="footer-social">
+					<span class="footer-social-label">Follow us</span>
+					<div class="social-links">
+						{socialLinks.map((social) => (
+							<a href={social.href} target="_blank" rel="noopener" aria-label={social.label}>
+								<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={social.path} /></svg>
+							</a>
+						))}
+					</div>
 				</div>
+				{newsletterVisible() && <NewsletterSignup variant="footer" />}
 			</div>
-			{newsletterVisible() && (
-				<div class="wrap footer-newsletter">
-					<NewsletterSignup variant="footer" />
-				</div>
-			)}
 			<p class="fine-print wrap">
 				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO {settings.npoNumber} &nbsp;|&nbsp; PBO {settings.pboNumber} &nbsp;|&nbsp; B-BBEE {settings.bbbeeLevel} &nbsp;|&nbsp; Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.
 			</p>
@@ -1219,7 +1220,6 @@ const structuredData = {
 				display: flex;
 				align-items: center;
 				gap: var(--space-4);
-				margin-top: var(--space-4);
 			}
 
 			.footer-social-label {
@@ -1249,8 +1249,13 @@ const structuredData = {
 				fill: currentColor;
 			}
 
-			.footer-newsletter {
-				margin-top: var(--space-5);
+			.footer-row {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: var(--space-4) var(--space-8);
+				margin-top: var(--space-4);
 			}
 
 			.fine-print {

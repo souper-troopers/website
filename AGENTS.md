@@ -1156,6 +1156,17 @@ treating it as settled.
   basic maintenance). Answered on the page (hosting is on Netlify, currently a small subscription the user pays, likely free once changes settle): **not before launch** - Webtimes likely holds the domain
   registration and possibly email; keep them until ~a month after launch, then ask what the R400 covers
   and downsize or move domain/email as a separate step.
+- **Where soupertroopers.org actually lives (checked 29 September, public DNS + whois):** registrar
+  **Diamatrix (domains.co.za)**; nameservers **Cloudflare** (`alexa`/`robert.ns.cloudflare.com`, changed
+  12 August 2026), and that Cloudflare account is **looked after by HostFaddy** (Kerry, via Webtimes, same
+  day). The website is on Webtimes' server (`154.66.197.17` = `server.wtdns.co.za`); mail goes through
+  **SpamExperts** (MX `mx.spamexperts.com` etc., SPF `include:spf.antispamcloud.com`), i.e. almost
+  certainly Webtimes-hosted email. There is also a `google-site-verification` TXT record - someone
+  already has Google Search Console for the domain. Kerry forwarded a Webtimes panel screenshot showing
+  `ns1/ns2.wtdns.co.za` (not the live nameservers) **and a login - never use it**; the user asked her
+  directly and she may need reminding to have that password changed.
+  - **Launch step**: HostFaddy changes the apex and `www` records to Netlify's values, touching nothing
+    else (MX, SPF, the verification TXT). Add the domain in Netlify first to get the exact values.
 - Kerry's "Q14 & 36" were the page's visible numbers for `q34` and `q29`.
 - Shan asked (WhatsApp) for **one more login to the status page** - a `STATUS_USERS` entry, which the
   user sets in Netlify, followed by a production redeploy (see the auth section).

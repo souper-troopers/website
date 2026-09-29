@@ -1153,7 +1153,7 @@ treating it as settled.
   stays until then.
 - **`q34`**: Kerry (WhatsApp) has asked Webtimes for the DNS settings; her login is the WordPress
   backend only. She asked whether the new site means cancelling Webtimes' R400/month (hosting and
-  basic maintenance). Answered on the page: **not before launch** - Webtimes likely holds the domain
+  basic maintenance). Answered on the page (hosting is on Netlify, currently a small subscription the user pays, likely free once changes settle): **not before launch** - Webtimes likely holds the domain
   registration and possibly email; keep them until ~a month after launch, then ask what the R400 covers
   and downsize or move domain/email as a separate step.
 - Kerry's "Q14 & 36" were the page's visible numbers for `q34` and `q29`.

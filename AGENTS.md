@@ -1146,6 +1146,20 @@ treating it as settled.
 - **`q17`: "using the word homeless or beneficiaries"** - ambiguous; asked whether that means the
   pages themselves too. Pages keep "people experiencing homelessness" until she answers.
 
+### Replies of 29 September
+- **`q40` closed**: kids' bracelets are also R40 and buyers choose the size. `attributeVariants` is now
+  ten options, "Souper, adult" ... "Respect, kids" (one dropdown, no code change).
+- **`q29`: the board meets Thursday 1 October**, not 28 September as the minutes had it. Header lockup
+  stays until then.
+- **`q34`**: Kerry (WhatsApp) has asked Webtimes for the DNS settings; her login is the WordPress
+  backend only. She asked whether the new site means cancelling Webtimes' R400/month (hosting and
+  basic maintenance). Answered on the page: **not before launch** - Webtimes likely holds the domain
+  registration and possibly email; keep them until ~a month after launch, then ask what the R400 covers
+  and downsize or move domain/email as a separate step.
+- Kerry's "Q14 & 36" were the page's visible numbers for `q34` and `q29`.
+- Shan asked (WhatsApp) for **one more login to the status page** - a `STATUS_USERS` entry, which the
+  user sets in Netlify, followed by a production redeploy (see the auth section).
+
 ### Custom and wholesale dolls go to the contact form (28 September)
 From a second pass over the 21 September transcript: Adrian asked for these enquiries to reach a form
 "rather than you missing an email". The two cards under the Worry Dolls grid now link to

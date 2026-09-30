@@ -974,6 +974,14 @@ Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
   (separate account vs reference + ledger, 18A or not) waits on Kerry's treasurer, board and legal.
 - ⚠ Kerry called the building sale sensitive and not in writing; **keep sale details out of this
   public repo** (the minutes deliberately omit them).
+- **Drafted the same day, on `dev`**: `src/pages/save-our-hub.astro` and a red band under the homepage
+  hero (black on `--st-red`, 5.2:1). All switches in `src/lib/campaign.ts`: `live` (band off on live
+  builds; page `noindex` and excluded from the sitemap in `astro.config.mjs` until then - but always
+  built, so it can be reviewed at its URL), `target`/`raised`/`raisedOn` (bar shows once a target is
+  set; updated by hand), `match`. Donations are tagged three ways: EFT reference `HUB` + surname,
+  PayFast `item_name` "Save our Hub", and a **Netlify Form `save-our-hub`** (name, contact, amount,
+  route, 18A) - ⚠ **that form needs its own notification address in Netlify** before go-live. Copy
+  awaiting Kerry: every line, the 18A offer, and "if the building is secured another way".
 
 ### The Worry Dolls, by variation (2026-09-24)
 The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop/Dolls/<variation>`).

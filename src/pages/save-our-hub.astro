@@ -1,0 +1,360 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
+import CopyButton from "../components/CopyButton.svelte";
+import CardCtaLabel from "../components/CardCtaLabel.astro";
+import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
+import { CAMPAIGN, CAMPAIGN_REFERENCE, rand } from "../lib/campaign";
+
+/**
+ * Save our Hub (draft, 30 September 2026). Built from the 30 September review: a dedicated page,
+ * reached from a fixed band on the homepage (no pop-ups), on Souper Troopers' own donation routes
+ * rather than BackaBuddy (Kerry: "we want to own it and control it").
+ *
+ * The one hard requirement from that call is that a gift for the building can be told apart from a
+ * general donation, and that we know who gave it (Adrian wants donors phoned, not emailed, if the
+ * building is secured another way). Three things do that here, one per route:
+ * - EFT carries the reference `HUB` plus the donor's surname;
+ * - the PayFast card form sends `item_name` "Save our Hub", which PayFast reports back with the
+ *   payer's name and email;
+ * - everyone is asked to fill in "Tell us about your gift", a Netlify Form (`save-our-hub`) that
+ *   records name, contact, amount, route and whether an 18A certificate is wanted - the list the
+ *   treasurer matches payments against.
+ *
+ * ⚠ Needs Kerry's approval before `CAMPAIGN.live` goes true: every visible line, the 18A promise,
+ * and "if the building is secured another way" (legal advice pending). The `save-our-hub` form also
+ * needs its own notification address in Netlify (Site configuration > Forms), or gifts are recorded
+ * with nobody told.
+ */
+
+const payfastReturnUrl = new URL("/save-our-hub/?donated=1", Astro.site).href;
+const payfastCancelUrl = new URL("/save-our-hub/", Astro.site).href;
+
+// Same account as the donate page; only the reference differs.
+const bankDetails = [
+	{ term: "Account name", value: "Souper Troopers" },
+	{ term: "Bank", value: "ABSA" },
+	{ term: "Account type", value: "Cheque" },
+	{ term: "Account number", value: "4092622072" },
+	{ term: "Reference", value: `${CAMPAIGN_REFERENCE} + your surname` },
+];
+const bankDetailsText = bankDetails.map((d) => `${d.term}: ${d.value}`).join("\n");
+
+const progress =
+	CAMPAIGN.target && CAMPAIGN.raised !== null
+		? Math.min(100, Math.round((CAMPAIGN.raised / CAMPAIGN.target) * 100))
+		: null;
+---
+
+<Layout
+	heroOverlay
+	noindex={!CAMPAIGN.live}
+	title="Save our Hub, secure the Humanity Hub building"
+	description="The building that houses the Humanity Hub in Woodstock, Cape Town, is for sale. Help Souper Troopers secure it, so the Hub stays open for everyone who depends on it."
+>
+	<PhotoHero image={hubExterior} position="left center" alt="The Humanity Hub on the corner of Newmarket Street, Woodstock">
+		<h1>Save our Hub</h1>
+		<p>
+			The building that houses the Humanity Hub in Woodstock, Cape Town, is for sale. Help us
+			secure it, so the Hub stays open for everyone who depends on it.
+		</p>
+		<a class="hero-jump" href="#give">Ways to give &darr;</a>
+	</PhotoHero>
+
+	<p id="payfast-thanks" class="payfast-thanks wrap" hidden>
+		Thank you - your card payment is on its way to us. Please tell us about your gift below, so we
+		can count it for the building.
+	</p>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<h2>Why it matters</h2>
+			<p>
+				The Humanity Hub at 66 Newmarket Street is where our work happens - a shower and a hot meal,
+				counselling, ID documents and job-readiness support, all under one roof. For many people it
+				is the one permanent address in a life where very little is permanent.
+			</p>
+			<p>
+				Securing the building means the Hub, and the Souper Squad who make and pack our products
+				there, can stay where they are.
+			</p>
+		</div>
+
+		{progress !== null && CAMPAIGN.target && CAMPAIGN.raised !== null && (
+			<div class="hub-progress">
+				<p class="hub-progress-figures">
+					<strong>{rand(CAMPAIGN.raised)}</strong> raised of {rand(CAMPAIGN.target)}
+				</p>
+				<div class="hub-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress} aria-label="Raised so far">
+					<span style={`width: ${progress}%`}></span>
+				</div>
+				{CAMPAIGN.raisedOn && <p class="hub-progress-note">Updated {CAMPAIGN.raisedOn}</p>}
+			</div>
+		)}
+
+		{CAMPAIGN.match && <p class="hub-match">{CAMPAIGN.match}</p>}
+	</section>
+
+	<section id="give" class="section wrap">
+		<div class="section-intro">
+			<h2>How to give</h2>
+		</div>
+		<div class="hub-give-grid">
+			<div class="card card-cta card-cta-wide hub-give-eft" style="--wedge-angle: 2deg">
+				<h3>Bank transfer (EFT)</h3>
+				<p>
+					Use the reference <strong>{CAMPAIGN_REFERENCE}</strong> and your surname, so we know your gift
+					is for the building.
+				</p>
+				<dl class="hub-bank">
+					{bankDetails.map((d) => (
+						<>
+							<dt>{d.term}</dt>
+							<dd>{d.value}</dd>
+						</>
+					))}
+				</dl>
+				<div class="hub-cta">
+					<CopyButton client:visible value={bankDetailsText} label="bank details" text="Copy bank details" cta />
+				</div>
+			</div>
+
+			<div class="card card-cta">
+				<h3>Card</h3>
+				<p>South African credit and debit cards, through PayFast.</p>
+				<form class="payfast-form hub-cta" action="https://www.payfast.co.za/eng/process" method="post">
+					<input type="hidden" name="cmd" value="_paynow" />
+					<input type="hidden" name="receiver" value="13206553" />
+					<input type="hidden" name="item_name" value="Save our Hub" />
+					<input type="hidden" name="return_url" value={payfastReturnUrl} />
+					<input type="hidden" name="cancel_url" value={payfastCancelUrl} />
+					<label for="hub-amount">Amount (R)</label>
+					<input id="hub-amount" type="number" name="amount" step="0.01" min="5.00" value="500" required />
+					<CardCtaLabel as="button">Give by card</CardCtaLabel>
+				</form>
+			</div>
+
+			<a class="card card-cta" href="https://pos.snapscan.io/qr/V0w6Ewn7" target="_blank" rel="noopener">
+				<h3>SnapScan</h3>
+				<p>Pay with the SnapScan app, then tell us about your gift below so we can count it for the building.</p>
+				<div class="hub-cta">
+					<CardCtaLabel>Open SnapScan</CardCtaLabel>
+				</div>
+			</a>
+		</div>
+	</section>
+
+	<section id="tell-us" class="section wrap">
+		<div class="section-intro">
+			<h2>Tell us about your gift</h2>
+			<p>So we can thank you, and keep your gift for the building, let us know what you gave.</p>
+		</div>
+		<div class="hub-form-wrap">
+			<form id="hub-form" class="contact-form" name="save-our-hub" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+				<input type="hidden" name="form-name" value="save-our-hub" />
+				<label class="honeypot-field" aria-hidden="true">
+					Leave this field blank
+					<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+				</label>
+				<label class="field-half">Your name<input type="text" name="name" autocomplete="name" required /></label>
+				<label class="field-half">Your email<input type="email" name="email" autocomplete="email" required /></label>
+				<label class="field-half">Phone (optional)<input type="tel" name="phone" autocomplete="tel" /></label>
+				<label class="field-half">Amount (R)<input type="number" name="amount" min="1" step="0.01" required /></label>
+				<label>
+					How you gave
+					<select name="method" required>
+						<option value="">Choose one</option>
+						<option>Bank transfer (EFT)</option>
+						<option>Card</option>
+						<option>SnapScan</option>
+						<option>Yoco</option>
+						<option>Other</option>
+					</select>
+				</label>
+				<label class="hub-check"><input type="checkbox" name="section18a" value="yes" /> I'd like a Section 18A tax certificate</label>
+				<label>Anything else (optional)<textarea name="message" rows="3"></textarea></label>
+				<button class="btn btn-primary" type="submit">Send</button>
+				<p id="hub-form-thanks" class="form-note" hidden>Thank you - we've got it.</p>
+				<p id="hub-form-error" class="form-note form-error" hidden>Something went wrong sending that - please try again.</p>
+			</form>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<h2>If the building is secured another way</h2>
+			<p>
+				We'll contact everyone who gave, to ask whether they'd like their gift to support the Hub's
+				work or to have it returned.
+			</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* White, not the global teal-dark: on the hero's tint teal-dark text is ~3.3:1. */
+	.hero-jump {
+		display: inline-block;
+		margin-top: var(--space-3);
+		color: var(--st-white);
+		font-weight: 700;
+		text-underline-offset: 3px;
+	}
+
+	.payfast-thanks {
+		margin-top: var(--space-6);
+		padding: var(--space-4) var(--space-5);
+		border-radius: 12px;
+		background: #e6f5f7;
+	}
+
+	.hub-progress {
+		max-width: 46rem;
+	}
+
+	.hub-progress-figures {
+		margin: 0 0 var(--space-2);
+		font-size: 1.1rem;
+	}
+
+	.hub-progress-bar {
+		height: 14px;
+		border-radius: 999px;
+		background: rgba(36, 35, 43, 0.1);
+		overflow: hidden;
+	}
+
+	.hub-progress-bar span {
+		display: block;
+		height: 100%;
+		background: var(--st-red);
+	}
+
+	.hub-progress-note {
+		margin: var(--space-2) 0 0;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	.hub-match {
+		max-width: 46rem;
+		padding-left: var(--space-4);
+		border-left: 4px solid var(--st-red);
+		font-weight: 600;
+	}
+
+	/* EFT leads across the top; card and SnapScan side by side beneath - the donate page's shape. */
+	.hub-give-grid {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	@media (min-width: 761px) {
+		.hub-give-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.hub-give-eft {
+			grid-column: 1 / -1;
+		}
+	}
+
+	.hub-give-grid .card {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hub-give-grid h3 {
+		margin: 0 0 var(--space-2);
+	}
+
+	.hub-cta {
+		margin-top: auto;
+		padding-top: var(--space-5);
+	}
+
+	.hub-bank {
+		display: grid;
+		grid-template-columns: max-content 1fr;
+		gap: var(--space-1) var(--space-4);
+		margin: var(--space-4) 0 0;
+	}
+
+	.hub-bank dt {
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	.hub-bank dd {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.payfast-form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	.payfast-form input {
+		box-sizing: border-box;
+		height: 40px;
+		max-width: 12rem;
+		padding: 0 var(--space-3);
+		border-radius: 10px;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		font: inherit;
+	}
+
+	/* The contact page's form styles, held to a readable width and aligned with the heading above. */
+	.hub-form-wrap {
+		max-width: 36rem;
+	}
+
+	.hub-form-wrap :global(.contact-form) {
+		margin: 0;
+		max-width: none;
+	}
+
+	.hub-check {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	#hub-form select {
+		box-sizing: border-box;
+		height: 40px;
+		padding: 0 var(--space-3);
+		border-radius: 10px;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		background: var(--st-white);
+		font: inherit;
+	}
+</style>
+
+<script>
+	if (new URLSearchParams(location.search).get("donated") === "1") {
+		document.querySelector<HTMLElement>("#payfast-thanks")?.removeAttribute("hidden");
+	}
+
+	const form = document.querySelector<HTMLFormElement>("#hub-form");
+	form?.addEventListener("submit", async (event) => {
+		event.preventDefault();
+		const thanks = document.querySelector<HTMLElement>("#hub-form-thanks");
+		const error = document.querySelector<HTMLElement>("#hub-form-error");
+		if (thanks) thanks.hidden = true;
+		if (error) error.hidden = true;
+		try {
+			const response = await fetch("/", {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
+			});
+			if (!response.ok) throw new Error("Form submission failed");
+			form.reset();
+			if (thanks) thanks.hidden = false;
+		} catch {
+			if (error) error.hidden = false;
+		}
+	});
+</script>

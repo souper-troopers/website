@@ -3,14 +3,28 @@
    pop-up, in the brand red (Adrian: red, so it catches the eye). Black on #dd4b59 is 5.2:1; white
    would be 4.0:1. Placed directly after a page's PhotoHero on the homepage and Donate. Off on live
    builds until CAMPAIGN.live - see src/lib/campaign.ts. */
+import { Image } from "astro:assets";
 import { campaignVisible } from "../lib/campaign";
+import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 ---
 
 {campaignVisible() && (
 	<a class="hub-appeal" href="/save-our-hub/">
 		<span class="wrap hub-appeal-inner">
-			<span><strong>Our home is for sale.</strong> Help us secure the Humanity Hub.</span>
-			<span class="hub-appeal-cta">Save our Hub <span aria-hidden="true">&rarr;</span></span>
+			{/* The building itself: "our home is for sale" lands harder when you can see the home.
+			    Decorative - the words carry the meaning. Crops from the right to keep the 66. */}
+			<Image
+				class="hub-appeal-photo"
+				src={hubExterior}
+				alt=""
+				widths={[96, 192]}
+				sizes="96px"
+				width={96}
+			/>
+			<span class="hub-appeal-body">
+				<span><strong>Our home is for sale.</strong> Help us secure the Humanity Hub.</span>
+				<span class="hub-appeal-cta">Save our Hub <span aria-hidden="true">&rarr;</span></span>
+			</span>
 		</span>
 	</a>
 )}
@@ -28,13 +42,31 @@ import { campaignVisible } from "../lib/campaign";
 
 .hub-appeal-inner {
 	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	padding-top: var(--space-3);
+	padding-bottom: var(--space-3);
+	font-size: 1.05rem;
+}
+
+.hub-appeal-photo {
+	flex: none;
+	width: 96px;
+	height: 64px;
+	object-fit: cover;
+	object-position: left center;
+	border-radius: 8px;
+	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.85);
+}
+
+.hub-appeal-body {
+	flex: 1;
+	min-width: 0;
+	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--space-2) var(--space-5);
-	padding-top: var(--space-4);
-	padding-bottom: var(--space-4);
-	font-size: 1.05rem;
 }
 
 .hub-appeal-cta {
@@ -56,6 +88,11 @@ import { campaignVisible } from "../lib/campaign";
 @media (max-width: 700px) {
 	.hub-appeal {
 		margin-top: calc(-1 * var(--space-12));
+	}
+
+	.hub-appeal-photo {
+		width: 72px;
+		height: 72px;
 	}
 }
 </style>

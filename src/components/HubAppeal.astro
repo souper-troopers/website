@@ -6,22 +6,46 @@
 import { Image } from "astro:assets";
 import { campaignVisible } from "../lib/campaign";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
+
+// A broken heart: the same heart path, clipped either side of a jagged crack, drawn as two copies
+// of the photo (lined up exactly) that tilt apart. Coordinates are the heart's own viewBox
+// (x 2-22, y 3-21.6); the crack runs from the notch at the top (12, 5.1) to the point (12, 21.6).
+const HEART =
+	"M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z";
+const CRACK = "12,5.1 10.6,8.6 13.1,11.2 10.9,14.2 12.9,17.3 12,21.6";
+const half = (side: "left" | "right") => {
+	const edge = side === "left" ? "0,25 0,0 12,0" : "30,25 30,0 12,0";
+	const svg =
+		`<svg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'>` +
+		`<clipPath id='c'><polygon points='${edge} ${CRACK} 12,25'/></clipPath>` +
+		`<path clip-path='url(#c)' d='${HEART}'/></svg>`;
+	return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+};
+const halves = [
+	{ side: "left", mask: half("left") },
+	{ side: "right", mask: half("right") },
+];
 ---
 
 {campaignVisible() && (
 	<a class="hub-appeal" href="/save-our-hub/">
 		<span class="wrap hub-appeal-inner">
 			{/* The building itself: "our home is for sale" lands harder when you can see the home.
-			    Decorative - the words carry the meaning. Cropped to a heart by a CSS mask. */}
+			    Decorative - the words carry the meaning. A broken heart, cut from it by CSS masks. */}
 			<span class="hub-appeal-heart">
-				<Image
-					class="hub-appeal-photo"
-					src={hubExterior}
-					alt=""
-					widths={[180, 360]}
-					sizes="130px"
-					width={180}
-				/>
+				{halves.map((h) => (
+					<span class={`hub-appeal-half hub-appeal-half-${h.side}`}>
+						<Image
+							class="hub-appeal-photo"
+							src={hubExterior}
+							alt=""
+							widths={[180, 360]}
+							sizes="130px"
+							width={180}
+							style={`-webkit-mask-image:${h.mask};mask-image:${h.mask}`}
+						/>
+					</span>
+				))}
 			</span>
 			<span class="hub-appeal-body">
 				<span><strong>Our home is for sale.</strong> Help us secure the Humanity Hub.</span>
@@ -51,29 +75,49 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	font-size: 1.05rem;
 }
 
-/* The drop shadow sits on the wrapper: a filter on the masked image itself would be cut off by
-   its own mask. The heart path's viewBox is trimmed to the shape, so the box is the heart's own
-   20:18.6 proportion and the mask fills it exactly. */
 /* The heart spills out of the band: negative margins take it out of the band's height, so the
    band is only as tall as its words and the heart overhangs top and bottom. Positioned so it
-   paints over the next section rather than under it. */
+   paints over the next section rather than under it. A little wider than the heart, for the gap. */
 .hub-appeal-heart {
 	flex: none;
 	display: block;
 	position: relative;
 	z-index: 1;
+	width: 94px;
+	height: 80px;
 	margin-block: -18px;
+}
+
+/* Each half carries its own drop shadow (a filter on the masked image would be cut off by its own
+   mask) and tilts away from the crack, pivoting on the heart's point. */
+.hub-appeal-half {
+	position: absolute;
+	top: 0;
+	left: 4px;
+	width: 86px;
+	height: 80px;
 	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+	transform-origin: 50% 100%;
+}
+
+.hub-appeal-half-left {
+	transform: translateX(-2px) rotate(-4deg);
+}
+
+.hub-appeal-half-right {
+	transform: translateX(2px) rotate(4deg);
 }
 
 .hub-appeal-photo {
 	display: block;
-	width: 86px;
-	height: 80px;
+	width: 100%;
+	height: 100%;
 	object-fit: cover;
 	object-position: 30% 60%;
-	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
-	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
 }
 
 .hub-appeal-body {
@@ -107,7 +151,12 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 		margin-top: calc(-1 * var(--space-12));
 	}
 
-	.hub-appeal-photo {
+	.hub-appeal-heart {
+		width: 84px;
+		height: 71px;
+	}
+
+	.hub-appeal-half {
 		width: 76px;
 		height: 71px;
 	}

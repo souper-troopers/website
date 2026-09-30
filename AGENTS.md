@@ -982,7 +982,7 @@ Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
   PayFast `item_name` "Save our Hub", and a **Netlify Form `save-our-hub`** (name, contact, amount,
   route, 18A) - ⚠ **that form needs its own notification address in Netlify** before go-live. Copy
   awaiting Kerry: every line, the 18A offer, and "if the building is secured another way".
-- **The band sits flush under the hero**: a negative top margin equal to `main`'s section gap
+- **The band is `src/components/HubAppeal.astro`, on the homepage and Donate** (straight after each `PhotoHero`). It sits flush under the hero: a negative top margin equal to `main`'s section gap
   (`--space-16`, `--space-12` at ≤700px). Change the gap and this must follow.
 
 ## Mobile page-to-page shifting (fixed 30 September)

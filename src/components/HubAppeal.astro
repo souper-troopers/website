@@ -54,9 +54,15 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 /* The drop shadow sits on the wrapper: a filter on the masked image itself would be cut off by
    its own mask. The heart path's viewBox is trimmed to the shape, so the box is the heart's own
    20:18.6 proportion and the mask fills it exactly. */
+/* The heart spills out of the band: negative margins take it out of the band's height, so the
+   band is only as tall as its words and the heart overhangs top and bottom. Positioned so it
+   paints over the next section rather than under it. */
 .hub-appeal-heart {
 	flex: none;
 	display: block;
+	position: relative;
+	z-index: 1;
+	margin-block: -18px;
 	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
 }
 

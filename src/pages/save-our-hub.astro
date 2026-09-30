@@ -268,7 +268,14 @@ const progress =
 		margin: 0 0 var(--space-2);
 	}
 
+	/* A flex column so the footer labels take .card-cta-label's align-self: flex-end and sit on the
+	   right, like every other card footer (the donate page's EFT card included). */
 	.hub-cta {
+		display: flex;
+		flex-direction: column;
+		/* Full width even where the card aligns its children to the start, or there's no room to
+		   push the label right into. */
+		align-self: stretch;
 		margin-top: auto;
 		padding-top: var(--space-5);
 	}

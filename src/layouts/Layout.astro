@@ -434,7 +434,11 @@ const structuredData = {
 						<a class="btn btn-primary header-donate" href="/donate" data-astro-prefetch="load" aria-current={currentPath === "/donate" ? "page" : undefined}><span class="support-label">Donate{currentPath === "/donate" && <span class="current-marker" aria-hidden="true"></span>}</span></a>
 						<a class="btn header-shop" href="/shop" data-astro-prefetch="load" aria-current={currentPath === "/shop" || currentPath.startsWith("/shop/") ? "page" : undefined}><span class="support-label">Shop{(currentPath === "/shop" || currentPath.startsWith("/shop/")) && <span class="current-marker" aria-hidden="true"></span>}</span></a>
 					</div>
-					<CartWidget client:load />
+					{/* The slot holds the cart's width before its island has parsed: Astro's island
+					    bootstrap is an inline script that pauses parsing, so the browser can paint the
+					    header without the cart and then widen it - on phones that nudged Donate and Shop
+					    47px left on every page load (measured 30 September). */}
+					<span class="cart-slot"><CartWidget client:load /></span>
 				</div>
 				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu">
 					<span class="nav-toggle-bar"></span>
@@ -733,6 +737,15 @@ const structuredData = {
 				align-items: center;
 				flex-shrink: 0;
 				gap: var(--space-6);
+			}
+
+			/* 34.8px is the cart button's rendered size (22px icon + 0.4rem padding each side). */
+			.cart-slot {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 35px;
+				min-height: 35px;
 			}
 
 			.support-menu {
@@ -1046,9 +1059,22 @@ const structuredData = {
 					padding: 0 14px;
 				}
 
+				/* The menu button is taken out of the row and pinned to the right edge, with its space
+				   reserved on .header-actions. It comes after the cart's island in the markup, so in
+				   the row it arrived a moment late and pushed Donate, Shop and the cart 44px left on
+				   every page load (measured 30 September). Pinned, it moves nothing when it arrives,
+				   and the markup - and so the tab order - is unchanged. Same position as before:
+				   32px wide, var(--space-5) from the edge (the .wrap padding), centred in the 64px bar. */
 				.nav-toggle {
 					order: 3;
 					display: flex;
+					position: absolute;
+					right: var(--space-5);
+					top: calc(var(--header-height) / 2 - 16px);
+				}
+
+				.header-actions {
+					margin-right: calc(32px + var(--space-3));
 				}
 
 				/* Homepage only (.hero-has-donate; every page's header is an overlay since 2026-09-24,
@@ -2591,6 +2617,48 @@ const structuredData = {
 				justify-content: flex-end;
 				min-height: calc(220px + var(--hero-clearance));
 				padding: calc(var(--space-8) + var(--hero-clearance)) 0 56px;
+			}
+
+			/* The homepage hero is sized by its words, which the browser can paint before it has read
+			   them: the cart's island in the header pauses parsing, so on a phone the hero first
+			   appeared ~150px tall (just its padding) and then grew to ~460px, the photo jumping with
+			   it (measured 30 September). A floor just under its natural height at each width means it
+			   paints at almost its final size and is never taller than before. Natural heights,
+			   measured with no floor: 501px to 340px wide, 462 to 390, 436 at 414, 397 from 430 to
+			   760, 582-628 from 761 to 900, 598-622 to 1045, 553-560 above. Re-measure if the
+			   headline, paragraph or hero padding changes. */
+			.hero-photo.photo-hero--home {
+				min-height: 390px;
+			}
+
+			@media (max-width: 413px) {
+				.hero-photo.photo-hero--home {
+					min-height: 455px;
+				}
+			}
+
+			@media (max-width: 359px) {
+				.hero-photo.photo-hero--home {
+					min-height: 495px;
+				}
+			}
+
+			@media (min-width: 761px) {
+				.hero-photo.photo-hero--home {
+					min-height: 575px;
+				}
+			}
+
+			@media (min-width: 901px) {
+				.hero-photo.photo-hero--home {
+					min-height: 590px;
+				}
+			}
+
+			@media (min-width: 1046px) {
+				.hero-photo.photo-hero--home {
+					min-height: 545px;
+				}
 			}
 
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the

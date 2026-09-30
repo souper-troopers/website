@@ -631,6 +631,17 @@ const goodsCategories = [
 		color: var(--st-teal-dark);
 	}
 
+	/* Where the five individual routes wrap onto a second line (narrow phones, and the two-across
+	   layout just above 760px), the standard 96px wedge left the first line of links above the blue.
+	   A taller wedge there keeps both lines on it (30 September). Measured: two lines up to 500px and
+	   from 761 to 1015px; the ranges are rounded outward. The companies card has three links and stays
+	   on one line, so it keeps the standard wedge. Re-measure if a route is added or renamed. */
+	@media (max-width: 520px), (min-width: 761px) and (max-width: 1025px) {
+		#individuals-band.card-cta::after {
+			height: 164px;
+		}
+	}
+
 	@media (min-width: 780px) {
 		.gi-chooser {
 			grid-template-columns: repeat(2, 1fr);

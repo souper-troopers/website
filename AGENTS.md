@@ -982,6 +982,25 @@ Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
   PayFast `item_name` "Save our Hub", and a **Netlify Form `save-our-hub`** (name, contact, amount,
   route, 18A) - ⚠ **that form needs its own notification address in Netlify** before go-live. Copy
   awaiting Kerry: every line, the 18A offer, and "if the building is secured another way".
+- **The band sits flush under the hero**: a negative top margin equal to `main`'s section gap
+  (`--space-16`, `--space-12` at ≤700px). Change the gap and this must follow.
+
+## Mobile page-to-page shifting (fixed 30 September)
+Reported on a phone: the page re-laid-out on every navigation. **It was the header, not the page
+banners** (except the homepage's). Astro's island bootstrap is an inline script that pauses parsing,
+so the browser painted the header before the cart island and the menu button existed, then moved
+Donate / Shop sideways when they arrived (`.header-actions` x209 -> x118 at 390).
+- **`.cart-slot`** wraps `<CartWidget>` with a 35×35 minimum, so its space is reserved before it
+  hydrates. **Below 761px the menu button is absolute** and `.header-actions` keeps a right margin
+  for it, so nothing waits on it.
+- **The homepage hero has per-width `min-height` floors** equal to its measured natural height
+  (390 / 455 ≤413 / 495 ≤359 / 575 ≥761 / 590 ≥901 / 545 ≥1046), because it grew 149 -> 462px as its
+  text parsed. Checked equal to natural at 27 widths; change the hero copy and re-measure.
+- Throttled CLS 0 on `/`, `/donate/`, `/get-involved/`, `/save-our-hub/`. At 320px the Donate / Shop /
+  cart group sits on a second row under the logo (before, the menu button wrapped instead).
+- Same day: Get Involved's individuals card wedge is 164px tall at ≤520px and 761-1025px, where its
+  route links wrap to two lines and fell out of the blue; Save our Hub's card labels right-align
+  (`.hub-cta` stretches).
 
 ### The Worry Dolls, by variation (2026-09-24)
 The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop/Dolls/<variation>`).

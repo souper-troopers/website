@@ -6,41 +6,44 @@
 import { Image } from "astro:assets";
 import { campaignVisible } from "../lib/campaign";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
-import hubHaircut from "../assets/images/hub-haircut.jpg";
-import hubLounge from "../assets/images/hub-lounge.jpg";
 
-// Three hearts, largest first: the building, then two moments inside it (both already on the
-// homepage's pillar cards). Sizes, offsets and tilts are hand-set to look scattered, not random at
-// build time, so the band doesn't change between deploys. Units are --u so phones scale the lot.
+// Three hearts that overlap slightly, cut out of ONE photo of the building - the photo shows
+// through all three at once. Sizes, offsets and tilts are hand-set (in the cluster's own 140x90
+// units) so the band looks the same on every deploy; the mask SVG is built from them here.
+const BOX = { w: 140, h: 90 };
 const hearts = [
-	{ src: hubExterior, position: "30% 60%", w: 86, h: 80, x: 0, y: 8, r: -6 },
-	{ src: hubHaircut, position: "50% 35%", w: 52, h: 48, x: 86, y: 0, r: 9 },
-	{ src: hubLounge, position: "50% 50%", w: 36, h: 34, x: 96, y: 56, r: -4 },
+	{ w: 84, h: 78, x: 0, y: 8, r: -6 },
+	{ w: 54, h: 50, x: 72, y: 0, r: 9 },
+	{ w: 38, h: 35, x: 80, y: 52, r: -5 },
 ];
+// The heart path, in a viewBox trimmed to the shape (x 2-22, y 3-21.6).
+const HEART =
+	"M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z";
+const paths = hearts
+	.map(({ w, h, x, y, r }) => {
+		const t = `translate(${x} ${y}) rotate(${r} ${w / 2} ${h / 2}) scale(${w / 20} ${h / 18.6}) translate(-2 -3)`;
+		return `<path transform='${t}' d='${HEART}'/>`;
+	})
+	.join("");
+const maskSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${BOX.w} ${BOX.h}'>${paths}</svg>`;
+const mask = `url("data:image/svg+xml,${encodeURIComponent(maskSvg)}")`;
 ---
 
 {campaignVisible() && (
 	<a class="hub-appeal" href="/save-our-hub/">
 		<span class="wrap hub-appeal-inner">
 			{/* The building itself: "our home is for sale" lands harder when you can see the home.
-			    Decorative - the words carry the meaning. Each cropped to a heart by a CSS mask. */}
+			    Decorative - the words carry the meaning. One photo, seen through three hearts (a CSS mask). */}
 			<span class="hub-appeal-hearts">
-				{hearts.map((h) => (
-					<span
-						class="hub-appeal-heart"
-						style={`--w:${h.w};--h:${h.h};--x:${h.x};--y:${h.y};--r:${h.r}deg`}
-					>
-						<Image
-							class="hub-appeal-photo"
-							src={h.src}
-							alt=""
-							widths={[120, 240]}
-							sizes="120px"
-							width={120}
-							style={`object-position:${h.position}`}
-						/>
-					</span>
-				))}
+				<Image
+					class="hub-appeal-photo"
+					src={hubExterior}
+					alt=""
+					widths={[200, 400]}
+					sizes="140px"
+					width={200}
+					style={`-webkit-mask-image:${mask};mask-image:${mask}`}
+				/>
 			</span>
 			<span class="hub-appeal-body">
 				<span><strong>Our home is for sale.</strong> Help us secure the Humanity Hub.</span>
@@ -70,24 +73,14 @@ const hearts = [
 	font-size: 1.05rem;
 }
 
-/* The cluster reserves the space; each heart is placed inside it. The drop shadow sits on the
-   wrapper, since a filter on the masked image would be cut off by its own mask. The heart path's
-   viewBox is trimmed to the shape, so each box is the heart's own ~20:18.6 proportion. */
+/* The drop shadow sits on the wrapper, since a filter on the masked image would be cut off by its
+   own mask; on the wrapper it follows the three hearts' outline. */
 .hub-appeal-hearts {
 	--u: 1px;
 	flex: none;
-	position: relative;
+	display: block;
 	width: calc(140 * var(--u));
 	height: calc(90 * var(--u));
-}
-
-.hub-appeal-heart {
-	position: absolute;
-	left: calc(var(--x) * var(--u));
-	top: calc(var(--y) * var(--u));
-	width: calc(var(--w) * var(--u));
-	height: calc(var(--h) * var(--u));
-	transform: rotate(var(--r));
 	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
 }
 
@@ -96,8 +89,11 @@ const hearts = [
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
-	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	object-position: 30% 60%;
+	-webkit-mask-size: 100% 100%;
+	mask-size: 100% 100%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
 }
 
 .hub-appeal-body {

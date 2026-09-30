@@ -1,7 +1,7 @@
 ---
 /* Save our Hub band (drafted 30 September): the fixed entry the review asked for - a band, not a
    pop-up, in the brand red (Adrian: red, so it catches the eye). Black on #dd4b59 is 5.2:1; white
-   would be 4.0:1. Placed directly after a page's PhotoHero on the homepage and Donate. Off on live
+   would be 4.0:1. Placed directly after the PhotoHero on Home, Donate and Get Involved. Off on live
    builds until CAMPAIGN.live - see src/lib/campaign.ts. */
 import { Image } from "astro:assets";
 import { campaignVisible } from "../lib/campaign";
@@ -12,15 +12,17 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	<a class="hub-appeal" href="/save-our-hub/">
 		<span class="wrap hub-appeal-inner">
 			{/* The building itself: "our home is for sale" lands harder when you can see the home.
-			    Decorative - the words carry the meaning. Crops from the right to keep the 66. */}
-			<Image
-				class="hub-appeal-photo"
-				src={hubExterior}
-				alt=""
-				widths={[96, 192]}
-				sizes="96px"
-				width={96}
-			/>
+			    Decorative - the words carry the meaning. Cropped to a heart by a CSS mask. */}
+			<span class="hub-appeal-heart">
+				<Image
+					class="hub-appeal-photo"
+					src={hubExterior}
+					alt=""
+					widths={[180, 360]}
+					sizes="130px"
+					width={180}
+				/>
+			</span>
 			<span class="hub-appeal-body">
 				<span><strong>Our home is for sale.</strong> Help us secure the Humanity Hub.</span>
 				<span class="hub-appeal-cta">Save our Hub <span aria-hidden="true">&rarr;</span></span>
@@ -49,14 +51,23 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	font-size: 1.05rem;
 }
 
-.hub-appeal-photo {
+/* The drop shadow sits on the wrapper: a filter on the masked image itself would be cut off by
+   its own mask. The heart path's viewBox is trimmed to the shape, so the box is the heart's own
+   20:18.6 proportion and the mask fills it exactly. */
+.hub-appeal-heart {
 	flex: none;
-	width: 96px;
-	height: 64px;
+	display: block;
+	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.hub-appeal-photo {
+	display: block;
+	width: 86px;
+	height: 80px;
 	object-fit: cover;
-	object-position: left center;
-	border-radius: 8px;
-	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.85);
+	object-position: 30% 60%;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 
 .hub-appeal-body {
@@ -91,8 +102,8 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	}
 
 	.hub-appeal-photo {
-		width: 72px;
-		height: 72px;
+		width: 76px;
+		height: 71px;
 	}
 }
 </style>

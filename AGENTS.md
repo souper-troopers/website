@@ -961,6 +961,20 @@ What changes what we build:
 - **Worry Dolls restructured on 2026-09-24** — see "The Worry Dolls, by variation" below.
 - Next meeting **Wednesday 30 September, 16:00**. Include Hilton on emails; the last one missed him.
 
+## The 30 September 2026 review
+Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
+`2026-10-02-agenda.md`. Transcript one level up, under a **new** name
+(`..._otter_ai_transcript.txt`, speakers named), so the 21 September file survives.
+- The meeting was taken over by the building. **Soft launch agreed** (just repoint the address, no
+  announcement); Adrian suggested Monday 5 October. **Next meeting Friday 2 October, 11:30.**
+- **New urgent work: a "Save our Hub" campaign** - a fixed homepage button (no pop-ups) to a
+  dedicated page, target ~R6m, optional running total, a match-funding mechanism built but hidden
+  until a match is in writing. **Not BackaBuddy** (Kerry wants to own it). Donations must be
+  **identifiable** (who gave what) and ring-fenced from general donations; how the money is held
+  (separate account vs reference + ledger, 18A or not) waits on Kerry's treasurer, board and legal.
+- ⚠ Kerry called the building sale sensitive and not in writing; **keep sale details out of this
+  public repo** (the minutes deliberately omit them).
+
 ### The Worry Dolls, by variation (2026-09-24)
 The 21 September review's shop asks, built on Shan's studio shots (`Content/Shop/Dolls/<variation>`).
 - **`shopItem.gallery`** (array of images, "More photos") joined `photo` ("Main photo"). The product

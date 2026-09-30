@@ -982,7 +982,7 @@ Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
   PayFast `item_name` "Save our Hub", and a **Netlify Form `save-our-hub`** (name, contact, amount,
   route, 18A) - ⚠ **that form needs its own notification address in Netlify** before go-live. Copy
   awaiting Kerry: every line, the 18A offer, and "if the building is secured another way".
-- **The band is `src/components/HubAppeal.astro`, on the homepage, Donate and Get Involved** (straight after each `PhotoHero`), with a small photo of the Hub on its left, cropped to a heart (a CSS `mask` with an inline SVG heart; the drop shadow sits on a wrapper, since a filter on the masked image is cut off by its own mask). Decorative, `alt=""`; 86×80, 76×71 on phones. It sits flush under the hero: a negative top margin equal to `main`'s section gap
+- **The band is `src/components/HubAppeal.astro`, on the homepage, Donate and Get Involved** (straight after each `PhotoHero`), with a small photo of the Hub on its left, cropped to a heart (a CSS `mask` with an inline SVG heart; the drop shadow sits on a wrapper, since a filter on the masked image is cut off by its own mask). Decorative, `alt=""`; 86×80, 76×71 on phones. The mask is on its own box and the photo inside is scaled 1.45× from near its foot, because a 3:2 photo in a near-square box has no vertical slack for `object-position` to trade sky for building. It sits flush under the hero: a negative top margin equal to `main`'s section gap
   (`--space-16`, `--space-12` at ≤700px). Change the gap and this must follow.
 
 ## Mobile page-to-page shifting (fixed 30 September)

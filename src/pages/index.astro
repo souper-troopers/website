@@ -432,8 +432,11 @@ const heroLqip =
 		}
 	}
 
+	/* Sits flush under the hero: main spaces its children with a gap (--space-16, --space-12 on
+	   phones), so the band pulls itself up by exactly that much. */
 	.hub-appeal {
 		display: block;
+		margin-top: calc(-1 * var(--space-16));
 		background: var(--st-red);
 		color: #000;
 		text-decoration: none;
@@ -464,6 +467,12 @@ const heroLqip =
 	.hub-appeal:focus-visible {
 		outline: 3px solid var(--st-ink);
 		outline-offset: -3px;
+	}
+
+	@media (max-width: 700px) {
+		.hub-appeal {
+			margin-top: calc(-1 * var(--space-12));
+		}
 	}
 </style>
 

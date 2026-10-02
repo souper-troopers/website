@@ -5,7 +5,8 @@ starts showing the new site.
 
 The code side is ready on the `launch` branch (indexing on, the real address everywhere, robots.txt
 and llms.txt switched over, per-page noindex where the blanket used to cover it). The redirects from
-the old site's addresses are already live on `main`. **Merge `launch` into `main` only after the
+the old site's addresses go out with the next normal publish from `dev` (they're harmless on the
+preview). **Merge `launch` into `main` only after the
 DNS change below has been made** - before that, it would tell Google the site lives at an address
 still serving the old WordPress site.
 

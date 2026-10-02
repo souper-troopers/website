@@ -1,0 +1,77 @@
+# Redirects from the old WordPress site's addresses (soupertroopers.org until the October 2026
+# launch), so links in Google, press articles and old social posts keep working. Built 2 October
+# 2026 from the old site's own sitemaps (sitemap_index.xml).
+#
+# None of these is forced (no "!"), so a rule only fires when no page exists at that address: a
+# new page of the same name - /donate/, /shop/ - always wins, and nothing here can shadow one.
+# Netlify ignores the trailing slash when matching, so one rule covers /about-us and /about-us/.
+# 301 = moved for good, which tells Google to carry the old page's standing over to the new one.
+
+# Pages
+/about-us              /about/                                  301
+/humanity-hub          /about/#humanity-hub                     301
+/individuals           /get-involved/#individuals               301
+/businesses            /get-involved/corporate-partnership/     301
+/contact-us            /contact/                                301
+/soupermarket          /shop/                                   301
+/souper-news           /our-work/#stories                       301
+/monthly-debit-order   /donate/                                 301
+/donation-confirmation /donate/                                 301
+/donation-failed       /donate/                                 301
+/donor-dashboard       /donate/                                 301
+/elementor-1148        /                                        301
+
+# The old shop
+/cart                  /shop/                                   301
+/checkout              /shop/                                   301
+/my-account            /shop/                                   301
+/product/donate        /donate/                                 301
+/product/troopers-coffee-dignity-blend-ground /shop/coffee/     301
+/product/african-worry-dolls-gift-tags        /shop/gift-tags/  301
+/product/african-worry-dolls-per-doll         /shop/worry-dolls/ 301
+/product-category/coffee/african-worry-dolls  /shop/worry-dolls/ 301
+/product-category/coffee                      /shop/coffee/     301
+/product-category/donate                      /donate/          301
+/product-tag/african-worry-dolls              /shop/worry-dolls/ 301
+/product/*             /shop/                                   301
+/product-category/*    /shop/                                   301
+
+# Blog categories and the author page
+/category/meet-the-team  /about/#team                           301
+/category/souper-news    /our-work/#stories                     301
+/category/troopers       /our-work/#stories                     301
+/author/*                /about/                                301
+
+# Image attachment pages under old pages (photos WordPress gave their own address)
+/about-us/*            /about/                                  301
+/humanity-hub/*        /about/#humanity-hub                     301
+
+# The old news posts. The new site has no news section, so each goes to the stories on Our Work.
+
+/helping-homeless-clients-find-employment-through-collaboration             /our-work/#stories 301
+/lighting-the-way-home                                                      /our-work/#stories 301
+/friendship-the-essence-of-life                                             /our-work/#stories 301
+/tearing-up-the-streets-of-hope-and-desolation                              /our-work/#stories 301
+/exit-plans-the-stumbling-block-for-gbv-on-the-streets                      /our-work/#stories 301
+/admittance-the-first-step-to-sobriety                                      /our-work/#stories 301
+/kicking-addiction-to-the-kerb                                              /our-work/#stories 301
+/moving-forward-and-upward                                                  /our-work/#stories 301
+/homeless-not-hopeless                                                      /our-work/#stories 301
+/64-we-advocate-for-this-number                                             /our-work/#stories 301
+/a-birth-that-gave-life-to-no-identity                                      /our-work/#stories 301
+/demolishing-elderly-isolation                                              /our-work/#stories 301
+/adams-big-catch                                                            /our-work/#stories 301
+/souper-news-june-2021                                                      /our-work/#stories 301
+/adams-big-catch-2                                                          /our-work/#stories 301
+/demolishing-elderly-isolation-2                                            /our-work/#stories 301
+/a-birth-that-gave-life-to-no-identity-2                                    /our-work/#stories 301
+/64-we-advocate-for-this-number-2                                           /our-work/#stories 301
+/homeless-not-hopeless-2                                                    /our-work/#stories 301
+/moving-forward-and-upward-2                                                /our-work/#stories 301
+/kicking-addiction-to-the-kerb-2                                            /our-work/#stories 301
+/admittance-the-first-step-to-sobriety-2                                    /our-work/#stories 301
+/exit-plans-the-stumbling-block-for-gbv-on-the-streets-2                    /our-work/#stories 301
+/tearing-up-the-streets-of-hope-and-desolation-2                            /our-work/#stories 301
+/friendship-the-essence-of-life-2                                           /our-work/#stories 301
+/lighting-the-way-home-2                                                    /our-work/#stories 301
+/helping-homeless-clients-find-employment-through-collaboration-2           /our-work/#stories 301

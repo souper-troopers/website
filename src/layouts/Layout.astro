@@ -2640,20 +2640,25 @@ const structuredData = {
 			   space under the browser's toolbar. min-height, so the box still grows if the words need
 			   more room (short landscape phones). It also cures the layout shift fixed on 30 September
 			   with per-width floors: the box's height no longer depends on the words, so it paints at
-			   its final size before they have been read. Words centred on laptops, at the foot on
-			   phones, where centred text left ~200px of close-up mural beneath it (14 September). */
+			   its final size before they have been read. Words at the foot of the photo (see below). */
 			.hero-photo.photo-hero--home {
 				box-sizing: border-box;
 				display: flex;
 				flex-direction: column;
-				justify-content: center;
+				justify-content: flex-end;
 				min-height: 100vh;
 				min-height: 100svh;
 			}
 
-			@media (max-width: 760px) {
-				.hero-photo.photo-hero--home {
-					justify-content: flex-end;
+			/* Words at the foot on every width (2 October), and on laptops the mural slid right so
+			   Mandela's face sits clear of them: centred, the headline ran across his mouth and chin.
+			   The photo is wider than the screen at full height, so the horizontal position has room
+			   to move. Landscape screens only: on phones and portrait tablets the centred crop already
+			   puts the face above the words, and the offset pushed it out of frame (820x1180).
+			   !important beats PhotoHero's inline object-position. */
+			@media (min-width: 761px) and (min-aspect-ratio: 1/1) {
+				.photo-hero--home .hero-bg img {
+					object-position: 8% 30% !important;
 				}
 			}
 

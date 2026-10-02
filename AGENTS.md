@@ -1022,6 +1022,11 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   ⚠ On phones the logo stands alone, so the header no longer says Souper Troopers there. **Purple
   primary buttons were tried and turned down by the user the same day** - buttons stay teal. The Hub
   purple measures `#8156a4` (white on it 5.53:1, black only 3.80:1) if it's wanted again.
+- **Homepage hero words at the foot on every width** (2 October, later): on laptops, centred words ran
+  across Mandela's mouth and chin. On landscape screens (`min-width: 761px` and
+  `min-aspect-ratio: 1/1`) the mural is also slid right (`object-position: 8% 30%`) so the face sits
+  clear of the words; portrait tablets keep the centred crop - the offset pushed the face out of
+  frame at 820x1180. Contrast after: 1,224 lines, none failing (home worst body 5.31:1).
 - **Still to do** (from the call): Taz's title and the decluttered partner list (Shan sent them to the
   user, not the status page); the worry-doll legend and "mounted on a card" (Shan: as the last
   carousel slide); Donate and Shop both filled, Shop in Hub purple once we have the colour; spread

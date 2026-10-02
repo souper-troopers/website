@@ -52,7 +52,7 @@ const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zo
 const highPriority = size !== "band";
 ---
 
-<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax={size === "home" ? "0.3" : "0.1"} style={zoom ? `--hero-zoom: ${zoom}` : undefined}>
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : undefined}>
 	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
 		<Image
 			src={image}

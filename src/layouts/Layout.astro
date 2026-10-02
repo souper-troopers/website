@@ -2581,9 +2581,12 @@ const structuredData = {
 			/* A smaller overhang than the homepage's 35%, with a gentler parallax to match (0.1, set
 			   by PhotoHero's script): at rest the hero shows the part of the photo below the overhang,
 			   and at 35% a wide inner hero showed only the lower half of a photo - the two people on
-			   Our Work lost their heads. 12% is still more than the 0.1 rate can ever uncover. */
+			   Our Work lost their heads. 12% is still more than the 0.1 rate can ever uncover. The
+			   homepage joined them on 2 October, when its hero became full-height: at 35% the mural
+			   was blown up to nearly twice the screen's width and read as close-up wall. */
 			.photo-hero--page .hero-bg,
-			.photo-hero--band .hero-bg {
+			.photo-hero--band .hero-bg,
+			.photo-hero--home .hero-bg {
 				top: -12%;
 				height: 124%;
 			}
@@ -2619,45 +2622,26 @@ const structuredData = {
 				padding: calc(var(--space-8) + var(--hero-clearance)) 0 56px;
 			}
 
-			/* The homepage hero is sized by its words, which the browser can paint before it has read
-			   them: the cart's island in the header pauses parsing, so on a phone the hero first
-			   appeared ~150px tall (just its padding) and then grew to ~460px, the photo jumping with
-			   it (measured 30 September). A floor just under its natural height at each width means it
-			   paints at almost its final size and is never taller than before. Natural heights,
-			   measured with no floor: 501px to 340px wide, 462 to 390, 436 at 414, 397 from 430 to
-			   760, 582-628 from 761 to 900, 598-622 to 1045, 553-560 above. Re-measure if the
-			   headline, paragraph or hero padding changes. */
+			/* The homepage hero fills the first screen (2 October review, Adrian: the photo should be
+			   bigger and the strip of page below it less dominant). Built for the mural now; the
+			   video drops into the same box when it arrives. svh, not vh: on phones vh includes the
+			   space under the browser's toolbar. min-height, so the box still grows if the words need
+			   more room (short landscape phones). It also cures the layout shift fixed on 30 September
+			   with per-width floors: the box's height no longer depends on the words, so it paints at
+			   its final size before they have been read. Words centred on laptops, at the foot on
+			   phones, where centred text left ~200px of close-up mural beneath it (14 September). */
 			.hero-photo.photo-hero--home {
-				min-height: 390px;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				min-height: 100vh;
+				min-height: 100svh;
 			}
 
-			@media (max-width: 413px) {
+			@media (max-width: 760px) {
 				.hero-photo.photo-hero--home {
-					min-height: 455px;
-				}
-			}
-
-			@media (max-width: 359px) {
-				.hero-photo.photo-hero--home {
-					min-height: 495px;
-				}
-			}
-
-			@media (min-width: 761px) {
-				.hero-photo.photo-hero--home {
-					min-height: 575px;
-				}
-			}
-
-			@media (min-width: 901px) {
-				.hero-photo.photo-hero--home {
-					min-height: 590px;
-				}
-			}
-
-			@media (min-width: 1046px) {
-				.hero-photo.photo-hero--home {
-					min-height: 545px;
+					justify-content: flex-end;
 				}
 			}
 

@@ -985,6 +985,33 @@ Minutes: `docs/meeting-notes/2026-09-30-website-review.md`; Friday's agenda in
 - **The band is `src/components/HubAppeal.astro`, on the homepage, Donate and Get Involved** (straight after each `PhotoHero`), with a small photo of the Hub on its left, cropped to a heart (a CSS `mask` with an inline SVG heart; the drop shadow sits on a wrapper, since a filter on the masked image is cut off by its own mask). Decorative, `alt=""`; 86×80, 76×71 on phones. **The heart spills out of the band** (`margin-block: -18px`, `z-index: 1`), so a laptop band is 68px (was 104), set by the words, with the heart 6px over each edge; on phones the three lines of text are taller than the heart, so it sits inside. **Tried and reverted on 30 September, at the user's call** (in git history if wanted): a 1.45× zoom to cut the sky; three hearts with three different photos; one photo seen through three, then five, scattered hearts; and a broken heart (two tilted halves either side of a jagged crack, commit `9ab5b5e`). The single plain heart won. It sits flush under the hero: a negative top margin equal to `main`'s section gap
   (`--space-16`, `--space-12` at ≤700px). Change the gap and this must follow.
 
+## The 2 October 2026 review
+Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level up
+(`..._otter_ai_transcript_2026_10_02.txt`). Next meeting **Friday 9 October, 11:30**; from 14 October,
+16:00 SA time.
+- ⚠ **The building**: Kerry gave a confidential update - keep it out of this public repo. For the site:
+  the "for sale" framing no longer fits, **Save our Hub stays hidden** (`q48` on hold), and the page
+  may come back as a rent/services or match-funding campaign.
+- **The name is decided for now**: the board is happy with "The Humanity Hub by Souper Troopers"
+  (`q29` settled); soupertroopers.org stays. The Henley MBA project (Oct-Nov) may refine it. The
+  **logo is open** (`q49`: Shan would use the Hub logo alone, Kerry wants the Souper Troopers link
+  visible) and the **Hub's colour is purple** - Shan blends purple and teal.
+- **Soft launch, aiming for Monday 5 October** (`q45` settled). Kerry wants off Webtimes, but they run
+  the email: keep a month or two of overlap. Kerry isn't waiting on Webtimes for anything.
+- **Done the same day, on `dev`**: Jake Gluckman (resigned) and Sidney's story (Sidney has passed
+  away; never use his image) **unpublished in Sanity** - drafts kept. Jake's name taken out of the
+  Reconnection Workshop copy on Get Involved and Corporate partnership; `q50` asks whether the
+  workshops continue. The homepage hero is **full-height again** (`min-height: 100svh`, words centred
+  on laptops, at the foot on phones), which also replaces the 30 September per-width floors; it now
+  shares the inner heroes' 12% overhang and 0.1 parallax (at 35% the mural was blown up to close-up
+  wall). The mural's "Super Troopers" lettering falls outside the frame at both widths; Shan will send
+  a better photo with faces. Hero contrast re-run: 1,224 lines, none failing (home worst 4.69:1). On
+  doll pages the handmade note moved **under Add to cart**.
+- **Still to do** (from the call): Taz's title and the decluttered partner list (Shan sent them to the
+  user, not the status page); the worry-doll legend and "mounted on a card" (Shan: as the last
+  carousel slide); Donate and Shop both filled, Shop in Hub purple once we have the colour; spread
+  out the footer newsletter.
+
 ## Mobile page-to-page shifting (fixed 30 September)
 Reported on a phone: the page re-laid-out on every navigation. **It was the header, not the page
 banners** (except the homepage's). Astro's island bootstrap is an inline script that pauses parsing,

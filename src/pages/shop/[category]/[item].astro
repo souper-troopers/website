@@ -146,13 +146,6 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 				</div>
 
 				<div class="detail-buy">
-					{handmade && (
-						<p class="product-handmade">
-							Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
-							exact doll you'll receive.
-						</p>
-					)}
-
 					{item.soldOut ? (
 						<p class="sold-out">
 							Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
@@ -165,6 +158,14 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 							name={item.name}
 							price={item.price}
 						/>
+					)}
+					{/* Directly under the button, where someone is deciding (2 October review: Kerry, "it's a
+					    lucky draw"; Adrian, "print underneath that button"). */}
+					{handmade && (
+						<p class="product-handmade">
+							Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
+							exact doll you'll receive.
+						</p>
 					)}
 				</div>
 
@@ -364,7 +365,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	}
 
 	.detail-buy .product-handmade {
-		margin-top: 0;
+		margin-top: var(--space-3);
 	}
 
 	.sold-out {

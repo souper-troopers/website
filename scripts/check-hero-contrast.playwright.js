@@ -6,7 +6,7 @@
 // nav link over it, it hides the text, screenshots, and compares the text's effective colour
 // against every pixel under that line - so a pass means the worst pixel passes, not the average.
 // Body 4.5:1, large text 3:1. Re-run after changing the hero tint or adding a hero photo.
-// Also measures the header's outlined Shop label (white on the photo) since 25 September.
+// Also measures the header's Shop label (white on the photo 25 September - 2 October; ink on a white fill since).
 
 async (page) => {
   // For every line of text in each hero (and the nav links sitting over it): record the line boxes

@@ -731,7 +731,7 @@ const structuredData = {
 			   The value tracks the tallest child rather than being a second magic number: the 44px button
 			   + the two var(--space-3) paddings on this rule. */
 			/* Donate / Shop: two separate controls, 8px apart (25 September; one segmented pill before).
-			   Donate is .btn-primary (ink on teal, 5.64:1). Shop is an outlined ghost - transparent, a
+			   Donate is .btn-primary (ink on teal, 5.64:1). Shop was an outlined ghost until 2 October (now filled white, see .header-shop) - transparent, a
 			   1.5px white rule, white label - filling faintly on hover. Both 44px tall (revised 25
 			   September, from 52), the height --header-height is built from, so the laptop header is 68px.
 			   Side padding 18px on laptops, 14px below 761px. Labels use the nav links' type (0.95rem /
@@ -791,16 +791,27 @@ const structuredData = {
 
 			/* `.support-menu` in front: the site-wide `.btn` rule sits later in this sheet and, at equal
 			   specificity, replaced this border with its transparent 2px one. */
+			/* Filled white since 2 October (Adrian, on the call: both buttons should catch the eye, not
+			   one filled and one outlined). White rather than a second teal pill, so the two still read
+			   as two choices; ink on white is 15.5:1, and the white pill stands off the dark header and
+			   the hero tint just as strongly. The 1.5px border is kept (now white) so the pill is the
+			   same size as before. Hover: a pale teal, ink label 13:1+. The current-page underline is
+			   teal-dark here (4.52:1 on white) - the brand teal is only 2.76:1 on white. */
 			.support-menu .header-shop {
-				border: 1.5px solid rgba(255, 255, 255, 0.7);
-				color: var(--st-white);
-				background: transparent;
-				transition: background 0.15s ease;
+				border: 1.5px solid var(--st-white);
+				color: var(--st-ink);
+				background: var(--st-white);
+				transition: background 0.15s ease, border-color 0.15s ease;
 			}
 
 			.support-menu .header-shop:hover {
-				background: rgba(255, 255, 255, 0.12);
-				color: var(--st-white);
+				background: #dff2f5;
+				border-color: #dff2f5;
+				color: var(--st-ink);
+			}
+
+			.support-menu .header-shop .current-marker {
+				background: var(--st-teal-dark);
 			}
 
 			.support-menu .header-shop:focus-visible {

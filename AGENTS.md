@@ -1027,9 +1027,13 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   `min-aspect-ratio: 1/1`) the mural is also slid right (`object-position: 8% 30%`) so the face sits
   clear of the words; portrait tablets keep the centred crop - the offset pushed the face out of
   frame at 820x1180. Contrast after: 1,224 lines, none failing (home worst body 5.31:1).
-- **Still to do** (from the call): Taz's title and the decluttered partner list (Shan sent them to the
-  user, not the status page); the worry-doll legend and "mounted on a card" (Shan: as the last
-  carousel slide); Donate and Shop both filled, Shop in Hub purple once we have the colour; spread
+- **Header Shop button filled white since 2 October** (Adrian: both buttons should catch the eye; the
+  outline didn't). Option A, both teal with a dark Hub-purple Shop label (5.01:1), read as one double
+  button and looked muddy, so white it is: ink label 15.5:1, hover pale teal `#dff2f5` (13.45:1), the
+  current-page underline teal-dark (4.52:1 on white; the brand teal is 2.76:1). Same 44px height,
+  header 69px on laptops and 65px on phones, as before.
+- **Still to do** (from the call): Taz's title and the decluttered partner list (asked for in the
+  user's DM); the worry-doll legend and "mounted on a card" (Shan: as the last carousel slide); spread
   out the footer newsletter.
 
 ## Mobile page-to-page shifting (fixed 30 September)

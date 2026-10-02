@@ -20,9 +20,10 @@ still serving the old WordPress site.
    - `www.soupertroopers.org` - a **CNAME** to `souper-troopers.netlify.app`
 
    Use what Netlify shows if it differs.
-3. **Shop payments**: check `PAYFAST_MODE` in Netlify's environment variables. Not `live` means the
-   shop checkout is still in test mode. If the live merchant details can't be in place, say so and
-   Add to cart gets hidden for the launch.
+3. **Shop payments**: the shop launches without online payment (`SHOP_CHECKOUT` is off on `launch`):
+   "Order this" opens the contact form with the order started. Netlify's PayFast details are still the
+   test account's, so set `PAYFAST_MODE` back to `sandbox` until the live merchant ID, key and
+   passphrase are entered. Turning checkout on later is described in `src/lib/shop.ts`.
 4. **Analytics**: add `soupertroopers.org` as a site in Cloudflare Web Analytics and pass on the new
    token - the current one is scoped to the preview address. (It can follow launch; nothing breaks
    without it, the numbers just don't record.)

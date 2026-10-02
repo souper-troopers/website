@@ -1061,8 +1061,17 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
 - **Redirects from the old WordPress site are on `dev`**, going out with the next normal publish (`public/_redirects`, 59 rules
   built from its sitemaps: ~18 pages, the old shop, 27 news posts to Our Work's stories, attachment
   pages, categories). Non-forced, so they never shadow a real page. Tested on Netlify's own server.
-- **Not done**: the Cloudflare Web Analytics token for the real domain (needs the user), and
-  `PAYFAST_MODE` unknown (the shop is in test mode unless it says `live`).
+- **The shop launches without online payment.** Netlify's PayFast settings are still the test
+  account's (merchant `10052763`, checked 2 October by asking the checkout function what it would send
+  - it has no side effects; the real account is `13206553`, as on the Donate page). The user set
+  `PAYFAST_MODE` to `live`, which only takes effect at the next deploy and with test details would
+  send shoppers to PayFast's error page - advised setting it back to `sandbox` until the live merchant
+  ID, key and passphrase are in Netlify. `SHOP_CHECKOUT` in `src/lib/shop.ts` is **true on `dev`, false on
+  `launch`**: off, the basket icon leaves the header and Add to cart becomes "Order this", opening the
+  contact form with "I'd like to order: <item>" started (topic "Shop order"; the item comes from the
+  URL, trimmed to 120 characters). To turn checkout on: live details in Netlify, `PAYFAST_MODE=live`,
+  the switch to true, publish, one small real purchase.
+- **Not done**: the Cloudflare Web Analytics token for the real domain - deferred until after launch.
 
 ## Mobile page-to-page shifting (fixed 30 September)
 Reported on a phone: the page re-laid-out on every navigation. **It was the header, not the page

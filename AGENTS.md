@@ -1013,6 +1013,15 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   `https://pos.snapscan.io/qr/Xsl1oJaQ.png?snap_code_size=960` (served at 500px; the page title reads
   "SnapScan | Souper Troopers"). Re-download the same way if the link ever changes - a QR left
   pointing at the old link would take payments the old way without anyone noticing.
+- **The header logo is the Humanity Hub's purple house since 2 October** (`src/assets/images/humanity-hub-logo.png`,
+  250x264, trimmed from `Branding/HUMANITY HUB LOGO_1.png` - 9494px tall, so never ship the original).
+  The words stay beside it: the logo's own lettering is ~7px tall at 44px and unreadable. "by Souper
+  Troopers" is the **light teal** (`--st-teal-light`): the brand teal measured 4.18-4.45:1 over the hero
+  photos where the header wraps (768-900px). Hero contrast after: 1,224 lines, none failing. The
+  Souper Troopers logo is still the NGO logo in the structured data, the favicon and the share card.
+  ⚠ On phones the logo stands alone, so the header no longer says Souper Troopers there. **Purple
+  primary buttons were tried and turned down by the user the same day** - buttons stay teal. The Hub
+  purple measures `#8156a4` (white on it 5.53:1, black only 3.80:1) if it's wanted again.
 - **Still to do** (from the call): Taz's title and the decluttered partner list (Shan sent them to the
   user, not the status page); the worry-doll legend and "mounted on a card" (Shan: as the last
   carousel slide); Donate and Shop both filled, Shop in Hub purple once we have the colour; spread

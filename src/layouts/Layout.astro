@@ -1,6 +1,7 @@
 ---
 import { Image, getImage } from "astro:assets";
 import logoReversed from "../assets/images/logo-reversed.png";
+import hubLogo from "../assets/images/humanity-hub-logo.png";
 import mandelaMural from "../assets/images/mandela-mural.png";
 import { getSiteSettings } from "../lib/sanity";
 import { openingHoursSpecification } from "../lib/opening-hours";
@@ -385,9 +386,14 @@ const structuredData = {
 					{/* In the initial viewport on every page there is, so Astro's lazy default only ever
 					    delays it. ~2KB, so eager costs nothing; it is deliberately NOT fetchpriority="high",
 					    which is reserved for each page's LCP image. */}
-					<Image src={logoReversed} alt="" width={44} height={44} densities={[1, 2, 3]} loading="eager" />
-					{/* A trial (2026-09-14) of leading with the Hub while keeping the tie to the logo, which
-					    still reads Souper Troopers. The logo itself waits on the board and q29. */}
+					{/* The Humanity Hub logo (the purple house), since 2 October: the board said go with "The
+					    Humanity Hub by Souper Troopers". Made from Branding/HUMANITY HUB LOGO_1.png, trimmed and
+					    resized to 264px tall. The words beside it stay: the logo's own lettering is ~7px tall
+					    at this size and can't be read, and "by Souper Troopers" in the brand teal keeps the
+					    link Kerry asked for. The Souper Troopers logo (logoReversed) is still the NGO's logo in
+					    the structured data, the favicon and the share card - the organisation's registered
+					    name hasn't changed. */}
+					<Image src={hubLogo} alt="" width={42} height={44} densities={[1, 2, 3]} loading="eager" />
 					<span class="brand-name">
 						<span class="brand-title">The Humanity Hub</span>
 						<span class="brand-by">by Souper Troopers</span>
@@ -895,10 +901,14 @@ const structuredData = {
 				font-weight: 700;
 			}
 
+			/* Souper Troopers teal (2 October): the Hub logo leads in purple, and its "by" line
+			   carries the colour of the name people already know. The light teal, not the brand teal: over the hero
+			   photos the brand teal measured 4.18-4.45:1 where the header wraps (768-900px), under the
+			   4.5:1 this 11.5px line needs. */
 			.brand-by {
 				font-size: 0.72rem;
 				font-weight: 600;
-				color: rgba(255, 255, 255, 0.75);
+				color: var(--st-teal-light);
 			}
 
 			nav[aria-label="Primary"] {
@@ -1186,6 +1196,8 @@ const structuredData = {
 			/* Pure black since 26 September (was --st-ink, 5.64:1): the user found the label soft, and
 			   black on the same brand teal is 7.62:1 - WCAG's enhanced (AAA) level - with the fill
 			   unchanged. Hover is 9.14:1. Only here: the rest of the site's text keeps the ink. */
+			/* Hub purple (white label) was tried on 2 October and turned down by the user the same day:
+			   primary buttons stay the brand teal. */
 			.btn-primary {
 				background: var(--st-teal);
 				color: #000;

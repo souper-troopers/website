@@ -92,9 +92,9 @@ rather than a wasted click.
 > conversation through to skills training, identity documents and steady work.
 >
 > We accept donations of clothing, toiletries, linen, household goods and non-perishable food, and we
-> welcome volunteers and corporate partners. Our social enterprise, Shmiley, sells Troopers Coffee and
-> handmade African Worry Dolls made by people the programme has supported, with income going back into
-> the work.
+> welcome volunteers and corporate partners. We also sell Troopers Coffee, handmade African Worry Dolls
+> and beaded bracelets, made by people the programme has supported, with income going back into the
+> work. (Shmiley left out since the 2 September review kept it in the background.)
 >
 > Visits to the Humanity Hub are by appointment.
 

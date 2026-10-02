@@ -48,6 +48,8 @@ import { getStore } from "@netlify/blobs";
 const STORE = "rfc-comments";
 
 const ALLOWED_ORIGINS = new Set([
+	"https://soupertroopers.org",
+	"https://www.soupertroopers.org",
 	"https://souper-troopers.netlify.app",
 	"http://localhost:8888",
 	"http://localhost:4321",

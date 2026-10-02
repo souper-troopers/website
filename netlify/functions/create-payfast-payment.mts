@@ -82,7 +82,7 @@ export default async (request: Request) => {
 	const merchantKey = process.env.PAYFAST_MERCHANT_KEY;
 	const passphrase = process.env.PAYFAST_PASSPHRASE ?? "";
 	const mode = process.env.PAYFAST_MODE ?? "sandbox";
-	const siteUrl = process.env.URL ?? "https://souper-troopers.netlify.app";
+	const siteUrl = process.env.URL ?? "https://soupertroopers.org";
 
 	if (!merchantId || !merchantKey) {
 		return new Response(JSON.stringify({ error: "Payment processor is not configured." }), {

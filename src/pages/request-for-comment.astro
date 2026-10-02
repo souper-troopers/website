@@ -316,7 +316,7 @@ const sections = [
 const askLink = (threadId: string) => new URL(`/request-for-comment/#ask-${threadId}`, Astro.site).href;
 ---
 
-<Layout title="Request for Comment" description="Souper Troopers website - where things stand.">
+<Layout title="Request for Comment" description="Souper Troopers website - where things stand." noindex>
 	<section class="page-hero">
 		<div class="wrap">
 			<span class="badge badge-on-dark">Request for comment - last updated on {updated}</span>

@@ -8,9 +8,9 @@ import sanityDevReload from './sanity-dev-reload.mjs';
 
 // https://astro.build/config
 export default defineConfig({
-  // Netlify preview URL — update again for the real domain before launch (see
-  // "Before real launch" in AGENTS.md). Used to build absolute canonical/Open Graph URLs.
-  site: 'https://souper-troopers.netlify.app',
+  // The real address since launch (October 2026). Used to build absolute canonical/Open Graph URLs
+  // and the sitemap. www.soupertroopers.org redirects here (set as the primary domain in Netlify).
+  site: 'https://soupertroopers.org',
   // `prefetch: true` on its own prefetches NOTHING — it only loads the runtime. `prefetchAll`
   // defaults to false, so with no `data-astro-prefetch` attribute anywhere, every link failed
   // `elMatchesStrategy` and no strategy ever matched (verified in the built bundle, 2026-08-13).

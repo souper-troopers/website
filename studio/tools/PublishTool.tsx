@@ -20,9 +20,9 @@ import {RocketIcon} from '@sanity/icons/Rocket'
 
 /**
  * Points at the deployed site's function, not at the Studio's own origin — these are two different
- * hosts. **Update this at launch**, alongside the other Netlify-preview-URL items in AGENTS.md.
+ * hosts. The real address since the October 2026 launch.
  */
-const TRIGGER_URL = 'https://souper-troopers.netlify.app/.netlify/functions/trigger-deploy'
+const TRIGGER_URL = 'https://soupertroopers.org/.netlify/functions/trigger-deploy'
 
 type Status =
   | {state: 'idle'}

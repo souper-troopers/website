@@ -167,8 +167,7 @@
 	}
 
 	/* No border override: .btn's transparent border keeps every button one height (AGENTS.md). */
-	.attribute-product-body button,
-	.attribute-product-body > .btn {
+	.attribute-product-body button {
 		cursor: pointer;
 		font: inherit;
 	}

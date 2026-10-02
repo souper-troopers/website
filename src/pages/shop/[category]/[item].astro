@@ -37,6 +37,12 @@ const photoUrl = item.photo
 // Worry dolls are each made by hand, so the photos show the style, not the exact doll you receive
 // (Kerry, 21 September review: "you're placing an order for the variation and not what it looks like").
 const handmade = item.categorySlug === "worry-dolls";
+// The legend and the card, as the last slide of each doll's photos (2 October review: Kerry, the
+// legend is "part of the selling aspect"; Shan's idea to put it at the end of the photos). The first
+// sentence is word for word from Shan's African Worry Dolls description in Sanity; "mounted on a
+// card" is what Shan said on the call.
+const legendSlide = handmade;
+const slideCount = slides.length + (legendSlide ? 1 : 0);
 
 // Trailing slashes deliberately match Astro's own canonical/sitemap URLs — structured data that
 // disagrees with the canonical tag on the same page reads as two URLs for one product.
@@ -125,11 +131,21 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 								/>
 							</li>
 						))}
+						{legendSlide && (
+							<li class="carousel-slide carousel-legend">
+								<div class="legend">
+									<p class="legend-text">
+										The dolls are meant to be whispered to and tucked under a pillow to carry away worries.
+									</p>
+									<p class="legend-card">Each doll comes mounted on a card.</p>
+								</div>
+							</li>
+						)}
 					</ul>
-					{slides.length > 1 && (
+					{slideCount > 1 && (
 						<div class="carousel-controls" hidden>
 							<button type="button" class="carousel-btn" data-dir="-1" aria-label="Previous photo">&larr;</button>
-							<span class="carousel-count" aria-live="polite">1 / {slides.length}</span>
+							<span class="carousel-count" aria-live="polite">1 / {slideCount}</span>
 							<button type="button" class="carousel-btn" data-dir="1" aria-label="Next photo">&rarr;</button>
 						</div>
 					)}
@@ -160,11 +176,13 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 						/>
 					)}
 					{/* Directly under the button, where someone is deciding (2 October review: Kerry, "it's a
-					    lucky draw"; Adrian, "print underneath that button"). */}
+					    lucky draw"; Adrian, "print underneath that button"). The last sentence is Kerry's point that
+					    people can come in and choose; by appointment, as everywhere else on the site. */}
 					{handmade && (
 						<p class="product-handmade">
 							Every doll is handmade, so yours will be one of a kind. The photos show each style, not the
-							exact doll you'll receive.
+							exact doll you'll receive. Or choose your own at the <a href="/contact/">Humanity Hub</a>, by
+							appointment.
 						</p>
 					)}
 				</div>
@@ -232,6 +250,36 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	.carousel-slide {
 		flex: 0 0 100%;
 		scroll-snap-align: start;
+	}
+
+	/* The legend slide: the same box as the photos (--slide-ratio), so nothing jumps when it comes
+	   round. A warm off-white, not the photos' white, so it reads as a card rather than a missing image. */
+	.legend {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: var(--space-4);
+		aspect-ratio: var(--slide-ratio, 3 / 4);
+		padding: var(--space-8);
+		background: #f6f1e7;
+		text-align: center;
+	}
+
+	.legend p {
+		margin: 0;
+	}
+
+	.legend-text {
+		font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+		font-weight: 700;
+		line-height: 1.3;
+		color: var(--st-ink);
+		text-wrap: balance;
+	}
+
+	.legend-card {
+		font-size: 1rem;
+		color: rgba(36, 35, 43, 0.75);
 	}
 
 	.carousel-slide img {

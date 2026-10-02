@@ -1254,7 +1254,9 @@ const structuredData = {
 			.site-footer {
 				background: var(--st-ink);
 				color: rgba(255, 255, 255, 0.85);
-				padding: var(--space-6) 0 var(--space-5);
+				/* Roomier since 2 October (the footer looked bunched on the call): more padding, and more
+				   space between the address row, the follow/newsletter row and the small print. */
+				padding: var(--space-10) 0 var(--space-8);
 				/* Lighter teal so copy buttons stay legible against the dark footer. */
 				--copy-button-color: var(--st-teal);
 			}
@@ -1307,8 +1309,8 @@ const structuredData = {
 				display: flex;
 				flex-wrap: wrap;
 				align-items: center;
-				gap: var(--space-4) var(--space-6);
-				margin-top: var(--space-4);
+				gap: var(--space-5) var(--space-6);
+				margin-top: var(--space-6);
 			}
 
 			.footer-row-divider {
@@ -1337,7 +1339,7 @@ const structuredData = {
 			}
 
 			.fine-print {
-				margin-top: var(--space-3);
+				margin-top: var(--space-6);
 				font-size: 0.8rem;
 				opacity: 0.55;
 			}

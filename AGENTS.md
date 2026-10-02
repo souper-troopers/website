@@ -1032,9 +1032,17 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   button and looked muddy, so white it is: ink label 15.5:1, hover pale teal `#dff2f5` (13.45:1), the
   current-page underline teal-dark (4.52:1 on white; the brand teal is 2.76:1). Same 44px height,
   header 69px on laptops and 65px on phones, as before.
-- **Still to do** (from the call): Taz's title and the decluttered partner list (asked for in the
-  user's DM); the worry-doll legend and "mounted on a card" (Shan: as the last carousel slide); spread
-  out the footer newsletter.
+- **Worry doll pages, later on 2 October**: a last carousel slide carries the legend, word for word
+  from Shan's Sanity description ("The dolls are meant to be whispered to and tucked under a pillow
+  to carry away worries.") plus "Each doll comes mounted on a card." (Shan, on the call) - same box as
+  the photos, warm off-white `#f6f1e7`; worry-dolls only (`legendSlide`), counted by the existing
+  controls. The handmade note gained "Or choose your own at the Humanity Hub, by appointment." (Kerry's
+  point; linked to Contact). The **footer** has more room (padding 40/32px, 24px between rows).
+- **Speed, measured for Adrian (2 October, live site, phone: 4x CPU, 1.6Mbps / 150ms, cold cache,
+  median of 3)**: LCP `/` 1.21s, `/shop/` 1.32s, `/donate/` 1.28s, `/about/` 1.29s; CLS 0 on all four;
+  homepage ~250KB, the most of the four.
+- **Still to do** (from the call): Taz's title, the decluttered partner list, team photos and Shan's
+  image swaps (asked for in the user's DM).
 
 ## Mobile page-to-page shifting (fixed 30 September)
 Reported on a phone: the page re-laid-out on every navigation. **It was the header, not the page

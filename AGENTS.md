@@ -2152,6 +2152,14 @@ each a full-bleed photo under a dark tint with the title and description in whit
 - `src/` — the actual Astro/Svelte site.
 - ~~`wireframes/`~~ — early static HTML mockups, **deleted 2026-08-13**. They were untouched since the initial commit, superseded by every page they covered, and still carried the pre-brand green palette, so opening one would have misled rather than informed. Recoverable from commit `7d20495` if ever wanted.
 - Media assets (photos, videos, logos, brand PDFs, product one-pagers) live in a sibling directory, `../souper-troopers-media/`, not in this repo.
+  - **Since 2 October `../souper-troopers-media` is a symlink to the live Google Drive folder**:
+    `~/Library/CloudStorage/GoogleDrive-stephensimonpaul@gmail.com/My Drive/Website` - Shan's shared
+    Website folder, added to My Drive as a shortcut and synced by Google Drive for desktop (streaming,
+    that folder only, so files download when first read - ~4s for the first open). No more
+    re-downloading: what Shan adds appears there. The last manual copy is kept beside it as
+    `../souper-troopers-media-snapshot-2026-10-02` (identical apart from `Press/PRESS.docx`, which the
+    Drive holds as a Google Doc). ⚠ The rest of that Drive is the user's personal files - read only
+    inside `Website`. Paths written below as `Content/Images/...` predate Shan's September reorganisation.
   - **The live old site is an asset source, and was overlooked.** `soupertroopers.org/about-us/#where-we-do-it` has always carried a **street-facing exterior shot of the Hub** — the corner of 66 Newmarket Street with the number painted a metre high on the wall and Table Mountain behind. It was recorded here and on `/google-listing` as *not existing* on the strength of it being absent from `../souper-troopers-media/`, which was the wrong place to look. Found 2026-08-15 by the user. **Check the live old site before recording that an asset doesn't exist.**
     - **WordPress keeps the full original behind the size suffix.** The page serves `where-we-do-it--1024x683.jpg`; dropping the suffix gives `where-we-do-it-.jpg` at **7079×4719** (5.8MB), and `-scaled.jpg` gives 2560px. Worth trying against any other image still on the old site — it is the difference between a web crop and a camera file.
     - Original archived to `Content/Images/Building/humanity-hub-exterior-original.jpg`; a 2400px copy is `src/assets/images/humanity-hub-exterior.jpg` and is on the Contact page. **The `<Image>` there sets `width` as well as `widths`** — without it Astro points the plain `src` at the full 2400px file as the srcset fallback, 272KB for a 340px card.

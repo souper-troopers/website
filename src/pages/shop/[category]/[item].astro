@@ -4,6 +4,7 @@ import PhotoHero from "../../../components/PhotoHero.astro";
 import shopPhoto from "../../../assets/images/shop-products.jpg";
 import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
+import { SHOP_CHECKOUT, orderLink } from "../../../lib/shop";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import { breadcrumbList, type Crumb } from "../../../lib/breadcrumbs";
 
@@ -167,13 +168,20 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 							Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
 						</p>
 					) : (
-						<AddToCartButton
-							client:load
-							id={item._id}
-							categoryName={item.categoryName}
-							name={item.name}
-							price={item.price}
-						/>
+						SHOP_CHECKOUT ? (
+							<AddToCartButton
+								client:load
+								id={item._id}
+								categoryName={item.categoryName}
+								name={item.name}
+								price={item.price}
+							/>
+						) : (
+							<>
+								<a class="btn btn-primary" href={orderLink(item.name)}>Order this</a>
+								<p class="product-order-note">We'll reply to arrange payment and collection.</p>
+							</>
+						)
 					)}
 					{/* Directly under the button, where someone is deciding (2 October review: Kerry, "it's a
 					    lucky draw"; Adrian, "print underneath that button"). The last sentence is Kerry's point that
@@ -405,11 +413,18 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 	}
 
 	.detail-buy :global(button),
+	.detail-buy > .btn,
 	.detail-buy .sold-out {
 		margin-top: var(--space-5);
 	}
 	.detail-buy > :first-child {
 		margin-top: 0;
+	}
+
+	.product-order-note {
+		margin: var(--space-2) 0 0;
+		font-size: 0.95rem;
+		color: rgba(36, 35, 43, 0.72);
 	}
 
 	.detail-buy .product-handmade {

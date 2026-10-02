@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { cart } from "../lib/cart.svelte";
+	import { orderLink } from "../lib/shop";
 
-	let { categorySlug, categoryName, photoUrl, photoLqip, variants } = $props<{
+	// `checkout` is SHOP_CHECKOUT (src/lib/shop.ts): with it off, "Order this" opens the contact form
+	// with the chosen option in the message, instead of adding to a basket.
+	let { categorySlug, categoryName, photoUrl, photoLqip, variants, checkout = true } = $props<{
 		categorySlug: string;
 		categoryName: string;
 		photoUrl?: string;
 		photoLqip?: string;
 		variants: { _key: string; label: string; price: number }[];
+		checkout?: boolean;
 	}>();
 
 	let selectedIndex = $state(0);
@@ -61,9 +65,14 @@
 			</select>
 		</label>
 
-		<button class="btn btn-primary" onclick={addToCart} disabled={!selected}>
-			{added ? "Added ✓" : "Add to cart"}
-		</button>
+		{#if checkout}
+			<button class="btn btn-primary" onclick={addToCart} disabled={!selected}>
+				{added ? "Added ✓" : "Add to cart"}
+			</button>
+		{:else}
+			<a class="btn btn-primary" href={orderLink(selected ? `${categoryName} - ${selected.label}` : categoryName)}>Order this</a>
+			<p class="attribute-order-note">We'll reply to arrange payment and collection.</p>
+		{/if}
 
 		<p class="attribute-product-note">
 			Every purchase funds Souper Troopers' work with people experiencing homelessness in Cape Town.
@@ -73,6 +82,12 @@
 </div>
 
 <style>
+	.attribute-order-note {
+		margin: var(--space-2) 0 0;
+		font-size: 0.95rem;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
 	/* Matches .product in shop/[category]/[item].astro - keep the two in step. Not the site's .card:
 	   its phone padding rule would inset the photo. */
 	.attribute-product {
@@ -152,7 +167,8 @@
 	}
 
 	/* No border override: .btn's transparent border keeps every button one height (AGENTS.md). */
-	.attribute-product-body button {
+	.attribute-product-body button,
+	.attribute-product-body > .btn {
 		cursor: pointer;
 		font: inherit;
 	}

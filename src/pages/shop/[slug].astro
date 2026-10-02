@@ -5,6 +5,7 @@ import shopPhoto from "../../assets/images/shop-products.jpg";
 import { PortableText } from "astro-portabletext";
 import { getProductCategories, getShopItems, shortProductName, urlFor } from "../../lib/sanity";
 import AttributeProduct from "../../components/AttributeProduct.svelte";
+import { SHOP_CHECKOUT } from "../../lib/shop";
 import ItemCard from "../../components/ItemCard.svelte";
 import CardCtaLabel from "../../components/CardCtaLabel.astro";
 import { backdropColour } from "../../lib/backdrop";
@@ -145,6 +146,7 @@ const jsonLd = attributeProductJsonLd
 				photoUrl={category.photo ? urlFor(category.photo).width(1100).auto("format").url() : undefined}
 				photoLqip={category.photoLqip}
 				variants={category.attributeVariants ?? []}
+				checkout={SHOP_CHECKOUT}
 			/>
 		) : (
 			<>

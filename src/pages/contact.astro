@@ -395,7 +395,15 @@ const faqItems: FaqItem[] = [
 			message: "I'd like to ask about wholesale prices for African Worry Dolls.\n\nBusiness name:\nRoughly how many:",
 		},
 	};
-	const topic = topics[new URLSearchParams(location.search).get("topic") ?? ""];
+	// Orders while the shop's online payment is off (src/lib/shop.ts): the product page passes the
+	// item's name, trimmed to a sensible length and kept on one line.
+	const params = new URLSearchParams(location.search);
+	const orderItem = (params.get("item") ?? "").replace(/\s+/g, " ").trim().slice(0, 120);
+	topics.order = {
+		label: "Shop order",
+		message: `I'd like to order:${orderItem ? " " + orderItem : ""}\n\nHow many:\nCollecting at the Hub, or arranging a courier:`,
+	};
+	const topic = topics[params.get("topic") ?? ""];
 	if (form && topic) {
 		const topicInput = form.querySelector<HTMLInputElement>("input[name='topic']");
 		const messageInput = form.querySelector<HTMLTextAreaElement>("textarea[name='message']");

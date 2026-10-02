@@ -14,6 +14,7 @@ import {
 	streetAddressFrom,
 } from "../lib/address";
 import CartWidget from "../components/CartWidget.svelte";
+import { SHOP_CHECKOUT } from "../lib/shop";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
@@ -444,7 +445,7 @@ const structuredData = {
 					    bootstrap is an inline script that pauses parsing, so the browser can paint the
 					    header without the cart and then widen it - on phones that nudged Donate and Shop
 					    47px left on every page load (measured 30 September). */}
-					<span class="cart-slot"><CartWidget client:load /></span>
+					{SHOP_CHECKOUT && <span class="cart-slot"><CartWidget client:load /></span>}
 				</div>
 				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu">
 					<span class="nav-toggle-bar"></span>

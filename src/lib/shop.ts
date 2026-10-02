@@ -10,7 +10,7 @@
  * variables, set PAYFAST_MODE to "live", set this to true, publish, and make one small real purchase
  * to confirm the money arrives.
  */
-export const SHOP_CHECKOUT = true;
+export const SHOP_CHECKOUT = false;
 
 /** The contact form, with an order for `item` started in the message (see contact.astro's topics). */
 export function orderLink(item: string): string {

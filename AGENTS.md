@@ -1058,7 +1058,7 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   into `launch` (`git checkout launch && git merge dev`) or it will be missing at launch.
 - **Main address: `soupertroopers.org`, `www` redirecting to it** - chosen by default; the user can
   still swap it (one line in `astro.config.mjs` plus Netlify's primary domain).
-- **Redirects from the old WordPress site are live on `main` already** (`public/_redirects`, 59 rules
+- **Redirects from the old WordPress site are on `dev`**, going out with the next normal publish (`public/_redirects`, 59 rules
   built from its sitemaps: ~18 pages, the old shop, 27 news posts to Our Work's stories, attachment
   pages, categories). Non-forced, so they never shadow a real page. Tested on Netlify's own server.
 - **Not done**: the Cloudflare Web Analytics token for the real domain (needs the user), and

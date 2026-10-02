@@ -1044,6 +1044,26 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
 - **Still to do** (from the call): Taz's title, the decluttered partner list, team photos and Shan's
   image swaps (asked for in the user's DM).
 
+## Launch (prepared 2 October 2026, for Monday 5 October)
+- **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes
+  (apex and `www` only, "DNS only", every email record untouched), the checks after, and the rollback.
+- **The `launch` branch** (pushed to GitHub; Netlify doesn't build branches) holds the changes that
+  must not reach `main` before the DNS switch: `PRE_LAUNCH_NOINDEX = false` (which also drops the
+  Internal header link), `site: 'https://soupertroopers.org'`, robots.txt switched over (Disallow gone,
+  crawler rules on, real sitemap), the `llms.txt` pre-launch line removed, per-page `noindex` on
+  `/request-for-comment` and the two order pages (the blanket used to cover them), and the real
+  address in the comments allowlist, the Studio's `TRIGGER_URL` and the PayFast fallback. Verified on
+  a build: 9 pages carry noindex, every public page doesn't, 25 sitemap URLs all on soupertroopers.org.
+  ⚠ **It branches from `dev` at `198599f`** - anything committed to `dev` before Monday must be merged
+  into `launch` (`git checkout launch && git merge dev`) or it will be missing at launch.
+- **Main address: `soupertroopers.org`, `www` redirecting to it** - chosen by default; the user can
+  still swap it (one line in `astro.config.mjs` plus Netlify's primary domain).
+- **Redirects from the old WordPress site are live on `main` already** (`public/_redirects`, 59 rules
+  built from its sitemaps: ~18 pages, the old shop, 27 news posts to Our Work's stories, attachment
+  pages, categories). Non-forced, so they never shadow a real page. Tested on Netlify's own server.
+- **Not done**: the Cloudflare Web Analytics token for the real domain (needs the user), and
+  `PAYFAST_MODE` unknown (the shop is in test mode unless it says `live`).
+
 ## Mobile page-to-page shifting (fixed 30 September)
 Reported on a phone: the page re-laid-out on every navigation. **It was the header, not the page
 banners** (except the homepage's). Astro's island bootstrap is an inline script that pauses parsing,

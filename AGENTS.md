@@ -1007,6 +1007,12 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   wall). The mural's "Super Troopers" lettering falls outside the frame at both widths; Shan will send
   a better photo with faces. Hero contrast re-run: 1,224 lines, none failing (home worst 4.69:1). On
   doll pages the handmade note moved **under Add to cart**.
+- **New SnapScan link, 2 October** (from Caryn, via Kerry on WhatsApp): `https://pos.snapscan.io/qr/Xsl1oJaQ`,
+  which also takes **card and Apple Pay**. It replaced `…/qr/V0w6Ewn7` on Donate and Save our Hub, and
+  `src/assets/images/pay/snapscan-qr.png` is SnapScan's own code for it, downloaded from
+  `https://pos.snapscan.io/qr/Xsl1oJaQ.png?snap_code_size=960` (served at 500px; the page title reads
+  "SnapScan | Souper Troopers"). Re-download the same way if the link ever changes - a QR left
+  pointing at the old link would take payments the old way without anyone noticing.
 - **Still to do** (from the call): Taz's title and the decluttered partner list (Shan sent them to the
   user, not the status page); the worry-doll legend and "mounted on a card" (Shan: as the last
   carousel slide); Donate and Shop both filled, Shop in Hub purple once we have the colour; spread

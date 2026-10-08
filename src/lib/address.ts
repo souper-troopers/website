@@ -1,5 +1,5 @@
 /**
- * Single source of truth for the parts of the Humanity Hub's address that Sanity doesn't hold.
+ * Single source of truth for the parts of The Humanity Hub's address that Sanity doesn't hold.
  *
  * Sanity's `siteSettings.address` is one flat string ("66 Newmarket Street, Woodstock, Cape Town"),
  * which is the right shape for Kerry to edit and the wrong shape for a machine — a string can't be

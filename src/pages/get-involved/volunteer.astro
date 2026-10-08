@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PhotoHero from "../../components/PhotoHero.astro";
-import volunteerDayPhoto from "../../assets/images/volunteer-day.jpg";
+import heroPhoto from "../../assets/images/partner-visit.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -37,17 +37,13 @@ const crumbs: Crumb[] = [
  *  AGENTS.md about `manager@` and `kerry@` being an existing, unresolved contradiction. */
 const volunteerEmail = "manager@soupertroopers.org";
 
-/** Shan's four, in her order. Nothing added. `more` is the part past the brief's 25-word card
+/** Shan's four, in her order, less "Organising the Hub itself" (removed at her request, 8 October). Nothing added. `more` is the part past the brief's 25-word card
  * budget (phase 3), opened on click - the words are unchanged, only split. */
 const ways: { title: string; body: string; more?: string }[] = [
 	{
 		title: "Sorting and packing donations",
 		body: "Everything that arrives has to be gone through, checked and packed before it reaches anybody.",
 		more: "It is the least glamorous job here and the one that most directly decides whether a donation is any use.",
-	},
-	{
-		title: "Organising the Hub itself",
-		body: "Helping rearrange and organise the Humanity Hub - the space is a working day centre, and keeping it in order is continuous rather than occasional.",
 	},
 	{
 		title: "Teaching a skill, or running a workshop",
@@ -63,7 +59,7 @@ const ways: { title: string; body: string; more?: string }[] = [
 const faqItems: FaqItem[] = [
 	{
 		question: "How can I volunteer with Souper Troopers?",
-		answer: "Email us and say roughly what you would like to do and when you are free. Volunteering happens at the Humanity Hub in Woodstock, Cape Town, and it is arranged in advance rather than being a walk-in - the Hub is a working day centre, so somebody needs to be expecting you.",
+		answer: "Email us and say roughly what you would like to do and when you are free. Volunteering happens at The Humanity Hub in Woodstock, Cape Town, and it is arranged in advance rather than being a walk-in - the Hub is a working day centre, so somebody needs to be expecting you.",
 		email: volunteerEmail,
 	},
 	{
@@ -72,12 +68,12 @@ const faqItems: FaqItem[] = [
 	},
 	{
 		question: "Can a group volunteer, or a company team?",
-		answer: "Yes. Groups are welcome as well as individuals. If you are a company looking to spend a day of service somewhere it will be of real use, sorting and packing donations or helping reorganise the Hub absorbs a group well. Tell us how many people and when, and we will say what would help most that week.",
+		answer: "Yes. Groups are welcome as well as individuals. If you are a company looking to spend a day of service somewhere it will be of real use, sorting and packing donations absorbs a group well. Tell us how many people and when, and we will say what would help most that week.",
 		email: volunteerEmail,
 	},
 	{
 		question: "Can I share a skill instead of giving time?",
-		answer: "That is one of the four things volunteers here actually do. Teaching the squad or the team a skill, or running a workshop, is a standing way to help, and it does not require you to be available regularly.",
+		answer: "That is one of the three things volunteers here actually do. Teaching the squad or the team a skill, or running a workshop, is a standing way to help, and it does not require you to be available regularly.",
 		email: volunteerEmail,
 	},
 	{
@@ -92,11 +88,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 <Layout
 	title="Volunteer in Cape Town"
-	description="Volunteer with Souper Troopers at the Humanity Hub in Woodstock, Cape Town - sorting donations, organising the Hub, or teaching a skill. Individuals and groups, one-off or regular."
+	description="Volunteer with Souper Troopers at The Humanity Hub in Woodstock, Cape Town - sorting donations or teaching a skill. Individuals and groups, one-off or regular."
 	jsonLd={jsonLd}
 	heroOverlay
 >
-	<PhotoHero image={volunteerDayPhoto} size="band" position="center 40%">
+	<PhotoHero image={heroPhoto} size="band" position="center 40%" zoom={1.7}>
 		<Breadcrumbs crumbs={crumbs} />
 		<h1>Volunteer</h1>
 		<p>What volunteers actually do here, how much time it takes, and how to arrange it.</p>
@@ -107,11 +103,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	<section class="section wrap">
 		<div class="prose">
 			<p class="lede">
-				Souper Troopers takes volunteers at the Humanity Hub in Woodstock, Cape Town. Individuals and
+				Souper Troopers takes volunteers at The Humanity Hub in Woodstock, Cape Town. Individuals and
 				groups are both welcome, and it can be a single morning or a regular arrangement.
 			</p>
 			{/* A link, not the address (design brief phase 3: the address lives on Contact and in the
-			    footer). The four things volunteers do were listed here and again in the cards below. */}
+			    footer). The things volunteers do were listed here and again in the cards below. */}
 			<p class="lede-address"><a href="/contact">Address and opening hours &rarr;</a></p>
 			{/* How to arrange it is said once, in the first question below, and the closing card
 			    carries the address to write to. This paragraph used to say it a third time. */}
@@ -120,8 +116,8 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<h2>Four ways people help</h2>
-			<p>All four are things volunteers do here now, rather than a wish list.</p>
+			<h2>Three ways people help</h2>
+			<p>All three are things volunteers do here now, rather than a wish list.</p>
 		</div>
 		<div class="ways">
 			{ways.map((way) => (
@@ -210,11 +206,10 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		font-weight: 600;
 	}
 
-	/* Exactly four items, so pinned to two columns rather than left to `auto-fit`, which fits three
-	   tracks at 1280px and strands the fourth on its own row. Same fix `.action-grid` already uses. */
+	/* Three items since 8 October (four before, pinned to two columns), so three across. */
 	@media (min-width: 901px) {
 		.ways {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 </style>

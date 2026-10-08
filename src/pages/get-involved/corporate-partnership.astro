@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PhotoHero from "../../components/PhotoHero.astro";
-import partnerPhoto from "../../assets/images/partner-visit.jpg";
+import partnerPhoto from "../../assets/images/volunteer-day.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import CardCtaLabel from "../../components/CardCtaLabel.astro";
@@ -38,14 +38,8 @@ const crumbs: Crumb[] = [
 	{ name: "Corporate partnership", path: "/get-involved/corporate-partnership/" },
 ];
 
-/**
- * `manager@` rather than the `kerry@` that the contact page's directory routes "Programme &
- * partnerships" to — matching the corporate section on the parent page, which has always said
- * manager@, and `siteSettings.email`. ⚠ Those two disagree with each other and always have; this
- * page follows the parent rather than quietly introducing a third answer. Flagged for the client to
- * settle - it is a one-line change here once they do.
- */
-const partnershipEmail = "manager@soupertroopers.org";
+/** Kerry, at Shan's request (8 October) - which also settles the old manager@ vs kerry@ question. */
+const partnershipEmail = "kerry@soupertroopers.org";
 
 const faqItems: FaqItem[] = [
 	{
@@ -73,7 +67,7 @@ const faqItems: FaqItem[] = [
 	{
 		question: "What does Souper Troopers do with corporate support?",
 		answer:
-			"It funds the CAST programme at the Humanity Hub in Woodstock, Cape Town - skills development and daily meals, transport to interviews, interview clothing, and healthcare as basic and as decisive as an eye test or a set of dentures.",
+			"It funds the CAST programme at The Humanity Hub in Woodstock, Cape Town - skills development and daily meals, transport to interviews, interview clothing, and healthcare as basic and as decisive as an eye test or a set of dentures.",
 		link: { href: "/our-work", label: "How the CAST programme works" },
 	},
 ];
@@ -86,11 +80,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
     what happened on the first pass. Astro escapes the bare `&` correctly on its own. */}
 <Layout
 	title="Corporate partnership & CSI, Cape Town"
-	description="Partner with Souper Troopers, a B-BBEE Level 1 homelessness charity in Cape Town - CSI partnerships, socio-economic development spend, Section 18A certificates, team workshops, and office coffee."
+	description="Partner with Souper Troopers, a B-BBEE Level 1 homelessness charity in Cape Town - CSI partnerships, socio-economic development spend, Section 18A certificates and office coffee."
 	jsonLd={jsonLd}
 	heroOverlay
 >
-	<PhotoHero image={partnerPhoto} size="band" position="center 40%" zoom={1.7}>
+	<PhotoHero image={partnerPhoto} size="band" position="center 40%">
 		<Breadcrumbs crumbs={crumbs} />
 		<h1>Corporate partnership</h1>
 		<p>
@@ -103,10 +97,11 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	    offer without relying on the <h1> above it. See "Core-site discoverability" in AGENTS.md. */}
 	<section class="section wrap">
 		<div class="prose">
-			<p class="lede">
+			{/* Body size since 8 October: Shan read the larger size as a different font. */}
+			<p>
 				Souper Troopers is a South African non-profit working with people experiencing
 				homelessness in Cape Town, and a B-BBEE {settings.bbbeeLevel} contributor. Businesses partner with us
-				in four ways, and every one of them is measurable on both a B-BBEE scorecard and a tax
+				in three ways, and every one of them is measurable on both a B-BBEE scorecard and a tax
 				return.
 			</p>
 			<p>
@@ -119,7 +114,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 
 	<section class="section wrap">
 		<div class="section-intro">
-			<h2>Four shapes a partnership takes</h2>
+			<h2>Three shapes a partnership takes</h2>
 		</div>
 		<div class="grid grid-2 partner-grid">
 			<div class="card card-cta">
@@ -134,7 +129,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> - Fund a programme</span></summary>
 					<div>
 						<p>
-							Sponsorship can also be pointed at one part of CAST or one part of the Humanity Hub,
+							Sponsorship can also be pointed at one part of CAST or one part of The Humanity Hub,
 							which is what makes it reportable against the social pillar of an ESG commitment -
 							named programmes and actual results, rather than a figure donated.
 						</p>
@@ -161,23 +156,8 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 				</details>
 				<CardCtaLabel as="a" href={`mailto:${partnershipEmail}?subject=Offering%20a%20skill%20or%20service`}>Offer a skill or service</CardCtaLabel>
 			</div>
-			<div class="card card-cta">
-				<h3>Book a team workshop</h3>
-				<p>
-					Our Reconnection Workshops bring a team together around identity, reflection and
-					emotional wellbeing. Voltalia recently hosted one for their team.
-				</p>
-				<details class="card-more">
-					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> - Book a team workshop</span></summary>
-					<div>
-						<p>
-							This is money a business was going to spend on a team day regardless. The difference
-							is where it goes afterwards: every workshop directly funds the programmes at the Hub.
-						</p>
-					</div>
-				</details>
-				<CardCtaLabel as="a" href={`mailto:${partnershipEmail}?subject=Corporate%20workshop%20enquiry`}>Ask about a workshop</CardCtaLabel>
-			</div>
+				{/* "Book a team workshop" was here until 8 October: Kerry asked for the Reconnection
+				    Workshops to be paused (status page, "Who runs the Reconnection Workshops now?"). */}
 			<div class="card card-cta">
 				<h3>Put Troopers Coffee in your office</h3>
 				<p>
@@ -226,21 +206,15 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 		max-width: 46rem;
 	}
 
-	/* Exactly four cards, and `.grid-2` is `auto-fit minmax(280px, 1fr)` — which fits *three*
-	   tracks at 1280px and leaves the fourth card stranded alone on a second row. Pinned to two
-	   columns so it reads as a 2x2 set, the same fix `.action-grid` uses on the parent page. */
+	/* Three cards since 8 October (the workshops are paused), so three across. */
 	@media (min-width: 901px) {
 		.partner-grid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 
 	.prose p + p {
 		margin-top: var(--space-3);
-	}
-
-	.lede {
-		font-size: 1.15rem;
 	}
 
 	/* Same treatment as `.benefit-note` on the parent page - regulated figures carry their caveat

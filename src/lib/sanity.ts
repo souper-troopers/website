@@ -18,6 +18,7 @@ export function urlFor(source: SanityImageSource) {
 }
 
 export interface SuccessStory {
+	_id: string;
 	name: string;
 	quote?: string;
 	body: string;

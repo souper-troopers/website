@@ -3,12 +3,13 @@ import HubAppeal from "../components/HubAppeal.astro";
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import hubPhoto from "../assets/images/hub-haircut.jpg";
-import castPhoto from "../assets/images/hub-lounge.jpg";
+import castPhoto from "../assets/images/hub-cast-8701.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
-import heroPhoto from "../assets/images/mandela-mural.png";
+import heroPhoto from "../assets/images/hub-candid-workshop.jpg";
 import PhotoHero from "../components/PhotoHero.astro";
 import StoryVideo from "../components/StoryVideo.astro";
 import CardCtaLabel from "../components/CardCtaLabel.astro";
+import CountUp from "../components/CountUp.svelte";
 import { getImpactStats, getFeaturedSuccessStories, getTeamMembers, urlFor } from "../lib/sanity";
 
 const impactStats = await getImpactStats("home");
@@ -47,7 +48,7 @@ const pillars = [
 		// A haircut at the Hub (Shan's photos, 25 September; was the building, which Contact's
 		// hero already shows). Portrait, so anchored on the two faces.
 		position: "center 35%",
-		alt: "A haircut at the Humanity Hub",
+		alt: "A haircut at The Humanity Hub",
 	},
 	{
 		title: "The CAST programme",
@@ -55,9 +56,9 @@ const pillars = [
 		href: "/our-work",
 		cta: "See the CAST journey",
 		photo: castPhoto,
-		// Two people talking in the Hub's lounge (Shan's photos, 25 September; was Our Work's hero).
-		position: "center 45%",
-		alt: "Two people talking in the lounge at the Humanity Hub",
+		// IMG_8701, a conversation at the Hub (Shan, 8 October; was the lounge, hub-lounge.jpg).
+		position: "center 40%",
+		alt: "A conversation with a social worker at The Humanity Hub",
 	},
 	{
 		title: "Every purchase pays a wage",
@@ -70,24 +71,26 @@ const pillars = [
 	},
 ];
 
-// Generated once via sharp (resize 24px wide, jpeg q40) from mandela-mural.png - see commit history if it
-// ever needs regenerating after the source photo changes.
+// Generated once via sharp (resize 24px wide, jpeg q40) from hub-candid-workshop.jpg - regenerate
+// if the hero photo changes.
 const heroLqip =
-	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAMABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAUCAwb/xAAjEAACAQUAAAcBAAAAAAAAAAABAgMABBESIQUGFCIxQWGB/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABcRAQEBAQAAAAAAAAAAAAAAAAIAAVH/2gAMAwEAAhEDEQA/ALL0TWXjFqi66tIN9EAD5yf5TBL4TGUBu7kYOBjlZWBnVGcOwPM9+alFI4bYMQfyjQ5Jj7MfLrJFPP6yQRLnIMhxt9czRStLqYTySs+7DnvAPKKU5Elf/9k=";
+	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAASABgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgED/8QAIhAAAgICAgICAwAAAAAAAAAAAQIDEQASBCEFURNBMnHR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgMB/8QAGxEAAgIDAQAAAAAAAAAAAAAAAAECEQMhMTL/2gAMAwEAAhEDEQA/AJ8k8Oso2FIOzf36/ee20ZiDoyXYXv36yoqBaj5HFk32FKCQTkxGgiVtofis670CR/Mm6HRIfnQqzRmVN16KIvZPoe8Zm/LcaXicmzt8Z/FyRZxml1iUtpnZHZmtmJJBsk5ZeWJj8bCyEqWI2I6vr7xjDLpNeTPcl3lKmRmcgUNjdDGMYwM//9k=";
 ---
 
 <Layout title="Souper Troopers - homelessness charity in Cape Town" rawTitle description="A Cape Town charity for people experiencing homelessness, based at our Humanity Hub service centre in Woodstock. Donate, volunteer or shop with us." heroOverlay heroDonate>
 	{/* The shared hero (PhotoHero.astro), at its natural height until the video lands. The mural is
 	    the page's LCP image, so the component loads it eager + fetchpriority high (Cloudflare RUM had
 	    measured LCP P90/P99 at 3,636ms when it was lazy). */}
-	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip}>
+	{/* Since 8 October the hero is Shan's workshop photo at the Hub (Content/Home), replacing the
+	    Mandela mural. It is 1448px wide, so a little soft on large screens; q51 asks for the original. */}
+	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip} position="center 40%" alt="A collage workshop around a long table at The Humanity Hub">
 		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
 		{/* Cut at the dash on 25 September (no rewording): CAST and "meets people halfway" are said by the
 		    pillar cards just below. The "Or see how else you can help" link went the same day - the
 		    "How to get involved" cards are one scroll away. The Donate button stays: the mobile
 		    header's Donate appears only once it has scrolled away. The headline's middle sentence is
 		    a question for Kerry (q37 on the status page) - don't change it until she answers. */}
-		<p>The Humanity Hub is where Souper Troopers helps people move from crisis to dignity.</p>
+		<p>The Humanity Hub is where Souper Troopers helps people move from crisis to independence and confidence.</p>
 		<div class="actions">
 			<a class="btn btn-primary" href="/donate">Donate now</a>
 		</div>
@@ -124,6 +127,31 @@ const heroLqip =
 		</div>
 	</section>
 
+	{/* The figures in their own band (Shan, 8 October), the homepage being the one place they are
+	    kept current - Our Work's band went the same day. From Sanity (impactStat, page "home"); Shan
+	    is confirming three more (employment, family and housing, counselling), added there as they come. */}
+	{impactStats.length > 0 && (
+		<section class="impact-band">
+			<div class="wrap">
+				<div class="section-intro">
+					<h2>Our impact</h2>
+				</div>
+				<div class="impact-stats">
+					{impactStats.map((stat) => (
+						<div class="impact-stat">
+							{stat.value != null ? (
+								<CountUp client:visible end={stat.value} suffix={stat.suffix ?? ""} />
+							) : (
+								<strong>{stat.displayValue}</strong>
+							)}
+							<span>{stat.label}</span>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+	)}
+
 	<section id="get-involved" class="section wrap">
 		{/* "How to get involved" is Kerry's own phrase from the 21 September review, where she asked
 		    for a big, obvious one on the homepage. Below the pillars, so the page says what the
@@ -150,7 +178,7 @@ const heroLqip =
 			</a>
 			<a href="/get-involved#individuals" class="card card-cta way-card">
 				<h3>Volunteer</h3>
-				<p>Give time, skills, or goods. Both make the Humanity Hub run.</p>
+				<p>Give time, skills, or goods. Both make The Humanity Hub run.</p>
 				<CardCtaLabel>Get involved</CardCtaLabel>
 			</a>
 			<a href="/get-involved#businesses" class="card card-cta way-card">

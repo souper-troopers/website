@@ -67,7 +67,7 @@ listing against the site, and a mismatched address or hours actively undermines 
 | **Website** | The live domain once launched — **not** the `netlify.app` preview URL |
 | **Phone** | **Leave blank — settled 2026-08-15.** Shan confirmed there is no direct line and email is the only route in. Do not substitute a personal mobile |
 | **Primary category** | `Non-profit organization` |
-| **Hours** | Mon–Thu 08:30–16:00, Fri 08:30–15:00, Sat–Sun closed |
+| **Hours** | Mon–Thu 07:30–15:30, Fri 07:30–15:00, Sat–Sun closed (corrected by Shan, 8 October 2026) |
 | **Attribute** | Set **"by appointment only"** — visits are not drop-in |
 
 Postal code `7925` **confirmed by Shan 2026-08-15** for this street address specifically, not just

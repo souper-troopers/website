@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
-import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
+import hubExterior from "../assets/images/hub-street.jpg";
 import { displayHours } from "../lib/opening-hours";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
@@ -38,11 +38,11 @@ const faqItems: FaqItem[] = [
 	{
 		question: "Is Souper Troopers a shelter?",
 		answer:
-			"No. Souper Troopers is not a shelter and the Humanity Hub is not an overnight facility. The Hub is a day-time base in Woodstock, Cape Town, where people experiencing homelessness meet social workers, share a meal, take part in skills training, and get help replacing identity documents and finding work.",
-		link: { href: "/our-work", label: "What happens at the Humanity Hub" },
+			"No. Souper Troopers is not a shelter and The Humanity Hub is not an overnight facility. The Hub is a day-time base in Woodstock, Cape Town, where people experiencing homelessness meet social workers, share a meal, take part in skills training, and get help replacing identity documents and finding work.",
+		link: { href: "/our-work", label: "What happens at The Humanity Hub" },
 	},
 	{
-		question: "Can I visit the Humanity Hub without an appointment?",
+		question: "Can I visit The Humanity Hub without an appointment?",
 		answer:
 			"No - visits are by appointment rather than drop-in, and Moeshfieqah sets those up. Email us with a rough idea of when suits you and what you would like to see, and she will arrange a time.",
 		email: "manager@soupertroopers.org",
@@ -55,26 +55,26 @@ const faqItems: FaqItem[] = [
 	{
 		question: "Where do I drop off donated goods?",
 		answer:
-			`At the Humanity Hub, ${displayAddress(settings.address)}. Email first to arrange a time, so somebody is expecting you and free to help you unload.`,
+			`At The Humanity Hub, ${displayAddress(settings.address)}. Email first to arrange a time, so somebody is expecting you and free to help you unload.`,
 		link: { href: "/get-involved/donate-goods", label: "What to bring and how to arrange it" },
 	},
 ];
 ---
 
 <Layout
-	title="Contact us at the Humanity Hub, Woodstock"
-	description="Get in touch with Souper Troopers at the Humanity Hub, our service centre in Woodstock, Cape Town - address, email, opening hours and a contact form."
+	title="Contact us at The Humanity Hub, Woodstock"
+	description="Get in touch with Souper Troopers at The Humanity Hub, our service centre in Woodstock, Cape Town - address, email, opening hours and a contact form."
 	jsonLd={[faqPageJsonLd(faqItems)]}
 	heroOverlay
 >
-	{/* The building, from the pavement opposite - the shared photo hero since 24 September (it was the
-	    Visit us card's photo). Described rather than decorative here: visits are by appointment, so
-	    the real question on the day is "is this the right door", which a street number painted a metre
-	    high answers better than any address line. Cropped from the right only to keep the 66. */}
+	{/* The building in sunshine, Shan's photo (8 October; was humanity-hub-exterior.jpg, still on Who
+	    We Are's cards). Described rather than decorative here: visits are by appointment, so the real
+	    question on the day is "is this the right door", which a street number painted a metre high
+	    answers better than any address line. 1460px wide - q51 asks Shan for the original. */}
 	<PhotoHero
 		image={hubExterior}
-		position="left center"
-		alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 painted on its side wall, Table Mountain behind it."
+		position="center 55%"
+		alt="The Humanity Hub at 66 Newmarket Street - a grey and white corner building with a large 66 and a mural of Nelson Mandela on its side wall, Table Mountain behind it."
 	>
 		<h1>Contact Us</h1>
 		<p>We'd love to hear from you - whether you're donating, volunteering, or partnering with us.</p>
@@ -106,7 +106,7 @@ const faqItems: FaqItem[] = [
 							</div>
 						))}
 					</dl>
-					<p class="visit-note">Humanity Hub visits are by appointment - Moeshfieqah sets those up.</p>
+					<p class="visit-note">Please book a visit first by emailing <a href="mailto:manager@soupertroopers.org">manager@soupertroopers.org</a>.</p>
 				</div>
 			</div>
 			<div class="card email-card" data-name="email">
@@ -169,7 +169,7 @@ const faqItems: FaqItem[] = [
 				<textarea name="message" rows="4" required></textarea>
 			</label>
 
-			<button class="btn btn-primary" type="submit">Send message</button>
+			<button class="btn btn-purple" type="submit">Send message</button>
 			<p id="contact-form-error" class="form-note form-error" hidden>
 				Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
 			</p>

@@ -1,5 +1,5 @@
 /**
- * Single source of truth for the Humanity Hub's opening hours.
+ * Single source of truth for The Humanity Hub's opening hours.
  *
  * Two consumers that must never disagree: the human-readable list on the contact page, and the
  * `openingHoursSpecification` in the site-wide NGO structured data (`Layout.astro`). Search engines
@@ -26,17 +26,18 @@ type OpeningHours = {
 	closes: string;
 };
 
+// Corrected by Shan on 8 October 2026 (were 8:30am-4pm Mon-Thu and 8:30am-3pm Fri).
 const hours: OpeningHours[] = [
 	{
 		label: "Mon–Thu",
 		days: ["Monday", "Tuesday", "Wednesday", "Thursday"],
-		opens: "08:30",
-		closes: "16:00",
+		opens: "07:30",
+		closes: "15:30",
 	},
 	{
 		label: "Fri",
 		days: ["Friday"],
-		opens: "08:30",
+		opens: "07:30",
 		closes: "15:00",
 	},
 ];

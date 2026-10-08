@@ -17,7 +17,7 @@
 	}
 </script>
 
-<button class="btn btn-primary add-to-cart" onclick={addToCart}>
+<button class="btn btn-purple add-to-cart" onclick={addToCart}>
 	{added ? "Added ✓" : "Add to cart"}
 </button>
 

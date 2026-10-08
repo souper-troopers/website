@@ -2,19 +2,20 @@
 import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
 import supportPhoto from "../assets/images/support-conversation.jpg";
-import CountUp from "../components/CountUp.svelte";
 import { Image } from "astro:assets";
 import essentialsPhoto from "../assets/images/services/essential-needs.jpg";
 import recoveryPhoto from "../assets/images/services/recovery-support.jpg";
 import familyPhoto from "../assets/images/services/family-reunification.jpg";
-import documentationPhoto from "../assets/images/services/documentation.jpg";
+import documentationPhoto from "../assets/images/services/documentation-hub.jpg";
 import employmentPhoto from "../assets/images/services/employment-skills.jpg";
 import socialPhoto from "../assets/images/services/social-enterprises.jpg";
 import StoryVideo from "../components/StoryVideo.astro";
-import { getImpactStats, getSuccessStories } from "../lib/sanity";
+import { getFeaturedSuccessStories, getSuccessStories } from "../lib/sanity";
 
-const impactStats = await getImpactStats("our-work");
-const stories = await getSuccessStories();
+// The homepage's quote (the first featured story) isn't repeated here: Shan, 8 October - three
+// stories read cleaner, refreshed quarterly.
+const [homepageStory] = await getFeaturedSuccessStories();
+const stories = (await getSuccessStories()).filter((story) => story._id !== homepageStory?._id);
 
 const castSteps = [
 	{
@@ -49,17 +50,19 @@ const castSteps = [
 // rehabilitation"), Housing assistance became Family reunification (so nobody reads it as a housing
 // service; her photo), and the Souper Squad card came off - the project has ended (q38 asks about
 // the Squad's other mentions).
-const hubServices: { title: string; body: string; more?: string; photo: ImageMetadata }[] = [
+// 8 October (Shan): Documentation has her own photo (IMG_001), Employment's photo sits higher
+// and Social enterprises' is shifted so the people are centred. `position` is object-position.
+const hubServices: { title: string; body: string; more?: string; photo: ImageMetadata; position?: string }[] = [
 	{ title: "Essential needs", body: "Toiletries, clothing, showers, food, and haircuts.", photo: essentialsPhoto },
 	{ title: "Holistic support", body: "Trauma counselling and wellness - yoga, art therapy and more.", photo: recoveryPhoto },
 	{ title: "Family reunification", body: "Reconnecting people with their families.", photo: familyPhoto },
 	{ title: "Documentation & financial aid", body: "Help with ID applications, social grants, and budgeting.", photo: documentationPhoto },
-	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments.", photo: employmentPhoto },
-	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers.", photo: socialPhoto },
+	{ title: "Employment & education", body: "Skills development, job readiness, business training, and course enrolments.", photo: employmentPhoto, position: "center top" },
+	{ title: "Social enterprises", body: "Troopers Coffee, African Worry Dolls, and the Woolworths Project - income and skills development for Troopers.", photo: socialPhoto, position: "right center" },
 ];
 ---
 
-<Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from the Humanity Hub, our service centre in Cape Town." heroOverlay>
+<Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from The Humanity Hub, our service centre in Cape Town." heroOverlay>
 	<PhotoHero image={supportPhoto} size="page" position="center 5%">
 		<h1>Our Work</h1>
 		<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
@@ -180,7 +183,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 			{hubServices.map((item) => (
 				<li class="svc-card">
 					<div class="svc-card-media">
-						<Image src={item.photo} alt="" width={800} widths={[400, 800]} sizes="(max-width: 560px) 100vw, (max-width: 1023px) 50vw, 270px" class="svc-card-img" />
+						<Image src={item.photo} alt="" width={800} widths={[400, 800]} sizes="(max-width: 560px) 100vw, (max-width: 1023px) 50vw, 270px" class="svc-card-img" style={item.position ? `object-position: ${item.position}` : undefined} />
 					</div>
 					<div class="svc-card-text">
 						<h3>{item.title}</h3>
@@ -197,26 +200,8 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		</ul>
 	</section>
 
-	<section class="impact-band">
-		<div class="wrap">
-			<div class="section-intro">
-				<h2>Outcomes from the latest CAST intake</h2>
-			</div>
-			<div class="impact-stats">
-				{impactStats.map((stat) => (
-					<div class="impact-stat">
-						{stat.value != null ? (
-							<CountUp client:visible end={stat.value} suffix={stat.suffix ?? ""} />
-						) : (
-							<strong>{stat.displayValue}</strong>
-						)}
-						<span>{stat.label}</span>
-					</div>
-				))}
-			</div>
-		</div>
-	</section>
-
+	{/* The "Outcomes from the latest CAST intake" band was here until 8 October: the figures now
+	    live on the homepage only, so there is one place to keep them current (Shan). */}
 	<section id="stories" class="section wrap">
 		<div class="section-intro">
 			<h2>Real people, real outcomes</h2>
@@ -475,7 +460,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		100% { opacity: 0; }
 	}
 
-	/* PROTOTYPE: the Humanity Hub services as identical photo cards - see the note on `hubServices`.
+	/* PROTOTYPE: The Humanity Hub services as identical photo cards - see the note on `hubServices`.
 	   Six cards since 25 September (the Souper Squad card went): three to a row on laptops, two on
 	   tablets, so every row is full and the old 8-column offset for a stranded seventh card is gone.
 	   Rows size to their own content (2026-09-25). */

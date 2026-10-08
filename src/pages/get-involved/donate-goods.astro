@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import PhotoHero from "../../components/PhotoHero.astro";
-import volunteerDayPhoto from "../../assets/images/volunteer-day.jpg";
+import heroPhoto from "../../assets/images/partner-visit.jpg";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import Faq from "../../components/Faq.astro";
 import EmailLink from "../../components/EmailLink.svelte";
@@ -53,11 +53,11 @@ const hoursSummary = displayHours.map((entry) => `${entry.days} ${entry.hours}`)
 const faqItems: FaqItem[] = [
 	{
 		question: "Where do I drop off donations in Cape Town?",
-		answer: `At the Humanity Hub, ${displayAddress(settings.address)}. Please email first to arrange a time rather than arriving unannounced - the Hub is a working day centre, not a drop-in donation point, and arranging it means somebody is expecting you and free to help you unload.`,
+		answer: `At The Humanity Hub, ${displayAddress(settings.address)}. Please email first to arrange a time rather than arriving unannounced - the Hub is a working day centre, not a drop-in donation point, and arranging it means somebody is expecting you and free to help you unload.`,
 		email: goodsEmail,
 	},
 	{
-		question: "When is the Humanity Hub open?",
+		question: "When is The Humanity Hub open?",
 		answer: `${hoursSummary}. Closed at weekends. Drop-offs are arranged in advance by email rather than being a walk-in, so the hours are when a time can be arranged for, not an invitation to arrive.`,
 	},
 	{
@@ -72,8 +72,8 @@ const faqItems: FaqItem[] = [
 	},
 	{
 		question: "What happens to what I donate?",
-		answer: "It goes into the work at the Humanity Hub in Woodstock - the meals served there, the people coming through the CAST programme, and, in the case of fabric and craft materials, the Souper Squad, who are paid to make the African Worry Dolls sold in the shop. If you would like to know where a particular donation ended up, ask us.",
-		link: { href: "/our-work", label: "What happens at the Humanity Hub" },
+		answer: "It goes into the work at The Humanity Hub in Woodstock - the meals served there, the people coming through the CAST programme, and, in the case of fabric and craft materials, the Souper Squad, who are paid to make the African Worry Dolls sold in the shop. If you would like to know where a particular donation ended up, ask us.",
+		link: { href: "/our-work", label: "What happens at The Humanity Hub" },
 	},
 	{
 		question: "Can I donate money instead, or as well?",
@@ -91,7 +91,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	jsonLd={jsonLd}
 	heroOverlay
 >
-	<PhotoHero image={volunteerDayPhoto} size="band" position="center 40%">
+	<PhotoHero image={heroPhoto} size="band" position="center 40%" zoom={1.7}>
 		<Breadcrumbs crumbs={crumbs} />
 		<h1>Donate goods</h1>
 		<p>What we can use, where to bring it, and how to arrange it.</p>
@@ -102,7 +102,7 @@ const jsonLd = [breadcrumbList(crumbs, Astro.site), faqPageJsonLd(faqItems)];
 	<section class="section wrap">
 		<div class="prose">
 			<p class="lede">
-				Souper Troopers takes donated goods at the Humanity Hub in Woodstock, Cape Town, and
+				Souper Troopers takes donated goods at The Humanity Hub in Woodstock, Cape Town, and
 				Section 18A tax certificates are available for donated goods as well as for money.
 			</p>
 			{/* A link, not the address (design brief phase 3: the address lives on Contact and in the

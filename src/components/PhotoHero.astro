@@ -47,6 +47,9 @@ interface Props {
 
 const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom } = Astro.props;
 
+// Widths up to 4000px since 8 October: a retina laptop needs ~2,900px for a full-width banner and
+// up to ~4,900px for a zoomed one, and the site used to stop at 2,400 - every banner was slightly
+// soft on a MacBook. Only photos that large get the big sizes; normal screens still pick small ones.
 // The hero is the page's LCP image everywhere but on product pages, where the product photo is
 // larger - so the band loads eagerly (it is in the first screen) but without jumping the queue.
 const highPriority = size !== "band";
@@ -59,7 +62,7 @@ const highPriority = size !== "band";
 			alt={alt}
 			role={alt ? undefined : "presentation"}
 			width={Math.min(image.width, 2400)}
-			widths={[640, 800, 1280, 1600, Math.min(image.width, 2400)].filter((w, i, a) => a.indexOf(w) === i && w <= image.width)}
+			widths={[640, 800, 1280, 1600, 2400, 3200, 4000, image.width].filter((w, i, a) => a.indexOf(w) === i && w <= Math.min(image.width, 4000))}
 			sizes={zoom ? `(min-width: 901px) ${Math.round(zoom * 100)}vw, 100vw` : "100vw"}
 			loading="eager"
 			fetchpriority={highPriority ? "high" : undefined}

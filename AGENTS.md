@@ -1128,6 +1128,17 @@ given to the user, and the user will list anything they disagree with afterwards
   `partner-woolworths` card is unpublished and "the Woolworths Project" is gone from Get Involved,
   Our Work and Corporate partnership (reworded without the name). `q30` closed. Don't reintroduce
   the name anywhere but the MyDifference card.
+- **Banner sharpness and framing (8 October, the user: "low-res and poorly cropped")**. Page banners
+  are ~3.8:1 strips (1440x378), so they show ~40% of a 3:2 photo's height. `PhotoHero` now offers
+  widths up to **4000px** (was capped at 2400, so every banner was soft on retina). Get Involved's
+  `partner-visit.jpg` is rebuilt at 4000px from Shan's 5472px original (`Extra/Images/Events/
+  22-IMG_9554.jpg`) and framed at `zoom 1.5`, `center 39%` (was 1.7 / 40%, which upscaled a
+  2400px file and cut her face). Our Work uses `support-conversation-hero.jpg`, the same photo
+  cropped 20% from the left so the man on the left sits clear of the heading (`center 12%`).
+  Contact's `hub-street.jpg` is a 1460px file - it stays soft until Shan's retake (`q51`).
+  ⚠ The dev server lost `sharp` again after a component edit; verify image work against
+  `npm run build` + `npx astro preview --port 4400` (point the contrast script there by
+  swapping the URL).
 - ⚠ **`pkill -f "astro dev"` also kills the `npm run dev` group** (`concurrently`'s command line
   contains "astro dev"), taking `netlify dev` and the Studio with it. Restart Astro with
   `npx astro dev stop` then `npx astro dev --port 4321 --background`; if the group did die, restart

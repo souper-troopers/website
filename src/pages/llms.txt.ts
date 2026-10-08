@@ -1,3 +1,4 @@
+import { whatsapp } from "../lib/whatsapp";
 import type { APIRoute } from "astro";
 import { getAllShopItems, getProductCategories, getPressMentions, getSiteSettings } from "../lib/sanity";
 import { displayHours } from "../lib/opening-hours";
@@ -49,7 +50,7 @@ export const GET: APIRoute = async () => {
 		"## Key facts",
 		`- Homelessness charity serving ${addressLocality}, ${addressRegion}, South Africa. Founded 2014.`,
 		`- Address: ${settings.address}, ${postalCode}. Opening hours ${hours}; closed weekends. Visits are by appointment, not drop-in.`,
-		`- Contact: ${settings.email}. There is no public telephone number; email is the only route in.`,
+		`- Contact: ${settings.email}, or WhatsApp messages to ${whatsapp.display} (+27 67 872 1593). There is no published line for calls.`,
 		"- Services: street outreach, meals, social work, skills training, help obtaining identity documents, family reunification, and job placement.",
 		"- Accepts donations of clothing, toiletries, linen, household goods and non-perishable food, and welcomes volunteers and corporate partners.",
 		"- Donations are tax-deductible in South Africa (Section 18A certificates available). B-BBEE Level 1.",

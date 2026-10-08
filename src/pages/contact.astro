@@ -5,6 +5,7 @@ import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import hubExterior from "../assets/images/hub-street.jpg";
 import { displayHours } from "../lib/opening-hours";
+import { whatsapp } from "../lib/whatsapp";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
 import Faq from "../components/Faq.astro";
@@ -50,7 +51,7 @@ const faqItems: FaqItem[] = [
 	{
 		question: "Does Souper Troopers have a phone number?",
 		answer:
-			"No. There is no direct line - email is the only way to reach the team, and it is read every working day. That is a deliberate choice for a small team rather than an oversight, so email is not a second-best route here.",
+			`There is no direct line for calls. Email is the main way to reach the team, and it is read every working day; you can also send a WhatsApp message to ${whatsapp.display}.`,
 	},
 	{
 		question: "Where do I drop off donated goods?",
@@ -119,6 +120,7 @@ const faqItems: FaqItem[] = [
 						</div>
 					))}
 				</dl>
+				<p class="whatsapp-line">Or WhatsApp us: <a href={whatsapp.href} target="_blank" rel="noopener">{whatsapp.display}</a></p>
 			</div>
 		</div>
 	</section>
@@ -181,6 +183,11 @@ const faqItems: FaqItem[] = [
 </Layout>
 
 <style>
+	.whatsapp-line {
+		margin-top: var(--space-4);
+		font-weight: 600;
+	}
+
 	/* Two cards side by side from 701px, one column below. */
 	.contact-cards {
 		display: grid;

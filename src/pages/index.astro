@@ -5,7 +5,7 @@ import { Image } from "astro:assets";
 import hubPhoto from "../assets/images/hub-haircut.jpg";
 import castPhoto from "../assets/images/hub-cast-8701.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
-import heroPhoto from "../assets/images/hub-candid-workshop.jpg";
+import heroPhoto from "../assets/images/hub-group-workshop.jpg";
 import PhotoHero from "../components/PhotoHero.astro";
 import StoryVideo from "../components/StoryVideo.astro";
 import CardCtaLabel from "../components/CardCtaLabel.astro";
@@ -71,18 +71,18 @@ const pillars = [
 	},
 ];
 
-// Generated once via sharp (resize 24px wide, jpeg q40) from hub-candid-workshop.jpg - regenerate
+// Generated once via sharp (resize 24px wide, jpeg q40) from hub-group-workshop.jpg - regenerate
 // if the hero photo changes.
 const heroLqip =
-	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAASABgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgED/8QAIhAAAgICAgICAwAAAAAAAAAAAQIDEQASBCEFURNBMnHR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgMB/8QAGxEAAgIDAQAAAAAAAAAAAAAAAAECEQMhMTL/2gAMAwEAAhEDEQA/AJ8k8Oso2FIOzf36/ee20ZiDoyXYXv36yoqBaj5HFk32FKCQTkxGgiVtofis670CR/Mm6HRIfnQqzRmVN16KIvZPoe8Zm/LcaXicmzt8Z/FyRZxml1iUtpnZHZmtmJJBsk5ZeWJj8bCyEqWI2I6vr7xjDLpNeTPcl3lKmRmcgUNjdDGMYwM//9k=";
+	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAASABgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgED/8QAIhAAAgEDBAIDAAAAAAAAAAAAAQIAAwQREhMhUQUxQcHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAAECAwT/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIxAxEh/9oADAMBAAIRAxEAPwC5e4pAVctxTHJ+p1dt01KUJzjnvqVGq3BFK4t3NTIwoJBMnoaFIMDS2yTjUPY/JF8GSTeWyFk3E1rxoVeSeh3EzXlrarZ3OTnbPpiwzEDQsMZLaZ4VmZiWLEnsmW/kyafjqBQlS2NRHGePmIilZSqM/cu1XTuMXxwNRzgZiIjBn//Z";
 ---
 
 <Layout title="Souper Troopers - homelessness charity in Cape Town" rawTitle description="A Cape Town charity for people experiencing homelessness, based at our Humanity Hub service centre in Woodstock. Donate, volunteer or shop with us." heroOverlay heroDonate>
 	{/* The shared hero (PhotoHero.astro), at its natural height until the video lands. The mural is
 	    the page's LCP image, so the component loads it eager + fetchpriority high (Cloudflare RUM had
 	    measured LCP P90/P99 at 3,636ms when it was lazy). */}
-	{/* Since 8 October the hero is Shan's workshop photo at the Hub (Content/Home), replacing the
-	    Mandela mural. It is 1448px wide, so a little soft on large screens; q51 asks for the original. */}
+	{/* Since 8 October the hero is Shan's workshop photo at the Hub (Content/Home/Group.jpg, 1600px,
+	    unedited - she re-uploaded it after the first, 1448px file), replacing the Mandela mural. */}
 	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip} position="center 40%" alt="A collage workshop around a long table at The Humanity Hub">
 		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
 		{/* Cut at the dash on 25 September (no rewording): CAST and "meets people halfway" are said by the

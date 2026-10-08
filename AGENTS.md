@@ -1078,8 +1078,12 @@ given to the user, and the user will list anything they disagree with afterwards
   to the public through Shmiley (Pty) Ltd" is Shan's wording, Shmiley named and all. Table tennis
   `center 25%` (bat shows), doll workshop `center 80%`. Team titles: Moeshfieqah "The Humanity Hub,
   Manager", Tasneem "Psychosocial Development Manager", Odette "African Worry Dolls & Troopers
-  Coffee Supervisor"; Odette's photo is `Content/Portraits/IMG_9877.jpg` (hotspot on the face).
-  Kerry's new portrait is still to come.
+  Coffee Supervisor".
+  ⚠ **Portraits: `Content/Portraits/IMG_9877.jpg` is Tasneem, not Odette.** It was put on Odette's
+  card (and the homepage quote) on 8 October by guesswork, and corrected the same day once Shan
+  uploaded named files (`Odette.png`, `Tass.png`, `Gideon.png`, `Caryn.png`, `Moesh.png`), now on
+  all five cards. **Never assign a photo of a person by guessing who it is** - ask. Kerry's new
+  portrait is still to come.
 - **Partners**: 8 logo partners and 21 supporters unpublished (drafts kept); 15 supporters added
   as names (`supporter-<slug>` ids, no logos yet). "The Angel Network" = the existing "Angel Network
   Cape Town", not added twice.
@@ -1114,6 +1118,20 @@ given to the user, and the user will list anything they disagree with afterwards
 - ⚠ **Dev server gotcha, again**: `astro dev` (running since 24 September) had lost `sharp`, so every
   local image 500'd. Restarted on its own (`npx astro dev --port 4321`); `netlify dev` kept proxying.
 - Status page: `q50` closed, `q51` answered with a follow-up (originals), new `q52`-`q54`.
+- **Shan's replies the same day (q51, q52, q54)**: homepage hero is now `hub-group-workshop.jpg`
+  (`Content/Home/Group.jpg`, 1600px, unedited; the 1448px candid file was removed); the building
+  photo waits for a retake from the front. Get Involved cards: individuals `individuals-randel.jpg`
+  ("Randel and HPE"), companies `partner-meeting.jpg` (`IMG_8418`); Corporate keeps Forvia.
+  **WhatsApp 067 872 1593** lives in `src/lib/whatsapp.ts` - Contact's Email us card, the footer,
+  the phone FAQ and llms.txt. Shown as WhatsApp only (not known to take calls), so not the Google
+  listing's phone number. **Woolworths asked to be mentioned only through MyDifference**: the
+  `partner-woolworths` card is unpublished and "the Woolworths Project" is gone from Get Involved,
+  Our Work and Corporate partnership (reworded without the name). `q30` closed. Don't reintroduce
+  the name anywhere but the MyDifference card.
+- ⚠ **`pkill -f "astro dev"` also kills the `npm run dev` group** (`concurrently`'s command line
+  contains "astro dev"), taking `netlify dev` and the Studio with it. Restart Astro with
+  `npx astro dev stop` then `npx astro dev --port 4321 --background`; if the group did die, restart
+  `netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open` and the Studio by hand.
 
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes

@@ -14,6 +14,7 @@ import {
 	streetAddressFrom,
 } from "../lib/address";
 import CartWidget from "../components/CartWidget.svelte";
+import { whatsapp } from "../lib/whatsapp";
 import { SHOP_CHECKOUT } from "../lib/shop";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
@@ -464,6 +465,7 @@ const structuredData = {
 				<strong>The Humanity Hub</strong>
 				<AddressLink client:visible lines={[displayAddress(settings.address)]} copyable={false} />
 				<EmailLink client:visible address={settings.email} />
+				<a class="footer-whatsapp" href={whatsapp.href} target="_blank" rel="noopener">WhatsApp {whatsapp.display}</a>
 			</div>
 			{/* Socials and the newsletter share one row on a laptop (28 September), left-aligned with a
 			    thin divider between; below 900px they wrap onto two rows and the divider goes. The homepage had its

@@ -1027,7 +1027,7 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   `min-aspect-ratio: 1/1`) the mural is also slid right (`object-position: 8% 30%`) so the face sits
   clear of the words; portrait tablets keep the centred crop - the offset pushed the face out of
   frame at 820x1180. Contrast after: 1,224 lines, none failing (home worst body 5.31:1).
-- **Header Shop button filled white since 2 October** (Adrian: both buttons should catch the eye; the
+- ⚠ **Superseded 8 October: the header Shop button is Hub purple** (see "Shan's list of changes"). **Header Shop button filled white since 2 October** (Adrian: both buttons should catch the eye; the
   outline didn't). Option A, both teal with a dark Hub-purple Shop label (5.01:1), read as one double
   button and looked muddy, so white it is: ink label 15.5:1, hover pale teal `#dff2f5` (13.45:1), the
   current-page underline teal-dark (4.52:1 on white; the brand teal is 2.76:1). Same 44px height,
@@ -1043,6 +1043,77 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
   homepage ~250KB, the most of the four.
 - **Still to do** (from the call): Taz's title, the decluttered partner list, team photos and Shan's
   image swaps (asked for in the user's DM).
+
+## Shan's list of changes, 8 October 2026
+Shan sent `Website changes_ The Humanity Hub.pdf` (one level up, outside the repo). The user's rule
+for it: **Shan's instructions trump ours**; where the list was ambiguous we took the recommendation
+given to the user, and the user will list anything they disagree with afterwards.
+- **"The Humanity Hub", capital T, everywhere** (code and Sanity). The legal/registered name, page
+  titles' "- Souper Troopers" suffix and the NGO structured data stay Souper Troopers. The footer's
+  name beside the address is The Humanity Hub. The footer email stays manager@ until Shan confirms
+  info@ with Kerry (a WhatsApp number is to come).
+- **Hub purple is back, for the shop and Send message only.** Tokens `--hub-purple: #8156a4` (white
+  5.53:1) and `--hub-purple-dark: #6a4589` (hover, 7.43:1) in `Layout.astro`; `.btn-purple` (white
+  label) on Add to cart, Order this, Contact's Send message, and the header's Shop pill (purple
+  fill, white current-page underline). Donate and every other `.btn-primary` stay teal: teal gives,
+  purple shops or asks. The user had turned down all-purple primary buttons on 2 October; this is
+  narrower, and Shan asked for exactly these. Who We Are's "mission" is purple with no glow
+  (`.mission-word`); the homepage's yellow "human" glow is untouched.
+- **Homepage**: the hero is `hub-candid-workshop.jpg` (Shan's `Content/Home/Candid Workshop in Warm
+  Light.png`, 1448px - soft on big screens; `q51` asks for the original and whether it was edited).
+  The mural's landscape offset rule went with the mural; the mural file stays (it's the share card).
+  CAST pillar is `hub-cast-8701.jpg`. A new white **impact band** ("Our impact") after the pillars
+  reads `impactStat` with `page: "home"`: 1,800+ People supported, 255+ ID documents secured, 280+
+  People supported through skills development (ids `impactStat-home-id-documents`,
+  `impactStat-home-skills`). Shan is confirming three more - add them in Sanity, no code needed.
+  Donate's 1,700+ became 1,800+ too.
+- **Our Work's stats band is gone** (the figures live on the homepage only). Its `impactStat` docs
+  with `page: "our-work"` are untouched and unused. Stories: Our Work shows every story **except the
+  homepage's lead** (first featured, Odette) - filtered by `_id`. Umar unpublished; Nawaal added
+  (`successStory-nawaal`); Gideon's and Odette's lines are Shan's. Documentation card is
+  `services/documentation-hub.jpg` (IMG_001); Employment `center top`, Social enterprises
+  `right center` (a `position` per service).
+- **Who We Are**: Squad paragraph is Shan's first option ("A selected number of individuals...") -
+  chosen over "18 people" because a count goes stale. "Products they work with - ... which is sold
+  to the public through Shmiley (Pty) Ltd" is Shan's wording, Shmiley named and all. Table tennis
+  `center 25%` (bat shows), doll workshop `center 80%`. Team titles: Moeshfieqah "The Humanity Hub,
+  Manager", Tasneem "Psychosocial Development Manager", Odette "African Worry Dolls & Troopers
+  Coffee Supervisor"; Odette's photo is `Content/Portraits/IMG_9877.jpg` (hotspot on the face).
+  Kerry's new portrait is still to come.
+- **Partners**: 8 logo partners and 21 supporters unpublished (drafts kept); 15 supporters added
+  as names (`supporter-<slug>` ids, no logos yet). "The Angel Network" = the existing "Angel Network
+  Cape Town", not added twice.
+- **In the news: nothing added.** All three links Shan sent are about the building being for sale
+  (People's Post "seeks R6m to secure its home", CapeTalk's Pippa Hudson, Good Things Guy on
+  Facebook). Kerry asked on 2 October to keep the building quiet, so they wait on `q53`.
+- **Get Involved**: individuals card re-framed (`center 85%`, more hands); companies card is
+  `volunteer-day.jpg` (Shan's `1-IMG_9839`), which was the page's hero - so the hero and the
+  Volunteer / Donate goods bands moved to `partner-visit.jpg` (zoom 1.7), and Corporate
+  partnership's banner became `volunteer-day.jpg` (Shan asked for a change but not to what; `q52`).
+  The goods line is Shan's ("Every item helps and you can receive a Section 18A certificate. For more
+  info, please email manager@") with no address, so nobody reads it as walk-in. "Help run the Hub"
+  and Volunteer's "Organising the Hub itself" card are gone (three ways now, three across).
+  Fundraiser and all corporate emails are **kerry@** - this settles the old manager@ vs kerry@ note.
+- **Reconnection Workshops paused** (Kerry, `q50`): off Get Involved (card, route link, "book us")
+  and Corporate partnership (now "three ways"/"Three shapes", three across), and out of llms.txt.
+  Put back from git history if they return.
+- **Corporate partnership's opening paragraph is body size** (`.lede` removed) - Shan read the
+  larger size as a different font.
+- **Contact**: hours are Mon-Thu 7:30am-3:30pm, Fri 7:30am-3pm (`src/lib/opening-hours.ts`, so
+  the structured data and the Google listing page follow; `docs/google-business-profile.md`
+  updated by hand). "Please book a visit first by emailing manager@soupertroopers.org". Hero is
+  `hub-street.jpg` (Shan's `The Humanity Hub IMG.png`, 1460px). `humanity-hub-exterior.jpg` stays
+  for Who We Are's cards.
+- **Doll legend slide** uses the printed card's wording ("Before you nod off, whisper your
+  worries..."). The card's back also says "a team of homeless Troopers" - deliberately not used,
+  since Shan's `q17` answer on "homeless" is still ambiguous.
+- **Contrast**: 1,114 hero/header lines at 8 widths, none failing (home worst body 4.87:1). The
+  check script no longer measures the header Shop label - it's a filled button now, 5.53:1 measured
+  directly. ⚠ The first run reported it at 3.69-4.41: the script screenshots 150ms after hiding the
+  text, and a label that was still fading read as lighter pixels. Measure filled buttons directly.
+- ⚠ **Dev server gotcha, again**: `astro dev` (running since 24 September) had lost `sharp`, so every
+  local image 500'd. Restarted on its own (`npx astro dev --port 4321`); `netlify dev` kept proxying.
+- Status page: `q50` closed, `q51` answered with a follow-up (originals), new `q52`-`q54`.
 
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes

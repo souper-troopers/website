@@ -17,7 +17,7 @@ import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
 import electronicsPhoto from "../assets/images/goods/electronics.jpg";
 import { getBbbeeBenefits, getSiteSettings } from "../lib/sanity";
 import individualsPhoto from "../assets/images/support-one-to-one.jpg";
-import businessesPhoto from "../assets/images/partner-visit.jpg";
+import heroPhoto from "../assets/images/partner-visit.jpg";
 
 const bbbeeBenefits = await getBbbeeBenefits();
 const settings = await getSiteSettings();
@@ -42,7 +42,7 @@ const goodsCategories = [
 ---
 
 <Layout title="Volunteer, donate goods, or partner" description="Volunteer, drop goods at our Humanity Hub in Woodstock, or partner as a business - practical support for people experiencing homelessness in Cape Town." heroOverlay>
-	<PhotoHero image={volunteerDayPhoto} size="page" position="center 40%">
+	<PhotoHero image={heroPhoto} size="page" position="center 40%" zoom={1.7}>
 		<h1>Get Involved</h1>
 		<p>There's a way to help whatever you have to give - time, goods, money, or a partnership.</p>
 	</PhotoHero>
@@ -68,6 +68,7 @@ const goodsCategories = [
 							src={individualsPhoto}
 							alt="A volunteer showing a Souper Squad member a technique, one to one"
 							class="gi-card-img"
+							style="object-position: center 85%"
 							width={1200} widths={[600, 1200]}
 							sizes="(min-width: 761px) 540px, 100vw"
 							onload="this.classList.add('is-loaded')"
@@ -104,12 +105,12 @@ const goodsCategories = [
 			</a>
 			<a class="card card-cta action-card" href="#goods">
 				<h3>Donate goods</h3>
-				<p>Food, toiletries, clothing, bedding, and more. Drop-offs welcome at the Humanity Hub.</p>
+				<p>Food, toiletries, clothing, bedding, and more.</p>
 				<CardCtaLabel>See what we need</CardCtaLabel>
 			</a>
 			<a class="card card-cta action-card" href="/get-involved/volunteer">
 				<h3>Volunteer</h3>
-				<p>Sort donations, help run the Hub, or teach a skill. Individuals and groups, one-off or regular.</p>
+				<p>Sort donations or teach a skill. Individuals and groups, one-off or regular.</p>
 				<CardCtaLabel>What volunteers do</CardCtaLabel>
 			</a>
 			<a class="card card-cta action-card" href="/shop">
@@ -140,9 +141,9 @@ const goodsCategories = [
 					<div class="section-intro">
 						<h3>What you can donate</h3>
 					</div>
-			{/* Same order as the partnership line below: context, then the way on, then the address to
-			    write to. The link is the low-commitment step and belongs before the email. */}
-			<p>Every item helps - drop off at <a href="/contact">66 Newmarket Street, Woodstock, Cape Town</a>, and Section 18A certificates are available for donated goods. <a class="gi-sub-link" href="/get-involved/donate-goods">Where to bring it &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /> to arrange.</p>
+			{/* Shan's wording (8 October). No address here: printed beside "drop off", people read it as
+			    an invitation to arrive unannounced, and donations are by arrangement. */}
+			<p>Every item helps and you can receive a Section 18A certificate. For more info, please email <EmailLink client:visible address="manager@soupertroopers.org" />. <a class="gi-sub-link" href="/get-involved/donate-goods">More about donating goods &rarr;</a></p>
 		<div class="grid grid-4">
 			{goodsCategories.map((item) => (
 				<div class="goods-tile shimmer-up">
@@ -168,7 +169,7 @@ const goodsCategories = [
 			<p>
 				A birthday, a race, a workplace challenge, a school drive - anything can become a
 				fundraiser. Three steps, and you don't need anything from us to start. Planning
-				something? Email <EmailLink client:visible address="manager@soupertroopers.org" /> and
+				something? Email <EmailLink client:visible address="kerry@soupertroopers.org" /> and
 				we'll help however we can.
 			</p>
 		<div class="grid grid-3">
@@ -200,8 +201,8 @@ const goodsCategories = [
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
 						<Image
-							src={businessesPhoto}
-							alt="Kerry meeting a corporate partner at a Souper Troopers event"
+							src={volunteerDayPhoto}
+							alt="A company volunteer day at The Humanity Hub"
 							class="gi-card-img"
 							width={1200} widths={[600, 1200]}
 							sizes="(min-width: 761px) 540px, 100vw"
@@ -215,10 +216,9 @@ const goodsCategories = [
 				</summary>
 			</details>
 			<div class="gi-card-text">
-				<p>Partner, sponsor, or book us - and see what it counts for on your scorecard.</p>
+				<p>Partner or sponsor us - and see what it counts for on your scorecard.</p>
 				<nav class="gi-routes" aria-label="Ways to work with us">
 					<a class="card-cta-action" href="/get-involved/corporate-partnership/">Partnership</a>
-					<a class="card-cta-action" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">Workshops</a>
 					<a class="card-cta-action" href="/shop">Coffee</a>
 				</nav>
 			</div>
@@ -231,7 +231,7 @@ const goodsCategories = [
 					</div>
 		{/* Above the cards, not below them: a lone line after a grid reads as a stranded footer, and
 		    every other sub-section here now leads with its prose. */}
-		<p>Interested in partnering? <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a> For more info, email <EmailLink client:visible address="manager@soupertroopers.org" /></p>
+		<p>Interested in partnering? <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a> For more info, email <EmailLink client:visible address="kerry@soupertroopers.org" /></p>
 		<div class="grid grid-4">
 			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
@@ -241,30 +241,21 @@ const goodsCategories = [
 				<p>Skills and services go as far as cash - if it's what your business does, we can probably use it.</p>
 			</div>
 			<div class="card"><h3>Donate goods</h3><p>Office electronics, furniture, and supplies.</p></div>
-			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or the Humanity Hub.</p></div>
+			<div class="card"><h3>Sponsor a programme</h3><p>Fund a specific part of CAST or The Humanity Hub.</p></div>
 		</div>
 	</section>
 
 	<section class="section wrap">
 					<div class="section-intro">
-						<h3>Two things you can book that fund the work</h3>
+						<h3>Something you can buy that funds the work</h3>
 					</div>
 			<p>
 				Not everything here is a donation. These are things your business would spend money on
 				anyway - the difference is where the money goes afterwards.
 			</p>
 		<div class="grid grid-2">
-			<a class="card card-cta action-card" href="mailto:manager@soupertroopers.org?subject=Corporate%20workshop%20enquiry">
-				<h3>Corporate workshops</h3>
-				{/* Trimmed from 74 words on 2026-09-13. The full version - what a workshop covers and
-				    exactly what it funds - is on /get-involved/corporate-partnership/, linked from the
-				    section above. A whole-card link cannot hold a "More" toggle inside it. */}
-				<p>
-					Reconnection Workshops for your team. Voltalia hosted one recently, and every workshop
-					funds the work at the Humanity Hub.
-				</p>
-				<CardCtaLabel>Enquire about a workshop</CardCtaLabel>
-			</a>
+			{/* The Reconnection Workshops card was here until 8 October: Kerry asked for them to be
+			    paused on the status page ("Who runs the Reconnection Workshops now?"). */}
 			<a class="card card-cta action-card" href="/shop">
 				<h3>Coffee for your workplace</h3>
 				<p>

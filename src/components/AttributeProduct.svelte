@@ -66,11 +66,11 @@
 		</label>
 
 		{#if checkout}
-			<button class="btn btn-primary" onclick={addToCart} disabled={!selected}>
+			<button class="btn btn-purple" onclick={addToCart} disabled={!selected}>
 				{added ? "Added ✓" : "Add to cart"}
 			</button>
 		{:else}
-			<a class="btn btn-primary" href={orderLink(selected ? `${categoryName} - ${selected.label}` : categoryName)}>Order this</a>
+			<a class="btn btn-purple" href={orderLink(selected ? `${categoryName} - ${selected.label}` : categoryName)}>Order this</a>
 			<p class="attribute-order-note">We'll reply to arrange payment and collection.</p>
 		{/if}
 

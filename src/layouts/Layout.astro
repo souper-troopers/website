@@ -270,7 +270,7 @@ const structuredData = {
 	url: Astro.site?.href,
 	logo: new URL(logoReversed.src, Astro.site).href,
 	description:
-		"Souper Troopers is a Cape Town non-profit working with people experiencing homelessness. It runs the Humanity Hub, a service centre in Woodstock, and the CAST programme - offering dignity, skills training, help with identity documents and a route back into work.",
+		"Souper Troopers is a Cape Town non-profit working with people experiencing homelessness. It runs The Humanity Hub, a service centre in Woodstock, and the CAST programme - offering dignity, skills training, help with identity documents and a route back into work.",
 	email: settings.email,
 	address: {
 		"@type": "PostalAddress",
@@ -292,7 +292,7 @@ const structuredData = {
 	 *
 	 * ⚠ Deliberately `location`, NOT `alternateName`. The Hub is what the *place* is called, which is
 	 * simply true; claiming it as another name for the organisation would quietly take a side on the
-	 * "should we lead with Souper Troopers or the Humanity Hub" question, which is the board's to
+	 * "should we lead with Souper Troopers or The Humanity Hub" question, which is the board's to
 	 * settle. If they decide the Hub becomes the primary identity, `alternateName` is the line to add.
 	 */
 	location: {
@@ -461,7 +461,7 @@ const structuredData = {
 
 		<footer class="site-footer">
 			<div class="wrap footer-inner">
-				<strong>Souper Troopers</strong>
+				<strong>The Humanity Hub</strong>
 				<AddressLink client:visible lines={[displayAddress(settings.address)]} copyable={false} />
 				<EmailLink client:visible address={settings.email} />
 			</div>
@@ -573,6 +573,10 @@ const structuredData = {
 				--st-red: #dd4b59;
 				--st-bg: #faf9f6;
 				--st-white: #ffffff;
+				/* The Humanity Hub's purple, measured off its logo. White on it is 5.53:1; black only
+				   3.80:1, so anything purple carries a white label. The dark shade is the hover. */
+				--hub-purple: #8156a4;
+				--hub-purple-dark: #6a4589;
 				--radius: 18px;
 				/* The real height of the header row, derived rather than written down: the tallest child
 				   is the 44px Donate control (52px until 25 September), plus this rule's own var(--space-3) padding top and
@@ -792,27 +796,26 @@ const structuredData = {
 
 			/* `.support-menu` in front: the site-wide `.btn` rule sits later in this sheet and, at equal
 			   specificity, replaced this border with its transparent 2px one. */
-			/* Filled white since 2 October (Adrian, on the call: both buttons should catch the eye, not
-			   one filled and one outlined). White rather than a second teal pill, so the two still read
-			   as two choices; ink on white is 15.5:1, and the white pill stands off the dark header and
-			   the hero tint just as strongly. The 1.5px border is kept (now white) so the pill is the
-			   same size as before. Hover: a pale teal, ink label 13:1+. The current-page underline is
-			   teal-dark here (4.52:1 on white) - the brand teal is only 2.76:1 on white. */
+			/* Hub purple with a white label since 8 October (Shan's changes document). Filled, like
+			   Donate, so both catch the eye (Adrian, 2 October), and told apart by colour: teal gives,
+			   purple shops. White on the purple is 5.53:1, on the hover shade 7.43:1; the pill against
+			   the dark header is 3.1:1, which is enough for a shape. The current-page underline is
+			   white here. It was filled white from 2 to 8 October. */
 			.support-menu .header-shop {
-				border: 1.5px solid var(--st-white);
-				color: var(--st-ink);
-				background: var(--st-white);
+				border: 1.5px solid var(--hub-purple);
+				color: var(--st-white);
+				background: var(--hub-purple);
 				transition: background 0.15s ease, border-color 0.15s ease;
 			}
 
 			.support-menu .header-shop:hover {
-				background: #dff2f5;
-				border-color: #dff2f5;
-				color: var(--st-ink);
+				background: var(--hub-purple-dark);
+				border-color: var(--hub-purple-dark);
+				color: var(--st-white);
 			}
 
 			.support-menu .header-shop .current-marker {
-				background: var(--st-teal-dark);
+				background: var(--st-white);
 			}
 
 			.support-menu .header-shop:focus-visible {
@@ -1217,6 +1220,19 @@ const structuredData = {
 
 			.btn-primary:hover {
 				background: var(--st-teal-secondary);
+			}
+
+			/* Hub purple, white label (5.53:1; hover 7.43:1). Since 8 October, at Shan's request, for
+			   the shop's buying actions (Add to cart, Order this, the header's Shop) and Contact's Send
+			   message. Donate and the rest stay .btn-primary teal: teal gives, purple shops or asks. */
+			.btn-purple {
+				background: var(--hub-purple);
+				color: var(--st-white);
+			}
+
+			.btn-purple:hover {
+				background: var(--hub-purple-dark);
+				color: var(--st-white);
 			}
 
 			.btn-secondary {
@@ -2664,17 +2680,8 @@ const structuredData = {
 				min-height: 100svh;
 			}
 
-			/* Words at the foot on every width (2 October), and on laptops the mural slid right so
-			   Mandela's face sits clear of them: centred, the headline ran across his mouth and chin.
-			   The photo is wider than the screen at full height, so the horizontal position has room
-			   to move. Landscape screens only: on phones and portrait tablets the centred crop already
-			   puts the face above the words, and the offset pushed it out of frame (820x1180).
-			   !important beats PhotoHero's inline object-position. */
-			@media (min-width: 761px) and (min-aspect-ratio: 1/1) {
-				.photo-hero--home .hero-bg img {
-					object-position: 8% 30% !important;
-				}
-			}
+			/* Words at the foot on every width (2 October). The landscape offset that slid the mural
+			   right (so Mandela's face cleared the words) went with the mural on 8 October. */
 
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
 			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break

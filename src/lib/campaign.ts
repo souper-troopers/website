@@ -1,6 +1,6 @@
 /**
  * The "Save our Hub" campaign (drafted 30 September 2026, from that day's review): a fundraising page
- * to secure the building the Humanity Hub is in, and a band on the homepage leading to it.
+ * to secure the building The Humanity Hub is in, and a band on the homepage leading to it.
  *
  * Everything the client still has to confirm lives here, so switching the campaign on, setting the
  * target or adding a match is one edit rather than a hunt through the page:

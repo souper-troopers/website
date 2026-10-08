@@ -24,7 +24,7 @@ const supporters = await getSupporters();
 const pressMentions = await getPressMentions();
 ---
 
-<Layout heroOverlay title="Who we are, and the Humanity Hub" description="Souper Troopers' mission, values and approach, and the Humanity Hub - the service centre in Woodstock, Cape Town where the work actually happens.">
+<Layout heroOverlay title="Who we are, and The Humanity Hub" description="Souper Troopers' mission, values and approach, and The Humanity Hub - the service centre in Woodstock, Cape Town where the work actually happens.">
 	{/* The shared photo hero (design brief, 24 September). The building, not people: consent to show
 	    anyone (q19) is unsettled, and it is what the opening line names. Cropped from the right only,
 	    so the painted 66 stays in frame. alt="" because it is a backdrop here; Contact carries the
@@ -32,7 +32,7 @@ const pressMentions = await getPressMentions();
 	<PhotoHero image={hubWorkshop} position="center 58%">
 		<h1>Who We Are</h1>
 		<p>
-			At the Humanity Hub in Woodstock, Cape Town, we help people move from life on the street
+			At The Humanity Hub in Woodstock, Cape Town, we help people move from life on the street
 			to independence, through the CAST programme. Est. 2014.
 		</p>
 	</PhotoHero>
@@ -40,10 +40,10 @@ const pressMentions = await getPressMentions();
 	<section class="section wrap">
 		{/* Section titles on this page say what the section is; the old chips above them did that,
 		    and the titles repeated the paragraph's first line (changed 2026-09-14). */}
-		{/* `statement` is the centred, larger variant (Layout.astro) - kept for this one section, which
-		    the user liked for how playful it looked, with the glow on the word that matters. */}
+		{/* `statement` is the centred, larger variant (Layout.astro). The word that matters is in Hub
+		    purple with no glow (Shan, 8 October: the glow felt dated; the purple carries it). */}
 		<div class="section-intro statement">
-			<h2>Our <span class="glow-word">mission</span></h2>
+			<h2>Our <span class="mission-word">mission</span></h2>
 			<p>
 				Every person deserves dignity, and with the right support, anyone can rebuild their future.
 				That belief drives everything we do - from a first conversation on the street to a first
@@ -133,11 +133,11 @@ const pressMentions = await getPressMentions();
 					Somewhere to come back to.
 				</p>
 				<details class="card-more">
-					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about the Humanity Hub</span></summary>
+					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about The Humanity Hub</span></summary>
 					<div>
 						<p>
 							Everything from a shower and a hot meal to counselling, ID documents, and job-readiness
-							support runs out of the Hub. <a href="/our-work">See what that support looks like</a> on
+							support runs out of The Humanity Hub. <a href="/our-work">See what that support looks like</a> on
 							Our Work.
 						</p>
 					</div>
@@ -146,8 +146,8 @@ const pressMentions = await getPressMentions();
 			<div class="figure shimmer-up">
 				<Image
 					src={tableTennisPhoto}
-					alt="A game of table tennis at the Humanity Hub"
-					style="object-position: center 12%"
+					alt="A game of table tennis at The Humanity Hub"
+					style="object-position: center 25%"
 					width={800} widths={[400, 800]}
 					sizes="(min-width: 700px) 500px, 100vw"
 					onload="this.classList.add('is-loaded')"
@@ -162,6 +162,7 @@ const pressMentions = await getPressMentions();
 				<Image
 					src={workshopPhoto}
 					alt="A Souper Squad skills workshop, making African Worry Dolls together"
+					style="object-position: center 80%"
 					width={800} widths={[400, 800]}
 					sizes="(min-width: 700px) 500px, 100vw"
 					onload="this.classList.add('is-loaded')"
@@ -172,15 +173,16 @@ const pressMentions = await getPressMentions();
 				{/* The Squad's list of activities lives on Our Work (the services cards); repeating it here
 				    word for word was the About/Our Work overlap found in the 2026-09-14 repetition pass. */}
 				<p>
-					More than twenty people in our Souper Squad earn a stipend through Souper Troopers social
-					enterprise. It is real work, with real income, building a real CV.
+					A selected number of individuals from our CAST programme earn a stipend through Souper
+					Troopers' social enterprise - gaining real work experience, earning an income and building
+					a pathway towards greater independence.
 				</p>
 				<details class="card-more">
 					<summary><span class="card-more-show">More</span><span class="card-more-hide">Less</span><span class="visually-hidden"> about the Souper Squad</span></summary>
 					<div>
 						<p>
-							What they make - Troopers Coffee and African Worry Dolls&trade; - is sold through Shmiley
-							(Pty) Ltd, our own social enterprise. The income creates the jobs and reduces our reliance
+							Products they work with - Troopers Coffee and African Worry Dolls&trade; - which is sold to
+							the public through Shmiley (Pty) Ltd, our own social enterprise. The income creates the jobs and reduces our reliance
 							on donor funding - so <a href="/shop">buying something from the shop</a> is itself a way
 							of supporting the work.
 						</p>
@@ -328,6 +330,10 @@ const pressMentions = await getPressMentions();
 
 
 <style>
+	.mission-word {
+		color: var(--hub-purple);
+	}
+
 	/* The hero is a workshop at the Hub (IMG_7419, 25 September). On laptops, anchored low
 	   (position "center 58%" since the heroes were shortened on 25 September) so the faces sit above
 	   or beside the words. On a phone the photo is cropped to

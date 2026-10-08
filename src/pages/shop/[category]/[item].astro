@@ -135,8 +135,11 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 						{legendSlide && (
 							<li class="carousel-slide carousel-legend">
 								<div class="legend">
+									{/* Word for word from the printed card each doll is mounted on (Shan, Content/Shop,
+									    8 October). */}
 									<p class="legend-text">
-										The dolls are meant to be whispered to and tucked under a pillow to carry away worries.
+										Before you nod off, whisper your worries to this doll and place it under your pillow.
+										Legend has it the doll will take your worries away while you sleep.
 									</p>
 									<p class="legend-card">Each doll comes mounted on a card.</p>
 								</div>
@@ -178,7 +181,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 							/>
 						) : (
 							<>
-								<a class="btn btn-primary" href={orderLink(item.name)}>Order this</a>
+								<a class="btn btn-purple" href={orderLink(item.name)}>Order this</a>
 								<p class="product-order-note">We'll reply to arrange payment and collection.</p>
 							</>
 						)

@@ -1139,10 +1139,14 @@ given to the user, and the user will list anything they disagree with afterwards
   -> 0 at 86%; the first try (0.6 at 55%, 0 at 72%) failed where the paragraph ends over the white
   shirt / white wall (2.3:1). Measured: worst body 4.69:1 (Our Work). Phones keep the full-bleed
   photo. Volunteer, Donate goods and Corporate bands are unchanged.
-- **Homepage on portrait screens** (phones, portrait tablets): `object-position: 88% center`
-  (`max-aspect-ratio: 1/1`), aimed at the woman in the pink beanie - centred, it was a half-cut man
-  and an empty wall. Still soft on phones (a 1,200px-tall photo shown ~1,050 css px tall at 3x);
-  the camera original (`q51`) is the only fix.
+- **Homepage on portrait screens** (phones, portrait tablets, `max-aspect-ratio: 1/1`): the photo
+  fills only the top 64% of the hero and fades to ink at its foot (mask 50% -> 100%), with the words
+  on the fade and the ink below - about 60% of the photo's width shows on a phone instead of a 28%
+  slice. `object-position: 72% center` keeps the woman in the pink beanie. Light veil (0.2 -> 0.6);
+  the header band is 0.82 here (0.7 failed the nav at 3.95:1 on portrait tablets, where the
+  header wraps over the bright ceiling). Measured: worst body 4.97, nav 4.95. (Tried first the same
+  day: full-bleed aimed at 88% - the user preferred the fade.) Still a little soft on phones until
+  the camera original arrives (`q51`).
 - **Banner sharpness and framing (8 October, the user: "low-res and poorly cropped")**. Page banners
   are ~3.8:1 strips (1440x378), so they show ~40% of a 3:2 photo's height. `PhotoHero` now offers
   widths up to **4000px** (was capped at 2400, so every banner was soft on retina). Get Involved's

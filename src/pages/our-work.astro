@@ -1,7 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
-import supportPhoto from "../assets/images/support-conversation.jpg";
+// Cropped 20% from the left (8 October) so the man on the left sits clear of the heading;
+// the full photo is support-conversation.jpg.
+import supportPhoto from "../assets/images/support-conversation-hero.jpg";
 import { Image } from "astro:assets";
 import essentialsPhoto from "../assets/images/services/essential-needs.jpg";
 import recoveryPhoto from "../assets/images/services/recovery-support.jpg";
@@ -63,7 +65,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 ---
 
 <Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from The Humanity Hub, our service centre in Cape Town." heroOverlay>
-	<PhotoHero image={supportPhoto} size="page" position="center 5%">
+	<PhotoHero image={supportPhoto} size="page" position="center 12%">
 		<h1>Our Work</h1>
 		<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
 	</PhotoHero>

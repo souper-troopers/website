@@ -185,6 +185,23 @@ const faqItems: FaqItem[] = [
 </Layout>
 
 <style>
+	/* Phones (8 October, the user: more breathing room either side of the building). The whole
+	   photo shows (contain, not cover) and its left and right edges fade into the ink as well as its
+	   foot, so the building no longer runs into the screen edges. */
+	@media (max-width: 760px) {
+		:global(.photo-hero--fade-mobile .hero-bg img) {
+			object-fit: contain;
+			object-position: center 75% !important;
+		}
+
+		:global(.photo-hero--fade-mobile .hero-bg) {
+			-webkit-mask-image: linear-gradient(to bottom, transparent 10%, #000 30%, #000 55%, transparent 100%), linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+			-webkit-mask-composite: source-in;
+			mask-image: linear-gradient(to bottom, transparent 10%, #000 30%, #000 55%, transparent 100%), linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+			mask-composite: intersect;
+		}
+	}
+
 	.whatsapp-line {
 		margin-top: var(--space-4);
 		font-weight: 600;

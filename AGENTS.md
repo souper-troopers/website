@@ -1133,16 +1133,17 @@ given to the user, and the user will list anything they disagree with afterwards
   (0.64) and is masked to fade into the hero's ink - fully on the left, a little top and bottom -
   so the words sit on near-black, the people are smaller, more of the photo shows and grain is far
   less visible (each pixel is drawn smaller; `sizes` drops to 64vw). Used on **Our Work** (the full
-  `support-conversation.jpg`, `center 25%`; the 20%-cropped copy was deleted), **Get Involved**
+  `support-conversation.jpg`, `center 12%` - lowered from 25% at the user's request; the 20%-cropped copy was deleted), **Get Involved**
   (`partner-visit.jpg`, no zoom, `center 40%`) and **Contact** (`hub-street.jpg`, `center 50%` -
   the 1460px file is now enough). Its own tint: `rgba(24,23,31)` 0.8 -> 0.72 at 62% -> 0.5 at 70%
   -> 0 at 86%; the first try (0.6 at 55%, 0 at 72%) failed where the paragraph ends over the white
   shirt / white wall (2.3:1). Measured: worst body 4.69:1 (Our Work). Phones keep the full-bleed
   photo. Volunteer, Donate goods and Corporate bands are unchanged.
 - **`PhotoHero fadeMobile` (phones, up to 760px, 8 October)**: on Who We Are, Our Work and Contact
-  the photo sits at the top at near its own shape (header height + 66vw tall) and fades to ink over
-  its lower half; the words start in the fade and run on below (`padding-top: header + 50vw`).
-  ~80% of each photo's width shows instead of a ~30% slice. Who We Are's old phone rule (anchor
+  the photo sits at the top at near its own shape (header height + 54vw tall, shortened from 66vw
+  the same day at the user's request) and fades to ink over its lower half; the words start in the
+  fade and run on below (`padding-top: header + 40vw`). ~95% of a 3:2 photo's width shows on a
+  390px phone, instead of a ~30% slice. Who We Are's old phone rule (anchor
   bottom-right, scale 1.5x) was removed with it. Tint: header band 0.82, veil 0.15 -> 0.7 into the
   fade. Measured: worst body 4.83 (Our Work). Get Involved and the other pages are unchanged.
 - **The phone header shows the logo alone on most pages** (since 2 October): "The Humanity Hub / by

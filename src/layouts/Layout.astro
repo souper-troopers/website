@@ -2711,13 +2711,29 @@ const structuredData = {
 
 			/* Words at the foot on every width (2 October). The landscape offset that slid the mural
 			   right (so Mandela's face cleared the words) went with the mural on 8 October. */
-			/* Portrait screens (phones, portrait tablets) show a narrow vertical slice of the group
-			   photo; centred it was a half-cut man and an empty wall (the user, 8 October). Aimed at
-			   the woman in the pink beanie on the right instead: her face sits above the words, which
-			   land on the table. !important beats PhotoHero's inline object-position. */
+			/* Portrait screens (phones, portrait tablets), 8 October: full-bleed, the group photo was
+			   a narrow vertical slice (a half-cut man and empty wall). Now the photo fills the top 64%
+			   of the hero and fades to ink at its foot, where the words sit - so far less of it is
+			   cropped (about 60% of its width shows on a phone, not 28%), aimed a little right of
+			   centre to keep the woman in the pink beanie. The tint only needs the header band and a
+			   light veil; the words are on the fade and the ink. !important beats PhotoHero's inline
+			   object-position. Measured with scripts/check-hero-contrast.playwright.js. */
 			@media (max-aspect-ratio: 1/1) {
+				.photo-hero--home .hero-bg {
+					top: 0;
+					height: 64%;
+					-webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+					mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+				}
+
 				.photo-hero--home .hero-bg img {
-					object-position: 88% center !important;
+					object-position: 72% center !important;
+				}
+
+				.photo-hero--home .hero-scrim {
+					background:
+						linear-gradient(180deg, rgba(24, 23, 31, 0.82) 0, rgba(24, 23, 31, 0.82) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+						linear-gradient(180deg, rgba(24, 23, 31, 0.2) 0%, rgba(24, 23, 31, 0.35) 50%, rgba(24, 23, 31, 0.6) 64%);
 				}
 			}
 

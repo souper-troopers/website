@@ -125,6 +125,16 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 				const wrap = stage.querySelector(".cast2-wrap");
 				const path = stage.querySelector(".cast2-trail");
 				const letters = [...stage.querySelectorAll(".cast2-letter")];
+				const steps = [...stage.querySelectorAll(".cast2 > li")];
+				// How far down the line each letter sits (stacked layout only), and how far it has
+				// been drawn so far. Phones reveal step by step as each scrolls into view (8 October):
+				// the stack is taller than the screen, so one timed run mostly played out of sight.
+				let reach = [];
+				let revealed = -1;
+				const drawTo = (i) => {
+					if (!reach.length) return;
+					path.style.strokeDashoffset = String(Math.max(0, Number(stage.style.getPropertyValue("--trail")) - reach[i]));
+				};
 				const build = () => {
 					const r = wrap.getBoundingClientRect();
 					const boxes = letters.map((l) => {
@@ -137,6 +147,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 					// down the left of the phone stack. The hand-drawn feel is the roughness filter on the
 					// stroke. Hops between letters and a wobble down the stack were tried first, 2026-09-13.
 					const vertical = Math.abs(boxes[1].l - boxes[0].l) < 10;
+					stage.classList.toggle("stacked", vertical);
 					let start, end;
 					if (vertical) {
 						const x = Math.min(...boxes.map((b) => b.l)) - 12;
@@ -152,6 +163,10 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 					}
 					path.setAttribute("d", `M${start[0].toFixed(1)},${start[1].toFixed(1)} L${end[0].toFixed(1)},${end[1].toFixed(1)}`);
 					stage.style.setProperty("--trail", path.getTotalLength().toFixed(1));
+					// Stacked: the line reaches each letter's foot; the last reaches the end.
+					reach = vertical ? boxes.map((b, i) => (i === boxes.length - 1 ? end[1] : b.b) - start[1]) : [];
+					if (!vertical) path.style.strokeDashoffset = "";
+					else if (revealed >= 0) drawTo(revealed);
 					// The dot starts at the line's start and slides to its end - see .cast2-dot.
 					const dot = stage.querySelector(".cast2-dot");
 					dot.setAttribute("cx", start[0].toFixed(1));
@@ -164,8 +179,25 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 				if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 				stage.classList.add("armed");
+				if (!("IntersectionObserver" in window)) {
+					steps.forEach((li) => li.classList.add("on"));
+					return stage.classList.add("playing");
+				}
+				if (stage.classList.contains("stacked")) {
+					// Phones: each step as it scrolls into view, the line growing down to it.
+					const io = new IntersectionObserver((entries) => {
+						for (const e of entries) {
+							if (!e.isIntersecting) continue;
+							const i = steps.indexOf(e.target);
+							for (let j = 0; j <= i; j++) steps[j].classList.add("on");
+							if (i > revealed) { revealed = i; drawTo(i); }
+							io.unobserve(e.target);
+						}
+					}, { rootMargin: "0px 0px -25% 0px" });
+					steps.forEach((li) => io.observe(li));
+					return;
+				}
 				const play = () => stage.classList.add("playing");
-				if (!("IntersectionObserver" in window)) return play();
 				const io = new IntersectionObserver((entries) => {
 					if (entries.some((e) => e.isIntersecting)) { play(); io.disconnect(); }
 				}, { threshold: 0.3 });
@@ -437,6 +469,32 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		transform: translate(var(--dot-dx, 0px), var(--dot-dy, 0px));
 		transition: transform calc(3 * var(--step)) linear;
 		animation: cast2-dot calc(3 * var(--step) + 200ms) linear forwards;
+	}
+
+	/* Phones (stacked, 8 October): no travelling dot - it read oddly on its own - and each step
+	   plays when it scrolls into view (`li.on`, set by the script), the line growing down to it. */
+	.cast-stage.stacked .cast2-dot {
+		display: none;
+	}
+
+	.cast-stage.armed.stacked .cast2-trail {
+		transition: stroke-dashoffset 700ms ease-out;
+	}
+
+	.cast-stage.armed.stacked li.on .cast2-outline {
+		animation: cast2-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	}
+
+	.cast-stage.armed.stacked li.on .cast2-fill {
+		animation: cast2-fill 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms forwards;
+	}
+
+	.cast-stage.armed.stacked li.on .cast2-rest {
+		animation: cast2-text 380ms ease-out 200ms forwards;
+	}
+
+	.cast-stage.armed.stacked li.on p {
+		animation: cast2-text 480ms ease-out 260ms forwards;
 	}
 
 	@keyframes cast2-pop {

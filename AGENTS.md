@@ -1151,6 +1151,12 @@ given to the user, and the user will list anything they disagree with afterwards
   **On the homepage it shows** (8 October, the user) while Donate and Shop are hidden, i.e. until
   the hero's own Donate scrolls out of view - `.hero-has-donate:not(.show-header-donate)
   .brand-name`. Hidden below 340px, where it wouldn't fit beside the cart and menu.
+- **CAST on phones (8 October, the user: the dot looked odd)**: the stacked layout (`.stacked`, set
+  by the script) has **no travelling dot**, and plays **step by step as each step scrolls into view**
+  (`li.on`, an IntersectionObserver per step, `rootMargin -25%` at the bottom) - the line grows down
+  to each letter's foot as it's revealed (700ms ease-out). Before, the whole 970px-tall stack ran
+  on one timer, mostly off screen, and the dot drifted from the letters' beats. Desktop (the row)
+  is unchanged: one timed run with the dot.
 - **Get Involved, Donate and the shop landing page** joined `fadeMobile` the same day, so every
   top-level page's banner matches on phones (child, product and order pages keep their slim band).
 - **Contact on phones**: the whole photo (`object-fit: contain`, `center 75%`) with its left, right,

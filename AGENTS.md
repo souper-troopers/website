@@ -1128,6 +1128,21 @@ given to the user, and the user will list anything they disagree with afterwards
   `partner-woolworths` card is unpublished and "the Woolworths Project" is gone from Get Involved,
   Our Work and Corporate partnership (reworded without the name). `q30` closed. Don't reintroduce
   the name anywhere but the MyDifference card.
+- **`PhotoHero inset` - the fading banner (8 October, the user's idea, superseding the re-crops in
+  the next bullet for these pages).** Above 900px the photo takes the right-hand `inset` share
+  (0.64) and is masked to fade into the hero's ink - fully on the left, a little top and bottom -
+  so the words sit on near-black, the people are smaller, more of the photo shows and grain is far
+  less visible (each pixel is drawn smaller; `sizes` drops to 64vw). Used on **Our Work** (the full
+  `support-conversation.jpg`, `center 25%`; the 20%-cropped copy was deleted), **Get Involved**
+  (`partner-visit.jpg`, no zoom, `center 40%`) and **Contact** (`hub-street.jpg`, `center 50%` -
+  the 1460px file is now enough). Its own tint: `rgba(24,23,31)` 0.8 -> 0.72 at 62% -> 0.5 at 70%
+  -> 0 at 86%; the first try (0.6 at 55%, 0 at 72%) failed where the paragraph ends over the white
+  shirt / white wall (2.3:1). Measured: worst body 4.69:1 (Our Work). Phones keep the full-bleed
+  photo. Volunteer, Donate goods and Corporate bands are unchanged.
+- **Homepage on portrait screens** (phones, portrait tablets): `object-position: 88% center`
+  (`max-aspect-ratio: 1/1`), aimed at the woman in the pink beanie - centred, it was a half-cut man
+  and an empty wall. Still soft on phones (a 1,200px-tall photo shown ~1,050 css px tall at 3x);
+  the camera original (`q51`) is the only fix.
 - **Banner sharpness and framing (8 October, the user: "low-res and poorly cropped")**. Page banners
   are ~3.8:1 strips (1440x378), so they show ~40% of a 3:2 photo's height. `PhotoHero` now offers
   widths up to **4000px** (was capped at 2400, so every banner was soft on retina). Get Involved's

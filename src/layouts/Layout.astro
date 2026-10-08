@@ -2773,6 +2773,31 @@ const structuredData = {
 					min-height: calc(180px + var(--header-height));
 					padding: calc(var(--space-6) + var(--header-height)) 0 56px;
 				}
+
+				/* PhotoHero's `fadeMobile` (8 October): the photo occupies the top of the hero at close
+				   to its own 3:2 shape - the header's height plus 66vw - and fades to ink over its lower
+				   half; the words start in that fade and run on below. On Who We Are, Our Work and
+				   Contact this shows ~80% of the photo's width instead of a ~30% slice. Its own tint:
+				   the header band, then a light veil deepening into the fade. Measured with
+				   scripts/check-hero-contrast.playwright.js. */
+				.hero-photo.photo-hero--page.photo-hero--fade-mobile {
+					min-height: 0;
+					justify-content: flex-start;
+					padding: calc(var(--header-height) + 50vw) 0 var(--space-10);
+				}
+
+				.photo-hero--fade-mobile .hero-bg {
+					top: 0;
+					height: calc(var(--header-height) + 66vw);
+					-webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+					mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+				}
+
+				.photo-hero--fade-mobile .hero-scrim {
+					background:
+						linear-gradient(180deg, rgba(24, 23, 31, 0.82) 0, rgba(24, 23, 31, 0.82) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+						linear-gradient(180deg, rgba(24, 23, 31, 0.15) 0, rgba(24, 23, 31, 0.15) calc(var(--header-height) + 30vw), rgba(24, 23, 31, 0.7) calc(var(--header-height) + 55vw), rgba(24, 23, 31, 0.7) 100%);
+				}
 			}
 
 			.quote {

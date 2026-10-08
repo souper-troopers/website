@@ -1139,6 +1139,18 @@ given to the user, and the user will list anything they disagree with afterwards
   -> 0 at 86%; the first try (0.6 at 55%, 0 at 72%) failed where the paragraph ends over the white
   shirt / white wall (2.3:1). Measured: worst body 4.69:1 (Our Work). Phones keep the full-bleed
   photo. Volunteer, Donate goods and Corporate bands are unchanged.
+- **`PhotoHero fadeMobile` (phones, up to 760px, 8 October)**: on Who We Are, Our Work and Contact
+  the photo sits at the top at near its own shape (header height + 66vw tall) and fades to ink over
+  its lower half; the words start in the fade and run on below (`padding-top: header + 50vw`).
+  ~80% of each photo's width shows instead of a ~30% slice. Who We Are's old phone rule (anchor
+  bottom-right, scale 1.5x) was removed with it. Tint: header band 0.82, veil 0.15 -> 0.7 into the
+  fade. Measured: worst body 4.83 (Our Work). Get Involved and the other pages are unchanged.
+- **The phone header shows the logo alone, deliberately** (since 2 October): "The Humanity Hub / by
+  Souper Troopers" is ~140px and doesn't fit beside Donate, Shop, the cart and the menu at 390px.
+- **Contact's photo may be slightly squeezed in the file itself** (asked 8 October). The page does
+  not distort it (`object-fit: cover`, no transform). In the file, the stop sign - an octagon facing
+  the camera - measures ~61x67px, ~10% taller than wide; perspective could explain some of that, so
+  it's not proven. The fix is Shan's retake / camera original (`q51`), not code.
 - **Homepage on portrait screens** (phones, portrait tablets, `max-aspect-ratio: 1/1`): the photo
   fills only the top 64% of the hero and fades to ink at its foot (mask 50% -> 100%), with the words
   on the fade and the ink below - about 60% of the photo's width shows on a phone instead of a 28%

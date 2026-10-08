@@ -1145,8 +1145,15 @@ given to the user, and the user will list anything they disagree with afterwards
   ~80% of each photo's width shows instead of a ~30% slice. Who We Are's old phone rule (anchor
   bottom-right, scale 1.5x) was removed with it. Tint: header band 0.82, veil 0.15 -> 0.7 into the
   fade. Measured: worst body 4.83 (Our Work). Get Involved and the other pages are unchanged.
-- **The phone header shows the logo alone, deliberately** (since 2 October): "The Humanity Hub / by
+- **The phone header shows the logo alone on most pages** (since 2 October): "The Humanity Hub / by
   Souper Troopers" is ~140px and doesn't fit beside Donate, Shop, the cart and the menu at 390px.
+  **On the homepage it shows** (8 October, the user) while Donate and Shop are hidden, i.e. until
+  the hero's own Donate scrolls out of view - `.hero-has-donate:not(.show-header-donate)
+  .brand-name`. Hidden below 340px, where it wouldn't fit beside the cart and menu.
+- **Get Involved** joined `fadeMobile` the same day, so all four top-level pages but Donate match.
+- **Contact on phones**: the whole photo (`object-fit: contain`, `center 75%`) with its left, right,
+  top and foot all fading into the ink - more room either side of the building (the user).
+  A first try scaled it to 90%, which showed hard rectangular edges inside the fade.
 - **Contact's photo may be slightly squeezed in the file itself** (asked 8 October). The page does
   not distort it (`object-fit: cover`, no transform). In the file, the stop sign - an octagon facing
   the camera - measures ~61x67px, ~10% taller than wide; perspective could explain some of that, so

@@ -1120,6 +1120,20 @@ const structuredData = {
 					display: inline-flex;
 				}
 
+				/* While Donate and Shop are hidden on the homepage, the name has the room, so it shows
+				   beside the logo (8 October, the user); it gives way to the buttons once the hero's
+				   own Donate scrolls out of view. Below 340px it stays hidden - with the cart and the
+				   menu button it would not fit. */
+				@media (min-width: 340px) {
+					.site-header-overlay.hero-has-donate:not(.show-header-donate) .brand .brand-name {
+						display: flex;
+					}
+
+					.site-header-overlay.hero-has-donate:not(.show-header-donate) .brand .brand-name span {
+						display: block;
+					}
+				}
+
 				/* Always in the flex layout (no display:none) so transform/visibility can transition —
 				   display can't be animated. Closed state sits translated fully above its own box
 				   (behind the header), non-interactive via visibility:hidden. The visibility delay is

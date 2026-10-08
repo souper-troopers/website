@@ -43,9 +43,16 @@ interface Props {
 	 * It enlarges the image, so it is softer; keep it to the band.
 	 */
 	zoom?: number;
+	/**
+	 * Above 900px only (8 October, the user's idea): the photo takes the right-hand share of the
+	 * banner given here (e.g. 0.64) and fades into the ink on its left, top and bottom edges, so the
+	 * words sit on near-black and the people appear smaller - more of the photo shows, and each
+	 * pixel is drawn smaller, which hides grain. Not combined with `zoom`.
+	 */
+	inset?: number;
 }
 
-const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom } = Astro.props;
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, inset } = Astro.props;
 
 // Widths up to 4000px since 8 October: a retina laptop needs ~2,900px for a full-width banner and
 // up to ~4,900px for a zoomed one, and the site used to stop at 2,400 - every banner was slightly
@@ -55,7 +62,7 @@ const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zo
 const highPriority = size !== "band";
 ---
 
-<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : undefined}>
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
 	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
 		<Image
 			src={image}
@@ -63,7 +70,7 @@ const highPriority = size !== "band";
 			role={alt ? undefined : "presentation"}
 			width={Math.min(image.width, 2400)}
 			widths={[640, 800, 1280, 1600, 2400, 3200, 4000, image.width].filter((w, i, a) => a.indexOf(w) === i && w <= Math.min(image.width, 4000))}
-			sizes={zoom ? `(min-width: 901px) ${Math.round(zoom * 100)}vw, 100vw` : "100vw"}
+			sizes={zoom ? `(min-width: 901px) ${Math.round(zoom * 100)}vw, 100vw` : inset ? `(min-width: 901px) ${Math.round(inset * 100)}vw, 100vw` : "100vw"}
 			loading="eager"
 			fetchpriority={highPriority ? "high" : undefined}
 			style={`object-position: ${position}`}

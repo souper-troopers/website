@@ -4,7 +4,6 @@ import CardCtaLabel from "../components/CardCtaLabel.astro";
 import Layout from "../layouts/Layout.astro";
 import PhotoHero from "../components/PhotoHero.astro";
 import HubAppeal from "../components/HubAppeal.astro";
-import volunteerDayPhoto from "../assets/images/volunteer-day.jpg";
 import EmailLink from "../components/EmailLink.svelte";
 import { Image } from "astro:assets";
 import foodPhoto from "../assets/images/goods/food.jpg";
@@ -16,7 +15,8 @@ import craftPhoto from "../assets/images/goods/craft.jpg";
 import cleaningPhoto from "../assets/images/goods/cleaning.jpg";
 import electronicsPhoto from "../assets/images/goods/electronics.jpg";
 import { getBbbeeBenefits, getSiteSettings } from "../lib/sanity";
-import individualsPhoto from "../assets/images/support-one-to-one.jpg";
+import individualsPhoto from "../assets/images/individuals-randel.jpg";
+import companiesPhoto from "../assets/images/partner-meeting.jpg";
 import heroPhoto from "../assets/images/partner-visit.jpg";
 
 const bbbeeBenefits = await getBbbeeBenefits();
@@ -66,9 +66,9 @@ const goodsCategories = [
 					<span class="gi-card-media shimmer-up">
 						<Image
 							src={individualsPhoto}
-							alt="A volunteer showing a Souper Squad member a technique, one to one"
+							alt="Two smiling visitors at a table at The Humanity Hub, one giving a thumbs up"
 							class="gi-card-img"
-							style="object-position: center 85%"
+							style="object-position: center 30%"
 							width={1200} widths={[600, 1200]}
 							sizes="(min-width: 761px) 540px, 100vw"
 							onload="this.classList.add('is-loaded')"
@@ -201,8 +201,8 @@ const goodsCategories = [
 				<summary class="gi-group-summary">
 					<span class="gi-card-media shimmer-up">
 						<Image
-							src={volunteerDayPhoto}
-							alt="A company volunteer day at The Humanity Hub"
+							src={companiesPhoto}
+							alt="Kerry meeting a corporate partner in their boardroom"
 							class="gi-card-img"
 							width={1200} widths={[600, 1200]}
 							sizes="(min-width: 761px) 540px, 100vw"
@@ -233,7 +233,7 @@ const goodsCategories = [
 		    every other sub-section here now leads with its prose. */}
 		<p>Interested in partnering? <a class="gi-sub-link" href="/get-involved/corporate-partnership">What this looks like in practice &rarr;</a> For more info, email <EmailLink client:visible address="kerry@soupertroopers.org" /></p>
 		<div class="grid grid-4">
-			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - like our Woolworths Project, upskilling Troopers and creating job opportunities.</p></div>
+			<div class="card"><h3>Partner with us</h3><p>Long-term collaboration on shared outcomes - upskilling Troopers and creating job opportunities.</p></div>
 			<div class="card">
 				<h3>Give what you already do</h3>
 				{/* No "More" here: its detail was the corporate partnership page's card word for word, and

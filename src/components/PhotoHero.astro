@@ -50,9 +50,15 @@ interface Props {
 	 * pixel is drawn smaller, which hides grain. Not combined with `zoom`.
 	 */
 	inset?: number;
+	/**
+	 * Phones only (up to 760px, 8 October): the photo sits at the top at nearly its own shape and
+	 * fades into the ink at its foot, with the words beneath - instead of a tall, narrow crop with
+	 * the words over it. Far less of the photo is cut away.
+	 */
+	fadeMobile?: boolean;
 }
 
-const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, inset } = Astro.props;
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, inset, fadeMobile } = Astro.props;
 
 // Widths up to 4000px since 8 October: a retina laptop needs ~2,900px for a full-width banner and
 // up to ~4,900px for a zoomed one, and the site used to stop at 2,400 - every banner was slightly
@@ -62,7 +68,7 @@ const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zo
 const highPriority = size !== "band";
 ---
 
-<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset, "photo-hero--fade-mobile": fadeMobile }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
 	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
 		<Image
 			src={image}

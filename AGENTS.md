@@ -1044,6 +1044,14 @@ Minutes: `docs/meeting-notes/2026-10-02-website-review.md`. Transcript one level
 - **Still to do** (from the call): Taz's title, the decluttered partner list, team photos and Shan's
   image swaps (asked for in the user's DM).
 
+## The 9 October 2026 review
+Minutes: `docs/meeting-notes/2026-10-09-website-review.md`. Stephen and Shan absent; nothing new for
+us. Soft launch Monday 12 October confirmed. **Once live, WhatsApp Kerry and Hilton** - Hilton calls
+the Woolworths contact only after launch. Building update confidential again (out of this repo); the
+address doesn't change and Save our Hub stays hidden. A match-funding campaign may follow Kerry's
+Monday fundraising workshop - wait for her brief. **Next website meeting: Wednesday 21 October,
+16:00.**
+
 ## Shan's list of changes, 8 October 2026
 Shan sent `Website changes_ The Humanity Hub.pdf` (one level up, outside the repo). The user's rule
 for it: **Shan's instructions trump ours**; where the list was ambiguous we took the recommendation

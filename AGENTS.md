@@ -2203,7 +2203,11 @@ underneath, so the content sits exactly in the middle of the photo below the hea
   78%) so the faces show above/beside the words. Contrast: 1,216 lines, none failing.
 - **Donate's hero is `hub-circle.jpg` since 12 October** (Shan's pick: `Extra/Images/Mix/IMG_7982 (1).jpg`,
   a group talking at the Hub, 4000px copy), `inset={0.64}` like Our Work, `center 4%` so the standing
-  man's head isn't cut off. Contrast 77 lines, worst body 5.57:1. `hub-visit.jpg` (the IMG_8600 below)
+  man's head isn't cut off. **The photo starts below the header on this page only** (scoped
+  `:global` rules in `donate.astro`, the user's call the same day): the Donate / Shop buttons had sat
+  over his head. Laptops push `.hero-bg` down by `--header-height` and grow the hero by the same;
+  tablets (761-900) by `--hero-clearance` (the wrapped header); phones shift the fade layout down one
+  header height. Contrast 77 lines at 8 widths, worst body 4.84:1. `hub-visit.jpg` (the IMG_8600 below)
   was deleted as unused. History follows.
 - **Donate's hero is IMG_8600 since 25 September** (`src/assets/images/hub-visit.jpg`, from
   `Extra/Images/Mix`: two visitors meeting a group at the Hub, the art wall behind), replacing

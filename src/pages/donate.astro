@@ -281,6 +281,56 @@ const otherWays = [
 </Layout>
 
 <style>
+	/* The banner photo starts below the header (12 October, the user): the people sit at the top of
+	   this photo, and the floating Donate / Shop buttons covered the standing man's head. So on this
+	   page the photo is pushed down by the header's height, leaving plain ink behind the header, and
+	   the hero grows by the same amount so the photo keeps its size. */
+	@media (min-width: 901px) {
+		:global(.photo-hero--inset.photo-hero--page) {
+			min-height: calc(max(260px, 42vh) + var(--header-height));
+			padding-top: calc(var(--hero-clearance) + var(--header-height) + 24px);
+		}
+
+		:global(.photo-hero--inset .hero-bg) {
+			top: var(--header-height);
+			height: calc(112% - var(--header-height));
+			-webkit-mask-image:
+				linear-gradient(to right, transparent 0%, #000 42%),
+				linear-gradient(to bottom, transparent 0%, #000 8%, #000 82%, transparent 100%);
+			mask-image:
+				linear-gradient(to right, transparent 0%, #000 42%),
+				linear-gradient(to bottom, transparent 0%, #000 8%, #000 82%, transparent 100%);
+		}
+	}
+
+	/* Tablets: full-bleed, under a header that wraps to two rows here, so the photo starts below
+	   --hero-clearance (the wrapped header's height) rather than --header-height. */
+	@media (min-width: 761px) and (max-width: 900px) {
+		:global(.hero-photo.photo-hero--page) {
+			padding-top: calc(var(--hero-clearance) * 2 + 24px);
+		}
+
+		:global(.photo-hero--page .hero-bg) {
+			top: var(--hero-clearance);
+			height: calc(112% - var(--hero-clearance));
+		}
+	}
+
+	@media (max-width: 760px) {
+		:global(.hero-photo.photo-hero--page.photo-hero--fade-mobile) {
+			padding-top: calc(var(--header-height) * 2 + 40vw);
+		}
+
+		:global(.photo-hero--fade-mobile .hero-bg) {
+			top: var(--header-height);
+		}
+
+		:global(.photo-hero--fade-mobile .hero-scrim) {
+			background:
+				linear-gradient(180deg, rgba(24, 23, 31, 0.15) 0, rgba(24, 23, 31, 0.15) calc(var(--header-height) * 2 + 22vw), rgba(24, 23, 31, 0.7) calc(var(--header-height) * 2 + 44vw), rgba(24, 23, 31, 0.7) 100%);
+		}
+	}
+
 	.payfast-thanks {
 		margin-top: var(--space-4);
 		font-weight: 600;

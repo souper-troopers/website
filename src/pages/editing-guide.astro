@@ -174,15 +174,19 @@ const notInStudio = [
 
 		<div class="eg-jobs">
 			{jobs.map((job) => (
-				<article class="card eg-job" id={job.id}>
-					<span class="eg-where">In the Studio: {job.where}</span>
-					<h3>{job.title}</h3>
+				<article class="eg-job" id={job.id}>
+					<div class="eg-job-head">
+						<span class="eg-where">In the Studio: {job.where}</span>
+						<h3>{job.title}</h3>
+					</div>
+					<div class="eg-job-body">
 					<ol>
 						{job.steps.map((step) => (
 							<li>{withBold(step).map((part, i) => (i % 2 ? <strong>{part}</strong> : part))}</li>
 						))}
 					</ol>
 					{job.note && <p class="eg-note">{job.note}</p>}
+					</div>
 				</article>
 			))}
 		</div>
@@ -295,26 +299,37 @@ const notInStudio = [
 		color: rgba(36, 35, 43, 0.72);
 	}
 
+	/* Full-width rows divided by hairlines (12 October, the user: cards looked odd here). The title
+	   sits beside its steps on laptops and above them on phones. */
 	.eg-jobs {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--space-4);
-		align-items: start;
-	}
-
-	@media (max-width: 760px) {
-		.eg-jobs {
-			grid-template-columns: minmax(0, 1fr);
-		}
+		display: flex;
+		flex-direction: column;
+		border-bottom: 1px solid rgba(36, 35, 43, 0.12);
 	}
 
 	.eg-job {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+		gap: var(--space-8);
+		padding: var(--space-6) 0;
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
 		scroll-margin-top: calc(var(--header-height) + var(--space-4));
 	}
 
+	@media (max-width: 760px) {
+		.eg-job {
+			grid-template-columns: minmax(0, 1fr);
+			gap: var(--space-3);
+		}
+	}
+
 	.eg-job h3 {
-		font-size: 1.1rem;
-		margin: var(--space-2) 0 var(--space-3);
+		font-size: 1.15rem;
+		margin-top: var(--space-2);
+	}
+
+	.eg-job-body {
+		max-width: 46rem;
 	}
 
 	.eg-job ol {

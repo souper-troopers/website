@@ -317,17 +317,22 @@ const otherWays = [
 	}
 
 	@media (max-width: 760px) {
+		/* The photo's top edge also fades into the ink above it (12 October, the user), so it no
+		   longer starts as a hard line under the header. It sits 16px lower to make room, so the
+		   fade runs down to the top of the man's head without reaching it. */
 		:global(.hero-photo.photo-hero--page.photo-hero--fade-mobile) {
-			padding-top: calc(var(--header-height) * 2 + 40vw);
+			padding-top: calc(var(--header-height) * 2 + 16px + 40vw);
 		}
 
 		:global(.photo-hero--fade-mobile .hero-bg) {
-			top: var(--header-height);
+			top: calc(var(--header-height) + 16px);
+			-webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 50%, transparent 100%);
+			mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 50%, transparent 100%);
 		}
 
 		:global(.photo-hero--fade-mobile .hero-scrim) {
 			background:
-				linear-gradient(180deg, rgba(24, 23, 31, 0.15) 0, rgba(24, 23, 31, 0.15) calc(var(--header-height) * 2 + 22vw), rgba(24, 23, 31, 0.7) calc(var(--header-height) * 2 + 44vw), rgba(24, 23, 31, 0.7) 100%);
+				linear-gradient(180deg, rgba(24, 23, 31, 0.15) 0, rgba(24, 23, 31, 0.15) calc(var(--header-height) * 2 + 16px + 22vw), rgba(24, 23, 31, 0.7) calc(var(--header-height) * 2 + 16px + 44vw), rgba(24, 23, 31, 0.7) 100%);
 		}
 	}
 

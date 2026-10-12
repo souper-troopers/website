@@ -1256,7 +1256,7 @@ Asked for by Shan and Kerry after launch, ahead of a walkthrough call. Same fami
   "it didn't work". Then seven everyday jobs, what isn't in the Studio, and what to do if it goes wrong.
 - ⚠ **Field names in it are quoted from `studio/schemaTypes/`** ("Price (R)", "Sold out", "Link to
   the article"...). Rename a field or type there and update the guide in the same change.
-- The status page stays (the user agreed with keeping it): it is the record of decisions and still
+- Recommended keeping the status page alongside it (12 October): it is the record of decisions and still
   holds open questions. The guide is for day-to-day edits; the status page is for decisions.
 
 ## Launch (prepared 2 October 2026, for Monday 5 October)

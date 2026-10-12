@@ -1213,7 +1213,10 @@ given to the user, and the user will list anything they disagree with afterwards
   their new pages, http -> https, www -> apex, status page 401 without a login, shop shows "Order
   this" with no basket, the Studio's publish function answers on the new address (GET 405,
   preflight 204), and the Studio redeployed from `main`. `souper-troopers.netlify.app` still serves
-  the site (canonicals point at soupertroopers.org).
+  the site (canonicals point at soupertroopers.org) - **redirected since the same day**: a forced
+  host rule at the top of `public/_redirects` sends every netlify.app page to the same page on
+  soupertroopers.org. Branch previews (`dev--souper-troopers.netlify.app`) are a different host and
+  unaffected.
 - **Still to do after launch**: a test contact-form message and a test email to an
   @soupertroopers.org address (the user); the Cloudflare Web Analytics site/token for
   soupertroopers.org; submitting the sitemap in Google Search Console (whoever owns the existing

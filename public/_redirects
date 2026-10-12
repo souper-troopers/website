@@ -1,3 +1,9 @@
+# The preview address, since the 12 October 2026 launch: every page there redirects to the same
+# page on the real address, so the weeks of links shared to it (WhatsApp, the status page) land on
+# the live site. Forced ("!"), since every page exists on both. This exact host only - branch
+# previews (dev--souper-troopers.netlify.app) are untouched and stay the free way to show work.
+https://souper-troopers.netlify.app/*  https://soupertroopers.org/:splat  301!
+
 # Redirects from the old WordPress site's addresses (soupertroopers.org until the October 2026
 # launch), so links in Google, press articles and old social posts keep working. Built 2 October
 # 2026 from the old site's own sitemaps (sitemap_index.xml).

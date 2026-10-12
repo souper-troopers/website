@@ -1218,8 +1218,9 @@ given to the user, and the user will list anything they disagree with afterwards
   soupertroopers.org. Branch previews (`dev--souper-troopers.netlify.app`) are a different host and
   unaffected.
 - **Still to do after launch**: a test contact-form message and a test email to an
-  @soupertroopers.org address (the user); the Cloudflare Web Analytics site/token for
-  soupertroopers.org; submitting the sitemap in Google Search Console (whoever owns the existing
+  @soupertroopers.org address (the user); ~~the Cloudflare Web Analytics site/token for
+  soupertroopers.org~~ (done 12 October: new site and token `f3ebabe5…` in `Layout.astro`; the old
+  preview site stays in Cloudflare for its history, and Kerry and Shan are invited as members); submitting the sitemap in Google Search Console (whoever owns the existing
   verification TXT); a look on a real iPhone; live PayFast details then `SHOP_CHECKOUT = true`;
   removing the `mcp__Sanity` allow rule from `.claude/settings.local.json`; keeping Webtimes (email,
   old site) a month or two before deciding; the Sanity organisation transfer.

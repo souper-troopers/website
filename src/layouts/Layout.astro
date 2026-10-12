@@ -374,9 +374,10 @@ const structuredData = {
 			<script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
 		))}
 
-		<!-- Cloudflare Web Analytics: the soupertroopers.org site since 12 October 2026 (the earlier
-		     token, db07bdfb..., was the netlify.app preview's site, kept in Cloudflare for its history). -->
-		<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f3ebabe5242743d19e212f10e925ceb5"}'></script>
+		<!-- Cloudflare Web Analytics: the soupertroopers.org site since 12 October 2026. A newly added
+		     site's token is rejected (404 from /cdn-cgi/rum) until Cloudflare activates it, which
+		     took over an hour for one site - test with a POST before publishing a new token. -->
+		<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "395b1839158c4551ada9942d0bf8e613"}'></script>
 		<!-- End Cloudflare Web Analytics -->
 	</head>
 	<body>

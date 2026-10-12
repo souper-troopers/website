@@ -1219,8 +1219,12 @@ given to the user, and the user will list anything they disagree with afterwards
   unaffected.
 - **Still to do after launch**: a test contact-form message and a test email to an
   @soupertroopers.org address (the user); ~~the Cloudflare Web Analytics site/token for
-  soupertroopers.org~~ (done 12 October: new site and token `f3ebabe5…` in `Layout.astro`; the old
-  preview site stays in Cloudflare for its history, and Kerry and Shan are invited as members); submitting the sitemap in Google Search Console (whoever owns the existing
+  soupertroopers.org~~ (done 12 October: token `395b1839…` in `Layout.astro`. ⚠ A newly added Web
+  Analytics site's token is rejected - 404 from `cloudflareinsights.com/cdn-cgi/rum` - until
+  Cloudflare activates it; one new site stayed rejected for over an hour (its token `f3ebabe5…`
+  was published and counted nothing), the next took minutes. **POST-test a token before
+  publishing it.** The old preview site was deleted, so pre-launch figures are gone. Kerry and
+  Shan are invited as members); submitting the sitemap in Google Search Console (whoever owns the existing
   verification TXT); a look on a real iPhone; live PayFast details then `SHOP_CHECKOUT = true`;
   removing the `mcp__Sanity` allow rule from `.claude/settings.local.json`; keeping Webtimes (email,
   old site) a month or two before deciding; the Sanity organisation transfer.

@@ -1285,6 +1285,10 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
   goes true: `CHECKOUT_ENABLED = SHOP_CHECKOUT || process.env.CONTEXT !== "production"`. Verified: a
   `CONTEXT=production` build has no basket. On previews the functions use `DEPLOY_PRIME_URL`
   (`siteUrl()`), since Netlify's `URL` there is still the live site.
+- ⚠ **There is no `dev` branch preview** (checked 12 October: `dev--souper-troopers.netlify.app` is a
+  404 and Netlify only lists `main` deploys) - the earlier note saying there was one was wrong. To test
+  this end to end, either turn on branch deploys for `dev` (Netlify → Build & deploy → Branches and
+  deploy contexts; free) or open a pull request, which gets a free deploy preview.
 - Tested locally: the checkout step returns the description and stores the order. **The paid-order
   email is untested** until someone completes a PayFast sandbox payment on the `dev` preview.
 

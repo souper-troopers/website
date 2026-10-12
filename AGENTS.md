@@ -1223,6 +1223,15 @@ given to the user, and the user will list anything they disagree with afterwards
   verification TXT); a look on a real iPhone; live PayFast details then `SHOP_CHECKOUT = true`;
   removing the `mcp__Sanity` allow rule from `.claude/settings.local.json`; keeping Webtimes (email,
   old site) a month or two before deciding; the Sanity organisation transfer.
+- **Netlify hosting stays on the user's personal plan for now, by choice (12 October).** Kerry and
+  Shan don't need Netlify access - they publish from the Studio's Publish button, and Netlify team
+  members are a Pro feature anyway. Once production deploys slow to comfortably under the Free
+  plan's ~20 a month, the plan is: a Netlify account under a charity email address, transfer the
+  project to it, Free plan, login in the charity's password manager with the user as one of its
+  users, then cancel the user's Personal plan. **A monthly scheduled task checks the deploy rate**
+  (`netlify-hosting-handover-check`, 09:00 on the 1st, first run 1 November 2026) and says when it
+  looks like the time; delete it once the move is done. Kerry and Shan were invited to Sanity the
+  same day.
 
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes

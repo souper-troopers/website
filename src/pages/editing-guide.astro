@@ -1,0 +1,374 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * How to update the website - written for Kerry and Shan after launch (12 October 2026), when they
+ * were invited to the Sanity Studio and asked for a how-to before a walkthrough call.
+ *
+ * Same family as `/google-listing`: `noindex`, excluded from the sitemap in `astro.config.mjs`,
+ * outside the password (it has no input, and it has to open on a phone), and listed on `/internal`.
+ *
+ * ⚠ Keep it true to the Studio. The names in quotes ("Shop item", "Price (R)", "Sold out"...) are the
+ * titles in `studio/schemaTypes/`, and the publish step is `studio/tools/PublishTool.tsx`. Rename a
+ * field there and this page goes stale silently - change both together.
+ */
+
+type Job = {
+	id: string;
+	title: string;
+	where: string;
+	steps: string[];
+	note?: string;
+};
+
+const studioUrl = "https://souper-troopers.sanity.studio/";
+
+const jobs: Job[] = [
+	{
+		id: "price",
+		title: "Change a price, or mark something sold out",
+		where: "Shop item",
+		steps: [
+			"Open **Shop item** and pick the product.",
+			"Change **Price (R)**, or switch on **Sold out**. Sold out hides the order button and tells the visitor it's unavailable - nothing is deleted.",
+			"For **Coffee** and the **Bracelets**, which are one product with options, open **Shop category** instead and change the price on the option under **Options**.",
+		],
+	},
+	{
+		id: "product",
+		title: "Add a new product",
+		where: "Shop item",
+		steps: [
+			"Open **Shop item** and press the **+** (create new) button.",
+			"Choose its **Category**, then fill in the name, **Price (R)** and a **Short description** of a line or two.",
+			"Add a **Main photo**, and any others under **More photos**. Product photos look best on a plain light background.",
+			"Under **Slug**, press **Generate**. That becomes the product's web address, so set it once and leave it.",
+			"**Display order** decides where it sits among the others: lower numbers come first.",
+		],
+	},
+	{
+		id: "team",
+		title: "Change someone's photo, title or details on the team",
+		where: "Team Member",
+		steps: [
+			"Open **Team Member** and pick the person.",
+			"Change **Role** for their title, or replace the **Photo**.",
+			"After uploading a photo, click the crop icon on it and drag the circle onto their face. The site shows portraits in a circle, so this decides what's kept.",
+		],
+	},
+	{
+		id: "figures",
+		title: "Update the impact figures",
+		where: "Impact Stat",
+		steps: [
+			"Open **Impact Stat** and pick the figure.",
+			"Change **Numeric value** (just the number, e.g. 1800) and the **Suffix** (e.g. +). The site adds the comma.",
+			"**Page** decides where it appears - Home or Donate. To add a new figure, create one and choose its page.",
+		],
+	},
+	{
+		id: "story",
+		title: "Add a success story",
+		where: "Success Story",
+		steps: [
+			"Open **Success Story** and press **+**.",
+			"Fill in **Name**, a **Quote** in their own words if you have one, the **Story** in a few sentences, and a **Photo**.",
+			"Switch on **Featured on homepage** only for the one story you want on the front page.",
+		],
+		note: "Only with the person's agreement to be named and pictured on a public page - it stays findable by their name for years.",
+	},
+	{
+		id: "press",
+		title: "Add a press mention",
+		where: "Press mention",
+		steps: [
+			"Open **Press mention** and press **+**.",
+			"Fill in the **Publication**, the **Headline** and the **Link to the article**, and set **Published** to the article's date - the list is ordered newest first by it.",
+			"Paste a clean link: if it came from a newsletter, cut everything from the ? onwards.",
+		],
+	},
+	{
+		id: "partners",
+		title: "Add or remove a partner or supporter",
+		where: "Partner / Supporter",
+		steps: [
+			"**Partner** is for organisations shown with their logo, a short **Blurb** and, if you add their **Website**, a link. **Supporter** is a name in the list beneath.",
+			"To take someone off the site, open them, use the small arrow beside the **Publish** button and choose **Unpublish**. That keeps them in the Studio so they can come back, where **Delete** can't be undone.",
+		],
+	},
+];
+
+/** Turns **bold** into <strong>, so the steps can stay plain strings. */
+function withBold(text: string): string[] {
+	return text.split("**");
+}
+
+const notInStudio = [
+	"Page headings and the wording on each page",
+	"The large photos at the top of each page",
+	"The services on Our Work, and the CAST steps",
+	"Opening hours, the WhatsApp number and the bank details",
+	"The questions and answers at the foot of Contact, Donate and Get Involved",
+];
+---
+
+<Layout
+	title="How to update the website"
+	description="A short guide for Kerry and Shan: editing the site in the Studio and publishing the changes."
+	noindex
+>
+	<section class="page-hero">
+		<div class="wrap">
+			<span class="badge badge-on-dark">For Kerry &amp; Shan</span>
+			<h1>How to update the website</h1>
+			<p>The site's products, people, stories and figures live in the Studio, where you can change them yourselves. This page covers the everyday jobs. Keep it open beside the Studio the first few times.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="eg-intro">
+			<h2>The one thing to know: there are two Publish buttons</h2>
+			<p>Changing something is a two-step job, and almost every "it didn't work" comes from missing the second step.</p>
+		</div>
+
+		<ol class="eg-steps">
+			<li>
+				<span class="eg-number" aria-hidden="true">1</span>
+				<div>
+					<h3>Sign in to the Studio</h3>
+					<p>Go to <a href={studioUrl}>souper-troopers.sanity.studio</a> and sign in with the account you created from the Sanity invitation email. Everything you can edit is listed down the left.</p>
+				</div>
+			</li>
+			<li>
+				<span class="eg-number" aria-hidden="true">2</span>
+				<div>
+					<h3>Make your change, then press Publish on it</h3>
+					<p>Edit the item, then press the green <strong>Publish</strong> button at the bottom right of it. Until you do, your change is only a draft. Repeat for as many changes as you like.</p>
+				</div>
+			</li>
+			<li>
+				<span class="eg-number" aria-hidden="true">3</span>
+				<div>
+					<h3>When you're finished, publish the website</h3>
+					<p>Click <strong>Publish</strong> in the bar at the very top of the Studio, then <strong>Publish to the website</strong>. The site rebuilds with everything you've changed. It takes a couple of minutes; then refresh the page to see it.</p>
+				</div>
+			</li>
+		</ol>
+
+		<div class="eg-callout">
+			<h3>Do your edits in a batch, then publish the website once</h3>
+			<p>Each website publish uses part of a monthly allowance - about twenty a month on the free plan. One publish at the end of a session covers every change in it, so there's no need to publish after each edit.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="eg-intro">
+			<h2>Everyday jobs</h2>
+			<p>Each one starts by choosing the type of thing on the left of the Studio, shown here in <strong>bold</strong>. Then finish with the two Publish steps above.</p>
+		</div>
+
+		<div class="eg-jobs">
+			{jobs.map((job) => (
+				<article class="card eg-job" id={job.id}>
+					<span class="eg-where">In the Studio: {job.where}</span>
+					<h3>{job.title}</h3>
+					<ol>
+						{job.steps.map((step) => (
+							<li>{withBold(step).map((part, i) => (i % 2 ? <strong>{part}</strong> : part))}</li>
+						))}
+					</ol>
+					{job.note && <p class="eg-note">{job.note}</p>}
+				</article>
+			))}
+		</div>
+	</section>
+
+	<section class="section wrap eg-two">
+		<div>
+			<h2>What isn't in the Studio</h2>
+			<p>Some things are written into the site itself, so they can't be changed from the Studio:</p>
+			<ul class="eg-list">
+				{notInStudio.map((item) => <li>{item}</li>)}
+			</ul>
+			<p>For any of these, send Stephen a message with the change, or the new photo, and he'll make it.</p>
+			<p>Two things in <strong>Site Settings</strong> - the address and the email - feed several places at once, including the Google listing. Check with Stephen before changing either.</p>
+		</div>
+		<div>
+			<h2>If something goes wrong</h2>
+			<ul class="eg-list">
+				<li><strong>Nothing you do in the Studio can break the site's layout.</strong> The worst case is wrong wording or the wrong photo, and that's fixed by changing it back and publishing again.</li>
+				<li><strong>The site hasn't changed after five minutes?</strong> Check the item says Published rather than Draft, and that you pressed Publish to the website afterwards.</li>
+				<li><strong>Want an earlier version back?</strong> Open the item and click the clock icon at the top. It lists every change and can restore an earlier one.</li>
+				<li><strong>"A publish just started"?</strong> Another publish is still running. Wait two minutes and press it again.</li>
+				<li>For anything else, message Stephen.</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="eg-callout">
+			<h3>About photos</h3>
+			<p>Use photos at least 1200 pixels wide where you can; small ones look blurry on large screens. Only use photos of people who have agreed to be on the website, and use the crop tool's circle to mark the important part - usually a face - so it isn't cut off.</p>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.eg-intro {
+		max-width: 46rem;
+		margin-bottom: var(--space-6);
+	}
+
+	.eg-intro h2 {
+		margin-bottom: var(--space-2);
+	}
+
+	.eg-intro p,
+	.eg-two p {
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.eg-steps {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		max-width: 46rem;
+	}
+
+	.eg-steps li {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: var(--space-4);
+		align-items: start;
+	}
+
+	.eg-steps h3 {
+		font-size: 1.15rem;
+		margin-bottom: var(--space-2);
+	}
+
+	.eg-steps p {
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	/* The yellow puck used for step numbers on /google-listing and the status page - ordinals, not
+	   controls, so deliberately not a filled teal circle (see AGENTS.md on colour as affordance). */
+	.eg-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		background: rgba(219, 188, 59, 0.22);
+		color: #7a5f0a;
+		font-weight: 700;
+	}
+
+	.eg-callout {
+		max-width: 46rem;
+		margin-top: var(--space-8);
+		padding: var(--space-4) var(--space-5);
+		border-left: 4px solid var(--st-teal);
+		background: #fff;
+		border-radius: 0 14px 14px 0;
+	}
+
+	.section .eg-callout:only-child {
+		margin-top: 0;
+	}
+
+	.eg-callout h3 {
+		font-size: 1.05rem;
+		margin-bottom: var(--space-2);
+	}
+
+	.eg-callout p {
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.eg-jobs {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+		align-items: start;
+	}
+
+	@media (max-width: 760px) {
+		.eg-jobs {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	.eg-job {
+		scroll-margin-top: calc(var(--header-height) + var(--space-4));
+	}
+
+	.eg-job h3 {
+		font-size: 1.1rem;
+		margin: var(--space-2) 0 var(--space-3);
+	}
+
+	.eg-job ol {
+		padding-left: 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.eg-job strong,
+	.eg-list strong {
+		color: var(--st-ink);
+	}
+
+	.eg-where {
+		font-size: 0.78rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.eg-note {
+		margin-top: var(--space-3);
+		padding-top: var(--space-3);
+		border-top: 1px solid rgba(36, 35, 43, 0.1);
+		font-size: 0.92rem;
+		color: rgba(36, 35, 43, 0.72);
+	}
+
+	.eg-two {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-10);
+	}
+
+	@media (max-width: 760px) {
+		.eg-two {
+			grid-template-columns: minmax(0, 1fr);
+			gap: var(--space-8);
+		}
+	}
+
+	.eg-two h2 {
+		margin-bottom: var(--space-3);
+	}
+
+	.eg-two p + p,
+	.eg-two ul + p,
+	.eg-two p + ul {
+		margin-top: var(--space-3);
+	}
+
+	.eg-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		padding-left: 1.15rem;
+		color: rgba(36, 35, 43, 0.72);
+	}
+</style>

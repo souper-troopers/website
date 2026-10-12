@@ -1248,6 +1248,17 @@ given to the user, and the user will list anything they disagree with afterwards
   looks like the time; delete it once the move is done. Kerry and Shan were invited to Sanity the
   same day.
 
+## `/editing-guide` - how Kerry and Shan update the site (built 12 October 2026)
+Asked for by Shan and Kerry after launch, ahead of a walkthrough call. Same family as
+`/google-listing`: `noindex`, out of the sitemap, outside the password, listed on `/internal`.
+- **It leads with the two Publish buttons** - the document's own Publish (draft -> published) and the
+  Studio's "Publish to the website" (the rebuild) - because missing the second is the likeliest
+  "it didn't work". Then seven everyday jobs, what isn't in the Studio, and what to do if it goes wrong.
+- ⚠ **Field names in it are quoted from `studio/schemaTypes/`** ("Price (R)", "Sold out", "Link to
+  the article"...). Rename a field or type there and update the guide in the same change.
+- The status page stays (the user agreed with keeping it): it is the record of decisions and still
+  holds open questions. The guide is for day-to-day edits; the status page is for decisions.
+
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes
   (apex and `www` only, "DNS only", every email record untouched), the checks after, and the rollback.

@@ -1294,8 +1294,8 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
 
 ## Netlify secrets scanning and the PayFast passphrase (12 October 2026)
 The first publish after the live PayFast details went into Netlify **failed on secrets scanning**:
-- **The live passphrase was a public string** - it matched the organisation's YouTube handle, which
-  is in `Layout.astro` and these notes. Netlify refuses to build while a secret value appears in the
+- **The live passphrase was guessable** - text that already appears on every page of the site.
+  Netlify refuses to build while a secret value appears in the
   repo or output, and rightly: a guessable passphrase weakens the PayFast account. Kerry is to set a
   long random one in PayFast (given by phone), then it goes into Netlify's Production context. Until
   then Production's `PAYFAST_PASSPHRASE` is left empty, which is safe while `SHOP_CHECKOUT` is false.

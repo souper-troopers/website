@@ -1227,8 +1227,9 @@ given to the user, and the user will list anything they disagree with afterwards
   host rule at the top of `public/_redirects` sends every netlify.app page to the same page on
   soupertroopers.org. Branch previews (`dev--souper-troopers.netlify.app`) are a different host and
   unaffected.
-- **Still to do after launch**: a test contact-form message and a test email to an
-  @soupertroopers.org address (the user); ~~the Cloudflare Web Analytics site/token for
+- **Still to do after launch**: ~~a test contact-form message and a test email to an
+  @soupertroopers.org address~~ (both done 12 October: the user got a reply through each, so the
+  contact form's notifications and the domain's email both work after the DNS switch); ~~the Cloudflare Web Analytics site/token for
   soupertroopers.org~~ (done 12 October: token `395b1839…` in `Layout.astro`. ⚠ A newly added Web
   Analytics site's token is rejected - 404 from `cloudflareinsights.com/cdn-cgi/rum` - until
   Cloudflare activates it; one new site stayed rejected for over an hour (its token `f3ebabe5…`

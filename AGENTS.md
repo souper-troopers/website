@@ -1198,6 +1198,29 @@ given to the user, and the user will list anything they disagree with afterwards
   `npx astro dev stop` then `npx astro dev --port 4321 --background`; if the group did die, restart
   `netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open` and the Studio by hand.
 
+## LIVE since Monday 12 October 2026
+- HostFaddy switched the two records the morning of 12 October (apex A 75.2.60.5, www CNAME
+  souper-troopers.netlify.app, both DNS only; email records untouched - checked). Netlify's first
+  "Provision certificate" failed ("could not provision a Let's Encrypt certificate") although the
+  DNS was correct (no AAAA, no CAA, no DNSSEC, no Netlify DNS zone); **it issued itself within
+  ~30 minutes with no change** - if it happens again, wait and retry before touching DNS.
+- `launch` was merged into `main` (`31d84fc`) and **`dev` fast-forwarded to it**, so `dev` now
+  carries the live settings (indexing on, `site: soupertroopers.org`, `SHOP_CHECKOUT = false`). The
+  `launch` branch is finished; publish as before, `dev` -> `main`. ⚠ Don't merge an old `dev`
+  checkout or the pre-launch config back in.
+- Checked live: public pages indexable, canonicals and sitemap on soupertroopers.org, robots.txt
+  open with the sitemap line, llms.txt without the pre-launch line, old WordPress addresses 301 to
+  their new pages, http -> https, www -> apex, status page 401 without a login, shop shows "Order
+  this" with no basket, the Studio's publish function answers on the new address (GET 405,
+  preflight 204), and the Studio redeployed from `main`. `souper-troopers.netlify.app` still serves
+  the site (canonicals point at soupertroopers.org).
+- **Still to do after launch**: a test contact-form message and a test email to an
+  @soupertroopers.org address (the user); the Cloudflare Web Analytics site/token for
+  soupertroopers.org; submitting the sitemap in Google Search Console (whoever owns the existing
+  verification TXT); a look on a real iPhone; live PayFast details then `SHOP_CHECKOUT = true`;
+  removing the `mcp__Sanity` allow rule from `.claude/settings.local.json`; keeping Webtimes (email,
+  old site) a month or two before deciding; the Sanity organisation transfer.
+
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes
   (apex and `www` only, "DNS only", every email record untouched), the checks after, and the rollback.

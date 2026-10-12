@@ -11,6 +11,11 @@ import Layout from "../layouts/Layout.astro";
  * ⚠ Keep it true to the Studio. The names in quotes ("Shop item", "Price (R)", "Sold out"...) are the
  * titles in `studio/schemaTypes/`, and the publish step is `studio/tools/PublishTool.tsx`. Rename a
  * field there and this page goes stale silently - change both together.
+ *
+ * Checked 12 October 2026 against the Studio's own interface text (sanity 6.9.1's English strings:
+ * "Publish", "Unpublish", "Document actions", "Create new document", "Crop image", "Generate",
+ * "History") and Sanity's history docs - which put history on the Free plan at 3 days, hence
+ * "the last few days". Re-check the labels after a major Sanity upgrade.
  */
 
 type Job = {
@@ -39,7 +44,7 @@ const jobs: Job[] = [
 		title: "Add a new product",
 		where: "Shop item",
 		steps: [
-			"Open **Shop item** and press the **+** (create new) button.",
+			"Open **Shop item** and press the **Create new document** button at the top of the list (hover over the buttons there to see their names).",
 			"Choose its **Category**, then fill in the name, **Price (R)** and a **Short description** of a line or two.",
 			"Add a **Main photo**, and any others under **More photos**. Product photos look best on a plain light background.",
 			"Under **Slug**, press **Generate**. That becomes the product's web address, so set it once and leave it.",
@@ -53,7 +58,7 @@ const jobs: Job[] = [
 		steps: [
 			"Open **Team Member** and pick the person.",
 			"Change **Role** for their title, or replace the **Photo**.",
-			"After uploading a photo, click the crop icon on it and drag the circle onto their face. The site shows portraits in a circle, so this decides what's kept.",
+			"After uploading a photo, hover over it and click **Crop image**. In the window that opens, drag the oval onto their face, then close it. The site shows portraits in a circle, so this decides what's kept.",
 		],
 	},
 	{
@@ -71,7 +76,7 @@ const jobs: Job[] = [
 		title: "Add a success story",
 		where: "Success Story",
 		steps: [
-			"Open **Success Story** and press **+**.",
+			"Open **Success Story** and press **Create new document** at the top of the list.",
 			"Fill in **Name**, a **Quote** in their own words if you have one, the **Story** in a few sentences, and a **Photo**.",
 			"Switch on **Featured on homepage** only for the one story you want on the front page.",
 		],
@@ -82,7 +87,7 @@ const jobs: Job[] = [
 		title: "Add a press mention",
 		where: "Press mention",
 		steps: [
-			"Open **Press mention** and press **+**.",
+			"Open **Press mention** and press **Create new document** at the top of the list.",
 			"Fill in the **Publication**, the **Headline** and the **Link to the article**, and set **Published** to the article's date - the list is ordered newest first by it.",
 			"Paste a clean link: if it came from a newsletter, cut everything from the ? onwards.",
 		],
@@ -93,7 +98,7 @@ const jobs: Job[] = [
 		where: "Partner / Supporter",
 		steps: [
 			"**Partner** is for organisations shown with their logo, a short **Blurb** and, if you add their **Website**, a link. **Supporter** is a name in the list beneath.",
-			"To take someone off the site, open them, use the small arrow beside the **Publish** button and choose **Unpublish**. That keeps them in the Studio so they can come back, where **Delete** can't be undone.",
+			"To take someone off the site, open them, click the small button beside **Publish** at the bottom (its name is **Document actions**) and choose **Unpublish**. That keeps them in the Studio so they can come back, where **Delete** can't be undone.",
 		],
 	},
 ];
@@ -143,7 +148,7 @@ const notInStudio = [
 				<span class="eg-number" aria-hidden="true">2</span>
 				<div>
 					<h3>Make your change, then press Publish on it</h3>
-					<p>Edit the item, then press the green <strong>Publish</strong> button at the bottom right of it. Until you do, your change is only a draft. Repeat for as many changes as you like.</p>
+					<p>Edit the item, then press the <strong>Publish</strong> button at the bottom right of it. Until you do, your change is only a draft - the label under the item's title says <strong>Draft</strong> rather than <strong>Published</strong>. Repeat for as many changes as you like.</p>
 				</div>
 			</li>
 			<li>
@@ -157,7 +162,7 @@ const notInStudio = [
 
 		<div class="eg-callout">
 			<h3>Do your edits in a batch, then publish the website once</h3>
-			<p>Each website publish uses part of a monthly allowance - about twenty a month on the free plan. One publish at the end of a session covers every change in it, so there's no need to publish after each edit.</p>
+			<p>Each website publish uses part of a limited monthly allowance. One publish at the end of a session covers every change in it, so there's no need to publish after each edit.</p>
 		</div>
 	</section>
 
@@ -197,8 +202,8 @@ const notInStudio = [
 			<h2>If something goes wrong</h2>
 			<ul class="eg-list">
 				<li><strong>Nothing you do in the Studio can break the site's layout.</strong> The worst case is wrong wording or the wrong photo, and that's fixed by changing it back and publishing again.</li>
-				<li><strong>The site hasn't changed after five minutes?</strong> Check the item says Published rather than Draft, and that you pressed Publish to the website afterwards.</li>
-				<li><strong>Want an earlier version back?</strong> Open the item and click the clock icon at the top. It lists every change and can restore an earlier one.</li>
+				<li><strong>The site hasn't changed after five minutes?</strong> Check the label under the item's title says Published rather than Draft, and that you pressed Publish to the website afterwards.</li>
+				<li><strong>Want an earlier version back?</strong> Open the item, click the <strong>⋯</strong> menu at its top right and choose <strong>History</strong>. It lists recent changes and can restore an earlier one. Sanity only keeps the last few days of changes on our plan, so for anything older, ask Stephen - the site keeps a weekly backup.</li>
 				<li><strong>"A publish just started"?</strong> Another publish is still running. Wait two minutes and press it again.</li>
 				<li>For anything else, message Stephen.</li>
 			</ul>

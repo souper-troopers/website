@@ -1254,6 +1254,11 @@ Asked for by Shan and Kerry after launch, ahead of a walkthrough call. Same fami
 - **It leads with the two Publish buttons** - the document's own Publish (draft -> published) and the
   Studio's "Publish to the website" (the rebuild) - because missing the second is the likeliest
   "it didn't work". Then seven everyday jobs, what isn't in the Studio, and what to do if it goes wrong.
+- **Checked against the Studio's own interface text, not memory** (12 October, after the user noted
+  past instructions had gone stale). Fixed then: history is in the **⋯ menu → History** (not a clock
+  icon), and on the Free plan it keeps only **3 days**; Unpublish sits under **Document actions** beside
+  Publish; new items use **Create new document**; photos use **Crop image**. Verify labels the same way
+  (grep `studio/node_modules/sanity/lib` for the English strings) rather than describing the UI from memory.
 - ⚠ **Field names in it are quoted from `studio/schemaTypes/`** ("Price (R)", "Sold out", "Link to
   the article"...). Rename a field or type there and update the guide in the same change.
 - Recommended keeping the status page alongside it (12 October): it is the record of decisions and still
@@ -2196,6 +2201,10 @@ underneath, so the content sits exactly in the middle of the photo below the hea
   off (37vh) was tried first and cropped Our Work's two people too tightly; the user called 42vh
   "the perfect height". Phones and bands unchanged. Who We Are's photo moved to `center 58%` (was
   78%) so the faces show above/beside the words. Contrast: 1,216 lines, none failing.
+- **Donate's hero is `hub-circle.jpg` since 12 October** (Shan's pick: `Extra/Images/Mix/IMG_7982 (1).jpg`,
+  a group talking at the Hub, 4000px copy), `inset={0.64}` like Our Work, `center 4%` so the standing
+  man's head isn't cut off. Contrast 77 lines, worst body 5.57:1. `hub-visit.jpg` (the IMG_8600 below)
+  was deleted as unused. History follows.
 - **Donate's hero is IMG_8600 since 25 September** (`src/assets/images/hub-visit.jpg`, from
   `Extra/Images/Mix`: two visitors meeting a group at the Hub, the art wall behind), replacing
   `partner-visit` (still used on Get Involved and Corporate partnership). `center 30%`, no zoom.

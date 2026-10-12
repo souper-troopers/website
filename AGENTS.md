@@ -1199,6 +1199,16 @@ given to the user, and the user will list anything they disagree with afterwards
   `netlify dev --command 'tail -f /dev/null' --target-port 4321 --no-open` and the Studio by hand.
 
 ## LIVE since Monday 12 October 2026
+- **"NPO", never "charity" (Shan, 12 October): "we don't use the word charity, we use the word NPO
+  or social impact organisation."** Homepage title is now "Souper Troopers - Cape Town NPO for
+  homeless people" (her pick of two; the literal "homeless NPO" read as an NPO without a home) and
+  its description "A Cape Town NPO for homeless people, based at The Humanity Hub in Woodstock.
+  Donate, volunteer or shop with us." Also changed: Who We Are's "A business, not just an NPO",
+  Corporate partnership's description and hero line, and llms.txt (which now tells answer engines
+  the organisation calls itself an NPO, while still matching "charities" in people's questions).
+  Left alone: Google's "Charity" category name on the listing guide, and internal pages. Don't
+  write "charity" about Souper Troopers in new copy. (The search-term trade-off - "charity" is the
+  more-searched word - was mentioned; the client's wording wins.)
 - HostFaddy switched the two records the morning of 12 October (apex A 75.2.60.5, www CNAME
   souper-troopers.netlify.app, both DNS only; email records untouched - checked). Netlify's first
   "Provision certificate" failed ("could not provision a Let's Encrypt certificate") although the

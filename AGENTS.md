@@ -1292,6 +1292,26 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
 - Tested locally: the checkout step returns the description and stores the order. **The paid-order
   email is untested** until someone completes a PayFast sandbox payment on the `dev` preview.
 
+## Netlify secrets scanning and the PayFast passphrase (12 October 2026)
+The first publish after the live PayFast details went into Netlify **failed on secrets scanning**:
+- **The live passphrase was a public string** - it matched the organisation's YouTube handle, which
+  is in `Layout.astro` and these notes. Netlify refuses to build while a secret value appears in the
+  repo or output, and rightly: a guessable passphrase weakens the PayFast account. Kerry is to set a
+  long random one in PayFast (given by phone), then it goes into Netlify's Production context. Until
+  then Production's `PAYFAST_PASSPHRASE` is left empty, which is safe while `SHOP_CHECKOUT` is false.
+  **Never record the passphrase's value here, and don't silence the scan** (`SECRETS_SCAN_OMIT_*`).
+- **The old sandbox merchant key sat in `.claude/settings.json`** (four `export PAYFAST_*` permission
+  rules from August). Sandbox only, but this repo is public; removed. It remains in git history -
+  harmless for a test key.
+- Previews had the live merchant key with the sandbox ID and mode (fails safe); should be the
+  sandbox key, as in local development.
+
+## Bracelets taken off the site (12 October 2026, Kerry)
+`productCategory-bracelets` unpublished in Sanity (draft kept - republish to bring them back). The
+shop landing page now shows three tiles across from 901px (`category-grid--three`), and an odd last
+tile is centred in the two-column layout. Mentions removed from the shop intro, the Google listing
+description (page and `docs/google-business-profile.md`) and the editing guide.
+
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes
   (apex and `www` only, "DNS only", every email record untouched), the checks after, and the rollback.

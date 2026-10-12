@@ -24,7 +24,7 @@ const tileColours = await Promise.all(
 		<h1>Shop with purpose</h1>
 		{/* Says what is for sale, not why: the card below already says who makes it and where the money
 		    goes, and this line used to say it first, in nearly the same words. */}
-		<p>Troopers Coffee, African Worry Dolls, gift tags and bracelets.</p>
+		<p>Troopers Coffee, African Worry Dolls and gift tags.</p>
 	</PhotoHero>
 
 	<section class="section wrap">
@@ -51,9 +51,9 @@ const tileColours = await Promise.all(
 	</section>
 
 	<section class="section wrap">
-		{/* Two by two (25 September, when Bracelets made four categories): three across left the
-		    fourth alone on a row, and four across made each tile too narrow for its photo and blurb. */}
-		<div class="grid grid-2 category-grid">
+		{/* Two by two for four categories (25 September, when Bracelets made four); three across for
+		    three (12 October, Bracelets taken off at Kerry's request), so no tile sits alone. */}
+		<div class:list={["grid grid-2 category-grid", { "category-grid--three": categories.length === 3 }]}>
 			{categories.map((category, i) => (
 				<a class="card card-cta category-tile" href={`/shop/${category.slug}`} style={`--card-colour:${tileColours[i] ?? "#ffffff"}`}>
 					{category.photo && (
@@ -121,6 +121,24 @@ const tileColours = await Promise.all(
 	@media (min-width: 701px) {
 		.category-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		/* An odd last tile in two columns is centred under the pair rather than left alone at the side. */
+		.category-grid > :global(:last-child:nth-child(odd)) {
+			grid-column: 1 / -1;
+			justify-self: center;
+			width: calc(50% - var(--space-6) / 2);
+		}
+	}
+
+	@media (min-width: 901px) {
+		.category-grid--three {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		.category-grid--three > :global(:last-child:nth-child(odd)) {
+			grid-column: auto;
+			width: auto;
 		}
 
 		/* Side by side, every text area gets the same minimum height - room for a two-line blurb (three

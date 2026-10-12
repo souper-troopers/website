@@ -1,4 +1,44 @@
 import { createHash } from "node:crypto";
+import { getStore } from "@netlify/blobs";
+import { ORDER_STORE, siteUrl as siteUrlFor, describeLines, type StoredOrder } from "./lib/shop-order.mts";
+
+/**
+ * Tells the Hub about a paid order by submitting the hidden `shop-order` Netlify Form (declared in
+ * src/pages/shop/order-confirmed.astro, where Netlify finds it at deploy). Netlify then emails it
+ * to that form's notification address - set in the dashboard, like the contact form's - and keeps
+ * it under Forms. Before this (October 2026) a paid order only reached the function logs, and
+ * PayFast's own emails said "Shop order (3 items)" with no list.
+ */
+async function notifyHub(fields: Record<string, string>, order: StoredOrder | null): Promise<boolean> {
+	const siteUrl = siteUrlFor();
+	const amountOk = !order || Number(order.total) === Number(fields.amount_gross);
+	const items = order
+		? order.lines.map((line) => `${line.qty} x ${line.name} - R${(line.price * line.qty).toFixed(2)}`).join("\n")
+		: `${fields.item_name}\n${fields.item_description ?? ""}`.trim();
+	const body = new URLSearchParams({
+		"form-name": "shop-order",
+		"buyer-name": [fields.name_first, fields.name_last].filter(Boolean).join(" "),
+		"buyer-email": fields.email_address ?? "",
+		items,
+		"amount-paid": `R${fields.amount_gross}`,
+		check: amountOk
+			? "Paid in full."
+			: `WARNING: PayFast reports R${fields.amount_gross} but the basket came to R${order?.total}. Check the PayFast dashboard before sending anything.`,
+		"payfast-reference": fields.pf_payment_id ?? "",
+		"order-reference": fields.m_payment_id ?? "",
+		"next-step": "Email the buyer to arrange collection from the Hub or their own courier.",
+	});
+	try {
+		const response = await fetch(`${siteUrl}/`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: body.toString(),
+		});
+		return response.ok;
+	} catch {
+		return false;
+	}
+}
 
 function phpUrlEncode(value: string): string {
 	// encodeURIComponent leaves !'()* unencoded, but PHP's urlencode() - which is what
@@ -81,15 +121,30 @@ export default async (request: Request) => {
 	}
 
 	if (fields.payment_status === "COMPLETE") {
-		// Verified and paid. No order-tracking database exists yet (see
-		// docs/shop-checkout-decision.md — inventory/order tracking was deliberately
-		// out of scope for v1). For now this just acknowledges the notification;
-		// order visibility lives in the PayFast merchant dashboard directly.
+		const store = getStore({ name: ORDER_STORE, consistency: "strong" });
+		const order = fields.m_payment_id
+			? ((await store.get(fields.m_payment_id, { type: "json" })) as StoredOrder | null)
+			: null;
+
 		console.log("PayFast payment confirmed", {
 			paymentId: fields.m_payment_id,
 			amount: fields.amount_gross,
-			item: fields.item_name,
+			items: order ? describeLines(order.lines) : fields.item_name,
+			orderFound: !!order,
 		});
+
+		// PayFast can repeat a notification; only the first one emails the Hub.
+		if (order?.notifiedAt) return new Response("OK", { status: 200 });
+
+		if (!(await notifyHub(fields, order))) {
+			// A non-200 makes PayFast send the notification again later, which retries the email.
+			console.error("Order email failed", { paymentId: fields.m_payment_id });
+			return new Response("Notification failed", { status: 500 });
+		}
+
+		if (order && fields.m_payment_id) {
+			await store.setJSON(fields.m_payment_id, { ...order, notifiedAt: new Date().toISOString() });
+		}
 	} else {
 		console.log("PayFast ITN received with non-complete status", {
 			paymentId: fields.m_payment_id,

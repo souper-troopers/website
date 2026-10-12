@@ -4,7 +4,7 @@ import PhotoHero from "../../../components/PhotoHero.astro";
 import shopPhoto from "../../../assets/images/shop-products.jpg";
 import { getAllShopItems, urlFor, type ShopItemWithCategory } from "../../../lib/sanity";
 import AddToCartButton from "../../../components/AddToCartButton.svelte";
-import { SHOP_CHECKOUT, orderLink } from "../../../lib/shop";
+import { CHECKOUT_ENABLED, orderLink } from "../../../lib/shop";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import { breadcrumbList, type Crumb } from "../../../lib/breadcrumbs";
 
@@ -171,7 +171,7 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 							Sold out for now — <a href="/contact">get in touch</a> and we'll let you know when it's back.
 						</p>
 					) : (
-						SHOP_CHECKOUT ? (
+						CHECKOUT_ENABLED ? (
 							<AddToCartButton
 								client:load
 								id={item._id}

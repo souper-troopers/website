@@ -1,5 +1,7 @@
 import { createClient } from "@sanity/client";
 import { createHash, randomUUID } from "node:crypto";
+import { getStore } from "@netlify/blobs";
+import { ORDER_STORE, siteUrl as siteUrlFor, ascii, describeLines, type StoredOrder } from "./lib/shop-order.mts";
 
 const sanityClient = createClient({
 	projectId: "wqa0no5g",
@@ -82,7 +84,7 @@ export default async (request: Request) => {
 	const merchantKey = process.env.PAYFAST_MERCHANT_KEY;
 	const passphrase = process.env.PAYFAST_PASSPHRASE ?? "";
 	const mode = process.env.PAYFAST_MODE ?? "sandbox";
-	const siteUrl = process.env.URL ?? "https://soupertroopers.org";
+	const siteUrl = siteUrlFor();
 
 	if (!merchantId || !merchantKey) {
 		return new Response(JSON.stringify({ error: "Payment processor is not configured." }), {
@@ -112,8 +114,11 @@ export default async (request: Request) => {
 
 	const lines = resolved as ResolvedLine[];
 	const total = lines.reduce((sum, line) => sum + line.price * line.qty, 0);
-	const itemName =
-		lines.length === 1 ? lines[0].name : `Souper Troopers Shop order (${lines.length} items)`;
+	const itemName = ascii(
+		lines.length === 1 && lines[0].qty === 1
+			? lines[0].name
+			: `Souper Troopers Shop order (${lines.reduce((n, line) => n + line.qty, 0)} items)`
+	).slice(0, 100);
 	const paymentId = randomUUID();
 
 	// Field order matters for the signature — PayFast validates against the exact
@@ -127,7 +132,16 @@ export default async (request: Request) => {
 		m_payment_id: paymentId,
 		amount: total.toFixed(2),
 		item_name: itemName,
+		// What was bought, so PayFast's own dashboard and payment emails say more than "3 items".
+		// PayFast caps it at 255 characters; the full list is in the stored order below.
+		item_description: describeLines(lines, 255),
 	};
+
+	// Kept so the payment notification (payfast-itn) can say exactly what was ordered, and check
+	// the amount PayFast reports against what we priced. Written before the buyer is sent to PayFast,
+	// so it exists by the time PayFast notifies us.
+	const order: StoredOrder = { lines, total: total.toFixed(2), createdAt: new Date().toISOString() };
+	await getStore({ name: ORDER_STORE, consistency: "strong" }).setJSON(paymentId, order);
 
 	const signature = buildSignature(fields, passphrase);
 

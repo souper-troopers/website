@@ -21,9 +21,27 @@ import EmailLink from "../../components/EmailLink.svelte";
 			<a class="btn btn-primary" href="/shop">Back to shop</a>
 		</div>
 	</section>
+
+	{/* Never shown or submitted by a visitor. Netlify only accepts submissions to a form it found in
+	    the built HTML, so this declares the fields payfast-itn sends when an order is paid - that
+	    submission is what emails the order to the Hub. Keep the names in step with notifyHub(). */}
+	<form name="shop-order" method="POST" data-netlify="true" hidden aria-hidden="true">
+		<input type="hidden" name="form-name" value="shop-order" />
+		<input type="text" name="buyer-name" />
+		<input type="email" name="buyer-email" />
+		<textarea name="items"></textarea>
+		<input type="text" name="amount-paid" />
+		<input type="text" name="check" />
+		<input type="text" name="payfast-reference" />
+		<input type="text" name="order-reference" />
+		<input type="text" name="next-step" />
+	</form>
 </Layout>
 
 <script>
 	// Clear the cart once we land here after a successful payment.
-	localStorage.removeItem("souper-troopers-cart");
+	// Guarded: Safari in private browsing exposes localStorage and then throws on it.
+	try {
+		localStorage.removeItem("souper-troopers-cart");
+	} catch {}
 </script>

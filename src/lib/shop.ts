@@ -12,6 +12,13 @@
  */
 export const SHOP_CHECKOUT = false;
 
+/**
+ * Checkout is also on in local development and on branch previews (October 2026), so the order
+ * email can be tested end to end against PayFast's test mode without touching the live site.
+ * Netlify sets CONTEXT at build time; it is "production" only for the live site.
+ */
+export const CHECKOUT_ENABLED = SHOP_CHECKOUT || process.env.CONTEXT !== "production";
+
 /** The contact form, with an order for `item` started in the message (see contact.astro's topics). */
 export function orderLink(item: string): string {
 	return `/contact/?topic=order&item=${encodeURIComponent(item)}#send-message`;

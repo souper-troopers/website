@@ -1265,6 +1265,29 @@ Asked for by Shan and Kerry after launch, ahead of a walkthrough call. Same fami
 - Recommended keeping the status page alongside it (12 October): it is the record of decisions and still
   holds open questions. The guide is for day-to-day edits; the status page is for decisions.
 
+## Shop orders now reach the Hub (built 12 October 2026, before checkout is switched on)
+Found while listing what switching checkout on needs: **a paid order reached nobody.** `payfast-itn`
+only wrote to the function logs, and PayFast's own emails named a basket "Shop order (3 items)" with
+no list and no options (bracelet word and size, coffee grind). Fixed before going live:
+- `create-payfast-payment` sends PayFast an `item_description` ("1 x Gift Tag - India Harris (pack
+  of 5) (R85.00); 2 x Bracelets - Souper, adult (R80.00)", ASCII, max 255) and stores the order in
+  Netlify Blobs (`shop-orders`, keyed by `m_payment_id`). Shared helpers: `netlify/functions/lib/shop-order.mts`
+  (a subfolder, so it isn't deployed as a function).
+- `payfast-itn`, on a verified COMPLETE payment, submits the hidden Netlify Form **`shop-order`**
+  (declared in `shop/order-confirmed.astro`): buyer name and email (from PayFast), items, amount, an
+  amount-vs-basket check, both references. Netlify emails it to that form's notification address.
+  Repeat notifications are ignored (`notifiedAt`); if the form post fails the ITN returns 500 so
+  PayFast retries.
+  - ⚠ **The `shop-order` form needs a notification address in Netlify** (Forms → Form
+    notifications), unless the existing one is set to "Any form". Otherwise orders are stored under
+    Forms and nobody is told.
+- **Checkout is on in local dev and branch previews, off on the live site** until `SHOP_CHECKOUT`
+  goes true: `CHECKOUT_ENABLED = SHOP_CHECKOUT || process.env.CONTEXT !== "production"`. Verified: a
+  `CONTEXT=production` build has no basket. On previews the functions use `DEPLOY_PRIME_URL`
+  (`siteUrl()`), since Netlify's `URL` there is still the live site.
+- Tested locally: the checkout step returns the description and stores the order. **The paid-order
+  email is untested** until someone completes a PayFast sandbox payment on the `dev` preview.
+
 ## Launch (prepared 2 October 2026, for Monday 5 October)
 - **The runbook is `docs/launch-day.md`**: the Netlify domain setup, exactly what HostFaddy changes
   (apex and `www` only, "DNS only", every email record untouched), the checks after, and the rollback.

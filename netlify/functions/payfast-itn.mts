@@ -9,8 +9,12 @@ import { ORDER_STORE, siteUrl as siteUrlFor, describeLines, type StoredOrder } f
  * it under Forms. Before this (October 2026) a paid order only reached the function logs, and
  * PayFast's own emails said "Shop order (3 items)" with no list.
  */
-async function notifyHub(fields: Record<string, string>, order: StoredOrder | null): Promise<boolean> {
-	const siteUrl = siteUrlFor();
+async function notifyHub(
+	request: Request,
+	fields: Record<string, string>,
+	order: StoredOrder | null
+): Promise<boolean> {
+	const siteUrl = siteUrlFor(request);
 	const amountOk = !order || Number(order.total) === Number(fields.amount_gross);
 	const items = order
 		? order.lines.map((line) => `${line.qty} x ${line.name} - R${(line.price * line.qty).toFixed(2)}`).join("\n")
@@ -136,7 +140,7 @@ export default async (request: Request) => {
 		// PayFast can repeat a notification; only the first one emails the Hub.
 		if (order?.notifiedAt) return new Response("OK", { status: 200 });
 
-		if (!(await notifyHub(fields, order))) {
+		if (!(await notifyHub(request, fields, order))) {
 			// A non-200 makes PayFast send the notification again later, which retries the email.
 			console.error("Order email failed", { paymentId: fields.m_payment_id });
 			return new Response("Notification failed", { status: 500 });

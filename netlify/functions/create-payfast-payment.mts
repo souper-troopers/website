@@ -84,7 +84,7 @@ export default async (request: Request) => {
 	const merchantKey = process.env.PAYFAST_MERCHANT_KEY;
 	const passphrase = process.env.PAYFAST_PASSPHRASE ?? "";
 	const mode = process.env.PAYFAST_MODE ?? "sandbox";
-	const siteUrl = siteUrlFor();
+	const siteUrl = siteUrlFor(request);
 
 	if (!merchantId || !merchantKey) {
 		return new Response(JSON.stringify({ error: "Payment processor is not configured." }), {

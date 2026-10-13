@@ -38,13 +38,22 @@ export function describeLines(lines: OrderLine[], max?: number): string {
 }
 
 /**
- * The address of the deploy this function is running on. On a branch preview Netlify's `URL` is
- * still the live site, so a preview's PayFast notifications and order emails would land on
- * production's functions; DEPLOY_PRIME_URL is the preview's own address.
+ * The address of the deploy this request reached, so a preview's PayFast notifications and order
+ * emails stay on that preview. Taken from the request itself: Netlify's CONTEXT and
+ * DEPLOY_PRIME_URL are build-time variables and turned out to be absent when a function runs - a
+ * deploy preview sent PayFast the live site's address (found 13 October). Only our own hosts are
+ * trusted; anything else falls back to the live address.
  */
-export function siteUrl(): string {
-	if (process.env.CONTEXT && process.env.CONTEXT !== "production" && process.env.DEPLOY_PRIME_URL) {
-		return process.env.DEPLOY_PRIME_URL;
+export function siteUrl(request: Request): string {
+	const fallback = process.env.URL ?? "https://soupertroopers.org";
+	try {
+		const { origin, hostname } = new URL(request.url);
+		const ours =
+			hostname === "soupertroopers.org" ||
+			/^[a-z0-9-]+--souper-troopers\.netlify\.app$/.test(hostname) ||
+			hostname === "localhost";
+		return ours ? origin : fallback;
+	} catch {
+		return fallback;
 	}
-	return process.env.URL ?? "https://soupertroopers.org";
 }

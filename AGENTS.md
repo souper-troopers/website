@@ -1283,8 +1283,10 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
     Forms and nobody is told.
 - **Checkout is on in local dev and branch previews, off on the live site** until `SHOP_CHECKOUT`
   goes true: `CHECKOUT_ENABLED = SHOP_CHECKOUT || process.env.CONTEXT !== "production"`. Verified: a
-  `CONTEXT=production` build has no basket. On previews the functions use `DEPLOY_PRIME_URL`
-  (`siteUrl()`), since Netlify's `URL` there is still the live site.
+  `CONTEXT=production` build has no basket. The functions take their own address **from the
+  incoming request** (`siteUrl(request)`, our hosts only, else the live site). ⚠ Not `CONTEXT` /
+  `DEPLOY_PRIME_URL`: those are build-time variables and absent when a function runs - the first
+  deploy preview sent PayFast the live site's `notify_url` because of it (13 October).
 - ⚠ **There is no `dev` branch preview** (checked 12 October: `dev--souper-troopers.netlify.app` is a
   404 and Netlify only lists `main` deploys) - the earlier note saying there was one was wrong. To test
   this end to end, either turn on branch deploys for `dev` (Netlify → Build & deploy → Branches and

@@ -1293,6 +1293,14 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
   deploy contexts; free) or open a pull request, which gets a free deploy preview.
 - Tested locally: the checkout step returns the description and stores the order. **The paid-order
   email is untested** until someone completes a PayFast sandbox payment on the `dev` preview.
+- **The sandbox test passed on 13 October** (the user, on deploy preview 1): payment confirmed, order
+  recorded with the right item and amount, `notifiedAt` set once. **It exposed one gap: the buyer's
+  name and email arrived empty** - PayFast only returns buyer details it was sent. The basket now asks
+  for First name, Surname and Email (required, a real `<form>`), `create-payfast-payment` rejects a
+  checkout without them (400, message shown in the basket), sends `name_first` / `name_last` /
+  `email_address` in PayFast's documented position, and stores them as `order.buyer`, which the order
+  email prefers. Blank fields are dropped before signing. The checkout button is Hub purple (was
+  green, 2.42:1).
 - **The test route chosen (13 October): a draft pull request `dev` -> `main`, titled "do not
   merge"**, purely for Netlify's free deploy preview (CONTEXT `deploy-preview`, so checkout is on and
   the functions use the preview's own address). The user makes a sandbox purchase there and checks

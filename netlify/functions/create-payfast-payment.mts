@@ -1,7 +1,7 @@
 import { createClient } from "@sanity/client";
 import { createHash, randomUUID } from "node:crypto";
 import { getStore } from "@netlify/blobs";
-import { ORDER_STORE, siteUrl as siteUrlFor, ascii, describeLines, type StoredOrder } from "./lib/shop-order.mts";
+import { ORDER_STORE, siteUrl as siteUrlFor, ascii, describeLines, type Buyer, type StoredOrder } from "./lib/shop-order.mts";
 
 const sanityClient = createClient({
 	projectId: "wqa0no5g",
@@ -93,7 +93,7 @@ export default async (request: Request) => {
 		});
 	}
 
-	let body: { items?: IncomingLine[] };
+	let body: { items?: IncomingLine[]; buyer?: Partial<Buyer> };
 	try {
 		body = await request.json();
 	} catch {
@@ -103,6 +103,17 @@ export default async (request: Request) => {
 	const incoming = body.items ?? [];
 	if (incoming.length === 0) {
 		return new Response(JSON.stringify({ error: "Cart is empty." }), { status: 400 });
+	}
+
+	// Required: the Hub has to be able to reach the buyer to arrange collection.
+	const clean = (value: unknown, max: number) => String(value ?? "").replace(/\s+/g, " ").trim().slice(0, max);
+	const buyer: Buyer = {
+		firstName: clean(body.buyer?.firstName, 100),
+		lastName: clean(body.buyer?.lastName, 100),
+		email: clean(body.buyer?.email, 100),
+	};
+	if (!buyer.firstName || !buyer.lastName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyer.email)) {
+		return new Response(JSON.stringify({ error: "Please add your name and email." }), { status: 400 });
 	}
 
 	const resolved = await Promise.all(incoming.map(resolveLine));
@@ -129,6 +140,12 @@ export default async (request: Request) => {
 		return_url: `${siteUrl}/shop/order-confirmed?ref=${paymentId}`,
 		cancel_url: `${siteUrl}/shop/order-cancelled`,
 		notify_url: `${siteUrl}/.netlify/functions/payfast-itn`,
+		// Buyer details, in PayFast's documented position (after notify_url, before m_payment_id).
+		// PayFast pre-fills its page with them and returns them in the notification. ASCII, like
+		// everything signed; the stored order keeps the name as typed.
+		name_first: ascii(buyer.firstName),
+		name_last: ascii(buyer.lastName),
+		email_address: buyer.email,
 		m_payment_id: paymentId,
 		amount: total.toFixed(2),
 		item_name: itemName,
@@ -140,8 +157,12 @@ export default async (request: Request) => {
 	// Kept so the payment notification (payfast-itn) can say exactly what was ordered, and check
 	// the amount PayFast reports against what we priced. Written before the buyer is sent to PayFast,
 	// so it exists by the time PayFast notifies us.
-	const order: StoredOrder = { lines, total: total.toFixed(2), createdAt: new Date().toISOString() };
+	const order: StoredOrder = { lines, buyer, total: total.toFixed(2), createdAt: new Date().toISOString() };
 	await getStore({ name: ORDER_STORE, consistency: "strong" }).setJSON(paymentId, order);
+
+	// Blank fields are left out of the signature, so they mustn't be posted either (a name of only
+	// non-ASCII letters comes out of ascii() empty).
+	for (const key of Object.keys(fields)) if (!fields[key]) delete fields[key];
 
 	const signature = buildSignature(fields, passphrase);
 

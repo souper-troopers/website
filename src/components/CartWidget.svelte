@@ -3,12 +3,18 @@
 
 	let checkingOut = $state(false);
 	let checkoutError = $state("");
+	// Who to contact about collection (13 October): sent to PayFast and kept with the order, since
+	// PayFast only returns buyer details it was given. The form's `required` checks them first.
+	let firstName = $state("");
+	let lastName = $state("");
+	let email = $state("");
 
 	function rand(n: number) {
 		return "R" + n.toLocaleString("en-ZA");
 	}
 
-	async function checkout() {
+	async function checkout(event: SubmitEvent) {
+		event.preventDefault();
 		if (cart.items.length === 0 || checkingOut) return;
 		checkingOut = true;
 		checkoutError = "";
@@ -18,9 +24,18 @@
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					items: cart.items.map((i) => ({ ref: i.ref, qty: i.qty })),
+					buyer: { firstName, lastName, email },
 				}),
 			});
-			if (!response.ok) throw new Error("Payment request failed");
+			if (!response.ok) {
+				const { error } = await response.json().catch(() => ({ error: "" }));
+				if (response.status === 400 && error) {
+					checkoutError = error;
+					checkingOut = false;
+					return;
+				}
+				throw new Error("Payment request failed");
+			}
 			const { action, fields } = await response.json();
 
 			const form = document.createElement("form");
@@ -111,9 +126,26 @@
 			<strong>{rand(cart.total)}</strong>
 		</div>
 
-		<button class="checkout-btn" onclick={checkout} disabled={checkingOut}>
-			{checkingOut ? "Redirecting to PayFast…" : "Checkout with PayFast →"}
-		</button>
+		<form class="checkout-form" onsubmit={checkout}>
+			<p class="checkout-intro">Your details, so we can arrange collection with you:</p>
+			<div class="checkout-names">
+				<label>
+					First name
+					<input type="text" bind:value={firstName} required autocomplete="given-name" maxlength="100" />
+				</label>
+				<label>
+					Surname
+					<input type="text" bind:value={lastName} required autocomplete="family-name" maxlength="100" />
+				</label>
+			</div>
+			<label>
+				Email
+				<input type="email" bind:value={email} required autocomplete="email" maxlength="100" />
+			</label>
+			<button class="checkout-btn" type="submit" disabled={checkingOut}>
+				{checkingOut ? "Redirecting to PayFast…" : "Checkout with PayFast →"}
+			</button>
+		</form>
 		{#if checkoutError}
 			<p class="cart-error">{checkoutError}</p>
 		{/if}
@@ -313,9 +345,50 @@
 		font-weight: 700;
 	}
 
+	.checkout-form {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.checkout-intro {
+		margin: 0;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.75);
+	}
+
+	.checkout-names {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 0.6rem;
+	}
+
+	.checkout-form label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		font-size: 0.8rem;
+		font-weight: 600;
+	}
+
+	.checkout-form input {
+		box-sizing: border-box;
+		width: 100%;
+		height: 38px;
+		padding: 0 0.6rem;
+		border: 1px solid rgba(36, 35, 43, 0.35);
+		border-radius: 8px;
+		font: inherit;
+		font-weight: 400;
+		background: #fff;
+		color: var(--st-ink);
+	}
+
 	.checkout-btn {
 		width: 100%;
-		background: var(--st-green, #4bbc63);
+		/* Hub purple, like Add to cart and Order this (Shan's shop colour, 8 October): white on it is
+		   5.53:1, where the old green was 2.42:1. */
+		background: var(--hub-purple, #8156a4);
 		color: var(--st-white, #fff);
 		border: none;
 		font: inherit;
@@ -323,6 +396,10 @@
 		padding: 0.85rem;
 		border-radius: 999px;
 		cursor: pointer;
+	}
+
+	.checkout-btn:hover:not(:disabled) {
+		background: var(--hub-purple-dark, #6a4589);
 	}
 
 	.checkout-btn:disabled {

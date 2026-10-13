@@ -10,8 +10,18 @@ export interface OrderLine {
 	qty: number;
 }
 
+export interface Buyer {
+	firstName: string;
+	lastName: string;
+	email: string;
+}
+
 export interface StoredOrder {
 	lines: OrderLine[];
+	/** Who to contact about collection. Asked for in the basket (13 October): PayFast only returns
+	 *  the buyer's details in its notification if we sent them, so the first test order arrived
+	 *  with no name or email - an order nobody could reply to. */
+	buyer?: Buyer;
 	/** Rands, two decimals - the same string sent to PayFast as `amount`. */
 	total: string;
 	createdAt: string;

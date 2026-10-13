@@ -21,8 +21,10 @@ async function notifyHub(
 		: `${fields.item_name}\n${fields.item_description ?? ""}`.trim();
 	const body = new URLSearchParams({
 		"form-name": "shop-order",
-		"buyer-name": [fields.name_first, fields.name_last].filter(Boolean).join(" "),
-		"buyer-email": fields.email_address ?? "",
+		"buyer-name": order?.buyer
+			? `${order.buyer.firstName} ${order.buyer.lastName}`
+			: [fields.name_first, fields.name_last].filter(Boolean).join(" "),
+		"buyer-email": order?.buyer?.email ?? fields.email_address ?? "",
 		items,
 		"amount-paid": `R${fields.amount_gross}`,
 		check: amountOk

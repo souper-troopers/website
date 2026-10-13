@@ -30,9 +30,33 @@ const id = `newsletter-${variant}`;
 			target="_blank"
 			aria-labelledby={`${id}-title`}
 		>
+			{/* Name and surname (13 October, Shan: an email alone "feels like we're chatting to bots").
+			    MERGE1 / MERGE2 are the audience's own First Name and Last Name fields - the names
+			    Mailchimp's hosted form posts - so they land in the existing columns. */}
+			<label class="visually-hidden" for={`${id}-first`}>First name</label>
+			<input
+				id={`${id}-first`}
+				class="newsletter-field newsletter-name"
+				type="text"
+				name="MERGE1"
+				required
+				autocomplete="given-name"
+				placeholder="First name"
+			/>
+			<label class="visually-hidden" for={`${id}-last`}>Surname</label>
+			<input
+				id={`${id}-last`}
+				class="newsletter-field newsletter-name"
+				type="text"
+				name="MERGE2"
+				required
+				autocomplete="family-name"
+				placeholder="Surname"
+			/>
 			<label class="visually-hidden" for={`${id}-email`}>Your email</label>
 			<input
 				id={`${id}-email`}
+				class="newsletter-field newsletter-email"
 				type="email"
 				name="EMAIL"
 				required
@@ -59,7 +83,7 @@ const id = `newsletter-${variant}`;
 		margin: 0;
 	}
 
-	.newsletter-form input[type="email"] {
+	.newsletter-field {
 		box-sizing: border-box;
 		flex: 1 1 14rem;
 		min-width: 0;
@@ -70,6 +94,15 @@ const id = `newsletter-${variant}`;
 		background: var(--st-white);
 		color: var(--st-ink);
 		font: inherit;
+	}
+
+	/* The two name fields share a row; the email and Subscribe take the next. */
+	.newsletter-name {
+		flex: 1 1 9rem;
+	}
+
+	.newsletter-email {
+		flex-basis: 60%;
 	}
 
 	.newsletter-form .btn {
@@ -124,13 +157,13 @@ const id = `newsletter-${variant}`;
 	/* Outlined on the ink footer (28 September, the user's call, kept after a trial): a white-bordered
 	   field and a teal-bordered button, rather than a white field and a filled teal button, so the
 	   sign-up sits as quietly as the dimmed labels beside it. Label 0.85 white ~12:1, teal border ~6:1. */
-	.newsletter-footer .newsletter-form input[type="email"] {
+	.newsletter-footer .newsletter-field {
 		background: transparent;
 		border: 1px solid var(--st-white);
 		color: var(--st-white);
 	}
 
-	.newsletter-footer .newsletter-form input[type="email"]::placeholder {
+	.newsletter-footer .newsletter-field::placeholder {
 		color: rgba(255, 255, 255, 0.65);
 	}
 

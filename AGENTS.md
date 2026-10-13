@@ -1306,6 +1306,19 @@ The first publish after the live PayFast details went into Netlify **failed on s
 - Previews had the live merchant key with the sandbox ID and mode (fails safe); should be the
   sandbox key, as in local development.
 
+## Orders go to sales@, and the newsletter asks for a name (13 October 2026, Shan)
+- **"Any orders should go through sales@"** (Shan; Kerry had said web orders go to info@ - Shan's
+  answer is the later one). Netlify routes notifications **per form**, so shop enquiries now have
+  their own form: the contact page submits as **`shop-enquiry`** (declared hidden at the foot of
+  `contact.astro`) when opened with `?topic=order`, `custom-dolls` or `wholesale-dolls`, and as
+  `contact` otherwise; `form.reset()` restores `contact`. The paid-order form is `shop-order`. **Both
+  need a sales@ notification in Netlify** (Forms → Form notifications). This also settles `q43`.
+- **Newsletter: First name and Surname, both required**, posted as `MERGE1` / `MERGE2` - the field
+  names Mailchimp's own hosted form uses for the audience's First Name / Last Name, so they fill the
+  existing columns. Two name fields share a row, email and Subscribe take the next; checked at 1280
+  and 390. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
+  confirmation email) is Mailchimp's own setting, Shan's to switch on.
+
 ## Bracelets taken off the site (12 October 2026, Kerry)
 `productCategory-bracelets` unpublished in Sanity (draft kept - republish to bring them back). The
 shop landing page now shows three tiles across from 901px (`category-grid--three`), and an odd last

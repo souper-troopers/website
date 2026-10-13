@@ -182,6 +182,19 @@ const faqItems: FaqItem[] = [
 	</section>
 
 	<div id="contact-toast" class="toast" role="status" aria-live="polite"></div>
+
+	{/* Never shown: declares the "shop-enquiry" form to Netlify at deploy, since it only accepts
+	    submissions to forms it found in the built HTML. The contact form above submits under this
+	    name when it was opened from the shop (?topic=order, custom-dolls or wholesale-dolls). The
+	    fields must match the contact form's. */}
+	<form name="shop-enquiry" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden aria-hidden="true">
+		<input type="hidden" name="form-name" value="shop-enquiry" />
+		<input type="text" name="topic" />
+		<input type="text" name="bot-field" />
+		<input type="text" name="name" />
+		<input type="email" name="email" />
+		<textarea name="message"></textarea>
+	</form>
 </Layout>
 
 <style>
@@ -434,6 +447,12 @@ const faqItems: FaqItem[] = [
 		const topicInput = form.querySelector<HTMLInputElement>("input[name='topic']");
 		const messageInput = form.querySelector<HTMLTextAreaElement>("textarea[name='message']");
 		if (topicInput) topicInput.value = topic.label;
+		// Every topic here is a shop enquiry, so it is filed under its own Netlify form, whose
+		// notifications go to sales@ (13 October, Shan: "any orders should go through sales@").
+		// Netlify routes notifications per form, not per field. form.reset() after sending puts the
+		// default "contact" back, so a second, ordinary message isn't sent to sales@.
+		const formName = form.querySelector<HTMLInputElement>("input[name='form-name']");
+		if (formName) formName.value = "shop-enquiry";
 		if (messageInput) {
 			messageInput.value = topic.message;
 			messageInput.rows = 7;

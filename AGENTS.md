@@ -1301,6 +1301,10 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
   `email_address` in PayFast's documented position, and stores them as `order.buyer`, which the order
   email prefers. Blank fields are dropped before signing. The checkout button is Hub purple (was
   green, 2.42:1).
+  - ⚠ **PayFast refuses a buyer email that matches the receiving merchant account's email** ("Merchant
+    is unable to receive payments from the same account", 400, seen on the second sandbox test). Not a
+    site bug: test with a different address (a Gmail `+test` alias works), and don't use the live
+    PayFast account's own email for the real test purchase.
 - **The test route chosen (13 October): a draft pull request `dev` -> `main`, titled "do not
   merge"**, purely for Netlify's free deploy preview (CONTEXT `deploy-preview`, so checkout is on and
   the functions use the preview's own address). The user makes a sandbox purchase there and checks

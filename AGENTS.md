@@ -1265,7 +1265,12 @@ Asked for by Shan and Kerry after launch, ahead of a walkthrough call. Same fami
 - Recommended keeping the status page alongside it (12 October): it is the record of decisions and still
   holds open questions. The guide is for day-to-day edits; the status page is for decisions.
 
-## Shop orders now reach the Hub (built 12 October 2026, before checkout is switched on)
+## Shop orders now reach the Hub (built 12 October 2026; checkout switched ON 13 October)
+**`SHOP_CHECKOUT = true` since 13 October**, after the second sandbox test on deploy preview 1
+delivered the order email to sales@ with the buyer's name and email. The preview PR (#1) is closed.
+Still to do: one small real purchase on the live site (not with the PayFast account's own email),
+refunded by Caryn; then send Kerry the "how orders work" message.
+
 Found while listing what switching checkout on needs: **a paid order reached nobody.** `payfast-itn`
 only wrote to the function logs, and PayFast's own emails named a basket "Shop order (3 items)" with
 no list and no options (bracelet word and size, coffee grind). Fixed before going live:

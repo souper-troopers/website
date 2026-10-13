@@ -6,11 +6,12 @@
  * this off, the basket icon leaves the header and "Add to cart" becomes "Order this", which opens the
  * contact form with the order already started.
  *
- * To turn checkout on: put the live merchant ID, key and passphrase into Netlify's environment
- * variables, set PAYFAST_MODE to "live", set this to true, publish, and make one small real purchase
- * to confirm the money arrives.
+ * Switched on 13 October 2026, after a PayFast sandbox purchase on a deploy preview delivered the
+ * order email (items, buyer name and email) to sales@. The live merchant ID, key and passphrase are
+ * in Netlify's Production context with PAYFAST_MODE "live"; previews keep the sandbox ones. Set this
+ * back to false to return to "Order this" through the contact form.
  */
-export const SHOP_CHECKOUT = false;
+export const SHOP_CHECKOUT = true;
 
 /**
  * Checkout is also on in local development and on branch previews (October 2026), so the order

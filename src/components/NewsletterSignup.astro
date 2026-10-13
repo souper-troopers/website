@@ -165,9 +165,11 @@ const id = `newsletter-${variant}`;
 	/* Outlined on the ink footer (28 September, the user's call, kept after a trial): a white-bordered
 	   field and a teal-bordered button, rather than a white field and a filled teal button, so the
 	   sign-up sits as quietly as the dimmed labels beside it. Label 0.85 white ~12:1, teal border ~6:1. */
+	/* Grey, not white (13 October, the user): 40% white on the ink footer is ~3.7:1, above the 3:1 a
+	   field's edge needs to stay visible. Focus keeps the browser's own ring. */
 	.newsletter-footer .newsletter-field {
 		background: transparent;
-		border: 1px solid var(--st-white);
+		border: 1px solid rgba(255, 255, 255, 0.4);
 		color: var(--st-white);
 	}
 

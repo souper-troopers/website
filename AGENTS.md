@@ -1320,7 +1320,8 @@ The first publish after the live PayFast details went into Netlify **failed on s
   share a row above the email. Checked at 1440, 1280, 900, 820 and 390. Fields and Subscribe are 36px
   tall (were 44px; the user's call), still well over the 24px touch-target floor. From 900px the form
   fills the row: the three fields are equal width (244px each at 1280) and Subscribe ends at the
-  container's right edge. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
+  container's right edge. Field borders are grey, 40% white (~3.7:1 on the ink footer, above the 3:1
+  floor for a field's edge); the button keeps its teal outline. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
   confirmation email) is Mailchimp's own setting, Shan's to switch on.
 
 ## Bracelets taken off the site (12 October 2026, Kerry)

@@ -139,18 +139,16 @@ const id = `newsletter-${variant}`;
 			flex-wrap: nowrap;
 		}
 
+		/* The form takes the rest of the row: the three fields share it equally and Subscribe sits
+		   at the right edge of the container (13 October, the user). */
 		.newsletter-footer .newsletter-form {
-			flex: 0 1 auto;
+			flex: 1 1 auto;
 			flex-wrap: nowrap;
 			max-width: none;
 		}
 
-		.newsletter-footer .newsletter-name {
-			flex: 0 1 10rem;
-		}
-
-		.newsletter-footer .newsletter-email {
-			flex: 0 1 16rem;
+		.newsletter-footer .newsletter-field {
+			flex: 1 1 0;
 		}
 	}
 

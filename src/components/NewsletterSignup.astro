@@ -132,15 +132,25 @@ const id = `newsletter-${variant}`;
 		max-width: 26rem;
 	}
 
-	/* From laptop widths the label stays beside the field; the whole group is one row with the
-	   socials, and wraps below them as a unit when the row runs out of room. */
-	@media (min-width: 761px) {
+	/* From 900px the footer sign-up is one line of its own under the socials: label, first name,
+	   surname, email and Subscribe (13 October). Narrower, the names share a row above the email. */
+	@media (min-width: 900px) {
 		.newsletter-footer {
 			flex-wrap: nowrap;
 		}
 
 		.newsletter-footer .newsletter-form {
-			flex: 0 0 24rem;
+			flex: 0 1 auto;
+			flex-wrap: nowrap;
+			max-width: none;
+		}
+
+		.newsletter-footer .newsletter-name {
+			flex: 0 1 10rem;
+		}
+
+		.newsletter-footer .newsletter-email {
+			flex: 0 1 16rem;
 		}
 	}
 

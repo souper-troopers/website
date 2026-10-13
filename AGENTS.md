@@ -1315,8 +1315,9 @@ The first publish after the live PayFast details went into Netlify **failed on s
   need a sales@ notification in Netlify** (Forms → Form notifications). This also settles `q43`.
 - **Newsletter: First name and Surname, both required**, posted as `MERGE1` / `MERGE2` - the field
   names Mailchimp's own hosted form uses for the audience's First Name / Last Name, so they fill the
-  existing columns. Two name fields share a row, email and Subscribe take the next; checked at 1280
-  and 390. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
+  existing columns. **The sign-up has its own footer row under the socials** (the divider beside
+  them is gone); from 900px label, names, email and Subscribe sit on one line, narrower the names
+  share a row above the email. Checked at 1440, 1280, 900, 820 and 390. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
   confirmation email) is Mailchimp's own setting, Shan's to switch on.
 
 ## Bracelets taken off the site (12 October 2026, Kerry)

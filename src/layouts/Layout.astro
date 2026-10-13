@@ -469,9 +469,10 @@ const structuredData = {
 				<EmailLink client:visible address={settings.email} />
 				<a class="footer-whatsapp" href={whatsapp.href} target="_blank" rel="noopener">WhatsApp {whatsapp.display}</a>
 			</div>
-			{/* Socials and the newsletter share one row on a laptop (28 September), left-aligned with a
-			    thin divider between; below 900px they wrap onto two rows and the divider goes. The homepage had its
-			    own sign-up section too, which read as a repeat directly above this - removed. */}
+			{/* Socials, then the newsletter on a row of its own at every width (13 October, the user: once
+			    the sign-up gained name fields it no longer sat comfortably beside the socials). The
+			    homepage had its own sign-up section too, which read as a repeat directly above this -
+			    removed. */}
 			<div class="wrap footer-row">
 				<div class="footer-social">
 					<span class="footer-social-label">Follow us</span>
@@ -483,12 +484,7 @@ const structuredData = {
 						))}
 					</div>
 				</div>
-				{newsletterVisible() && (
-					<>
-						<span class="footer-row-divider" aria-hidden="true"></span>
-						<NewsletterSignup variant="footer" />
-					</>
-				)}
+				{newsletterVisible() && <NewsletterSignup variant="footer" />}
 			</div>
 			<p class="fine-print wrap">
 				&copy; {new Date().getFullYear()} Souper Troopers. Est. 2014. &nbsp;|&nbsp; NPO {settings.npoNumber} &nbsp;|&nbsp; PBO {settings.pboNumber} &nbsp;|&nbsp; B-BBEE {settings.bbbeeLevel} &nbsp;|&nbsp; Shop products by Shmiley (Pty) Ltd, a Souper Troopers social enterprise.
@@ -1348,29 +1344,8 @@ const structuredData = {
 				margin-top: var(--space-6);
 			}
 
-			.footer-row-divider {
-				display: none;
-				width: 1px;
-				height: 20px;
-				background: rgba(255, 255, 255, 0.25);
-			}
-
-			/* Below 900px the sign-up always takes its own row, so there is never a one-row layout
-			   without the divider. */
-			@media (max-width: 899px) {
-				.footer-row .newsletter-footer {
-					flex-basis: 100%;
-				}
-			}
-
-			@media (min-width: 900px) {
-				.footer-row {
-					flex-wrap: nowrap;
-				}
-
-				.footer-row-divider {
-					display: block;
-				}
+			.footer-row .newsletter-footer {
+				flex-basis: 100%;
 			}
 
 			.fine-print {

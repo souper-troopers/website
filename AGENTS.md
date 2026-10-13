@@ -1291,6 +1291,11 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
   deploy contexts; free) or open a pull request, which gets a free deploy preview.
 - Tested locally: the checkout step returns the description and stores the order. **The paid-order
   email is untested** until someone completes a PayFast sandbox payment on the `dev` preview.
+- **The test route chosen (13 October): a draft pull request `dev` -> `main`, titled "do not
+  merge"**, purely for Netlify's free deploy preview (CONTEXT `deploy-preview`, so checkout is on and
+  the functions use the preview's own address). The user makes a sandbox purchase there and checks
+  the `shop-order` email reaches sales@. Close the PR afterwards; publishing stays the usual `dev` ->
+  `main` fast-forward. Kerry's "how orders work" message is held until payments are switched on.
 
 ## Netlify secrets scanning and the PayFast passphrase (12 October 2026)
 The first publish after the live PayFast details went into Netlify **failed on secrets scanning**:

@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PhotoHero from "../../components/PhotoHero.astro";
+import hubPhoto from "../../assets/images/hub-street.jpg";
+
+/**
+ * Where the contact form lands after sending (14 October 2026). The form became an ordinary post when
+ * it gained Netlify's reCAPTCHA, which only works that way, so this replaces the old "Message sent"
+ * pop-up. Shop enquiries (topic order / custom / wholesale) land here too. `noindex` and out of the
+ * sitemap: nobody should arrive here from a search.
+ */
+---
+
+<Layout heroOverlay title="Message sent" description="Thank you for your message." noindex>
+	<PhotoHero image={hubPhoto} size="band" position="center 50%">
+		<h1>Thank you</h1>
+		<p>Your message is on its way to us. We'll get back to you soon.</p>
+	</PhotoHero>
+
+	<section class="section wrap">
+		<div class="card thanks-card">
+			<p>If it's urgent, you can also WhatsApp us or email the address on the <a href="/contact/">contact page</a>.</p>
+			<a class="btn btn-primary" href="/">Back to the homepage</a>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.thanks-card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-4);
+	}
+</style>

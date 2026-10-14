@@ -1330,6 +1330,24 @@ The first publish after the live PayFast details went into Netlify **failed on s
 - Previews had the live merchant key with the sandbox ID and mode (fails safe); should be the
   sandbox key, as in local development.
 
+## The contact form has Netlify's reCAPTCHA (14 October 2026)
+A porn-link spam message reached info@ through the contact form overnight on 13 October: Netlify's
+content filter (Akismet) had caught 27 others, the honeypot catches only the crudest bots, and
+neither stops a bot posting straight to the form. Kerry: "We need some serious security".
+- **Netlify-provided reCAPTCHA v2** (option A of two; the other needed the charity's own Google
+  reCAPTCHA keys in `SITE_RECAPTCHA_KEY` / `SITE_RECAPTCHA_SECRET`): `data-netlify-recaptcha="true"`
+  on the `contact` form and on the hidden `shop-enquiry` declaration, plus the placeholder
+  `<div data-netlify-recaptcha="true">` before Send. Netlify injects the "I'm not a robot" box at
+  deploy and **rejects any submission without a valid tick, server-side**. Checked against Netlify's
+  spam-filters docs on the day.
+- ⚠ **It only works with an ordinary form post**, so the background `fetch` submit, the "Message
+  sent" toast and the error line were removed: the form posts to `/contact/thanks/`
+  (`src/pages/contact/thanks.astro`, noindex, out of the sitemap). **Nothing shows locally** - the
+  box only exists on a deployed site.
+- **`shop-order` can't carry it** (our own function fills it in), so in principle a fake "order" can
+  be posted to sales@. That is why step 1 for orders is to confirm the payment in PayFast first.
+- `save-our-hub` (hidden page) has no reCAPTCHA yet - add it before that campaign goes live.
+
 ## Orders go to sales@, and the newsletter asks for a name (13 October 2026, Shan)
 - **"Any orders should go through sales@"** (Shan; Kerry had said web orders go to info@ - Shan's
   answer is the later one). Netlify routes notifications **per form**, so shop enquiries now have

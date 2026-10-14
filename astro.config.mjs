@@ -48,7 +48,7 @@ export default defineConfig({
       // '/save-our-hub/' is a draft awaiting Kerry's approval - remove it from this list when
       // CAMPAIGN.live goes true (src/lib/campaign.ts).
       filter: (page) =>
-        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/', '/shmiley-decision/', '/video-brief/', '/internal/', '/changelog/', '/editing-guide/', '/save-our-hub/'].some(
+        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/', '/shmiley-decision/', '/video-brief/', '/internal/', '/changelog/', '/editing-guide/', '/contact/thanks/', '/save-our-hub/'].some(
           (path) => page.endsWith(path)
         ),
     }),

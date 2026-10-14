@@ -147,7 +147,12 @@ const faqItems: FaqItem[] = [
 				<h2 class="contact-title">Send us a message</h2>
 				<p>Prefer not to email directly? Use the form below and we'll get back to you.</p>
 			</div>
-			<form id="contact-form" class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+			{/* Netlify's own reCAPTCHA (14 October, after a spam message reached info@ past the content
+			    filter): Netlify adds the "I'm not a robot" box at deploy and rejects any submission
+			    without a valid tick - including a bot posting straight to the form. It needs an ordinary
+			    form post, so the message is sent the normal way and lands on /contact/thanks/ rather
+			    than a pop-up. Nothing shows locally: the box only exists on a deployed site. */}
+			<form id="contact-form" class="contact-form" name="contact" method="POST" action="/contact/thanks/" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true">
 			<input type="hidden" name="form-name" value="contact" />
 			{/* Set by the script below when the shop's Custom dolls or Wholesale card sends someone here
 			    (`?topic=`), so the notification says which kind of enquiry it is. In the static HTML so
@@ -173,21 +178,18 @@ const faqItems: FaqItem[] = [
 				<textarea name="message" rows="4" required></textarea>
 			</label>
 
+			<div class="recaptcha" data-netlify-recaptcha="true"></div>
+
 			<button class="btn btn-purple" type="submit">Send message</button>
-			<p id="contact-form-error" class="form-note form-error" hidden>
-				Something went wrong sending that - you can email <EmailLink client:visible address="manager@soupertroopers.org" /> directly instead.
-			</p>
 		</form>
 		</div>
 	</section>
-
-	<div id="contact-toast" class="toast" role="status" aria-live="polite"></div>
 
 	{/* Never shown: declares the "shop-enquiry" form to Netlify at deploy, since it only accepts
 	    submissions to forms it found in the built HTML. The contact form above submits under this
 	    name when it was opened from the shop (?topic=order, custom-dolls or wholesale-dolls). The
 	    fields must match the contact form's. */}
-	<form name="shop-enquiry" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden aria-hidden="true">
+	<form name="shop-enquiry" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" hidden aria-hidden="true">
 		<input type="hidden" name="form-name" value="shop-enquiry" />
 		<input type="text" name="topic" />
 		<input type="text" name="bot-field" />
@@ -389,29 +391,6 @@ const faqItems: FaqItem[] = [
 		margin: 0;
 	}
 
-	.toast {
-		position: fixed;
-		left: 50%;
-		bottom: 1.5rem;
-		z-index: 200;
-		max-width: calc(100% - 2rem);
-		text-align: center;
-		background: var(--st-teal-dark);
-		color: var(--st-white);
-		padding: 0.85rem 1.5rem;
-		border-radius: var(--radius);
-		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
-		opacity: 0;
-		pointer-events: none;
-		transform: translate(-50%, 0.5rem);
-		transition: opacity 0.25s ease, transform 0.25s ease;
-	}
-
-	.toast.show {
-		opacity: 1;
-		pointer-events: auto;
-		transform: translate(-50%, 0);
-	}
 </style>
 
 <script>
@@ -449,8 +428,8 @@ const faqItems: FaqItem[] = [
 		if (topicInput) topicInput.value = topic.label;
 		// Every topic here is a shop enquiry, so it is filed under its own Netlify form, whose
 		// notifications go to sales@ (13 October, Shan: "any orders should go through sales@").
-		// Netlify routes notifications per form, not per field. form.reset() after sending puts the
-		// default "contact" back, so a second, ordinary message isn't sent to sales@.
+		// Netlify routes notifications per form, not per field. Both forms carry the reCAPTCHA, so
+		// neither can be posted to directly by a bot.
 		const formName = form.querySelector<HTMLInputElement>("input[name='form-name']");
 		if (formName) formName.value = "shop-enquiry";
 		if (messageInput) {
@@ -458,51 +437,4 @@ const faqItems: FaqItem[] = [
 			messageInput.rows = 7;
 		}
 	}
-	const errorEl = document.querySelector<HTMLElement>("#contact-form-error");
-	const toastEl = document.querySelector<HTMLElement>("#contact-toast");
-	let toastTimer: ReturnType<typeof setTimeout>;
-
-	function showToast(message: string) {
-		if (!toastEl) return;
-		toastEl.textContent = message;
-		toastEl.classList.add("show");
-		clearTimeout(toastTimer);
-		toastTimer = setTimeout(() => toastEl.classList.remove("show"), 4000);
-	}
-
-	form?.addEventListener("submit", async (event) => {
-		event.preventDefault();
-		if (errorEl) errorEl.hidden = true;
-
-		const submitButton = form.querySelector<HTMLButtonElement>("button[type='submit']");
-		if (submitButton) submitButton.disabled = true;
-
-		try {
-			const response = await fetch("/", {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
-			});
-			if (!response.ok) throw new Error("Form submission failed");
-
-			form.reset();
-			showToast(
-				import.meta.env.DEV
-					? "Message sent (local dev - Netlify only emails this notification from the live deployed site, not from dev)."
-					: "Message sent - thanks for reaching out, we'll get back to you soon.",
-			);
-
-			if (submitButton) {
-				const originalText = submitButton.textContent;
-				submitButton.textContent = "Sent ✓";
-				setTimeout(() => {
-					submitButton.textContent = originalText;
-					submitButton.disabled = false;
-				}, 1800);
-			}
-		} catch {
-			if (errorEl) errorEl.hidden = false;
-			if (submitButton) submitButton.disabled = false;
-		}
-	});
 </script>

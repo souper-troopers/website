@@ -63,7 +63,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 ---
 
 <Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from The Humanity Hub, our service centre in Cape Town." heroOverlay>
-	<PhotoHero image={supportPhoto} size="page" position="center 25%" inset={0.64} fadeMobile>
+	<PhotoHero image={supportPhoto} size="page" position="center 25%" fadeMobile>
 		<h1>Our Work</h1>
 		<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
 	</PhotoHero>
@@ -258,6 +258,25 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 </Layout>
 
 <style>
+	/* The banner on laptops and tablets (14 October, Shan's "Tasneem and Denim"): the two women sit at
+	   the photo's far edges with plain wall between them, so the photo runs the full width (no
+	   inset fade, which hid Tasneem) and the words are centred over the wall. Only that middle band
+	   is darkened; the edges stay light so both faces show. Phones keep the shared fade layout. */
+	@media (min-width: 761px) {
+		:global(.photo-hero.photo-hero--page .hero-content) {
+			text-align: center;
+			max-width: 23rem;
+			margin-inline: auto;
+		}
+
+		:global(.photo-hero.photo-hero--page .hero-scrim) {
+			background:
+				linear-gradient(180deg, rgba(24, 23, 31, 0.82) 0, rgba(24, 23, 31, 0.82) calc(var(--hero-clearance) - 12px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+				linear-gradient(90deg, rgba(24, 23, 31, 0.15) 0%, rgba(24, 23, 31, 0.15) 14%, rgba(24, 23, 31, 0.82) 27%, rgba(24, 23, 31, 0.82) 73%, rgba(24, 23, 31, 0.15) 86%, rgba(24, 23, 31, 0.15) 100%);
+		}
+	}
+
+
 	/* PROTOTYPE - see the comment on the section. */
 	.cast-stage {
 		--step: 650ms;

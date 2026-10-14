@@ -1330,6 +1330,16 @@ The first publish after the live PayFast details went into Netlify **failed on s
 - Previews had the live merchant key with the sandbox ID and mode (fails safe); should be the
   sandbox key, as in local development.
 
+## Our Work's banner: Shan's "Tasneem and Denim" (14 October 2026)
+`src/assets/images/tasneem-denim.jpg` (Drive `Content/Our Work/Banner image/Tasneem and Denim.jpg`,
+4000px copy), `center 25%`. The two women sit at the photo's far edges with plain wall between them,
+so the shared `inset` fade hid Tasneem behind the words. **Our Work alone drops `inset` and, from
+761px, centres the hero words** (`max-width: 23rem`) over the wall with a scoped scrim: dark (0.82)
+from 27% to 73% of the width, light (0.15) at the edges so both faces show, plus the homepage's 0.82
+header band (the 0.7 one left "by Souper Troopers" at 4.1:1 over the bright top-left). Phones keep
+`fadeMobile`. Contrast 74 lines at 8 widths, worst body 5.52:1. `support-conversation.jpg` was deleted
+as unused. Same day: Tasneem's name is **"Tasneem Hoosain"** in Sanity (Shan: drop "Fielies").
+
 ## The contact form has Netlify's reCAPTCHA (14 October 2026)
 A porn-link spam message reached info@ through the contact form overnight on 13 October: Netlify's
 content filter (Akismet) had caught 27 others, the honeypot catches only the crudest bots, and

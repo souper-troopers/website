@@ -27,9 +27,11 @@ async function notifyHub(
 		"buyer-email": order?.buyer?.email ?? fields.email_address ?? "",
 		items,
 		"amount-paid": `R${fields.amount_gross}`,
-		check: amountOk
+		// Orders paid on staging or a preview (sandbox payments) say so first, so sales@ can't mistake
+		// a test for a real order. Anything not on the live domain counts.
+		check: (new URL(siteUrl).hostname === "soupertroopers.org" ? "" : "[STAGING - test order, sandbox payment, please ignore] ") + (amountOk
 			? "Paid in full."
-			: `WARNING: PayFast reports R${fields.amount_gross} but the basket came to R${order?.total}. Check the PayFast dashboard before sending anything.`,
+			: `WARNING: PayFast reports R${fields.amount_gross} but the basket came to R${order?.total}. Check the PayFast dashboard before sending anything.`),
 		"payfast-reference": fields.pf_payment_id ?? "",
 		"order-reference": fields.m_payment_id ?? "",
 		"next-step": "Email the buyer to arrange collection from the Hub or their own courier.",

@@ -9,6 +9,7 @@ import { whatsapp } from "../lib/whatsapp";
 import { getSiteSettings } from "../lib/sanity";
 import { displayAddress } from "../lib/address";
 import Faq from "../components/Faq.astro";
+import { IS_STAGING, STAGING_LABEL } from "../lib/env";
 import { faqPageJsonLd, type FaqItem } from "../lib/faq";
 
 // Was a hardcoded duplicate of the Sanity value until the postal code landed. Reading it from the
@@ -157,7 +158,9 @@ const faqItems: FaqItem[] = [
 			{/* Set by the script below when the shop's Custom dolls or Wholesale card sends someone here
 			    (`?topic=`), so the notification says which kind of enquiry it is. In the static HTML so
 			    Netlify registers the field at deploy - fields it hasn't seen are dropped. */}
-			<input type="hidden" name="topic" value="" />
+			{/* On staging builds the topic starts with the staging label, so a test message is obvious in
+			    the inbox (src/lib/env.ts). Empty on the live site. */}
+			<input type="hidden" name="topic" value={IS_STAGING ? STAGING_LABEL : ""} />
 			<label class="honeypot-field" aria-hidden="true">
 				Leave this field blank
 				<input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
@@ -425,7 +428,7 @@ const faqItems: FaqItem[] = [
 	if (form && topic) {
 		const topicInput = form.querySelector<HTMLInputElement>("input[name='topic']");
 		const messageInput = form.querySelector<HTMLTextAreaElement>("textarea[name='message']");
-		if (topicInput) topicInput.value = topic.label;
+		if (topicInput) topicInput.value = `${topicInput.defaultValue ? topicInput.defaultValue + " " : ""}${topic.label}`;
 		// Every topic here is a shop enquiry, so it is filed under its own Netlify form, whose
 		// notifications go to sales@ (13 October, Shan: "any orders should go through sales@").
 		// Netlify routes notifications per form, not per field. Both forms carry the reCAPTCHA, so

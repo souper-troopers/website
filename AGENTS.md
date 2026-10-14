@@ -1330,6 +1330,22 @@ The first publish after the live PayFast details went into Netlify **failed on s
 - Previews had the live merchant key with the sandbox ID and mode (fails safe); should be the
   sandbox key, as in local development.
 
+## Staging: the `dev` branch deploy (14 October 2026)
+**`https://dev--souper-troopers.netlify.app`** - Netlify builds it on every push to `dev` (branch
+deploys set to "individual branches: dev"; free, not metered). Use it to show the next batch before
+publishing; it reads the live Sanity content. `souper-troopers.netlify.app` itself is the live site
+under another name (and redirects), so it can't be staging.
+- **`src/lib/env.ts` `IS_STAGING`** = Netlify `CONTEXT` set and not "production" (branch deploys and PR
+  previews; false locally and live). It adds `noindex` on every page, a fixed yellow **"Staging - not
+  the live site"** pill (bottom-left, links to the live site), and **`[STAGING - test, please
+  ignore]`** at the start of the contact form's `topic` field. Verified with `CONTEXT=branch-deploy`
+  and `CONTEXT=production` builds: present on the first, absent on the second.
+- Paid orders not on soupertroopers.org get **`[STAGING - test order, sandbox payment, please
+  ignore]`** at the start of the order email's `check` line (by request host, in `payfast-itn`).
+- **Forms on staging still email the real inboxes** (info@, sales@) - hence the labels.
+  `save-our-hub` has no label (hidden page).
+- Checkout is on there, in PayFast test mode (the branch-deploy context has the sandbox details).
+
 ## Our Work's banner: Shan's "Tasneem and Denim" (14 October 2026)
 `src/assets/images/tasneem-denim.jpg` (Drive `Content/Our Work/Banner image/Tasneem and Denim.jpg`,
 4000px copy), `center 25%`. The two women sit at the photo's far edges with plain wall between them,

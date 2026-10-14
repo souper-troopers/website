@@ -16,6 +16,7 @@ import {
 import CartWidget from "../components/CartWidget.svelte";
 import { whatsapp } from "../lib/whatsapp";
 import { CHECKOUT_ENABLED } from "../lib/shop";
+import { IS_STAGING } from "../lib/env";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
@@ -335,7 +336,8 @@ const structuredData = {
 		    whole preview and comes off at launch; the per-page `noindex` prop must *survive* that,
 		    because the internal pages (request-for-comment, google-listing) should stay out of search
 		    permanently. Deleting the blanket without this would have quietly published both. */}
-		{(PRE_LAUNCH_NOINDEX || noindex) && <meta name="robots" content="noindex, nofollow" />}
+		{/* IS_STAGING: the dev branch deploy and PR previews are never indexed, whatever the page. */}
+		{(PRE_LAUNCH_NOINDEX || noindex || IS_STAGING) && <meta name="robots" content="noindex, nofollow" />}
 		{/* The icons have no background of their own — just the brush ring and the ST — so the ink
 		    letterforms would be near-invisible against a dark browser tab strip. The `-dark` variants
 		    are identical but with white letters, picked up via `media` on the link. `favicon.ico` stays
@@ -381,6 +383,11 @@ const structuredData = {
 		<!-- End Cloudflare Web Analytics -->
 	</head>
 	<body>
+		{/* Staging only (src/lib/env.ts): a fixed corner label, so the dev branch deploy can't be
+		    mistaken for the live site. Fixed, so it moves no layout. */}
+		{IS_STAGING && (
+			<a class="staging-flag" href="https://soupertroopers.org/">Staging - not the live site</a>
+		)}
 		<header class:list={["site-header", { "site-header-overlay": heroOverlay, "hero-has-donate": heroOverlay && heroDonate }]}>
 			<div class="wrap header-inner">
 				{/* The label names the link once. With the logo's alt text and the visible words both
@@ -1280,6 +1287,21 @@ const structuredData = {
 			.btn-outline-teal:hover {
 				background: var(--st-teal-dark);
 				color: var(--st-white);
+			}
+
+			.staging-flag {
+				position: fixed;
+				left: 12px;
+				bottom: 12px;
+				z-index: 1000;
+				padding: 6px 12px;
+				border-radius: 999px;
+				background: #fde047;
+				color: #24232b;
+				font-size: 0.8rem;
+				font-weight: 700;
+				text-decoration: none;
+				box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 			}
 
 			.site-footer {

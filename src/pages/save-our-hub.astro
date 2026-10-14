@@ -150,7 +150,10 @@ const progress =
 			<p>So we can thank you, and keep your gift for the building, let us know what you gave.</p>
 		</div>
 		<div class="hub-form-wrap">
-			<form id="hub-form" class="contact-form" name="save-our-hub" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+			{/* Netlify's reCAPTCHA, as on the contact form (14 October): the page isn't linked yet, but
+			    Netlify accepts posts to this form, so a bot could reach info@ through it. An ordinary
+			    post, so it comes back here with ?sent=1 and the script shows the thank-you line. */}
+			<form id="hub-form" class="contact-form" name="save-our-hub" method="POST" action="/save-our-hub/?sent=1#hub-form" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true">
 				<input type="hidden" name="form-name" value="save-our-hub" />
 				<label class="honeypot-field" aria-hidden="true">
 					Leave this field blank
@@ -173,9 +176,9 @@ const progress =
 				</label>
 				<label class="hub-check"><input type="checkbox" name="section18a" value="yes" /> I'd like a Section 18A tax certificate</label>
 				<label>Anything else (optional)<textarea name="message" rows="3"></textarea></label>
+				<div class="recaptcha" data-netlify-recaptcha="true"></div>
 				<button class="btn btn-primary" type="submit">Send</button>
 				<p id="hub-form-thanks" class="form-note" hidden>Thank you - we've got it.</p>
-				<p id="hub-form-error" class="form-note form-error" hidden>Something went wrong sending that - please try again.</p>
 			</form>
 		</div>
 	</section>
@@ -344,24 +347,7 @@ const progress =
 		document.querySelector<HTMLElement>("#payfast-thanks")?.removeAttribute("hidden");
 	}
 
-	const form = document.querySelector<HTMLFormElement>("#hub-form");
-	form?.addEventListener("submit", async (event) => {
-		event.preventDefault();
-		const thanks = document.querySelector<HTMLElement>("#hub-form-thanks");
-		const error = document.querySelector<HTMLElement>("#hub-form-error");
-		if (thanks) thanks.hidden = true;
-		if (error) error.hidden = true;
-		try {
-			const response = await fetch("/", {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
-			});
-			if (!response.ok) throw new Error("Form submission failed");
-			form.reset();
-			if (thanks) thanks.hidden = false;
-		} catch {
-			if (error) error.hidden = false;
-		}
-	});
+	if (new URLSearchParams(location.search).get("sent") === "1") {
+		document.querySelector<HTMLElement>("#hub-form-thanks")?.removeAttribute("hidden");
+	}
 </script>

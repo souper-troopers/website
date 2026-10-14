@@ -1346,7 +1346,9 @@ neither stops a bot posting straight to the form. Kerry: "We need some serious s
   box only exists on a deployed site.
 - **`shop-order` can't carry it** (our own function fills it in), so in principle a fake "order" can
   be posted to sales@. That is why step 1 for orders is to confirm the payment in PayFast first.
-- `save-our-hub` (hidden page) has no reCAPTCHA yet - add it before that campaign goes live.
+- **`save-our-hub` has it too** (same day): the page is hidden, but Netlify accepts posts to its form.
+  An ordinary post back to `/save-our-hub/?sent=1#hub-form`, which shows the existing thank-you line.
+  So every form a person can reach is covered; `shop-order` is the only one without (see above).
 
 ## Orders go to sales@, and the newsletter asks for a name (13 October 2026, Shan)
 - **"Any orders should go through sales@"** (Shan; Kerry had said web orders go to info@ - Shan's

@@ -1216,7 +1216,9 @@ given to the user, and the user will list anything they disagree with afterwards
   ~30 minutes with no change** - if it happens again, wait and retry before touching DNS.
 - `launch` was merged into `main` (`31d84fc`) and **`dev` fast-forwarded to it**, so `dev` now
   carries the live settings (indexing on, `site: soupertroopers.org`, `SHOP_CHECKOUT = false`). The
-  `launch` branch is finished; publish as before, `dev` -> `main`. ⚠ Don't merge an old `dev`
+  `launch` branch is finished and was **deleted on 14 October** (local and GitHub, along with the merged
+  `fix/safari-blank-page`); publish as before, `dev` -> `main`. Branches now: `dev` (staging), `main`
+  (live), and the local-only, unmerged `light-tint` experiment. ⚠ Don't merge an old `dev`
   checkout or the pre-launch config back in.
 - Checked live: public pages indexable, canonicals and sitemap on soupertroopers.org, robots.txt
   open with the sitemap line, llms.txt without the pre-launch line, old WordPress addresses 301 to

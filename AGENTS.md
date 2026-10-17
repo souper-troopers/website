@@ -1358,8 +1358,24 @@ header band (the 0.7 one left "by Souper Troopers" at 4.1:1 over the bright top-
 `fadeMobile`. Contrast 74 lines at 8 widths, worst body 5.52:1. `support-conversation.jpg` was deleted
 as unused. Same day: Tasneem's name is **"Tasneem Hoosain"** in Sanity (Shan: drop "Fielies").
 
+## The phone menu no longer closes itself on the way to another page (17 October 2026)
+Reported on an iPhone as the header "popping" between pages; never reproducible in Chrome or desktop
+Safari, with or without throttling, and Reduce Motion did not change it. **Found from a screen
+recording** (frames pulled with a Swift/AVFoundation script - no ffmpeg here): tapping a link in the
+open phone menu ran `closeNav()`, so the menu began sliding away on the *old* page while the new one
+loaded. The iPhone showed that half-closed frame - header row gone, menu jumped up ~64px - for about
+0.4s, then snapped back to the open menu for the page-change fade.
+- The click handler in `Layout.astro` now closes the menu only for a link to the **same path** (an
+  anchor on this page). For any other page the menu stays open until the new page replaces it.
+- A `pageshow` listener closes it when a page comes back from the back/forward cache (`persisted`),
+  since that page would otherwise reappear with the menu still open.
+- Checked in WebKit at iPhone size with the next page held back 1.5s: live site, menu closed while
+  waiting; fixed build, menu and header intact while waiting; menu closed after Back.
+- **To debug anything iPhone-only again, ask for a screen recording** (Control Center -> Record) and
+  step through it frame by frame. There is no Xcode on this Mac, so no iOS Simulator.
+
 ## Every hero gets a blurred preview of its photo (17 October 2026)
-Reported on a phone as "layout popping" between pages. **It was not a layout shift**: every
+Made while chasing the report above, before the recording showed the real cause. **It was not a layout shift**: every
 `PhotoHero` box is sized by CSS (the photo is absolutely positioned in `.hero-bg`), and measured CLS
 on the live site at 390px, 4x CPU / 1.6Mbps, cold and warm, was 0 on all nine main pages. What showed
 was the photo painting late over the ink background - a dark box, then a cut to the photo.

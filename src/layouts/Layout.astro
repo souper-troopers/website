@@ -3062,10 +3062,22 @@ const structuredData = {
 				primaryNav?.classList.toggle("is-open", !isOpen);
 			});
 
+			// Close only for a link to a spot on this same page. Going to another page, the menu stays
+			// open until the new page replaces it: closing it here started its slide-away on the old
+			// page while the new one loaded, and an iPhone showed that half-closed state - the header
+			// row gone and the menu jumped up - for about half a second, then snapped back into the
+			// page-change fade (seen in a screen recording, 17 October; Chrome never showed it).
 			primaryNav?.addEventListener("click", (event) => {
-				if ((event.target as HTMLElement).tagName === "A") {
+				const link = (event.target as HTMLElement).closest("a");
+				if (link && link.pathname === location.pathname) {
 					closeNav();
 				}
+			});
+
+			// Back to a page kept in the browser's back/forward memory, the menu would still be open as
+			// it was left - so close it then instead.
+			window.addEventListener("pageshow", (event) => {
+				if (event.persisted) closeNav();
 			});
 
 			// Auto-close on downward scroll only (not upward) — the menu overlays the page content

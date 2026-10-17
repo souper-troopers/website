@@ -381,6 +381,8 @@ const structuredData = {
 		     took over an hour for one site - test with a POST before publishing a new token. -->
 		<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "395b1839158c4551ada9942d0bf8e613"}'></script>
 		<!-- End Cloudflare Web Analytics -->
+		{/* The banner photo fades in from its onload handler; with JavaScript off that never runs. !important because Astro places its stylesheets after this tag. */}
+		<noscript><style>.photo-hero .hero-bg.blur-up img { opacity: 1 !important; }</style></noscript>
 	</head>
 	<body>
 		{/* Staging only (src/lib/env.ts): a fixed corner label, so the dev branch deploy can't be
@@ -2098,6 +2100,26 @@ const structuredData = {
 			.goods-tile-img[loading="eager"] {
 				opacity: 1;
 				transition: none;
+			}
+
+			/* Except the page banners, since 17 October (the user's ask): every hero now has its own
+			   blurred preview underneath (src/lib/lqip.ts), so the sharp photo fades in over it rather
+			   than cutting in. The cost is the one described above - the banner counts as painted
+			   for LCP only once the fade starts - accepted for the look. Without JavaScript the
+			   onload never fires, so the <noscript> rule in <head> shows it. */
+			.photo-hero .hero-bg.blur-up img {
+				opacity: 0;
+				transition: opacity 0.5s ease;
+			}
+
+			.photo-hero .hero-bg.blur-up img.is-loaded {
+				opacity: 1;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.photo-hero .hero-bg.blur-up img {
+					transition: none;
+				}
 			}
 
 			/* Generic loading placeholder for local (non-Sanity) images, which have no LQIP data —

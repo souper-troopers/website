@@ -1375,7 +1375,7 @@ loaded. The iPhone showed that half-closed frame - header row gone, menu jumped 
   `@view-transition` on, iOS Safari draws the old page shifted up ~110px (fixed header off the top)
   while it waits for the next page to be ready to fade in** - one frame going to Who We Are, 0.7s going
   to Our Work or Get Involved (the slower pages to be ready). The fade then starts from a correct
-  snapshot. Unique to this site because few sites use cross-document view transitions. Fixed by
+  snapshot. Unique to this site because few sites use cross-document view transitions. ⚠ **The recordings were Chrome on iPhone**, not Safari - every iOS browser runs on WebKit, so the fix covers both. Fixed by
   turning the fade off on iOS only: `@supports (-webkit-touch-callout: none) { @view-transition {
   navigation: none } }` in `Layout.astro`. `-webkit-touch-callout` is iOS WebKit only - checked false
   in Chromium and in desktop WebKit, so laptops and Android keep the fade.
@@ -1392,6 +1392,12 @@ was the photo painting late over the ink background - a dark box, then a cut to 
   `.blur-up` background (with `background-position` = the photo's `position`) unless an `lqip` prop
   is given. If `fsPath` ever disappears it returns undefined and the hero falls back to ink.
 - The homepage's hand-made `heroLqip` string was removed - the component makes the same thing.
+- **The sharp photo fades in over the preview** (0.5s, the user's ask the same day): a
+  `.photo-hero .hero-bg.blur-up img` rule overrides the eager-image "no fade" rule for heroes only.
+  Cost: LCP is recorded when the fade starts, a few hundred ms later. Off under reduced motion.
+  ⚠ A `<noscript>` style shows the photo without JavaScript, and it needs `!important` - Astro places
+  its stylesheet links after it in `<head>`, so at equal specificity the stylesheet won (measured:
+  opacity stayed 0 with JS off). Checked in Chromium and WebKit: 0 while loading, 1 after, 1 warm.
 - Not done: `zoom` heroes (Corporate partnership, desktop) show the preview unzoomed, so the blur
   sits slightly differently from the photo - invisible in practice. Contrast unaffected: the
   preview is the same photo, blurred, under the same tint.

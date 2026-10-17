@@ -9,6 +9,21 @@
 	let lastName = $state("");
 	let email = $state("");
 
+	// The page behind stays put while the cart is open (17 October): it scrolled under the scrim,
+	// which looked odd. The scrollbar's width is padded back so the page doesn't shift sideways on
+	// systems whose scrollbars take space.
+	$effect(() => {
+		if (!cart.isOpen) return;
+		const root = document.documentElement;
+		const scrollbar = window.innerWidth - root.clientWidth;
+		root.style.overflow = "hidden";
+		if (scrollbar > 0) root.style.paddingRight = `${scrollbar}px`;
+		return () => {
+			root.style.overflow = "";
+			root.style.paddingRight = "";
+		};
+	});
+
 	function rand(n: number) {
 		return "R" + n.toLocaleString("en-ZA");
 	}
@@ -84,7 +99,7 @@
 	inert={!cart.isOpen}
 >
 	<div class="cart-drawer-header">
-		<h2>Your cart</h2>
+		<h2>Your cart{#if cart.count > 0}<span class="cart-drawer-count">{cart.count} item{cart.count === 1 ? "" : "s"}</span>{/if}</h2>
 		<button class="cart-close" onclick={() => cart.close()} aria-label="Close cart">&times;</button>
 	</div>
 
@@ -106,7 +121,7 @@
 						<span class="cart-line-name">{item.name}</span>
 						<span class="cart-line-price">{rand(item.price)} each</span>
 					</div>
-					<div class="cart-line-controls">
+					<div class="cart-line-qty">
 						<input
 							type="number"
 							min="1"
@@ -115,8 +130,13 @@
 							onchange={(e) => cart.updateQty(item.key, +e.currentTarget.value)}
 							aria-label={`Quantity for ${item.name}`}
 						/>
-						<button class="cart-remove" onclick={() => cart.remove(item.key)} aria-label={`Remove ${item.name}`}>Remove</button>
+						<span class="cart-line-subtotal">{rand(item.price * item.qty)}</span>
 					</div>
+					<button class="cart-remove" onclick={() => cart.remove(item.key)} aria-label={`Remove ${item.name}`}>
+						<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+							<path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12a2 2 0 0 0 2 1.8h7a2 2 0 0 0 2-1.8l1-12M9 7V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
 				</li>
 			{/each}
 		</ul>
@@ -237,23 +257,51 @@
 		}
 	}
 
+	/* An ink band across the top, like the site's own header, so the panel's title reads as its
+	   frame rather than as one more line of content (17 October). Full bleed: it cancels the
+	   drawer's padding. Same height as the site header, so the two line up on a phone. */
 	.cart-drawer-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex: 0 0 auto;
+		min-height: var(--header-height, 64px);
+		margin: -1.5rem -1.5rem 0;
+		padding: 0 0.75rem 0 1.5rem;
+		background: var(--st-ink, #24232b);
+		color: var(--st-white, #fff);
 	}
 
 	.cart-drawer-header h2 {
-		font-size: 1.15rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.6rem;
+		font-size: 1.25rem;
+	}
+
+	.cart-drawer-count {
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.75);
 	}
 
 	.cart-close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
 		background: none;
 		border: none;
-		font-size: 1.5rem;
+		border-radius: 50%;
+		font-size: 1.6rem;
 		line-height: 1;
 		cursor: pointer;
 		color: inherit;
+	}
+
+	.cart-close:hover {
+		background: rgba(255, 255, 255, 0.12);
 	}
 
 	.cart-empty {
@@ -285,24 +333,27 @@
 
 	/* The list takes the drawer's spare height and scrolls inside it. Its floor (120px) means that
 	   on a very short screen the drawer as a whole scrolls instead (its own overflow-y), rather
-	   than the list shrinking to nothing. The small padding keeps focus rings from being clipped. */
+	   than the list shrinking to nothing. The small padding keeps focus rings from being clipped; the
+	   1rem at its foot is inside the scroll, so the last box clears the divider only at the end. */
 	.cart-lines {
 		list-style: none;
 		margin: 0 -4px;
-		padding: 4px;
+		padding: 4px 4px 1rem;
 		display: grid;
 		align-content: start;
-		gap: 1rem;
+		gap: 0.6rem;
 		flex: 1 1 auto;
 		min-height: 120px;
 		overflow-y: auto;
 		overscroll-behavior: contain;
 	}
 
+	/* margin-top cancels the drawer's 1rem gap, so the divider sits flush on the scrolling list. */
 	.cart-footer {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		margin-top: -1rem;
 		padding-top: 1rem;
 		border-top: 1px solid rgba(36, 35, 43, 0.12);
 	}
@@ -311,19 +362,24 @@
 		margin: 0;
 	}
 
+	/* Each item in its own soft box (17 October): name and unit price on the left, quantity with
+	   the line total beneath it, and a bin on the right. */
 	.cart-line {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto auto;
+		align-items: start;
 		gap: 0.75rem;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid rgba(36, 35, 43, 0.08);
+		padding: 0.75rem 0.5rem 0.75rem 0.9rem;
+		background: #f7f6f3;
+		border: 1px solid rgba(36, 35, 43, 0.08);
+		border-radius: 12px;
 	}
 
 	.cart-line-info {
 		display: flex;
 		flex-direction: column;
 		gap: 0.2rem;
+		padding-top: 0.15rem;
 	}
 
 	.cart-line-name {
@@ -333,14 +389,14 @@
 
 	.cart-line-price {
 		font-size: 0.8rem;
-		color: rgba(36, 35, 43, 0.65);
+		color: rgba(36, 35, 43, 0.7);
 	}
 
-	.cart-line-controls {
+	.cart-line-qty {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-end;
-		gap: 0.35rem;
+		align-items: center;
+		gap: 0.3rem;
 	}
 
 	.cart-qty {
@@ -348,17 +404,35 @@
 		font: inherit;
 		padding: 0.25rem 0.4rem;
 		border-radius: 8px;
-		border: 1px solid rgba(36, 35, 43, 0.15);
+		border: 1px solid rgba(36, 35, 43, 0.2);
+		background: var(--st-white, #fff);
 		text-align: center;
 	}
 
+	.cart-line-subtotal {
+		font-size: 0.8rem;
+		font-weight: 700;
+	}
+
+	/* A bin rather than the word: muted ink at rest (8.6:1 on the box), red on hover and focus. */
 	.cart-remove {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
 		background: none;
 		border: none;
-		color: var(--st-red, #dd4b59);
-		font-size: 0.78rem;
+		border-radius: 8px;
+		color: rgba(36, 35, 43, 0.7);
 		cursor: pointer;
 		padding: 0;
+	}
+
+	.cart-remove:hover,
+	.cart-remove:focus-visible {
+		color: var(--st-red, #dd4b59);
+		background: rgba(221, 75, 89, 0.1);
 	}
 
 	.cart-total {

@@ -1325,6 +1325,15 @@ sit in `.cart-footer` at the bottom of the drawer; `.cart-lines` takes the spare
 The list has a 120px floor, so on a very short screen (a phone on its side) the whole drawer scrolls
 instead (its own `overflow-y: auto` stays). Measured: footer 24px off the drawer's foot at 390x844 and
 1280x800, with 1 item and with 8.
+- **Redesigned the same day (the user):** each `.cart-line` is a soft box (`#f7f6f3`, hairline, 12px
+  radius) - name and unit price, then quantity with the **line total** beneath it, then a **bin**
+  button (36px, muted ink, red on hover/focus; `aria-label` "Remove <name>"). The header is an **ink
+  band** at `--header-height`, full bleed, with "n items", so it lines up with the site header. The
+  footer's `margin-top: -1rem` cancels the drawer's gap so the divider sits flush on the list; the
+  list's 1rem bottom padding is inside the scroll.
+- **The page behind is locked while the cart is open**: an `$effect` sets `overflow: hidden` on
+  `<html>` (plus padding for the scrollbar's width where it takes space) and clears both on close.
+  Checked: wheel over the page leaves `scrollY` unchanged while open, scrolls again after closing.
 
 ## Netlify secrets scanning and the PayFast passphrase (12 October 2026)
 The first publish after the live PayFast details went into Netlify **failed on secrets scanning**:

@@ -1416,12 +1416,11 @@ loaded. The iPhone showed that half-closed frame - header row gone, menu jumped 
   off, Chrome still showed the old page shifted ~110px for ~0.4s before cutting to the new one.
   Safari too, less. bbc.com doesn't do it in the same Chrome. The fade's old-page snapshot (second
   recording) was unshifted, so the page never actually scrolled - the browser *drew* it shifted.
-  **Experiment, on staging:** below 761px the overlay header is `position: sticky` in the flow with
-  `margin-bottom: calc(-1 * (var(--header-height) + 1px))` instead of `fixed` (bbc.com's header is in
-  the flow). Measured identical at 390 in WebKit on /, /about/, /our-work/ and a product page: header
-  65px, hero and h1 positions, page height, header pinned after scrolling, menu. Laptops stay
-  `fixed` (the wrapping header can't be matched by a fixed negative margin). **If it doesn't help,
-  revert it** rather than leaving an unexplained difference between phone and laptop.
+  **Tried and reverted the same day:** a sticky, in-flow header on phones instead of `fixed`. No
+  change - and the fourth recording showed why: the fixed **staging pill** moved up by the same
+  ~110px, so the browser draws the *whole viewport* offset (about the status bar plus Chrome's
+  address bar) while it waits for the next page, independent of the header. It is the gap between
+  leaving one page and painting the next, which a site with client-side navigation never has.
 - **To debug anything iPhone-only again, ask for a screen recording** (Control Center -> Record) and
   step through it frame by frame. There is no Xcode on this Mac, so no iOS Simulator.
 

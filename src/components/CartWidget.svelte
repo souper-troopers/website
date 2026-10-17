@@ -121,6 +121,9 @@
 			{/each}
 		</ul>
 
+		<!-- Pinned to the foot of the drawer (17 October, the user): the list above scrolls, so the
+		     total and checkout stay in view however many items there are. -->
+		<div class="cart-footer">
 		<div class="cart-total">
 			<span>Total</span>
 			<strong>{rand(cart.total)}</strong>
@@ -150,6 +153,7 @@
 			<p class="cart-error">{checkoutError}</p>
 		{/if}
 		<p class="cart-note">Collection is in person (66 Newmarket Street, Woodstock) or your own arranged courier.</p>
+		</div>
 	{/if}
 </aside>
 
@@ -279,12 +283,32 @@
 		font-weight: 600;
 	}
 
+	/* The list takes the drawer's spare height and scrolls inside it. Its floor (120px) means that
+	   on a very short screen the drawer as a whole scrolls instead (its own overflow-y), rather
+	   than the list shrinking to nothing. The small padding keeps focus rings from being clipped. */
 	.cart-lines {
 		list-style: none;
-		margin: 0;
-		padding: 0;
+		margin: 0 -4px;
+		padding: 4px;
 		display: grid;
+		align-content: start;
 		gap: 1rem;
+		flex: 1 1 auto;
+		min-height: 120px;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.cart-footer {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(36, 35, 43, 0.12);
+	}
+
+	.cart-footer > p {
+		margin: 0;
 	}
 
 	.cart-line {

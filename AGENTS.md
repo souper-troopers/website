@@ -1318,6 +1318,14 @@ no list and no options (bracelet word and size, coffee grind). Fixed before goin
   the `shop-order` email reaches sales@. Close the PR afterwards; publishing stays the usual `dev` ->
   `main` fast-forward. Kerry's "how orders work" message is held until payments are switched on.
 
+## The cart drawer's foot is pinned (17 October 2026)
+The user's ask: in `CartWidget.svelte` the Total, the buyer form, any error and the collection note
+sit in `.cart-footer` at the bottom of the drawer; `.cart-lines` takes the spare height and scrolls
+(`flex: 1 1 auto`, `overflow-y: auto`). Total is in the pinned part on purpose, beside Checkout.
+The list has a 120px floor, so on a very short screen (a phone on its side) the whole drawer scrolls
+instead (its own `overflow-y: auto` stays). Measured: footer 24px off the drawer's foot at 390x844 and
+1280x800, with 1 item and with 8.
+
 ## Netlify secrets scanning and the PayFast passphrase (12 October 2026)
 The first publish after the live PayFast details went into Netlify **failed on secrets scanning**:
 - **The live passphrase was guessable** - text that already appears on every page of the site.

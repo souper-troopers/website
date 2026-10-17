@@ -1358,6 +1358,20 @@ header band (the 0.7 one left "by Souper Troopers" at 4.1:1 over the bright top-
 `fadeMobile`. Contrast 74 lines at 8 widths, worst body 5.52:1. `support-conversation.jpg` was deleted
 as unused. Same day: Tasneem's name is **"Tasneem Hoosain"** in Sanity (Shan: drop "Fielies").
 
+## Every hero gets a blurred preview of its photo (17 October 2026)
+Reported on a phone as "layout popping" between pages. **It was not a layout shift**: every
+`PhotoHero` box is sized by CSS (the photo is absolutely positioned in `.hero-bg`), and measured CLS
+on the live site at 390px, 4x CPU / 1.6Mbps, cold and warm, was 0 on all nine main pages. What showed
+was the photo painting late over the ink background - a dark box, then a cut to the photo.
+- **`src/lib/lqip.ts`** makes a 24px JPEG data URI (~550 bytes) from the image's source file at
+  build time, via Astro's non-enumerable `image.fsPath` and `sharp`. `PhotoHero` uses it as the
+  `.blur-up` background (with `background-position` = the photo's `position`) unless an `lqip` prop
+  is given. If `fsPath` ever disappears it returns undefined and the hero falls back to ink.
+- The homepage's hand-made `heroLqip` string was removed - the component makes the same thing.
+- Not done: `zoom` heroes (Corporate partnership, desktop) show the preview unzoomed, so the blur
+  sits slightly differently from the photo - invisible in practice. Contrast unaffected: the
+  preview is the same photo, blurred, under the same tint.
+
 ## The contact form has Netlify's reCAPTCHA (14 October 2026)
 A porn-link spam message reached info@ through the contact form overnight on 13 October: Netlify's
 content filter (Akismet) had caught 27 others, the honeypot catches only the crudest bots, and

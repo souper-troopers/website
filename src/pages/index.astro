@@ -71,10 +71,6 @@ const pillars = [
 	},
 ];
 
-// Generated once via sharp (resize 24px wide, jpeg q40) from hub-group-workshop.jpg - regenerate
-// if the hero photo changes.
-const heroLqip =
-	"data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAASABgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAQFBgED/8QAIhAAAgEDBAIDAAAAAAAAAAAAAQIAAwQREhMhUQUxQcHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAAECAwT/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIxAxEh/9oADAMBAAIRAxEAPwC5e4pAVctxTHJ+p1dt01KUJzjnvqVGq3BFK4t3NTIwoJBMnoaFIMDS2yTjUPY/JF8GSTeWyFk3E1rxoVeSeh3EzXlrarZ3OTnbPpiwzEDQsMZLaZ4VmZiWLEnsmW/kyafjqBQlS2NRHGePmIilZSqM/cu1XTuMXxwNRzgZiIjBn//Z";
 ---
 
 <Layout title="Souper Troopers - Cape Town NPO for homeless people" rawTitle description="A Cape Town NPO for homeless people, based at The Humanity Hub in Woodstock. Donate, volunteer or shop with us." heroOverlay heroDonate>
@@ -83,7 +79,7 @@ const heroLqip =
 	    measured LCP P90/P99 at 3,636ms when it was lazy). */}
 	{/* Since 8 October the hero is Shan's workshop photo at the Hub (Content/Home/Group.jpg, 1600px,
 	    unedited - she re-uploaded it after the first, 1448px file), replacing the Mandela mural. */}
-	<PhotoHero image={heroPhoto} size="home" lqip={heroLqip} position="center 40%" alt="A collage workshop around a long table at The Humanity Hub">
+	<PhotoHero image={heroPhoto} size="home" position="center 40%" alt="A collage workshop around a long table at The Humanity Hub">
 		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change.</h1>
 		{/* Cut at the dash on 25 September (no rewording): CAST and "meets people halfway" are said by the
 		    pillar cards just below. The "Or see how else you can help" link went the same day - the

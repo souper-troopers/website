@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { lqipFor } from "../lib/lqip";
 
 /**
  * One hero for every public page (design brief, 24 September, phase 1): a full-bleed photo behind
@@ -31,7 +32,9 @@ interface Props {
 	size?: "home" | "page" | "band";
 	/** CSS object-position for the photo - e.g. "left center" keeps the painted 66 on the Hub. */
 	position?: string;
-	/** A tiny inline preview shown while the photo loads (the homepage has one). */
+	/** A tiny inline preview shown while the photo loads. Generated from `image` when not given
+	 *  (src/lib/lqip.ts), so every hero paints a blurred version of its photo at once rather than a
+	 *  dark box the photo then pops into. */
 	lqip?: string;
 	/** An alternative tint (a CSS background) for a photo the default fails on. */
 	scrim?: string;
@@ -66,10 +69,11 @@ const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zo
 // The hero is the page's LCP image everywhere but on product pages, where the product photo is
 // larger - so the band loads eagerly (it is in the first screen) but without jumping the queue.
 const highPriority = size !== "band";
+const preview = lqip ?? (await lqipFor(image));
 ---
 
 <section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset, "photo-hero--fade-mobile": fadeMobile }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
-	<div class:list={["hero-bg", { "blur-up": lqip }]} style={lqip ? `background-image:url(${lqip})` : undefined}>
+	<div class:list={["hero-bg", { "blur-up": preview }]} style={preview ? `background-image:url(${preview}); background-position: ${position}` : undefined}>
 		<Image
 			src={image}
 			alt={alt}

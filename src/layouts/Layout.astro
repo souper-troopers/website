@@ -1,5 +1,6 @@
 ---
 import { Image, getImage } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 import logoReversed from "../assets/images/logo-reversed.png";
 import hubLogo from "../assets/images/humanity-hub-logo.png";
 import mandelaMural from "../assets/images/mandela-mural.png";
@@ -154,6 +155,14 @@ interface Props {
 	noindex?: boolean;
 	/** Use `title` exactly as given, instead of appending " - Souper Troopers". Only the homepage should need this: "Brand - descriptor" is the convention for a site's front door, and the automatic suffix can only ever produce "descriptor - Brand". Every other page reads correctly with the brand last. */
 	rawTitle?: boolean;
+	/**
+	 * Load this page the ordinary way rather than through the ClientRouter (17 October). Pages
+	 * without the router are always reached by a full page load, and leave by one. For pages
+	 * whose scripts must run on a fresh document: Netlify injects reCAPTCHA's script into Contact
+	 * and Save our Hub at deploy, and it only renders the "I'm not a robot" box on a real load; the
+	 * status page has its own inline scripts and sits behind a password.
+	 */
+	fullReload?: boolean;
 }
 
 /**
@@ -172,6 +181,7 @@ const {
 	jsonLd = [],
 	noindex = false,
 	rawTitle = false,
+	fullReload = false,
 } = Astro.props;
 
 /**
@@ -322,6 +332,11 @@ const structuredData = {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		{/* Pages swap in place rather than reloading (17 October): an iPhone browser drew the old page
+		    shifted ~110px while it waited for the next one, and from Cape Town every page is a round
+		    trip to Netlify's server in São Paulo. With the router the current page stays put while
+		    the next one is fetched. See "ClientRouter" in AGENTS.md before adding a page script. */}
+		{!fullReload && <ClientRouter />}
 		{/* Deliberately NOT preloaded. That looks wrong for a self-hosted webfont, and was right
 		    until the metrics-matched fallback landed: while text was hidden until Quicksand arrived,
 		    getting it early was the whole game. Now nothing waits for it, so a <link rel=preload> only
@@ -457,7 +472,7 @@ const structuredData = {
 					    bootstrap is an inline script that pauses parsing, so the browser can paint the
 					    header without the cart and then widen it - on phones that nudged Donate and Shop
 					    47px left on every page load (measured 30 September). */}
-					{CHECKOUT_ENABLED && <span class="cart-slot"><CartWidget client:load /></span>}
+					{CHECKOUT_ENABLED && <span class="cart-slot" transition:persist="cart"><CartWidget client:load /></span>}
 				</div>
 				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Menu">
 					<span class="nav-toggle-bar"></span>
@@ -3082,53 +3097,63 @@ const structuredData = {
 		</style>
 
 		<script>
-			const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
-			const primaryNav = document.querySelector<HTMLElement>("#primary-nav");
+			import { onEveryPage } from "../lib/page-load";
 
-			function closeNav() {
-				navToggle?.setAttribute("aria-expanded", "false");
-				primaryNav?.classList.remove("is-open");
-			}
+			// Run for every page, including those the ClientRouter swaps in (see src/lib/page-load.ts):
+			// each swap brings a new header, so its listeners are attached afresh, and the window
+			// listener is dropped (signal) before the next page arrives.
+			onEveryPage((signal) => {
+				const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
+				const primaryNav = document.querySelector<HTMLElement>("#primary-nav");
 
-			navToggle?.addEventListener("click", () => {
-				const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-				navToggle.setAttribute("aria-expanded", String(!isOpen));
-				primaryNav?.classList.toggle("is-open", !isOpen);
-			});
-
-			// Close only for a link to a spot on this same page. Going to another page, the menu stays
-			// open until the new page replaces it: closing it here started its slide-away on the old
-			// page while the new one loaded, and an iPhone showed that half-closed state - the header
-			// row gone and the menu jumped up - for about half a second, then snapped back into the
-			// page-change fade (seen in a screen recording, 17 October; Chrome never showed it).
-			primaryNav?.addEventListener("click", (event) => {
-				const link = (event.target as HTMLElement).closest("a");
-				if (link && link.pathname === location.pathname) {
-					closeNav();
+				function closeNav() {
+					navToggle?.setAttribute("aria-expanded", "false");
+					primaryNav?.classList.remove("is-open");
 				}
-			});
 
-			// Back to a page kept in the browser's back/forward memory, the menu would still be open as
-			// it was left - so close it then instead.
-			window.addEventListener("pageshow", (event) => {
-				if (event.persisted) closeNav();
-			});
+				navToggle?.addEventListener("click", () => {
+					const isOpen = navToggle.getAttribute("aria-expanded") === "true";
+					navToggle.setAttribute("aria-expanded", String(!isOpen));
+					primaryNav?.classList.toggle("is-open", !isOpen);
+				});
 
-			// Auto-close on downward scroll only (not upward) — the menu overlays the page content
-			// right below the header, so continuing to scroll down through it reads as the user moving
-			// on, not adjusting their position within an open menu.
-			let lastScrollY = window.scrollY;
-			window.addEventListener(
-				"scroll",
-				() => {
-					const currentScrollY = window.scrollY;
-					if (currentScrollY > lastScrollY && primaryNav?.classList.contains("is-open")) {
+				// Close only for a link to a spot on this same page. Going to another page, the menu
+				// stays open until the new page replaces it (it arrives with its own, closed menu):
+				// closing it here started its slide-away on the old page while the new one loaded, and
+				// an iPhone showed that half-closed state (seen in a screen recording, 17 October).
+				primaryNav?.addEventListener("click", (event) => {
+					const link = (event.target as HTMLElement).closest("a");
+					if (link && link.pathname === location.pathname) {
 						closeNav();
 					}
-					lastScrollY = currentScrollY;
-				},
-				{ passive: true },
-			);
+				});
+
+				// Back to a page kept in the browser's back/forward memory, the menu would still be
+				// open as it was left - so close it then instead.
+				window.addEventListener(
+					"pageshow",
+					(event) => {
+						if (event.persisted) closeNav();
+					},
+					{ signal },
+				);
+
+				// Auto-close on downward scroll only (not upward) — the menu overlays the page content
+				// right below the header, so continuing to scroll down through it reads as the user
+				// moving on, not adjusting their position within an open menu.
+				let lastScrollY = window.scrollY;
+				window.addEventListener(
+					"scroll",
+					() => {
+						const currentScrollY = window.scrollY;
+						if (currentScrollY > lastScrollY && primaryNav?.classList.contains("is-open")) {
+							closeNav();
+						}
+						lastScrollY = currentScrollY;
+					},
+					{ passive: true, signal },
+				);
+			});
 		</script>
 	</body>
 </html>

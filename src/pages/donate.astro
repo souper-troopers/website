@@ -538,10 +538,16 @@ const otherWays = [
 </style>
 
 <script>
-	// PayFast's Pay Now form returns here with ?donated=1 (see payfastReturnUrl in the frontmatter).
-	// Reveal the thank-you line, then drop the param so a refresh or share doesn't repeat it.
-	if (new URLSearchParams(location.search).get("donated") === "1") {
-		document.querySelector<HTMLElement>("#payfast-thanks")?.removeAttribute("hidden");
-		history.replaceState(null, "", location.pathname);
-	}
+	import { onEveryPage } from "../lib/page-load";
+
+	// Per page (src/lib/page-load.ts); only acts where the thank-you line exists.
+	onEveryPage(() => {
+		// PayFast's Pay Now form returns here with ?donated=1 (see payfastReturnUrl in the frontmatter).
+		// Reveal the thank-you line, then drop the param so a refresh or share doesn't repeat it.
+		const thanks = document.querySelector<HTMLElement>("#payfast-thanks");
+		if (thanks && new URLSearchParams(location.search).get("donated") === "1") {
+			thanks.removeAttribute("hidden");
+			history.replaceState(history.state, "", location.pathname);
+		}
+	});
 </script>

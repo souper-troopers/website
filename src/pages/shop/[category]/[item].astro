@@ -450,34 +450,39 @@ const breadcrumbJsonLd = breadcrumbList(crumbs, Astro.site);
 </style>
 
 <script>
-	// Buttons and a counter for the photo carousel. The track already scrolls and snaps on its own, so
-	// with no script the carousel still works - the controls just stay hidden.
-	for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
-		const track = root.querySelector<HTMLElement>(".carousel-track");
-		const controls = root.querySelector<HTMLElement>(".carousel-controls");
-		if (!track || !controls) continue;
-		const count = controls.querySelector<HTMLElement>(".carousel-count");
-		const [prev, next] = controls.querySelectorAll<HTMLButtonElement>(".carousel-btn");
-		const total = track.children.length;
-		const current = () => Math.round(track.scrollLeft / track.clientWidth);
-		const update = () => {
-			const i = current();
-			if (count) count.textContent = `${i + 1} / ${total}`;
-			prev.disabled = i === 0;
-			next.disabled = i === total - 1;
-		};
-		for (const button of [prev, next]) {
-			button.addEventListener("click", () => {
-				track.scrollTo({ left: (current() + Number(button.dataset.dir)) * track.clientWidth });
+	import { onEveryPage } from "../../../lib/page-load";
+
+	// Per page (src/lib/page-load.ts), so a product page swapped in by the ClientRouter gets its controls.
+	onEveryPage(() => {
+		// Buttons and a counter for the photo carousel. The track already scrolls and snaps on its own, so
+		// with no script the carousel still works - the controls just stay hidden.
+		for (const root of document.querySelectorAll<HTMLElement>("[data-carousel]")) {
+			const track = root.querySelector<HTMLElement>(".carousel-track");
+			const controls = root.querySelector<HTMLElement>(".carousel-controls");
+			if (!track || !controls) continue;
+			const count = controls.querySelector<HTMLElement>(".carousel-count");
+			const [prev, next] = controls.querySelectorAll<HTMLButtonElement>(".carousel-btn");
+			const total = track.children.length;
+			const current = () => Math.round(track.scrollLeft / track.clientWidth);
+			const update = () => {
+				const i = current();
+				if (count) count.textContent = `${i + 1} / ${total}`;
+				prev.disabled = i === 0;
+				next.disabled = i === total - 1;
+			};
+			for (const button of [prev, next]) {
+				button.addEventListener("click", () => {
+					track.scrollTo({ left: (current() + Number(button.dataset.dir)) * track.clientWidth });
+				});
+			}
+			track.addEventListener("keydown", (event) => {
+				if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+				event.preventDefault();
+				(event.key === "ArrowLeft" ? prev : next).click();
 			});
+			track.addEventListener("scroll", update, { passive: true });
+			controls.hidden = false;
+			update();
 		}
-		track.addEventListener("keydown", (event) => {
-			if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-			event.preventDefault();
-			(event.key === "ArrowLeft" ? prev : next).click();
-		});
-		track.addEventListener("scroll", update, { passive: true });
-		controls.hidden = false;
-		update();
-	}
+	});
 </script>

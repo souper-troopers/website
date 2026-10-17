@@ -149,7 +149,7 @@
 			<strong>{rand(cart.total)}</strong>
 		</div>
 
-		<form class="checkout-form" onsubmit={checkout}>
+		<form class="checkout-form" onsubmit={checkout} data-astro-reload>
 			<p class="checkout-intro">Your details, so we can arrange collection with you:</p>
 			<div class="checkout-names">
 				<FloatingField label="First name" bind:value={firstName} required autocomplete="given-name" maxlength={100} />

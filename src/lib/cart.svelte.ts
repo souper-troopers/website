@@ -90,3 +90,9 @@ class CartStore {
 }
 
 export const cart = new CartStore();
+
+// The cart island persists across ClientRouter page swaps (transition:persist in Layout.astro), so
+// it must close itself when the visitor moves on - e.g. "Browse the shop" from an empty cart.
+if (typeof document !== "undefined") {
+	document.addEventListener("astro:before-preparation", () => cart.close());
+}

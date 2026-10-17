@@ -117,8 +117,10 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 		</div>
 		{/* Inline so the armed state lands before first paint. The path is drawn through wherever the
 		    letters actually are, so one script serves the climbing row and the stacked phone layout.
-		    No JS: no path, everything else in its finished state. Reduced motion: path drawn, no play. */}
-		<script is:inline>
+		    No JS: no path, everything else in its finished state. Reduced motion: path drawn, no play.
+		    data-astro-rerun: the ClientRouter runs an inline script only the first time it sees its
+		    text, so without it a second visit to Our Work would leave the animation unarmed. */}
+		<script is:inline data-astro-rerun>
 			(() => {
 				const stage = document.querySelector(".cast-stage");
 				if (!stage) return;

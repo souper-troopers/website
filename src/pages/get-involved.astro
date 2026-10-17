@@ -316,46 +316,51 @@ const goodsCategories = [
 
 </Layout>
 <script>
-	/**
-	 * The detail sections collapse, and several links point straight at them - the action cards at
-	 * the top use #goods and #fundraise, and the header/footer may too. A closed <details> would
-	 * scroll into view showing only its heading, which reads as a dead link rather than as a
-	 * section that needs opening.
-	 *
-	 * Chrome opens a <details> when the hash targets something *inside* it, but here the id sits on
-	 * the <section> wrapping it, and Safari and Firefox are less consistent - so this is done
-	 * explicitly rather than relied upon.
-	 */
-	function openTarget() {
-		if (!location.hash) return;
-		const target = document.querySelector(location.hash);
-		if (!target) return;
-		// The audience content is not inside its <details> any more (see the note on .gi-groups): it
-		// is a region after the card, shown while that card's <details> is open. So a target inside a
-		// region opens the card named by its data-for, and any ancestor <details> as before.
-		let opened = false;
-		const region = target.closest<HTMLElement>("[data-for]");
-		const card = region ? document.getElementById(region.dataset.for ?? "") : null;
-		if (card instanceof HTMLDetailsElement && !card.open) {
-			card.open = true;
-			opened = true;
-		}
-		let el: Element | null = target;
-		while (el) {
-			if (el instanceof HTMLDetailsElement && !el.open) {
-				el.open = true;
+	import { onEveryPage } from "../lib/page-load";
+
+	// Per page (src/lib/page-load.ts): arriving from another page with a #hash runs openTarget once the page is in place; same-page #links still fire hashchange.
+	onEveryPage((signal) => {
+		/**
+		 * The detail sections collapse, and several links point straight at them - the action cards at
+		 * the top use #goods and #fundraise, and the header/footer may too. A closed <details> would
+		 * scroll into view showing only its heading, which reads as a dead link rather than as a
+		 * section that needs opening.
+		 *
+		 * Chrome opens a <details> when the hash targets something *inside* it, but here the id sits on
+		 * the <section> wrapping it, and Safari and Firefox are less consistent - so this is done
+		 * explicitly rather than relied upon.
+		 */
+		function openTarget() {
+			if (!location.hash) return;
+			const target = document.querySelector(location.hash);
+			if (!target) return;
+			// The audience content is not inside its <details> any more (see the note on .gi-groups): it
+			// is a region after the card, shown while that card's <details> is open. So a target inside a
+			// region opens the card named by its data-for, and any ancestor <details> as before.
+			let opened = false;
+			const region = target.closest<HTMLElement>("[data-for]");
+			const card = region ? document.getElementById(region.dataset.for ?? "") : null;
+			if (card instanceof HTMLDetailsElement && !card.open) {
+				card.open = true;
 				opened = true;
 			}
-			el = el.parentElement;
+			let el: Element | null = target;
+			while (el) {
+				if (el instanceof HTMLDetailsElement && !el.open) {
+					el.open = true;
+					opened = true;
+				}
+				el = el.parentElement;
+			}
+			if (opened) {
+				// Re-run the jump: the anchor was resolved against the collapsed height.
+				requestAnimationFrame(() => target.scrollIntoView());
+			}
 		}
-		if (opened) {
-			// Re-run the jump: the anchor was resolved against the collapsed height.
-			requestAnimationFrame(() => target.scrollIntoView());
-		}
-	}
 
-	openTarget();
-	window.addEventListener("hashchange", openTarget);
+		openTarget();
+		window.addEventListener("hashchange", openTarget, { signal });
+	});
 </script>
 
 

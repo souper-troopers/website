@@ -831,7 +831,8 @@ what reads as a flash.
 the old page, hold it, and cross-fade into the new one — so the reveal happens *behind* the
 transition. **No JavaScript, no `ClientRouter`, no per-page changes**, and both documents opt in
 automatically since every page renders through this layout.
-- **Deliberately not Astro's `<ClientRouter />`.** That swaps documents in JS and would need every
+- ~~**Deliberately not Astro's `<ClientRouter />`.**~~ **Adopted 17 October** - see "ClientRouter:
+  pages swap in place". Original note: That swaps documents in JS and would need every
   inline script on the site re-examined for re-run semantics — `Masonry.astro` resolves its grid
   through `document.currentScript.previousElementSibling` at parse time, `index.astro` attaches
   scroll handlers, `our-work.astro` arms the CAST animation once per load. The CSS at-rule gets most
@@ -1421,8 +1422,42 @@ loaded. The iPhone showed that half-closed frame - header row gone, menu jumped 
   ~110px, so the browser draws the *whole viewport* offset (about the status bar plus Chrome's
   address bar) while it waits for the next page, independent of the header. It is the gap between
   leaving one page and painting the next, which a site with client-side navigation never has.
+- **The fix that addressed the cause: Astro's `ClientRouter` (17 October, on staging first).** See
+  "ClientRouter" below.
 - **To debug anything iPhone-only again, ask for a screen recording** (Control Center -> Record) and
   step through it frame by frame. There is no Xcode on this Mac, so no iOS Simulator.
+
+## ClientRouter: pages swap in place (17 October 2026)
+Built to end the iPhone page-change jump (section above): with a real page load the browser shows the
+old page - drawn shifted - until the next one paints, and **from Cape Town every page is a round trip
+to Netlify's edge in São Paulo** (netlify.app resolves there; ~0.2s warm per page, vs gov.uk's ~0.01s
+from a South African edge). `<ClientRouter />` in `Layout.astro` fetches the next page while the
+current one stays put, then swaps it in with a same-document view transition. This reverses the
+August decision ("Deliberately not Astro's ClientRouter") - the reasons it gave are handled below.
+- ⚠ **A bundled `<script>` runs once per visit, not once per page** (the router dedupes scripts by src
+  or text, `swap-functions.js`). Any script that finds elements on the page must go through
+  **`onEveryPage(setup)` in `src/lib/page-load.ts`**: it runs on `astro:page-load` (first load and
+  every swap), or directly on pages without the router, and hands `setup` an AbortSignal that fires
+  before the next swap - pass it to every `window`/`document` listener. Converted: the nav script in
+  `Layout.astro`, `PhotoHero.astro` (parallax, header fade), `FlipCard.astro`, Donate's thank-you
+  line, Get Involved's open-on-hash, the product carousel. `StoryVideo.astro` needed nothing (one
+  delegated `document` listener, added once).
+- ⚠ **Inline scripts likewise run only the first time their text is seen.** Our Work's CAST script has
+  `data-astro-rerun`; any new inline script that sets up a page needs it too.
+- **`<Layout fullReload>` opts a page out**: such pages have no router, so they are always reached
+  and left by a full load. Used on **Contact and Save our Hub** (Netlify injects reCAPTCHA's script
+  at deploy; it renders the "I'm not a robot" box only on a real load, so a swapped-in second visit
+  would have no box and the form would be rejected) and on the **status page** (password, its own
+  inline scripts).
+- **The cart persists across swaps** (`transition:persist="cart"` on `.cart-slot`), so its count
+  doesn't flash; `cart.svelte.ts` closes the drawer on `astro:before-preparation`. The checkout form
+  has `data-astro-reload`. Forms posting elsewhere (Mailchimp, PayFast) are ignored by the router.
+- Prefetch stays off (`prefetch: false` also disables the router's own prefetch). Cloudflare Web
+  Analytics counts router navigations by itself (its `spa` option defaults on).
+- Checked in Chromium and WebKit at iPhone size and 1280: same document across swaps, menu, parallax,
+  header fade, flip cards, the CAST animation on a second visit, `#goods` from another page, the
+  carousel, Add to cart and the cart closing on "Browse the shop", Back, Contact as a full load, and
+  the hero photo fading in on swapped pages. No script errors.
 
 ## Every hero gets a blurred preview of its photo (17 October 2026)
 Made while chasing the report above, before the recording showed the real cause. **It was not a layout shift**: every

@@ -94,49 +94,55 @@ const preview = lqip ?? (await lqipFor(image));
 </section>
 
 <script>
-	// Parallax on the photo, and the transparent header fading to solid ink as the hero scrolls
-	// away (continuously, not snapping - a snap read as a jump). Moved here from index.astro when
-	// every page got a photo hero; bundled once however many pages use it.
-	const hero = document.querySelector<HTMLElement>(".photo-hero");
-	const heroImg = hero?.querySelector<HTMLElement>(".hero-bg");
-	const header = document.querySelector<HTMLElement>(".site-header-overlay");
-	// Homepage only: on a phone the header's Donate / Shop hides while the hero's own Donate button
-	// is on screen (see `.hero-has-donate` in Layout.astro), and reappears once it has scrolled away.
-	const heroDonateBtn = header?.classList.contains("hero-has-donate")
-		? hero?.querySelector<HTMLElement>(".btn-primary")
-		: null;
-	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-	// 0.3 on the homepage; 0.1 elsewhere, matching the smaller overhang there (see Layout.astro).
-	const parallaxRate = Number(hero?.dataset.parallax ?? 0.3);
-	let ticking = false;
+	import { onEveryPage } from "../lib/page-load";
 
-	function update() {
-		if (!hero) return;
-		if (heroImg && !prefersReducedMotion) {
-			// No cap: .hero-bg's overhang (35% on the homepage, 12% elsewhere) covers a full hero height
-			// times the rate, so no gap ever opens above the photo.
-			heroImg.style.transform = `translateY(${window.scrollY * parallaxRate}px)`;
-		}
-		if (header) {
-			const threshold = Math.max(hero.offsetHeight - header.offsetHeight, 1);
-			const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
-			header.style.setProperty("--header-fade", String(progress));
-			if (heroDonateBtn) {
-				header.classList.toggle("show-header-donate", heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight);
-			}
-		}
-		ticking = false;
-	}
+	// Per page, so a page swapped in by the ClientRouter gets its own hero and header (see
+	// src/lib/page-load.ts); the scroll listener goes with the page it was attached for.
+	onEveryPage((signal) => {
+		// Parallax on the photo, and the transparent header fading to solid ink as the hero scrolls
+		// away (continuously, not snapping - a snap read as a jump). Moved here from index.astro when
+		// every page got a photo hero; bundled once however many pages use it.
+		const hero = document.querySelector<HTMLElement>(".photo-hero");
+		const heroImg = hero?.querySelector<HTMLElement>(".hero-bg");
+		const header = document.querySelector<HTMLElement>(".site-header-overlay");
+		// Homepage only: on a phone the header's Donate / Shop hides while the hero's own Donate button
+		// is on screen (see `.hero-has-donate` in Layout.astro), and reappears once it has scrolled away.
+		const heroDonateBtn = header?.classList.contains("hero-has-donate")
+			? hero?.querySelector<HTMLElement>(".btn-primary")
+			: null;
+		const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		// 0.3 on the homepage; 0.1 elsewhere, matching the smaller overhang there (see Layout.astro).
+		const parallaxRate = Number(hero?.dataset.parallax ?? 0.3);
+		let ticking = false;
 
-	update();
-	window.addEventListener(
-		"scroll",
-		() => {
-			if (!ticking) {
-				requestAnimationFrame(update);
-				ticking = true;
+		function update() {
+			if (!hero) return;
+			if (heroImg && !prefersReducedMotion) {
+				// No cap: .hero-bg's overhang (35% on the homepage, 12% elsewhere) covers a full hero height
+				// times the rate, so no gap ever opens above the photo.
+				heroImg.style.transform = `translateY(${window.scrollY * parallaxRate}px)`;
 			}
-		},
-		{ passive: true },
-	);
+			if (header) {
+				const threshold = Math.max(hero.offsetHeight - header.offsetHeight, 1);
+				const progress = Math.min(Math.max(window.scrollY / threshold, 0), 1);
+				header.style.setProperty("--header-fade", String(progress));
+				if (heroDonateBtn) {
+					header.classList.toggle("show-header-donate", heroDonateBtn.getBoundingClientRect().bottom < header.offsetHeight);
+				}
+			}
+			ticking = false;
+		}
+
+		update();
+		window.addEventListener(
+			"scroll",
+			() => {
+				if (!ticking) {
+					requestAnimationFrame(update);
+					ticking = true;
+				}
+			},
+			{ passive: true, signal },
+		);
+	});
 </script>

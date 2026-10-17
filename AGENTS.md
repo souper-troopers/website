@@ -1331,6 +1331,20 @@ instead (its own `overflow-y: auto` stays). Measured: footer 24px off the drawer
   band** at `--header-height`, full bleed, with "n items", so it lines up with the site header. The
   footer's `margin-top: -1rem` cancels the drawer's gap so the divider sits flush on the list; the
   list's 1rem bottom padding is inside the scroll.
+- **Second pass the same day (the user):** each line is a two-row grid - name beside the quantity,
+  then unit price beside the **line total on one baseline**. The line total's right edge equals the
+  Total figure's (`.cart-total` is inset by the boxes' `--line-pad`; measured equal at 390 and
+  1280). The **bin is a 24px white circle hung on the box's top-right corner** (`top/right: -12px`);
+  the list has 12px of extra top/right padding with a matching negative right margin, so the circle
+  isn't clipped by the list's scroll box, and the drawer has `overflow-x: hidden`. Drawer padding
+  halved to 0.75rem. A divider under Total; 0.4rem more above Checkout.
+  - **`src/components/FloatingField.svelte`**: the label sits in the field like a placeholder and
+    floats above the text when focused or filled (and on `:autofill`). A real `<label for>`, id from
+    `$props.id()` (a random id would differ between server and browser). Used for First name, Surname
+    and Email.
+  - **The empty cart is centred in the drawer's height**: the cart icon in a soft purple circle, "Your
+    cart is empty", one line built from existing site wording ("made by people the CAST programme has
+    supported"), and a purple "Browse the shop" button.
 - **The page behind is locked while the cart is open**: an `$effect` sets `overflow: hidden` on
   `<html>` (plus padding for the scrollbar's width where it takes space) and clears both on close.
   Checked: wheel over the page leaves `scrollY` unchanged while open, scrolls again after closing.

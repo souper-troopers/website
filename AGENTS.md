@@ -1371,6 +1371,14 @@ loaded. The iPhone showed that half-closed frame - header row gone, menu jumped 
   since that page would otherwise reappear with the menu still open.
 - Checked in WebKit at iPhone size with the next page held back 1.5s: live site, menu closed while
   waiting; fixed build, menu and header intact while waiting; menu closed after Back.
+- ⚠ **That was only half of it.** A second recording showed the real jump: **with the cross-document
+  `@view-transition` on, iOS Safari draws the old page shifted up ~110px (fixed header off the top)
+  while it waits for the next page to be ready to fade in** - one frame going to Who We Are, 0.7s going
+  to Our Work or Get Involved (the slower pages to be ready). The fade then starts from a correct
+  snapshot. Unique to this site because few sites use cross-document view transitions. Fixed by
+  turning the fade off on iOS only: `@supports (-webkit-touch-callout: none) { @view-transition {
+  navigation: none } }` in `Layout.astro`. `-webkit-touch-callout` is iOS WebKit only - checked false
+  in Chromium and in desktop WebKit, so laptops and Android keep the fade.
 - **To debug anything iPhone-only again, ask for a screen recording** (Control Center -> Record) and
   step through it frame by frame. There is no Xcode on this Mac, so no iOS Simulator.
 

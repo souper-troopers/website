@@ -534,6 +534,18 @@ const structuredData = {
 				}
 			}
 
+			/* Off on iPhone and iPad (17 October): while it waits for the next page to be ready to fade
+			   in, iOS Safari draws the old page shifted up ~110px, with the fixed header off the top -
+			   one frame on a quick page, 0.7s on Our Work and Get Involved (seen in two screen
+			   recordings; never in desktop Safari or Chrome). Without the fade Safari simply holds the
+			   old page until the new one paints. `-webkit-touch-callout` is supported only by iOS
+			   WebKit, so laptops and Android keep the fade. */
+			@supports (-webkit-touch-callout: none) {
+				@view-transition {
+					navigation: none;
+				}
+			}
+
 			/* The current-page underline slides between pages (asked for 25 September). Every page has
 			   at most one .current-marker - under the current nav link, or under Donate / Shop in the
 			   header pill - and it carries the same view-transition-name everywhere, so the browser

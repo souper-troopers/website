@@ -746,6 +746,19 @@ const structuredData = {
 				border-bottom-color: rgba(255, 255, 255, calc(0.1 * var(--header-fade, 0)));
 			}
 
+			/* Phones (17 October, an experiment): sticky in the page's flow instead of fixed, pulled up
+			   over the hero by its own height (the 64px bar plus its 1px border), so it looks and
+			   behaves the same. iPhone browsers - Chrome most visibly - drew the whole old page shifted
+			   up ~110px, header off the top, for up to half a second after a link was tapped; bbc.com,
+			   whose header is in the flow, doesn't do it. Laptops keep `fixed` - the header there can
+			   wrap to two or three rows, which a fixed negative margin couldn't follow. */
+			@media (max-width: 760px) {
+				.site-header-overlay {
+					position: sticky;
+					margin-bottom: calc(-1 * (var(--header-height) + 1px));
+				}
+			}
+
 			/* min-height, not height: the row must still be free to grow when it wraps (the nav drops
 			   onto its own line below ~1085px), but it must never START shorter than its finished self.
 			   Without this the header renders at 66px as soon as the brand has parsed, then jumps to

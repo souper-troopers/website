@@ -1412,6 +1412,16 @@ loaded. The iPhone showed that half-closed frame - header row gone, menu jumped 
   turning the fade off on iOS only: `@supports (-webkit-touch-callout: none) { @view-transition {
   navigation: none } }` in `Layout.astro`. `-webkit-touch-callout` is iOS WebKit only - checked false
   in Chromium and in desktop WebKit, so laptops and Android keep the fade.
+- ⚠ **Still not all of it (third recording, Chrome on iPhone, after publishing):** with the fade
+  off, Chrome still showed the old page shifted ~110px for ~0.4s before cutting to the new one.
+  Safari too, less. bbc.com doesn't do it in the same Chrome. The fade's old-page snapshot (second
+  recording) was unshifted, so the page never actually scrolled - the browser *drew* it shifted.
+  **Experiment, on staging:** below 761px the overlay header is `position: sticky` in the flow with
+  `margin-bottom: calc(-1 * (var(--header-height) + 1px))` instead of `fixed` (bbc.com's header is in
+  the flow). Measured identical at 390 in WebKit on /, /about/, /our-work/ and a product page: header
+  65px, hero and h1 positions, page height, header pinned after scrolling, menu. Laptops stay
+  `fixed` (the wrapping header can't be matched by a fixed negative margin). **If it doesn't help,
+  revert it** rather than leaving an unexplained difference between phone and laptop.
 - **To debug anything iPhone-only again, ask for a screen recording** (Control Center -> Record) and
   step through it frame by frame. There is no Xcode on this Mac, so no iOS Simulator.
 

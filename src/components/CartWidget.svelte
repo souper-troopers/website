@@ -459,10 +459,11 @@
 		font-weight: 700;
 	}
 
+	/* 0.85rem between rows: a floated label (FloatingField) stands ~6px above its field's border. */
 	.checkout-form {
 		display: flex;
 		flex-direction: column;
-		gap: 0.6rem;
+		gap: 0.85rem;
 	}
 
 	.checkout-intro {

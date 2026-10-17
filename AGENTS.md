@@ -1341,7 +1341,9 @@ instead (its own `overflow-y: auto` stays). Measured: footer 24px off the drawer
   - **`src/components/FloatingField.svelte`**: the label sits in the field like a placeholder and
     floats above the text when focused or filled (and on `:autofill`). A real `<label for>`, id from
     `$props.id()` (a random id would differ between server and browser). Used for First name, Surname
-    and Email.
+    and Email. **Outlined style** (the user, same day): floated, the label sits across the top border
+    on a white patch, so the field is 42px (was 50); teal-dark while focused. The patch is white
+    because the field only lives on the white drawer.
   - **The empty cart is centred in the drawer's height**: the cart icon in a soft purple circle, "Your
     cart is empty", one line built from existing site wording ("made by people the CAST programme has
     supported"), and a purple "Browse the shop" button.

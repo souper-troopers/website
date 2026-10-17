@@ -40,6 +40,10 @@
 </div>
 
 <style>
+	/* Outlined style (17 October, the user: save vertical space): once floated, the label sits
+	   across the field's top border on a white patch, so the text needs no room beneath it and the
+	   field is 42px rather than 50. The patch is white because the field is always on the white
+	   cart drawer - change it with the background if the field is ever used elsewhere. */
 	.field {
 		position: relative;
 	}
@@ -47,8 +51,8 @@
 	input {
 		box-sizing: border-box;
 		width: 100%;
-		height: 50px;
-		padding: 20px 0.75rem 6px;
+		height: 42px;
+		padding: 0 0.75rem;
 		border: 1px solid rgba(36, 35, 43, 0.35);
 		border-radius: 10px;
 		font: inherit;
@@ -63,18 +67,20 @@
 		border-color: transparent;
 	}
 
-	/* At rest the label reads as a placeholder (muted ink at 0.7, 5.8:1 on white); floated it is
-	   small and sits above the text, inside the field's top padding. */
+	/* At rest the label reads as a placeholder (muted ink at 0.7, 5.8:1 on white). */
 	label {
 		position: absolute;
 		left: calc(0.75rem + 1px);
 		top: 50%;
 		transform: translateY(-50%);
-		transform-origin: left top;
+		padding: 0 4px;
+		margin-left: -4px;
+		background: #fff;
 		font-size: 0.95rem;
+		line-height: 1.2;
 		color: rgba(36, 35, 43, 0.7);
 		pointer-events: none;
-		transition: top 0.15s ease, transform 0.15s ease, font-size 0.15s ease;
+		transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -83,10 +89,15 @@
 
 	.floated label,
 	input:autofill + label {
-		top: 7px;
-		transform: none;
+		top: 0;
 		font-size: 0.72rem;
 		font-weight: 600;
+		color: rgba(36, 35, 43, 0.8);
+	}
+
+	/* Teal-dark while focused, matching the outline (4.52:1 on white). */
+	input:focus + label {
+		color: var(--st-teal-dark, #148294);
 	}
 
 	@media (prefers-reduced-motion: reduce) {

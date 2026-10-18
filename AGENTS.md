@@ -1469,6 +1469,12 @@ new page in Chromium and WebKit, against 400ms+, and no request at all at tap ti
   so a copy in the HTTP cache still costs a round trip to São Paulo before use; and in Safari Astro's
   prefetch is a plain fetch into the HTTP cache - what blanked pages in September. These fetches are
   `cache: "no-store"`, so nothing reaches the browser's cache. Skipped on Save-Data / 2g.
+- **Then each page's banner photo** (`preloadHero`), one at a time at low priority, after all the HTML:
+  a `new Image()` with the page's own `sizes`/`srcset`, so the browser picks the very file that
+  page will request. ~40-130KB each on a phone (1280w webp), ~350KB for the five, once per visitor
+  (photos are cached for good). Banner only, not photos further down. Verified: the swapped-in page's
+  photo is the preloaded file, complete, `no-fade`, and no image request at tap time. Unlike HTML,
+  photos go through the HTTP cache - that is fine; the Safari bug was about HTML for full loads.
 - The custom loader mirrors Astro's: follows the /about -> /about/ redirect (`event.to`), drops
   `<noscript>`, falls back to a full load for a page without the router, and preloads any stylesheet
   the current page lacks (Our Work has its own).

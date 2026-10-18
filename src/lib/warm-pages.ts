@@ -1,5 +1,6 @@
 /**
- * Keep the main pages ready in memory, so moving to one is instant (18 October).
+ * Keep the main pages ready in memory, so moving to one is instant (18 October), and their banner
+ * photos in the browser's cache.
  *
  * After a page has settled, the HTML of every link marked `data-preload-page` (the menu, Donate and
  * Shop - see Layout.astro) is fetched in the background, one at a time, and kept here for five
@@ -70,9 +71,35 @@ export function warmMarkedPages(): void {
 		.filter((u, i, all) => u.origin === location.origin && keyOf(u) !== here && all.findIndex((v) => keyOf(v) === keyOf(u)) === i);
 	const start = async () => {
 		for (const url of urls) await fetchCopy(url);
+		// Then each page's banner photo (18 October), one at a time at low priority: ~40-130KB each
+		// on a phone, ~350KB for the five, once per visitor - photos are cached for good. Only the
+		// banner, not the photos further down. Same sizes/srcset as the page, so the browser picks
+		// the very file that page will ask for, and the swapped-in page finds it already loaded
+		// (PhotoHero shows it at once, with no fade).
+		for (const url of urls) {
+			const copy = copies.get(keyOf(url));
+			if (fresh(copy)) await preloadHero(copy.html);
+		}
 	};
 	if ("requestIdleCallback" in window) requestIdleCallback(() => void start(), { timeout: 3000 });
 	else setTimeout(() => void start(), 1500);
+}
+
+const preloadedHeroes = new Set<string>();
+
+function preloadHero(html: string): Promise<void> {
+	const source = new DOMParser().parseFromString(html, "text/html").querySelector<HTMLImageElement>(".photo-hero .hero-bg img");
+	const srcset = source?.getAttribute("srcset");
+	if (!source || !srcset || preloadedHeroes.has(srcset)) return Promise.resolve();
+	preloadedHeroes.add(srcset);
+	const img = new Image();
+	img.fetchPriority = "low";
+	img.decoding = "async";
+	// sizes before srcset before src, so the browser chooses from the full set.
+	img.sizes = source.getAttribute("sizes") ?? "100vw";
+	img.srcset = srcset;
+	img.src = source.getAttribute("src") ?? "";
+	return img.decode().catch(() => {});
 }
 
 /**

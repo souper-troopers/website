@@ -25,3 +25,17 @@ export function onEveryPage(setup: (signal: AbortSignal) => void): void {
 		run();
 	}
 }
+
+/**
+ * Pages that opt out of the ClientRouter with `<Layout fullReload>` - keep this list and those props
+ * in step. Links to them must never be fetched by script first: the router would fetch the page,
+ * find no router on it and then do a full load of the same address, and a full load reusing a
+ * script-fetched copy is what blanked pages in Safari in September (AGENTS.md, "Link prefetching is
+ * OFF"). So links to these get `data-astro-reload` (the router leaves them to the browser) and are
+ * never prefetched.
+ */
+export const FULL_RELOAD_PATHS = ["/contact", "/save-our-hub", "/request-for-comment"];
+
+export function isFullReloadPath(pathname: string): boolean {
+	return FULL_RELOAD_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+}

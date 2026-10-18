@@ -86,6 +86,11 @@ const preview = lqip ?? (await lqipFor(image));
 			style={`object-position: ${position}`}
 			onload="this.classList.add('is-loaded')"
 		/>
+		{/* Already in the browser's memory (a page seen before): show it at once rather than fading
+		    it in over its blurred preview - with page swapping the swap's own cross-fade came first,
+		    so a second fade half a second later read as the photo arriving twice (18 October). Runs
+		    during parsing on a full load; swapped-in pages are handled on astro:after-swap below. */}
+		<script is:inline>(() => { const img = document.currentScript.previousElementSibling; if (img && img.complete && img.naturalWidth) img.classList.add("is-loaded", "no-fade"); })();</script>
 	</div>
 	<div class="hero-scrim" style={scrim ? `background: ${scrim}` : undefined}></div>
 	<div class="wrap hero-content">
@@ -95,6 +100,13 @@ const preview = lqip ?? (await lqipFor(image));
 
 <script>
 	import { onEveryPage } from "../lib/page-load";
+
+	// A swapped-in page's photo that the browser already has: shown at once, before the swap's
+	// cross-fade takes its picture of the new page (after-swap fires before that; page scripts after).
+	document.addEventListener("astro:after-swap", () => {
+		const img = document.querySelector<HTMLImageElement>(".photo-hero .hero-bg img");
+		if (img?.complete && img.naturalWidth) img.classList.add("is-loaded", "no-fade");
+	});
 
 	// Per page, so a page swapped in by the ClientRouter gets its own hero and header (see
 	// src/lib/page-load.ts); the scroll listener goes with the page it was attached for.

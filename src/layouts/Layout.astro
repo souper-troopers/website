@@ -1,6 +1,7 @@
 ---
 import { Image, getImage } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
+import { isFullReloadPath } from "../lib/page-load";
 import logoReversed from "../assets/images/logo-reversed.png";
 import hubLogo from "../assets/images/humanity-hub-logo.png";
 import mandelaMural from "../assets/images/mandela-mural.png";
@@ -427,13 +428,9 @@ const structuredData = {
 						<span class="brand-by">by Souper Troopers</span>
 					</span>
 				</a>
-				{/* data-astro-prefetch="load" overrides the site-wide `viewport` default (astro.config.mjs)
-				    for these five links only. Under 760px this nav is translate-Y'd fully above the
-				    viewport until the hamburger opens it, so an IntersectionObserver never sees it and
-				    `viewport` would not fire until the menu is already open — on the exact device where
-				    the delay was noticed. `load` prefetches at idle regardless of position. Affordable
-				    precisely because it is the fixed nav: five documents at ~10KB gzipped each, less than
-				    one hero photo, and the same six on every page so they are cache hits after the first. */}
+				{/* data-preload-page: these pages are fetched into memory once the current page has settled,
+				    so tapping one is instant (src/lib/warm-pages.ts, 18 October). Not on Contact: the pages
+				    in FULL_RELOAD_PATHS are never fetched by script, and their links skip the router. */}
 				<nav aria-label="Primary" id="primary-nav">
 					{/* Sits before Home and is separated by a rule, so it reads as "not part of this
 					    menu" rather than as the first item of it. Only rendered before launch. */}
@@ -441,12 +438,11 @@ const structuredData = {
 						<a
 							class="nav-internal"
 							href={internalLink.href}
-							data-astro-prefetch="load"
 							aria-current={currentPath === internalLink.href ? "page" : undefined}
 						>{internalLink.label}{currentPath === internalLink.href && <span class="current-marker" aria-hidden="true"></span>}</a>
 					)}
 					{navLinks.map((link) => (
-						<a href={link.href} data-astro-prefetch="load" aria-current={currentPath === link.href ? "page" : undefined}>{link.label}{currentPath === link.href && <span class="current-marker" aria-hidden="true"></span>}</a>
+						<a href={link.href} data-preload-page={isFullReloadPath(link.href) ? undefined : ""} data-astro-reload={isFullReloadPath(link.href) ? "" : undefined} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}{currentPath === link.href && <span class="current-marker" aria-hidden="true"></span>}</a>
 					))}
 				</nav>
 				{/* Adrian's point on the 2 September call: the homepage never mentions the shop, so a
@@ -465,8 +461,8 @@ const structuredData = {
 				    .support-menu (Donate / Shop), so the cart stays. */}
 				<div class="header-actions">
 					<div class="support-menu">
-						<a class="btn btn-primary header-donate" href="/donate" data-astro-prefetch="load" aria-current={currentPath === "/donate" ? "page" : undefined}><span class="support-label">Donate{currentPath === "/donate" && <span class="current-marker" aria-hidden="true"></span>}</span></a>
-						<a class="btn header-shop" href="/shop" data-astro-prefetch="load" aria-current={currentPath === "/shop" || currentPath.startsWith("/shop/") ? "page" : undefined}><span class="support-label">Shop{(currentPath === "/shop" || currentPath.startsWith("/shop/")) && <span class="current-marker" aria-hidden="true"></span>}</span></a>
+						<a class="btn btn-primary header-donate" href="/donate" data-preload-page aria-current={currentPath === "/donate" ? "page" : undefined}><span class="support-label">Donate{currentPath === "/donate" && <span class="current-marker" aria-hidden="true"></span>}</span></a>
+						<a class="btn header-shop" href="/shop" data-preload-page aria-current={currentPath === "/shop" || currentPath.startsWith("/shop/") ? "page" : undefined}><span class="support-label">Shop{(currentPath === "/shop" || currentPath.startsWith("/shop/")) && <span class="current-marker" aria-hidden="true"></span>}</span></a>
 					</div>
 					{/* The slot holds the cart's width before its island has parsed: Astro's island
 					    bootstrap is an inline script that pauses parsing, so the browser can paint the
@@ -2131,6 +2127,11 @@ const structuredData = {
 				opacity: 1;
 			}
 
+			/* Already loaded when the page appeared (PhotoHero.astro): no fade. */
+			.photo-hero .hero-bg.blur-up img.no-fade {
+				transition: none;
+			}
+
 			@media (prefers-reduced-motion: reduce) {
 				.photo-hero .hero-bg.blur-up img {
 					transition: none;
@@ -3097,12 +3098,30 @@ const structuredData = {
 		</style>
 
 		<script>
-			import { onEveryPage } from "../lib/page-load";
+			import { onEveryPage, isFullReloadPath } from "../lib/page-load";
+			import { warmMarkedPages } from "../lib/warm-pages";
+
+			// Links to the pages that always load in full (Contact, Save our Hub, the status page) are
+			// handed straight to the browser: marked before the ClientRouter's own click handler sees
+			// them (this one runs in the capture phase), so the router never fetches them first. The
+			// menu's links carry the attribute in the markup; this covers every other link to them.
+			document.addEventListener(
+				"click",
+				(event) => {
+					const link = (event.target as Element | null)?.closest?.("a");
+					if (!link || link.origin !== location.origin) return;
+					if (isFullReloadPath(link.pathname)) link.dataset.astroReload = "";
+				},
+				{ capture: true },
+			);
 
 			// Run for every page, including those the ClientRouter swaps in (see src/lib/page-load.ts):
 			// each swap brings a new header, so its listeners are attached afresh, and the window
 			// listener is dropped (signal) before the next page arrives.
 			onEveryPage((signal) => {
+				// Fetch the main pages into memory once this one has settled (src/lib/warm-pages.ts).
+				warmMarkedPages();
+
 				const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
 				const primaryNav = document.querySelector<HTMLElement>("#primary-nav");
 

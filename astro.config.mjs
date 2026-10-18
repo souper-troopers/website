@@ -11,31 +11,13 @@ export default defineConfig({
   // The real address since launch (October 2026). Used to build absolute canonical/Open Graph URLs
   // and the sitemap. www.soupertroopers.org redirects here (set as the primary domain in Netlify).
   site: 'https://soupertroopers.org',
-  // `prefetch: true` on its own prefetches NOTHING — it only loads the runtime. `prefetchAll`
-  // defaults to false, so with no `data-astro-prefetch` attribute anywhere, every link failed
-  // `elMatchesStrategy` and no strategy ever matched (verified in the built bundle, 2026-08-13).
-  // `prefetchAll` opts every same-origin link in; `viewport` rather than the `hover` default
-  // because hover is a pointer-only event and this was reported on a phone, where it can only
-  // fire on the tap that is already navigating. Astro skips prefetch when the browser reports
-  // Save-Data or a 2g connection, so this stays polite on poor mobile connections.
   /**
-   * ⚠ TEMPORARILY DISABLED to test the Safari blank-page bug (2026-09-07).
-   *
-   * Symptom: clicking a link in Safari (macOS and iOS, and iOS Chrome, which is also WebKit) lands
-   * on a blank page with a download bar offering "document.txt". Reloading fixes it. Server headers
-   * are correct - checked against production, every page returns text/html; charset=UTF-8.
-   *
-   * Why prefetch is the suspect: Astro only reaches its `fetch()` fallback in browsers where
-   * `link.relList.supports("prefetch")` is false, which is exactly Safari - Chrome and Firefox take
-   * the `<link rel=prefetch>` branch and are unaffected. On a static build the fallback is a bare
-   * `fetch(url, {priority:"low"})` that populates the HTTP cache, and Safari reusing such an entry
-   * for a *navigation* is a known source of exactly this symptom. It also explains why only some
-   * pages break (only links actually prefetched) and why a reload cures it.
-   *
-   * If this turns out not to be the cause, restore:
-   *   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
-   * and remove nothing else - the `data-astro-prefetch="load"` attributes on the nav links are
-   * inert while the runtime is not shipped.
+   * Off since 7 September, and staying off: in Safari it blanked pages (a full page load reusing the
+   * copy Astro's fetch() fallback had put in the HTTP cache showed a blank page offering
+   * "document.txt"). Astro's prefetch also couldn't help much here: our HTML is `max-age=0,
+   * must-revalidate`, so a cached copy still costs a round trip to Netlify's edge (São Paulo, from
+   * Cape Town) before use. Pages are instead kept in memory by src/lib/warm-pages.ts (18 October),
+   * which feeds the ClientRouter directly and never touches the HTTP cache.
    */
   prefetch: false,
   integrations: [

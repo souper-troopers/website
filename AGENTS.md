@@ -1459,6 +1459,31 @@ August decision ("Deliberately not Astro's ClientRouter") - the reasons it gave 
   carousel, Add to cart and the cart closing on "Browse the shop", Back, Contact as a full load, and
   the hero photo fading in on swapped pages. No script errors.
 
+## The main pages are kept in memory (18 October 2026)
+`src/lib/warm-pages.ts`: once a page has settled, the HTML of every link marked **`data-preload-page`**
+(the menu, the header's Donate and Shop) is fetched one at a time and kept in memory for five
+minutes; when the ClientRouter is about to load one, its `loader` is swapped for one built from that
+copy (`astro:before-preparation`). Measured with every page request delayed 0.4s: 60-110ms to the
+new page in Chromium and WebKit, against 400ms+, and no request at all at tap time.
+- **Why not Astro's prefetch** (still `prefetch: false`): our HTML is `max-age=0, must-revalidate`,
+  so a copy in the HTTP cache still costs a round trip to São Paulo before use; and in Safari Astro's
+  prefetch is a plain fetch into the HTTP cache - what blanked pages in September. These fetches are
+  `cache: "no-store"`, so nothing reaches the browser's cache. Skipped on Save-Data / 2g.
+- The custom loader mirrors Astro's: follows the /about -> /about/ redirect (`event.to`), drops
+  `<noscript>`, falls back to a full load for a page without the router, and preloads any stylesheet
+  the current page lacks (Our Work has its own).
+- **Pages that always load in full - `FULL_RELOAD_PATHS` in `src/lib/page-load.ts`, keep it in step
+  with the `fullReload` props - are never fetched by script.** Without the guard the router fetched
+  Contact, found no router and then did a full load of the same address: the September pattern. The
+  menu's Contact link carries `data-astro-reload`; a capture-phase click listener in `Layout.astro`
+  adds it to any other link to those pages before the router sees the click.
+- **A photo the browser already has is shown at once** (`no-fade`, PhotoHero.astro: an inline check
+  straight after the `<img>` on full loads, `astro:after-swap` on swaps, before the cross-fade takes
+  its picture of the new page). Reported as the banner "fading in twice": the swap's cross-fade, then
+  the photo's own fade half a second later. A photo seen for the first time still fades in.
+- "Transition was skipped" in Chromium's console is a navigation started while the previous swap was
+  still animating (quick test clicks); harmless.
+
 ## Every hero gets a blurred preview of its photo (17 October 2026)
 Made while chasing the report above, before the recording showed the real cause. **It was not a layout shift**: every
 `PhotoHero` box is sized by CSS (the photo is absolutely positioned in `.hero-bg`), and measured CLS

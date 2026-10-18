@@ -1314,6 +1314,54 @@ const structuredData = {
 				color: var(--st-white);
 			}
 
+			/* Feedback that a tap did something (src/lib/nav-feedback.ts, 18 October). The link or button
+			   under the finger dims while pressed and for a moment after; `!important` because plenty of
+			   link rules set their own opacity, and this has to win for that moment only. */
+			[data-pressed] {
+				opacity: 0.6 !important;
+			}
+
+			/* The loading bar: lives on <html>, outside the <body> each page swap replaces. It creeps
+			   towards 85% while the next page loads (fast at first, then slowing, so a slow page never
+			   looks finished), then runs to the end and fades once the page is in. */
+			.nav-progress {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 3px;
+				background: var(--st-teal);
+				transform: scaleX(0);
+				transform-origin: 0 50%;
+				opacity: 0;
+				z-index: 2000;
+				pointer-events: none;
+			}
+
+			.nav-progress.is-loading {
+				opacity: 1;
+				transform: scaleX(0.85);
+				transition: transform 8s cubic-bezier(0.1, 0.7, 0.2, 1), opacity 0.15s;
+			}
+
+			.nav-progress.is-done {
+				opacity: 0;
+				transform: scaleX(1);
+				transition: transform 0.2s ease-out, opacity 0.25s 0.15s;
+			}
+
+			/* Less motion: the bar simply appears full width while waiting and goes when the page is in. */
+			@media (prefers-reduced-motion: reduce) {
+				.nav-progress.is-loading {
+					transform: scaleX(1);
+					transition: opacity 0.15s;
+				}
+
+				.nav-progress.is-done {
+					transition: opacity 0.2s;
+				}
+			}
+
 			.staging-flag {
 				position: fixed;
 				left: 12px;
@@ -3100,6 +3148,11 @@ const structuredData = {
 		<script>
 			import { onEveryPage, isFullReloadPath } from "../lib/page-load";
 			import { warmMarkedPages } from "../lib/warm-pages";
+			import { initNavFeedback } from "../lib/nav-feedback";
+
+			// Pressed look on links and buttons, and a loading bar while the next page loads. Set up once
+			// per visit: it listens on `document` and keeps its bar outside the swapped <body>.
+			initNavFeedback();
 
 			// Links to the pages that always load in full (Contact, Save our Hub, the status page) are
 			// handed straight to the browser: marked before the ClientRouter's own click handler sees

@@ -1490,6 +1490,21 @@ new page in Chromium and WebKit, against 400ms+, and no request at all at tap ti
 - "Transition was skipped" in Chromium's console is a navigation started while the previous swap was
   still animating (quick test clicks); harmless.
 
+## Tap feedback: pressed look and loading bar (18 October 2026)
+Reported: "sometimes when I click a link I can't tell whether the browser is navigating", worse on a
+phone. With the ClientRouter the old page stays put while the next loads and the browser shows no
+loading indicator of its own; warmed pages swap at once, anything else is ~0.2s+ from Cape Town with
+nothing on screen. **`src/lib/nav-feedback.ts`**, started once per visit from `Layout.astro`'s script:
+- **Pressed look**: the link/button under the pointer gets `data-pressed` (opacity 0.6, `!important`
+  in `Layout.astro`) and keeps it ~160ms after release. On touch it waits 90ms first and drops it on
+  `pointercancel`, so a finger landing on a link to scroll doesn't flash it. Deliberately not
+  `:active` (iOS applies it only with a touchstart listener, then flashes it while scrolling).
+- **Loading bar** (`.nav-progress`, 3px teal, on `<html>` so swaps don't remove it): starts 150ms
+  after `astro:before-preparation` (so instant swaps show nothing), creeps to 85%, completes on
+  `astro:after-swap`. Links the router leaves to the browser (Contact, external, every link on a
+  `fullReload` page) start it from the click; `pageshow` with `persisted` clears it. Under reduced
+  motion it appears full width without the creep.
+
 ## Every hero gets a blurred preview of its photo (17 October 2026)
 Made while chasing the report above, before the recording showed the real cause. **It was not a layout shift**: every
 `PhotoHero` box is sized by CSS (the photo is absolutely positioned in `.hero-bg`), and measured CLS

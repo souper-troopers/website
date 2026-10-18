@@ -1548,6 +1548,20 @@ neither stops a bot posting straight to the form. Kerry: "We need some serious s
   floor for a field's edge); the button keeps its teal outline. Spam protection was already Mailchimp's off-screen bot trap; **double opt-in** (a
   confirmation email) is Mailchimp's own setting, Shan's to switch on.
 
+## Bot sign-ups to Mailchimp's "Volunteers" list (18 October 2026)
+Kerry forwarded "New subscriber to Volunteers" notifications: made-up names, dotted Gmail addresses
+(list bombing), **Subscriber IP 127.0.0.1**. Our footer form (titled "Souper Troopers", audience id
+`da88c4e011`) posts from the visitor's browser, so Mailchimp would record a real IP - so probably not
+ours. **The old WordPress site is still live on Webtimes' server** (`154.66.197.17`; reach it with
+`curl --resolve soupertroopers.org:443:154.66.197.17`): its Contact Us page has an Elementor form
+(First Name, Surname, Email, Phone, Message), and Elementor can pass entries to Mailchimp from the
+server - matching both the names and the 127.0.0.1. A strong lead, not proven.
+- Advised: Webtimes to switch the old website off (keep email with them); double opt-in on the
+  audience (the fix that matters - Audience → More options → Audience settings, checked against
+  Mailchimp's help on the day); delete the fake contacts; "View Subscriber" shows the source.
+- **reCAPTCHA on our footer form: held off, the user's call.** Revisit only if fake sign-ups continue
+  once the old site is off and double opt-in is on.
+
 ## Bracelets taken off the site (12 October 2026, Kerry)
 `productCategory-bracelets` unpublished in Sanity (draft kept - republish to bring them back). The
 shop landing page now shows three tiles across from 901px (`category-grid--three`), and an odd last

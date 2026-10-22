@@ -2852,10 +2852,9 @@ const structuredData = {
 			   point at the 21 October review: the 100deg ink sweep darkened ~70% of the photo, faces
 			   included. On staging only; needs Kerry's / Adrian's sign-off before it reaches main -
 			   revert by dropping `lightHero` in index.astro.
-			   - No wash over the photo. The only band is behind the floating header (the nav is white
-			     text on the photo): solid at 0.85 to the header's foot, then easing out over ~190px.
-			     It follows the header's real height (--header-actual, set by PhotoHero's script), so
-			     a one-row header doesn't get the two-row depth.
+			   - No wash over the photo. The header is white with dark text (see the block near the end
+			     of this sheet), so the dark band rules below are overridden on this page; they follow the
+			     header's real height (--header-actual, set by PhotoHero's script).
 			   - Landscape screens: the words sit lower, wider and smaller, and are made readable by
 			     darkness that follows the letters - no block, nothing beyond the words: a wide, soft
 			     text-shadow (each layer listed twice, i.e. the text's shadow drawn twice), plus a
@@ -3282,6 +3281,73 @@ const structuredData = {
 					gap: var(--space-5);
 				}
 
+			}
+
+			/* Part of the light home hero trial (22 October, `lightHero`; staging only, needs sign-off):
+			   a white header with dark text - 30% white at rest over the photo (no band beneath it),
+			   fading to solid white as the hero scrolls away. Scoped with :has() to the page that has
+			   `.photo-hero--light`, so dropping `lightHero` reverts it too; widening it to every page
+			   is a matter of dropping that scope (an open question for the client). "by Souper
+			   Troopers" is a deeper teal (#0f6674) here; at 30% it still measures 3.1-4.3:1 over the
+			   photo on small phones and at 1920 - accepted by the user (22 October). */
+			body:has(.photo-hero--light) .site-header {
+				background: rgba(255, 255, 255, calc(0.3 + 0.7 * var(--header-fade, 0)));
+				border-bottom-color: rgba(36, 35, 43, calc(0.1 * var(--header-fade, 0)));
+			}
+
+			body:has(.photo-hero--light) .brand,
+			body:has(.photo-hero--light) .brand-title {
+				color: var(--st-ink);
+			}
+
+			body:has(.photo-hero--light) .brand-by {
+				color: #0f6674;
+			}
+
+			body:has(.photo-hero--light) nav[aria-label="Primary"] a {
+				color: rgba(36, 35, 43, 0.85);
+			}
+
+			body:has(.photo-hero--light) nav[aria-label="Primary"] a:hover {
+				color: var(--st-teal-dark);
+			}
+
+			body:has(.photo-hero--light) nav[aria-label="Primary"] a[aria-current="page"],
+			body:has(.photo-hero--light) .site-header-overlay nav[aria-label="Primary"] a[aria-current="page"] {
+				color: var(--st-ink);
+			}
+
+			body:has(.photo-hero--light) nav[aria-label="Primary"] .current-marker {
+				background: var(--st-teal-dark);
+			}
+
+			body:has(.photo-hero--light) .nav-toggle-bar {
+				background: var(--st-ink);
+			}
+
+			body:has(.photo-hero--light) .cart-toggle {
+				color: var(--st-ink) !important;
+			}
+
+			@media (max-width: 760px) {
+				body:has(.photo-hero--light) nav[aria-label="Primary"] {
+					background: var(--st-white);
+				}
+
+				body:has(.photo-hero--light) nav[aria-label="Primary"] a {
+					border-bottom-color: rgba(36, 35, 43, 0.1);
+				}
+			}
+
+			/* No band behind the header (the header carries 30% white itself). */
+			body:has(.photo-hero--light) .photo-hero--home.photo-hero--light .hero-scrim {
+				background: none;
+			}
+
+			@media (max-aspect-ratio: 1/1) {
+				body:has(.photo-hero--light) .photo-hero--home.photo-hero--light .hero-scrim {
+					background: linear-gradient(180deg, rgba(24, 23, 31, 0) 0%, rgba(24, 23, 31, 0.35) 50%, rgba(24, 23, 31, 0.6) 64%);
+				}
 			}
 		</style>
 

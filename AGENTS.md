@@ -2645,8 +2645,10 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
 PhotoHero's script only acts on it). Name it whenever unpublished commits are reported.
 - **Why**: Adrian at the 21 October review - the home page felt dark. The 100deg ink sweep darkened
   ~70% of the photo's width, faces included.
-- **Now**: no wash over the photo. A band behind the header only - solid 0.85 to the header's foot,
-  easing out over ~190px, following the header's real height (`--header-actual`). On laptops the
+- **Now**: no wash over the photo. **The header is white with dark text** on this page only: 30%
+  white at rest over the photo (no band beneath it), fading to solid white as the hero scrolls away;
+  "by Souper Troopers" is a deeper teal (#0f6674). Other pages keep the dark header - whether they
+  get the same treatment is a question for the team. On laptops the
   words sit lower, wider (h1 30ch, p 60ch) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`), and the
   darkness follows the letters with no block anywhere: a wide, soft text-shadow (each layer listed
   twice - the text's shadow drawn twice, the user's idea), plus a blurred ink copy of the same words
@@ -2664,6 +2666,10 @@ PhotoHero's script only acts on it). Name it whenever unpublished commits are re
   (22 October) as the letters themselves pass; a fatter silhouette barely moved it, and a faint
   background under the headline (the alternative) brings back the block. Every other line and page
   passes that check.
+- ⚠ **The white header's "by Souper Troopers" line is under 4.5:1 at some widths** at the 30% rest
+  state: 3.1:1 at 360, 3.9:1 at 390, 4.3:1 at 1920 (4.5-4.8 elsewhere; every other header item
+  passes). Accepted by the user for the trial; **fix it before it goes live** - dark grey for that
+  line, or ~40% white.
 - **Tried and dropped the same day**: a hand-painted brush stroke behind the words (light, then ink
   with a teal outline; on the unmerged `home-brush-banner` branch); white text with an ink outline;
   a fade rising from the foot (briefly on staging); no header band (nav 1.0-1.7:1 on the white wall);

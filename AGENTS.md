@@ -2642,26 +2642,34 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
 ⚠ **On `dev` (staging) only, NOT to be published until Kerry / Adrian sign off.** Anyone publishing
 `dev` -> `main` must either have that sign-off or first revert the trial - drop `lightHero` from the
 `PhotoHero` in `index.astro` (one change; every rule is `.photo-hero--light` in `Layout.astro`, and
-PhotoHero's script only measures for it). Name it whenever unpublished commits are reported.
+PhotoHero's script only acts on it). Name it whenever unpublished commits are reported.
 - **Why**: Adrian at the 21 October review - the home page felt dark. The 100deg ink sweep darkened
   ~70% of the photo's width, faces included.
 - **Now**: no wash over the photo. A band behind the header only - solid 0.85 to the header's foot,
   easing out over ~190px, following the header's real height (`--header-actual`). On laptops the
-  words sit lower, wider (h1 30ch, p 60ch) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`), on a wide
-  soft text-shadow plus a soft strip (0.66) as wide as each element's longest real line
-  (`--text-w`, measured by PhotoHero's script) with a 48px feather; the Donate button has a matching
-  soft shadow. Portrait screens keep their layout (words on the ink below the photo). No wording
-  changed (q37); "human" stays brand yellow.
+  words sit lower, wider (h1 30ch, p 60ch) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`), and the
+  darkness follows the letters with no block anywhere: a wide, soft text-shadow (each layer listed
+  twice - the text's shadow drawn twice, the user's idea), plus a blurred ink copy of the same words
+  underneath (::before wide, ::after tight, with a thick ink text-stroke). The copy's text is
+  `data-shadow`, filled by PhotoHero's script from the element's own text, so it can't drift from
+  the wording (without JS only the text-shadow remains). The Donate button has a matching soft
+  shadow. Portrait screens keep their layout (words on the ink below the photo). No wording changed
+  (q37); "human" stays brand yellow.
 - **Works for the planned video**: the darkness follows the words, not the footage.
-- Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: headline 6.1:1
-  or better on laptops (13:1 on phones), "human" 4.28:1, paragraph 6.6:1; the hero line-box check
-  passes on all 14 pages (home: body 7.46, h1 3.4, header 5.2).
+- Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: headline 3.83:1
+  or better, "human" 3.85:1, paragraph 4.51:1. ⚠ **A known, accepted exception to the line-box
+  check** (`scripts/check-hero-contrast.playwright.js`): with no block behind the words, a few pixels
+  of empty space inside the line boxes (between letters, above the lowercase "human") still show the
+  wall - "human" 1.9-2.1:1 at 1024-1680, the headline's second line 2.2-3.0:1. Accepted by the user
+  (22 October) as the letters themselves pass; a fatter silhouette barely moved it, and a faint
+  background under the headline (the alternative) brings back the block. Every other line and page
+  passes that check.
 - **Tried and dropped the same day**: a hand-painted brush stroke behind the words (light, then ink
   with a teal outline; on the unmerged `home-brush-banner` branch); white text with an ink outline;
   a fade rising from the foot (briefly on staging); no header band (nav 1.0-1.7:1 on the white wall);
-  a dark box or ellipse behind the words sized to the element (it ran far past the shorter lines on
-  wide screens); and shadow alone (paragraph ~2:1 over the white wall - a text-shadow spreads thin
-  strokes too much to darken right beside them).
+  a soft strip or ellipse behind the words (briefly on staging; it read as a dark block, and sized to
+  the element's max-width it ran far past the shorter lines); and text-shadow alone (paragraph ~2:1
+  over the white wall - a shadow spreads thin strokes too much to darken right beside them).
 
 ### The nav's Shop link is gone; the pill carries it (2026-09-25)
 Design brief §3.3 (`d0913a6`). "Shop" was in the header three times - nav link, the Donate / Shop

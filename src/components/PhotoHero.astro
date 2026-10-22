@@ -62,8 +62,7 @@ interface Props {
 	/**
 	 * Homepage only - a trial (22 October, for Adrian's "too dark" point on the 21 October review;
 	 * needs Kerry's / Adrian's sign-off before it is published): no wash over the photo, a short band
-	 * behind the header, and the words made readable by a soft shadow and faint ellipses that follow
-	 * the text. Styles are `.photo-hero--light` in Layout.astro; dropping the prop in index.astro
+	 * behind the header, and the words made readable by a soft shadow that follows the letters. Styles are `.photo-hero--light` in Layout.astro; dropping the prop in index.astro
 	 * reverts the hero.
 	 */
 	lightHero?: boolean;
@@ -155,20 +154,16 @@ const preview = lqip ?? (await lqipFor(image));
 
 		// The header's real height (one row or two), for the light home hero's band (`lightHero`).
 		const setHeaderHeight = () => { if (hero && header) hero.style.setProperty("--header-actual", `${header.offsetHeight}px`); };
-		// The light home hero's tint is as wide as each element's longest rendered line, so no
-		// darkness runs past the words (the element box is its max-width, wider than most lines).
-		const setTextWidths = () => {
-			if (!hero?.classList.contains("photo-hero--light")) return;
+		setHeaderHeight();
+		window.addEventListener("resize", setHeaderHeight, { signal });
+		// The light home hero draws a blurred ink copy of its headline and paragraph underneath them
+		// (Layout.astro, `content: attr(data-shadow)`); the copy is taken from the words themselves,
+		// so it can't drift from the wording. Without JavaScript only the text-shadow remains.
+		if (hero?.classList.contains("photo-hero--light")) {
 			for (const el of hero.querySelectorAll<HTMLElement>(".hero-content > h1, .hero-content > p")) {
-				const range = document.createRange();
-				range.selectNodeContents(el);
-				const right = Math.max(...[...range.getClientRects()].map((r) => r.right));
-				el.style.setProperty("--text-w", `${Math.ceil(right - el.getBoundingClientRect().left)}px`);
+				el.dataset.shadow = el.textContent ?? "";
 			}
-		};
-		const measure = () => { setHeaderHeight(); setTextWidths(); };
-		measure();
-		window.addEventListener("resize", measure, { signal });
+		}
 		update();
 		window.addEventListener(
 			"scroll",

@@ -2856,20 +2856,24 @@ const structuredData = {
 			     text on the photo): solid at 0.85 to the header's foot, then easing out over ~190px.
 			     It follows the header's real height (--header-actual, set by PhotoHero's script), so
 			     a one-row header doesn't get the two-row depth.
-			   - Landscape screens: the words sit lower, wider and smaller, and are made readable by a
-			     wide, soft text-shadow built up close to the letters, plus a soft strip behind the
-			     headline and the paragraph, each only as wide as its longest line (--text-w) with a
-			     48px feather - so the darkness follows the text and there is none without it. Shadow
-			     alone failed over the white wall (paragraph ~2:1); a box or ellipse sized to the
-			     element's max-width ran far past the shorter lines on wide screens. The Donate button
-			     gets a matching soft shadow.
-			   - The strips are ::before with z-index -1 and no stacking context on h1 / p, so both sit
-			     under all the words; with `isolation` on the paragraph its strip covered the
-			     headline's last line.
+			   - Landscape screens: the words sit lower, wider and smaller, and are made readable by
+			     darkness that follows the letters - no block, nothing beyond the words: a wide, soft
+			     text-shadow (each layer listed twice, i.e. the text's shadow drawn twice), plus a
+			     blurred ink copy of the same words underneath (::before wide, ::after tight, with a
+			     thick ink -webkit-text-stroke so the silhouette is fatter than the letters). The copy's
+			     text is `data-shadow`, filled from the element's own text by PhotoHero's script.
+			     Tried and dropped: shadow alone (paragraph ~2:1 over the white wall - a text-shadow
+			     spreads thin strokes too much to darken right beside them); a soft strip or ellipse
+			     behind the words (it read as a dark block, and sized to the element's max-width it ran
+			     far past the shorter lines). The Donate button has a matching soft shadow.
+			   - The copies are ::before/::after with z-index -1 and no stacking context on h1 / p, so
+			     they sit under all the words.
 			   - Portrait screens keep their layout (photo on top fading into ink, words beneath) with
 			     the smaller headline.
-			   Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: worst
-			   headline 4.74:1, "human" 4.27:1 (brand yellow), paragraph 4.62:1. */
+			   Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: headline
+			   3.83:1 or better, "human" 3.85:1 (brand yellow), paragraph 4.51:1. The line-box check
+			   (scripts/check-hero-contrast.playwright.js) flags empty space inside the headline's line
+			   boxes on laptops - an accepted exception, see AGENTS.md. */
 			.photo-hero--home.photo-hero--light .hero-scrim {
 				background: linear-gradient(180deg, rgba(24, 23, 31, 0.85) 0, rgba(24, 23, 31, 0.85) calc(var(--header-actual, var(--hero-clearance)) - 10px), rgba(24, 23, 31, 0.66) calc(var(--header-actual, var(--hero-clearance)) + 22px), rgba(24, 23, 31, 0.44) calc(var(--header-actual, var(--hero-clearance)) + 60px), rgba(24, 23, 31, 0.24) calc(var(--header-actual, var(--hero-clearance)) + 104px), rgba(24, 23, 31, 0.09) calc(var(--header-actual, var(--hero-clearance)) + 150px), rgba(24, 23, 31, 0) calc(var(--header-actual, var(--hero-clearance)) + 190px));
 			}
@@ -2904,6 +2908,13 @@ const structuredData = {
 						0 0 24px rgba(24, 23, 31, 0.9),
 						0 0 42px rgba(24, 23, 31, 0.78),
 						0 0 76px rgba(24, 23, 31, 0.62),
+						0 0 140px rgba(24, 23, 31, 0.48),
+						0 0 2px rgba(24, 23, 31, 1),
+						0 0 5px rgba(24, 23, 31, 1),
+						0 0 12px rgba(24, 23, 31, 0.95),
+						0 0 24px rgba(24, 23, 31, 0.9),
+						0 0 42px rgba(24, 23, 31, 0.78),
+						0 0 76px rgba(24, 23, 31, 0.62),
 						0 0 140px rgba(24, 23, 31, 0.48);
 				}
 
@@ -2915,32 +2926,49 @@ const structuredData = {
 						0 0 18px rgba(24, 23, 31, 0.9),
 						0 0 32px rgba(24, 23, 31, 0.78),
 						0 0 60px rgba(24, 23, 31, 0.62),
+						0 0 110px rgba(24, 23, 31, 0.48),
+						0 0 1px rgba(24, 23, 31, 1),
+						0 0 4px rgba(24, 23, 31, 1),
+						0 0 9px rgba(24, 23, 31, 0.95),
+						0 0 18px rgba(24, 23, 31, 0.9),
+						0 0 32px rgba(24, 23, 31, 0.78),
+						0 0 60px rgba(24, 23, 31, 0.62),
 						0 0 110px rgba(24, 23, 31, 0.48);
 				}
 
-				/* A solid strip as wide as the longest line (--text-w, from PhotoHero's script), feathered
-				   by a mask over a short margin only, so no darkness runs on past the words. */
+				/* A fattened, blurred ink silhouette of the same words underneath (wide and tight),
+				   darker right beside the strokes than a text-shadow can get. */
 				.photo-hero--light h1::before,
-				.photo-hero--light .hero-content > p::before {
-					--fx: 48px;
-					--fy: 36px;
-					content: "";
+				.photo-hero--light h1::after,
+				.photo-hero--light .hero-content > p::before,
+				.photo-hero--light .hero-content > p::after {
+					content: attr(data-shadow);
 					position: absolute;
+					inset: 0;
 					z-index: -1;
-					left: calc(-1 * var(--fx));
-					top: calc(-1 * var(--fy));
-					bottom: calc(-1 * var(--fy));
-					width: calc(var(--text-w, 100%) + 2 * var(--fx));
+					color: var(--st-ink);
+					text-shadow: none;
 					pointer-events: none;
-					background: rgba(24, 23, 31, 0.66);
-					-webkit-mask-image:
-						linear-gradient(to right, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%),
-						linear-gradient(to bottom, transparent 0, #000 var(--fy), #000 calc(100% - var(--fy)), transparent 100%);
-					-webkit-mask-composite: source-in;
-					mask-image:
-						linear-gradient(to right, transparent 0, #000 var(--fx), #000 calc(100% - var(--fx)), transparent 100%),
-						linear-gradient(to bottom, transparent 0, #000 var(--fy), #000 calc(100% - var(--fy)), transparent 100%);
-					mask-composite: intersect;
+				}
+
+				.photo-hero--light h1::before {
+					-webkit-text-stroke: 0.18em var(--st-ink);
+					filter: blur(22px);
+				}
+
+				.photo-hero--light h1::after {
+					-webkit-text-stroke: 0.14em var(--st-ink);
+					filter: blur(8px);
+				}
+
+				.photo-hero--light .hero-content > p::before {
+					-webkit-text-stroke: 16px var(--st-ink);
+					filter: blur(14px);
+				}
+
+				.photo-hero--light .hero-content > p::after {
+					-webkit-text-stroke: 12px var(--st-ink);
+					filter: blur(4px);
 				}
 
 				.photo-hero--light .actions .btn {

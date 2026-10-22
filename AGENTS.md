@@ -2638,6 +2638,27 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
   one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
   passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
+### Trial on staging: the home hero darkened from the foot (22 October 2026)
+⚠ **On `dev` (staging) only, NOT to be published until Kerry / Adrian sign off.** Anyone publishing
+`dev` -> `main` must either have that sign-off or first revert the trial - drop `bottomFade` from the
+`PhotoHero` in `index.astro` (one change; every rule is `.photo-hero--bottom-fade` in `Layout.astro`).
+Name it whenever unpublished commits are reported.
+- **Why**: Adrian at the 21 October review - the home page felt dark. The 100deg ink sweep darkened
+  ~70% of the photo's width, faces included. Now landscape screens keep only the band behind the
+  header (0.9) and a fade rising from the foot (0.88 -> 0.8 at 30% -> 0.72 at 44% -> clear by 68%),
+  and the words sit lower, wider (h1 30ch, p 60ch) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`),
+  so the top third of the photo is untouched. Portrait screens keep their layout with a smaller
+  headline and a 0.9 header band. No wording changed (q37).
+- **Works for the planned video**: contrast comes from the fade at the foot, not from what the
+  footage shows at the top.
+- Measured: 1,029 hero/header lines on 14 pages at 8 widths, none failing; home worst body 5.77:1,
+  h1 4.75:1, nav 4.81:1. A first try (0.6 at 30%, clear by 56%) failed: the headline and the yellow
+  "human" reached ~41% of the height at 768-1024 landscape and measured 1.8-2.7:1 over the white wall.
+- **Tried and dropped the same day** (on the unmerged `home-brush-banner` branch): the words on a
+  hand-painted brush stroke, off-white with ink text and then ink with a teal outline - the paint drew
+  more attention than the words; and white text with an ink outline and no wash - cartoonish, and the
+  paragraph unreadable over the white walls.
+
 ### The nav's Shop link is gone; the pill carries it (2026-09-25)
 Design brief §3.3 (`d0913a6`). "Shop" was in the header three times - nav link, the Donate / Shop
 pill, the cart. The nav is now **Home, Who We Are, Our Work, Get Involved, Contact** (`navLinks` in

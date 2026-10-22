@@ -2848,6 +2848,55 @@ const structuredData = {
 				}
 			}
 
+			/* TRIAL, 22 October - the home hero darkened from the foot only (`<PhotoHero bottomFade>`), for
+			   Adrian's "too dark" point at the 21 October review: the 100deg sweep darkened ~70% of the
+			   photo's width, faces included. On staging only; needs Kerry's / Adrian's sign-off before
+			   it reaches main - revert by dropping `bottomFade` in index.astro.
+			   - Landscape screens: the top band behind the floating header stays (0.9 - without the sweep
+			     under it, "by Souper Troopers" failed at 0.7 and 0.82), and a fade rises from the foot
+			     instead of the sweep: 0.72 or darker to 44% of the height, where the words end (they reach
+			     ~41% at 768 and 1024 landscape), clear by 68%. The words sit lower, wider and smaller, and
+			     the top third of the photo is untouched. 0.6 at 30% / clear by 56% failed: the headline
+			     and the yellow "human" measured 1.8-2.7:1 over the white wall. Contrast comes from the fade, not the
+			     photo, which suits the planned video too.
+			   - Portrait screens keep their layout (photo on top fading into ink, words beneath) with the
+			     smaller headline; the header band goes to 0.9 there too ("by Souper Troopers" 4.37:1 at
+			     0.82).
+			   Measured with scripts/check-hero-contrast.playwright.js; re-run if a stop moves. */
+			@media (min-aspect-ratio: 1001/1000) {
+				.photo-hero--home.photo-hero--bottom-fade .hero-scrim {
+					background:
+						linear-gradient(180deg, rgba(24, 23, 31, 0.9) 0, rgba(24, 23, 31, 0.9) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+						linear-gradient(0deg, rgba(24, 23, 31, 0.88) 0%, rgba(24, 23, 31, 0.8) 30%, rgba(24, 23, 31, 0.72) 44%, rgba(24, 23, 31, 0) 68%);
+				}
+
+				.hero-photo.photo-hero--home.photo-hero--bottom-fade {
+					padding-top: max(46vh, calc(var(--hero-clearance) + var(--space-8)));
+				}
+
+				.photo-hero--bottom-fade h1 {
+					max-width: 30ch;
+					font-size: clamp(1.9rem, 3.3vw, 2.5rem);
+				}
+
+				.photo-hero--bottom-fade .hero-content > p {
+					max-width: 60ch;
+					opacity: 1;
+				}
+			}
+
+			@media (max-aspect-ratio: 1/1) {
+				.photo-hero--home.photo-hero--bottom-fade .hero-scrim {
+					background:
+						linear-gradient(180deg, rgba(24, 23, 31, 0.9) 0, rgba(24, 23, 31, 0.9) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),
+						linear-gradient(180deg, rgba(24, 23, 31, 0.2) 0%, rgba(24, 23, 31, 0.35) 50%, rgba(24, 23, 31, 0.6) 64%);
+				}
+
+				.photo-hero--bottom-fade h1 {
+					font-size: clamp(1.8rem, 7.4vw, 2.6rem);
+				}
+			}
+
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
 			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break
 			   into three lines at 20. */

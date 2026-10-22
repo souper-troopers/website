@@ -59,9 +59,16 @@ interface Props {
 	 * the words over it. Far less of the photo is cut away.
 	 */
 	fadeMobile?: boolean;
+	/**
+	 * Homepage only - a trial (22 October, for Adrian's "too dark" point on the 21 October review;
+	 * needs Kerry's / Adrian's sign-off before it is published): the left-to-right ink sweep gives way
+	 * to a fade rising from the foot, and the words sit lower, wider and smaller inside it. Styles are
+	 * `.photo-hero--bottom-fade` in Layout.astro; dropping the prop in index.astro reverts the hero.
+	 */
+	bottomFade?: boolean;
 }
 
-const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, inset, fadeMobile } = Astro.props;
+const { image, alt = "", size = "page", position = "center 30%", lqip, scrim, zoom, inset, fadeMobile, bottomFade } = Astro.props;
 
 // Widths up to 4000px since 8 October: a retina laptop needs ~2,900px for a full-width banner and
 // up to ~4,900px for a zoomed one, and the site used to stop at 2,400 - every banner was slightly
@@ -72,7 +79,7 @@ const highPriority = size !== "band";
 const preview = lqip ?? (await lqipFor(image));
 ---
 
-<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset, "photo-hero--fade-mobile": fadeMobile }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
+<section class:list={["hero", "hero-photo", "photo-hero", `photo-hero--${size}`, { "photo-hero--inset": inset, "photo-hero--fade-mobile": fadeMobile, "photo-hero--bottom-fade": bottomFade }]} data-parallax="0.1" style={zoom ? `--hero-zoom: ${zoom}` : inset ? `--hero-inset: ${Math.round(inset * 100)}%` : undefined}>
 	<div class:list={["hero-bg", { "blur-up": preview }]} style={preview ? `background-image:url(${preview}); background-position: ${position}` : undefined}>
 		<Image
 			src={image}

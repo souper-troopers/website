@@ -2913,6 +2913,50 @@ const structuredData = {
 				}
 			}
 
+			/* TRIAL, 22 October - the outline variant (`<PhotoHero outline>`), to see what no wash at all
+			   looks like: only the band behind the floating header stays (the nav is text on the photo),
+			   and the h1 and paragraph are white with a 2px ink outline drawn by eight text-shadows.
+			   Not expected to hold its contrast on the white walls - a look, not a candidate. */
+			.photo-hero--home.photo-hero--outline .hero-scrim {
+				background: linear-gradient(180deg, rgba(24, 23, 31, 0.9) 0, rgba(24, 23, 31, 0.9) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px));
+			}
+
+			.photo-hero--outline h1,
+			.photo-hero--outline .hero-content > p {
+				opacity: 1;
+				--o: 2px;
+				text-shadow:
+					var(--o) 0 0 var(--st-ink), calc(-1 * var(--o)) 0 0 var(--st-ink),
+					0 var(--o) 0 var(--st-ink), 0 calc(-1 * var(--o)) 0 var(--st-ink),
+					var(--o) var(--o) 0 var(--st-ink), calc(-1 * var(--o)) var(--o) 0 var(--st-ink),
+					var(--o) calc(-1 * var(--o)) 0 var(--st-ink), calc(-1 * var(--o)) calc(-1 * var(--o)) 0 var(--st-ink);
+			}
+
+			.photo-hero--outline .hero-content > p {
+				--o: 1.5px;
+			}
+
+			.photo-hero--outline .hero-highlight {
+				animation: none;
+				text-shadow: inherit;
+			}
+
+			.photo-hero--outline h1 {
+				font-size: clamp(2rem, 4.2vw, 2.9rem);
+			}
+
+			@media (max-aspect-ratio: 1/1) {
+				.photo-hero--outline h1 {
+					font-size: clamp(1.8rem, 7.4vw, 2.6rem);
+				}
+
+				.photo-hero--home.photo-hero--outline .hero-bg {
+					height: 100%;
+					-webkit-mask-image: none;
+					mask-image: none;
+				}
+			}
+
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
 			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break
 			   into three lines at 20. */

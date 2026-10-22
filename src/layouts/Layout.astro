@@ -2848,6 +2848,71 @@ const structuredData = {
 				}
 			}
 
+			/* TRIAL, 22 October - the brush-stroke home banner (`<PhotoHero brush>`, homepage only), for
+			   Adrian's "too dark" point at the 21 October review: the left of the hero read as a dark
+			   slab. Needs client sign-off; not live. Revert by dropping `brush` from the PhotoHero in
+			   index.astro - every rule below keys on .photo-hero--brush.
+			   - No dark wash over the photo: only the top band behind the floating header stays (the
+			     nav is white text on the photo), at 0.9 - without the old sweep beneath it, "by Souper
+			     Troopers" measured 3.4-3.7:1 at 0.7 and 4.1-4.3:1 at 0.82.
+			   - The h1 and the paragraph each sit on a hand-painted ink stroke with a thin brand-teal
+			     outline, so their contrast comes from the paint and no longer depends on the photo -
+			     which also holds when the video replaces it. The strokes are public/brush/*.svg (made by
+			     scripts/make-brush.py, ink fill baked in) as a stretched background, not a mask: CSS
+			     applies a mask after filters, so it would cut the drop-shadow outline off.
+			   - The paint runs off the page's left edge: its left inset is the .wrap's margin and
+			     padding plus 40px. The hero's overflow: hidden keeps that from scrolling sideways.
+			   - The insets are tuned so no glyph reaches a ragged edge; check 390-1440 if they change. */
+			.photo-hero--home.photo-hero--brush .hero-scrim {
+				background: linear-gradient(180deg, rgba(24, 23, 31, 0.9) 0, rgba(24, 23, 31, 0.9) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px));
+			}
+
+			.photo-hero--brush h1,
+			.photo-hero--brush .hero-content > p {
+				position: relative;
+				isolation: isolate;
+				width: fit-content;
+			}
+
+			.photo-hero--brush h1 {
+				font-size: clamp(2rem, 4.2vw, 2.9rem);
+			}
+
+			.photo-hero--brush .hero-content > p {
+				margin-top: 2.3rem;
+				opacity: 1;
+			}
+
+			.photo-hero--brush h1::before,
+			.photo-hero--brush .hero-content > p::before {
+				content: "";
+				position: absolute;
+				z-index: -1;
+				left: calc(-1 * (max(0px, (100vw - 1100px) / 2) + var(--space-5)) - 40px);
+				background: center / 100% 100% no-repeat;
+				filter: drop-shadow(2px 0 0 var(--st-teal)) drop-shadow(-2px 0 0 var(--st-teal)) drop-shadow(0 2px 0 var(--st-teal)) drop-shadow(0 -2px 0 var(--st-teal));
+			}
+
+			.photo-hero--brush h1::before {
+				top: -1.5em;
+				right: -1.7em;
+				bottom: -1.5em;
+				background-image: url("/brush/brush-headline.svg");
+			}
+
+			.photo-hero--brush .hero-content > p::before {
+				top: -1.35em;
+				right: -3em;
+				bottom: -1.3em;
+				background-image: url("/brush/brush-paragraph.svg");
+			}
+
+			@media (max-aspect-ratio: 1/1) {
+				.photo-hero--brush h1 {
+					font-size: clamp(1.8rem, 7.4vw, 2.6rem);
+				}
+			}
+
 			/* One h1 size for every hero but the homepage's, which stays larger. Wider than the
 			   homepage's 20ch: product names ("African Worry Doll - Christmas Angel") would break
 			   into three lines at 20. */

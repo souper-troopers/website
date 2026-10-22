@@ -2638,6 +2638,25 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
   one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
   passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
+### Trial, not live: the brush-stroke home banner (22 October 2026)
+On branch **`home-brush-banner`** only (draft PR "Do not merge", for Netlify's deploy preview) - not on
+`dev`, not published, and it needs the client's sign-off. Prompted by Adrian at the 21 October
+review: the left of the home hero read as a dark slab (the 100deg ink sweep).
+- The wash over the photo is gone; only the top band behind the floating header stays, at 0.9 (at
+  0.7 and 0.82 "by Souper Troopers" failed, 3.4-4.3:1, once the sweep was no longer under it). The
+  h1 and the hero paragraph each sit on a hand-painted ink brush stroke with a 2px brand-teal
+  outline, running off the page's left edge; text stays white, "human" stays yellow.
+- **Why it suits the video too**: the words' contrast now comes from the paint, not the footage, so a
+  moving hero can't make them unreadable.
+- One flag: `<PhotoHero brush>` in `index.astro` (`.photo-hero--brush` in `Layout.astro`). The strokes
+  are `public/brush/*.svg` from `scripts/make-brush.py` (seed 4 headline, 17 paragraph), used as
+  backgrounds - a mask would cut off the drop-shadow outline.
+- Measured every glyph pixel (not line boxes) at 360-1440: white 15.8:1, yellow 8.5:1, none on the
+  outline or the photo. The insets were grown until the "g" of "change." and the ends of "We all"
+  and "crisis" cleared the frayed edges - re-check if the words, sizes or SVGs change. The general
+  contrast script reports the h1 at 2.76:1 there: its line boxes, taller than the letters, reach the
+  teal outline. Other pages unchanged.
+
 ### The nav's Shop link is gone; the pill carries it (2026-09-25)
 Design brief §3.3 (`d0913a6`). "Shop" was in the header three times - nav link, the Donate / Shop
 pill, the cart. The nav is now **Home, Who We Are, Our Work, Get Involved, Contact** (`navLinks` in

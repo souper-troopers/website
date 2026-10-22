@@ -8,8 +8,14 @@
 // Body 4.5:1, large text 3:1. Re-run after changing the hero tint or adding a hero photo.
 // The header's Shop label is no longer measured: since 8 October it is white on a solid Hub purple
 // fill (5.53:1), so like every filled button its label sits on its own colour, not the photo.
+// The brush-stroke home hero (trial, 22 October) needs no special case: its ink paint (a ::before)
+// stays visible while the text is hidden, so each line is measured against the paint. Its h1 reports
+// ~2.76:1 because the line boxes, taller than the letters, reach the paint's teal outline; whether a
+// letter does is a glyph-level check (see AGENTS.md, "Trial, not live: the brush-stroke home banner").
+// BASE: the dev server by default; point it at `npx astro preview --port 4400` for a build.
 
 async (page) => {
+  const BASE = "http://localhost:8888";
   // For every line of text in each hero (and the nav links sitting over it): record the line boxes
   // and the text's effective colour, hide the text, screenshot, then compare that colour against
   // every pixel of real photo + tint under each line. Worst pixel and 5th percentile reported.
@@ -19,7 +25,7 @@ async (page) => {
   for (const w of widths) {
     await page.setViewportSize({ width: w, height: 900 });
     for (const p of pages) {
-      await page.goto("http://localhost:8888" + p, { waitUntil: "load" });
+      await page.goto(BASE + p, { waitUntil: "load" });
       await page.evaluate(async () => {
         window.scrollTo(0, 0);
         const img = document.querySelector(".photo-hero .hero-bg img");

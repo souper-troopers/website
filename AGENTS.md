@@ -1360,6 +1360,13 @@ The first publish after the live PayFast details went into Netlify **failed on s
   long random one in PayFast (given by phone), then it goes into Netlify's Production context. Until
   then Production's `PAYFAST_PASSPHRASE` is left empty, which is safe while `SHOP_CHECKOUT` is false.
   **Never record the passphrase's value here, and don't silence the scan** (`SECRETS_SCAN_OMIT_*`).
+- **Live checkout was broken from 13 to 23 October, and nobody noticed until a customer did.** A
+  shopper buying 1kg of coffee got PayFast's 400 page. PayFast's page names the cause: first
+  "Invalid merchant key" (Production's key didn't belong to the live merchant ID), then, once the key
+  was fixed, "Generated signature does not match" (Production's passphrase didn't match PayFast's).
+  Stephen corrected both in Netlify on 23 October; each needed a production redeploy; the R65 gift-tag
+  test then succeeded. **Ask for the wording on PayFast's error page first** - it diagnoses itself.
+  Same day: the 1kg Espresso/Moka Pot was R395 in Sanity, corrected to R435 (all 1kg options, Shan).
 - **The old sandbox merchant key sat in `.claude/settings.json`** (four `export PAYFAST_*` permission
   rules from August). Sandbox only, but this repo is public; removed. It remains in git history -
   harmless for a test key.

@@ -1,4 +1,6 @@
 ---
+import { IS_STAGING } from "../lib/env";
+
 /**
  * A TRIAL (10 November 2026, local only): a silent looping video behind the homepage hero, to compare
  * two ways of serving it before Shan's edit arrives. Lives inside PhotoHero's `.hero-bg`, so it
@@ -6,7 +8,8 @@
  * until the video is actually playing - and what shows whenever the video is skipped.
  *
  * Choose the source from the address bar:
- *   ?video=file     our own MP4 from /video/ (the default while trialling)
+ *   ?video=file     our own MP4 from /video/ (the default on staging and locally; on the live
+ *                   site the default is the photo, so this trial cannot reach it by accident)
  *   ?video=youtube  the same footage from YouTube (muted, controls hidden, looped by script)
  *   ?video=off      the photo only
  *   &phone=1        also play on phones / portrait screens (off by default)
@@ -28,7 +31,7 @@ interface Props {
 const { mp4, mp4Small, youtubeId, start, end, poster } = Astro.props;
 ---
 
-<div class="hero-video" data-mp4={mp4} data-mp4-small={mp4Small} data-youtube={youtubeId} data-start={start} data-end={end} data-poster={poster} aria-hidden="true"></div>
+<div class="hero-video" data-mp4={mp4} data-mp4-small={mp4Small} data-youtube={youtubeId} data-start={start} data-end={end} data-poster={poster} data-default={IS_STAGING || !process.env.CONTEXT ? "file" : "off"} aria-hidden="true"></div>
 
 <style is:global>
 	.hero-video {
@@ -115,7 +118,7 @@ const { mp4, mp4Small, youtubeId, start, end, poster } = Astro.props;
 		const box = document.querySelector<HTMLElement>(".hero-video");
 		if (!box) return;
 		const params = new URLSearchParams(location.search);
-		const mode = params.get("video") ?? "file";
+		const mode = params.get("video") ?? box.dataset.default ?? "off";
 		const conn = (navigator as any).connection;
 		const portrait = window.matchMedia("(max-width: 760px), (max-aspect-ratio: 1/1)").matches;
 		if (

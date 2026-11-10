@@ -1,38 +1,55 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PhotoHero from "../components/PhotoHero.astro";
-import hubCirclePhoto from "../assets/images/hub-circle.jpg";
+import { Image } from "astro:assets";
+import thumbsUp from "../assets/images/individuals-randel.jpg";
+import haircut from "../assets/images/hub-haircut.jpg";
+import lounge from "../assets/images/hub-lounge.jpg";
+import craft from "../assets/images/workshop-craft.jpg";
+import tableTennis from "../assets/images/hub-table-tennis.jpg";
 import { DOUBLE_UP, rand, randWords } from "../lib/double-up";
 
 /**
- * Double Up for Humanity (built 10 November 2026) - see src/lib/double-up.ts for the switches.
- * No menu item: reached from the red band or by address. Giving happens on BackaBuddy (they offer no
- * embed - checked 10 November), so the page tells the story and hands over with one clear button.
+ * Double Up for Humanity (built 10 November 2026; made playful the same day at Stephen's request) -
+ * see src/lib/double-up.ts for the switches. No menu item: reached from the red band or by address.
+ * Giving happens on BackaBuddy (they offer no embed - checked 10 November), so the page tells the
+ * story and hands over with one clear BackaBuddy button.
  *
- * ⚠ All wording is a placeholder built from what Kerry and Shan said on the 10 November call and
- * from lines the site already uses. Replace it with theirs before `pageLive` goes true.
+ * Playful, but on the site's own system: brand yellow behind the hero (ink on #dbbc3b is ~8:1), two
+ * tilted photos for "double", a R100 x2 = R200 sum, and sticker-style chips. Photos are ones the site
+ * already uses (consent covered, q35). Decorative, so alt="".
+ *
+ * ⚠ The BackaBuddy logo (public/logos/backabuddy.svg) is their own, taken from their site to show
+ * where the gift goes - ask BackaBuddy for the official file and their OK when we get the link.
+ * ⚠ All wording is a placeholder built from the 10 November call and existing site lines. Replace it
+ * with Kerry's / Shan's before `pageLive` goes true.
  */
 const progress = DOUBLE_UP.raised !== null ? Math.min(100, Math.round((DOUBLE_UP.raised / DOUBLE_UP.target) * 100)) : null;
 const giveUrl = DOUBLE_UP.backabuddyUrl;
+const hubPhotos = [lounge, craft, tableTennis];
 ---
 
 <Layout
-	heroOverlay
 	noindex={!DOUBLE_UP.pageLive}
 	title="Double Up for Humanity, every rand doubled"
 	description="From 23 to 27 November, every rand given to The Humanity Hub in Woodstock, Cape Town, is matched. Help Souper Troopers raise R1 million."
 >
-	<PhotoHero image={hubCirclePhoto} size="page" position="center 4%" fadeMobile>
-		<h1>Double Up for Humanity</h1>
-		<p>From 23 to 27 November, every rand you give to The Humanity Hub is doubled.</p>
-		<div class="actions">
-			{giveUrl ? (
-				<a class="btn btn-primary" href={giveUrl} target="_blank" rel="noopener">Give on BackaBuddy</a>
-			) : (
-				<span class="du-pending">The BackaBuddy link is coming soon</span>
-			)}
+	<section class="du-hero">
+		<div class="wrap du-hero-inner">
+			<div class="du-hero-text">
+				<span class="du-sticker">23&ndash;27 November</span>
+				<h1>Double Up <span class="du-for">for</span> Humanity</h1>
+				<p class="du-lede">From 23 to 27 November, every rand you give to The Humanity Hub is doubled.</p>
+				<a class="du-bab-btn" href={giveUrl ?? "#give"} target={giveUrl ? "_blank" : undefined} rel={giveUrl ? "noopener" : undefined}>
+					Give on <img src="/logos/backabuddy.svg" alt="BackaBuddy" width="124" height="29" />
+				</a>
+			</div>
+			<div class="du-hero-photos" aria-hidden="true">
+				<Image class="du-photo du-photo-back" src={haircut} alt="" widths={[320, 640]} sizes="(min-width: 761px) 300px, 45vw" />
+				<Image class="du-photo du-photo-front" src={thumbsUp} alt="" widths={[320, 640]} sizes="(min-width: 761px) 300px, 45vw" loading="eager" />
+				<span class="du-x2">&times;2</span>
+			</div>
 		</div>
-	</PhotoHero>
+	</section>
 
 	<section class="section wrap">
 		<div class="section-intro">
@@ -43,6 +60,20 @@ const giveUrl = DOUBLE_UP.backabuddyUrl;
 				one week.
 			</p>
 		</div>
+
+		<p class="du-sum" aria-label="Give R100, it is doubled, and the Hub receives R200">
+			<span class="du-coin">R100</span>
+			<span class="du-op du-op-x">&times;2</span>
+			<span class="du-op">=</span>
+			<span class="du-coin du-coin-big">R200</span>
+			<span class="du-sum-note">for the Hub</span>
+		</p>
+
+		<ul class="du-chips">
+			<li class="du-chip du-chip-teal"><strong>{randWords(DOUBLE_UP.target)}</strong> our goal</li>
+			<li class="du-chip du-chip-purple"><strong>One week</strong> 23&ndash;27 November</li>
+			<li class="du-chip du-chip-red"><strong>Every gift</strong> matched rand for rand</li>
+		</ul>
 
 		{progress !== null && DOUBLE_UP.raised !== null && (
 			<div class="du-progress">
@@ -55,7 +86,7 @@ const giveUrl = DOUBLE_UP.backabuddyUrl;
 		)}
 	</section>
 
-	<section class="section wrap">
+	<section class="section wrap du-hub">
 		<div class="section-intro">
 			<h2>What happens inside the Hub</h2>
 			<p>
@@ -65,40 +96,248 @@ const giveUrl = DOUBLE_UP.backabuddyUrl;
 			</p>
 			<p>Your gift helps secure this work for the next three years.</p>
 		</div>
+		<div class="du-strip" aria-hidden="true">
+			{hubPhotos.map((img) => (
+				<Image class="du-strip-photo" src={img} alt="" widths={[320, 640]} sizes="(min-width: 761px) 340px, 30vw" />
+			))}
+		</div>
 	</section>
 
-	<section class="section wrap">
-		<div class="du-give card">
+	<section id="give" class="section wrap">
+		<div class="du-give">
+			<img class="du-give-logo" src="/logos/backabuddy.svg" alt="BackaBuddy" width="206" height="48" />
 			<h2>Give through BackaBuddy</h2>
 			<p>
 				Gifts go through BackaBuddy, South Africa's fundraising platform, so every donation is recorded.
 				You can give anonymously if you prefer.
 			</p>
-			{giveUrl ? (
-				<a class="btn btn-primary" href={giveUrl} target="_blank" rel="noopener">Give on BackaBuddy</a>
-			) : (
-				<p class="du-pending-dark">The BackaBuddy link is coming soon.</p>
-			)}
+			{/* Until DOUBLE_UP.backabuddyUrl is set this goes nowhere useful (#give) - the element is here
+			    to review the page; ask Kerry / Shan for the campaign link. */}
+			<a class="du-bab-btn du-bab-btn-solid" href={giveUrl ?? "#give"} target={giveUrl ? "_blank" : undefined} rel={giveUrl ? "noopener" : undefined}>
+				Give on BackaBuddy <span aria-hidden="true">&rarr;</span>
+			</a>
 		</div>
 		<p class="du-other">Other ways to give, such as EFT and SnapScan, are on our <a href="/donate/">Donate page</a>.</p>
 	</section>
 </Layout>
 
 <style>
-	/* White on the hero's tint, like the other heroes' secondary lines. */
-	.du-pending {
-		display: inline-block;
-		color: var(--st-white);
-		font-weight: 700;
+	/* The site's main spaces sections with a gap; the hero sits flush under the header. */
+	.du-hero {
+		position: relative;
+		overflow: hidden;
+		margin-top: calc(-1 * var(--space-16));
+		padding: calc(var(--space-16) + var(--space-8)) 0 var(--space-12);
+		background:
+			radial-gradient(circle at 8% 22%, rgba(255, 255, 255, 0.35) 0 6px, transparent 7px),
+			radial-gradient(circle at 46% 12%, rgba(221, 75, 89, 0.55) 0 5px, transparent 6px),
+			radial-gradient(circle at 38% 88%, rgba(129, 86, 164, 0.5) 0 7px, transparent 8px),
+			radial-gradient(circle at 92% 82%, rgba(255, 255, 255, 0.4) 0 9px, transparent 10px),
+			radial-gradient(circle at 70% 8%, rgba(27, 171, 190, 0.55) 0 6px, transparent 7px),
+			var(--st-yellow);
+		color: var(--st-ink);
 	}
 
-	.du-pending-dark {
-		font-weight: 700;
-		margin: 0;
+	.du-hero-inner {
+		display: grid;
+		gap: var(--space-10);
+		align-items: center;
 	}
+
+	@media (min-width: 761px) {
+		.du-hero-inner {
+			grid-template-columns: 1.15fr 1fr;
+		}
+	}
+
+	.du-sticker {
+		display: inline-block;
+		transform: rotate(-3deg);
+		padding: 6px 14px;
+		border-radius: 999px;
+		background: var(--st-ink);
+		color: var(--st-white);
+		font-weight: 700;
+		font-size: 0.9rem;
+	}
+
+	.du-hero h1 {
+		margin: var(--space-4) 0 var(--space-4);
+		font-size: clamp(2.6rem, 6vw, 4.4rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+	}
+
+	.du-for {
+		font-size: 0.6em;
+		font-weight: 600;
+	}
+
+	.du-lede {
+		margin: 0 0 var(--space-6);
+		font-size: 1.2rem;
+		max-width: 32rem;
+	}
+
+	/* A BackaBuddy-branded button: their purple (#702878), white label (9.4:1). On the hero it is white
+	   with their logo; the solid version sits in the give card. */
+	.du-bab-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 20px;
+		border-radius: 999px;
+		background: var(--st-white);
+		color: #702878;
+		font-weight: 700;
+		text-decoration: none;
+		box-shadow: 0 6px 0 rgba(36, 35, 43, 0.85);
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.du-bab-btn img {
+		display: block;
+		height: 26px;
+		width: auto;
+	}
+
+	.du-bab-btn:hover {
+		transform: translateY(2px);
+		box-shadow: 0 4px 0 rgba(36, 35, 43, 0.85);
+	}
+
+	.du-bab-btn-solid {
+		background: #702878;
+		color: var(--st-white);
+		padding: 12px 24px;
+	}
+
+	.du-hero-photos {
+		position: relative;
+		height: clamp(260px, 32vw, 380px);
+	}
+
+	.du-hero-photos :global(.du-photo) {
+		position: absolute;
+		width: min(58%, 280px);
+		aspect-ratio: 3 / 4;
+		height: auto;
+		object-fit: cover;
+		border: 8px solid var(--st-white);
+		border-bottom-width: 26px;
+		border-radius: 6px;
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+	}
+
+	.du-hero-photos :global(.du-photo-back) {
+		top: 4%;
+		left: 4%;
+		transform: rotate(-7deg);
+	}
+
+	.du-hero-photos :global(.du-photo-front) {
+		top: 10%;
+		right: 4%;
+		transform: rotate(5deg);
+	}
+
+	.du-x2 {
+		position: absolute;
+		left: 44%;
+		bottom: 0;
+		display: grid;
+		place-items: center;
+		width: 84px;
+		height: 84px;
+		border-radius: 50%;
+		background: var(--st-red);
+		color: #000;
+		font-size: 2rem;
+		font-weight: 800;
+		transform: rotate(-10deg);
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+	}
+
+	/* The sum: R100 x2 = R200. Ink on these tints is well over 7:1. */
+	.du-sum {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3) var(--space-4);
+		margin: var(--space-8) 0 var(--space-6);
+	}
+
+	.du-coin {
+		display: grid;
+		place-items: center;
+		width: 104px;
+		height: 104px;
+		border-radius: 50%;
+		background: #f3e7b8;
+		border: 4px solid var(--st-yellow);
+		font-size: 1.5rem;
+		font-weight: 800;
+	}
+
+	.du-coin-big {
+		width: 140px;
+		height: 140px;
+		font-size: 2.1rem;
+		background: #cdeef2;
+		border-color: var(--st-teal);
+		transform: rotate(-6deg);
+	}
+
+	.du-op {
+		font-size: 2rem;
+		font-weight: 800;
+	}
+
+	.du-op-x {
+		padding: 4px 12px;
+		border-radius: 999px;
+		background: var(--st-red);
+		color: #000;
+		font-size: 1.4rem;
+	}
+
+	.du-sum-note {
+		font-weight: 700;
+		font-size: 1.2rem;
+	}
+
+	.du-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	.du-chip {
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-4) var(--space-5);
+		border-radius: 18px;
+		font-size: 0.95rem;
+	}
+
+	.du-chip strong {
+		font-size: 1.3rem;
+	}
+
+	.du-chip:nth-child(1) { transform: rotate(-1.5deg); }
+	.du-chip:nth-child(2) { transform: rotate(1deg); }
+	.du-chip:nth-child(3) { transform: rotate(-0.5deg); }
+
+	.du-chip-teal { background: #cdeef2; }
+	.du-chip-purple { background: #e6dbf0; }
+	.du-chip-red { background: #f8d7da; }
 
 	.du-progress {
 		max-width: 46rem;
+		margin-top: var(--space-8);
 	}
 
 	.du-progress-figures {
@@ -125,20 +364,80 @@ const giveUrl = DOUBLE_UP.backabuddyUrl;
 		color: rgba(36, 35, 43, 0.7);
 	}
 
-	.du-give {
-		max-width: 46rem;
+	.du-strip {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: var(--space-4);
+		margin-top: var(--space-8);
+		max-width: 64rem;
 	}
 
-	.du-give h2 {
-		margin: 0;
+	.du-strip :global(.du-strip-photo) {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		border-radius: 14px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 14px 30px rgba(0, 0, 0, 0.1);
 	}
 
+	.du-strip :global(.du-strip-photo:nth-child(1)) { transform: rotate(-2deg); }
+	.du-strip :global(.du-strip-photo:nth-child(2)) { transform: rotate(1.5deg) translateY(12px); }
+	.du-strip :global(.du-strip-photo:nth-child(3)) { transform: rotate(-1deg); }
+
+	.du-give {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-4);
+		max-width: 46rem;
+		padding: var(--space-8);
+		border-radius: 24px;
+		background: var(--st-white);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 14px 30px rgba(0, 0, 0, 0.1);
+		border-top: 8px solid #702878;
+	}
+
+	.du-give-logo {
+		height: 40px;
+		width: auto;
+	}
+
+	.du-give h2,
 	.du-give p {
 		margin: 0;
 	}
 
 	.du-other {
 		margin-top: var(--space-5);
+	}
+
+	@media (max-width: 760px) {
+		.du-hero {
+			margin-top: calc(-1 * var(--space-12));
+			padding: calc(var(--space-12) + var(--space-6)) 0 var(--space-10);
+		}
+
+		.du-coin {
+			width: 84px;
+			height: 84px;
+			font-size: 1.25rem;
+		}
+
+		.du-coin-big {
+			width: 112px;
+			height: 112px;
+			font-size: 1.7rem;
+		}
+
+		.du-give {
+			padding: var(--space-6);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.du-bab-btn {
+			transition: none;
+		}
 	}
 </style>

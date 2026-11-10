@@ -22,6 +22,7 @@ import { IS_STAGING } from "../lib/env";
 import EmailLink from "../components/EmailLink.svelte";
 import AddressLink from "../components/AddressLink.svelte";
 import NewsletterSignup from "../components/NewsletterSignup.astro";
+import NewsletterNudge from "../components/NewsletterNudge.astro";
 import { newsletterVisible } from "../lib/newsletter";
 import quicksand400 from "@fontsource/quicksand/files/quicksand-latin-400-normal.woff2?url";
 import quicksand600 from "@fontsource/quicksand/files/quicksand-latin-600-normal.woff2?url";
@@ -3391,5 +3392,7 @@ const structuredData = {
 				);
 			});
 		</script>
+		{/* The newsletter corner card (10 November) - see src/components/NewsletterNudge.astro. */}
+		<NewsletterNudge />
 	</body>
 </html>

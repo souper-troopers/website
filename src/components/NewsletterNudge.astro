@@ -1,0 +1,356 @@
+---
+/**
+ * The newsletter "nudge" (10 November 2026): the middle ground between a full-page pop-up (which
+ * Stephen and most people dismiss on sight) and the footer sign-up (too easy to miss - Kerry, 10
+ * November review). A small card fixed to the bottom-right corner; on phones a slim bar along the
+ * bottom that opens into the card when tapped. It never dims or blocks the page.
+ *
+ * When it appears: once the visitor has read about two-thirds of a page, or on their second page -
+ * never on landing. Not on pages where people are busy giving, buying or writing to us (SKIP below).
+ * Closing it keeps it away for 30 days; subscribing, for a year. Remembered in this browser only.
+ * `?nudge=1` shows it at once, for review.
+ *
+ * Shows the Super News itself, because the selling point is Shan's magazine, not "a newsletter".
+ * ⚠ The cover is a placeholder drawn in CSS until Shan sends the latest issue's cover; the line about
+ * readers ("more than 800") is from the 10 November call - confirm before going live.
+ * Posts to the same Mailchimp form as the footer (src/lib/newsletter.ts), with first name and
+ * surname required, as Shan asked on 13 October.
+ */
+import { newsletterForm, newsletterVisible } from "../lib/newsletter";
+
+const form = newsletterForm();
+const show = newsletterVisible();
+---
+
+{show && (
+	<aside class="nudge" aria-labelledby="nudge-title" hidden data-nudge>
+		<button type="button" class="nudge-bar" aria-expanded="false" aria-controls="nudge-card" data-nudge-open>
+			<span class="nudge-bar-cover" aria-hidden="true">SN</span>
+			<span><strong>Get the Super News</strong>, monthly</span>
+			<span class="nudge-bar-chev" aria-hidden="true">&#8963;</span>
+		</button>
+		<div class="nudge-card" id="nudge-card">
+			<button type="button" class="nudge-close" aria-label="Close" data-nudge-close>&times;</button>
+			<div class="nudge-head">
+				{/* Placeholder cover until Shan sends the real one. */}
+				<div class="nudge-cover" aria-hidden="true">
+					<span class="nudge-cover-kicker">The Humanity Hub</span>
+					<span class="nudge-cover-title">Super<br />News</span>
+				</div>
+				<div>
+					<p class="nudge-title" id="nudge-title">Get the Super News</p>
+					<p class="nudge-text">A monthly magazine from The Humanity Hub, read by more than 800 supporters.</p>
+				</div>
+			</div>
+			<form class="nudge-form" action={form?.action ?? "#"} method="post" target="_blank" data-nudge-form>
+				<div class="nudge-names">
+					<label class="visually-hidden" for="nudge-first">First name</label>
+					<input id="nudge-first" type="text" name="MERGE1" required autocomplete="given-name" placeholder="First name" />
+					<label class="visually-hidden" for="nudge-last">Surname</label>
+					<input id="nudge-last" type="text" name="MERGE2" required autocomplete="family-name" placeholder="Surname" />
+				</div>
+				<label class="visually-hidden" for="nudge-email">Your email</label>
+				<input id="nudge-email" type="email" name="EMAIL" required autocomplete="email" placeholder="Your email" />
+				{form && (
+					<div class="nudge-trap" aria-hidden="true">
+						<input type="text" name={form.honeypot} tabindex="-1" value="" autocomplete="off" />
+					</div>
+				)}
+				<button class="btn btn-purple nudge-submit" type="submit">
+					Subscribe<span class="visually-hidden"> (opens in a new tab)</span>
+				</button>
+			</form>
+			<p class="nudge-thanks" hidden data-nudge-thanks>Thank you! Check your inbox to confirm.</p>
+		</div>
+	</aside>
+)}
+
+<style>
+	.nudge {
+		position: fixed;
+		right: 20px;
+		bottom: 20px;
+		z-index: 900;
+		width: min(360px, calc(100vw - 40px));
+		color: var(--st-ink);
+		animation: nudge-in 0.35s ease-out;
+	}
+
+	.nudge[hidden] {
+		display: none;
+	}
+
+	@keyframes nudge-in {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+	}
+
+	.nudge-card {
+		position: relative;
+		padding: var(--space-5);
+		border-radius: 20px;
+		background: var(--st-white);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 18px 40px rgba(0, 0, 0, 0.2);
+	}
+
+	.nudge-bar {
+		display: none;
+	}
+
+	.nudge-close {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 32px;
+		height: 32px;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: rgba(36, 35, 43, 0.7);
+		font-size: 1.5rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.nudge-close:hover {
+		background: rgba(36, 35, 43, 0.08);
+	}
+
+	.nudge-head {
+		display: flex;
+		gap: var(--space-4);
+		align-items: center;
+		margin-bottom: var(--space-4);
+		padding-right: var(--space-6);
+	}
+
+	/* The placeholder cover: a tilted little magazine in Hub purple. White on #8156a4 is 5.5:1. */
+	.nudge-cover {
+		flex: none;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 72px;
+		height: 96px;
+		padding: 8px 7px;
+		border-radius: 4px;
+		background: linear-gradient(160deg, var(--hub-purple) 0%, #5f3c80 100%);
+		color: var(--st-white);
+		transform: rotate(-4deg);
+		box-shadow: 3px 4px 0 var(--st-yellow), 0 6px 14px rgba(0, 0, 0, 0.2);
+	}
+
+	.nudge-cover-kicker {
+		font-size: 0.5rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.nudge-cover-title {
+		font-size: 1.05rem;
+		font-weight: 800;
+		line-height: 1;
+	}
+
+	.nudge-title {
+		margin: 0 0 4px;
+		font-size: 1.15rem;
+		font-weight: 800;
+	}
+
+	.nudge-text {
+		margin: 0;
+		font-size: 0.9rem;
+		color: rgba(36, 35, 43, 0.8);
+	}
+
+	.nudge-form {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.nudge-names {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-2);
+	}
+
+	.nudge-form input {
+		box-sizing: border-box;
+		width: 100%;
+		height: 40px;
+		padding: 0 var(--space-3);
+		border: 1px solid rgba(36, 35, 43, 0.3);
+		border-radius: 10px;
+		font: inherit;
+		font-size: 0.95rem;
+	}
+
+	.nudge-submit {
+		justify-content: center;
+		margin-top: var(--space-1);
+	}
+
+	.nudge-trap {
+		position: absolute;
+		left: -5000px;
+	}
+
+	.nudge-thanks {
+		margin: var(--space-3) 0 0;
+		font-weight: 700;
+	}
+
+	/* Phones: a slim bar along the bottom, opening into the card. */
+	@media (max-width: 600px) {
+		.nudge {
+			left: 12px;
+			right: 12px;
+			bottom: 12px;
+			width: auto;
+		}
+
+		.nudge-bar {
+			display: flex;
+			align-items: center;
+			gap: var(--space-3);
+			width: 100%;
+			padding: 10px 14px;
+			border: 0;
+			border-radius: 14px;
+			background: var(--st-white);
+			color: var(--st-ink);
+			font: inherit;
+			font-size: 0.92rem;
+			text-align: left;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 12px 28px rgba(0, 0, 0, 0.2);
+			cursor: pointer;
+		}
+
+		.nudge-bar-cover {
+			flex: none;
+			display: grid;
+			place-items: center;
+			width: 28px;
+			height: 36px;
+			border-radius: 3px;
+			background: var(--hub-purple);
+			color: var(--st-white);
+			font-size: 0.7rem;
+			font-weight: 800;
+			transform: rotate(-4deg);
+		}
+
+		.nudge-bar-chev {
+			margin-left: auto;
+			font-size: 1.2rem;
+		}
+
+		.nudge .nudge-card {
+			display: none;
+		}
+
+		.nudge.is-open .nudge-card {
+			display: block;
+		}
+
+		.nudge.is-open .nudge-bar {
+			display: none;
+		}
+	}
+
+	/* Staging only: keep clear of the yellow "Staging" flag in the bottom-left corner. */
+	@media (max-width: 600px) {
+		:global(body:has(.staging-flag)) .nudge {
+			bottom: 56px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nudge {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	import { onEveryPage } from "../lib/page-load";
+
+	const KEY = "nudgeUntil";
+	const DAY = 86_400_000;
+	// Pages where people are busy giving, buying or writing to us - and the internal pages.
+	const SKIP = ["/donate", "/shop", "/contact", "/double-up", "/save-our-hub", "/request-for-comment", "/internal", "/editing-guide", "/changelog", "/google-listing", "/shmiley-decision", "/video-brief"];
+
+	const read = (k: string, store: Storage) => {
+		try {
+			return store.getItem(k);
+		} catch {
+			return null;
+		}
+	};
+	const write = (k: string, v: string, store: Storage) => {
+		try {
+			store.setItem(k, v);
+		} catch {}
+	};
+
+	// Counted once per page shown, so "second page" works with the ClientRouter too.
+	onEveryPage((signal) => {
+		const pages = Number(read("nudgePages", sessionStorage) ?? 0) + 1;
+		write("nudgePages", String(pages), sessionStorage);
+
+		const box = document.querySelector<HTMLElement>("[data-nudge]");
+		if (!box) return;
+		const forced = new URLSearchParams(location.search).get("nudge") === "1";
+		const path = location.pathname;
+		if (!forced) {
+			if (SKIP.some((p) => path === p || path.startsWith(p + "/"))) return;
+			if (Number(read(KEY, localStorage) ?? 0) > Date.now()) return;
+		}
+
+		const close = (days: number) => {
+			write(KEY, String(Date.now() + days * DAY), localStorage);
+			box.hidden = true;
+		};
+		const show = () => {
+			if (!box.hidden || signal.aborted) return;
+			box.hidden = false;
+		};
+
+		box.querySelector("[data-nudge-close]")?.addEventListener("click", () => close(30), { signal });
+		box.querySelector("[data-nudge-open]")?.addEventListener(
+			"click",
+			(e) => {
+				box.classList.add("is-open");
+				(e.currentTarget as HTMLElement).setAttribute("aria-expanded", "true");
+				box.querySelector<HTMLInputElement>("#nudge-first")?.focus();
+			},
+			{ signal },
+		);
+		box.querySelector("[data-nudge-form]")?.addEventListener(
+			"submit",
+			() => {
+				write(KEY, String(Date.now() + 365 * DAY), localStorage);
+				setTimeout(() => {
+					box.querySelector<HTMLElement>("[data-nudge-form]")!.hidden = true;
+					box.querySelector<HTMLElement>("[data-nudge-thanks]")!.hidden = false;
+				}, 50);
+			},
+			{ signal },
+		);
+		document.addEventListener("keydown", (e) => e.key === "Escape" && !box.hidden && close(30), { signal });
+
+		if (forced || pages >= 2) {
+			setTimeout(show, forced ? 0 : 2500);
+			return;
+		}
+		const onScroll = () => {
+			const read = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+			if (read >= 0.66) show();
+		};
+		window.addEventListener("scroll", onScroll, { passive: true, signal });
+	});
+</script>

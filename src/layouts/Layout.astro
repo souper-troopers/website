@@ -833,13 +833,13 @@ const structuredData = {
 			   purple shops. White on the purple is 5.53:1, on the hover shade 7.43:1; the pill against
 			   the dark header is 3.1:1, which is enough for a shape. The current-page underline is
 			   white here. It was filled white from 2 to 8 October.
-			   10 November (Stephen): a hairline pale lilac outline (#c9b3e0, 8.2:1 against the ink bar),
+			   10 November (Stephen): a hairline pale lilac outline (#c9b3e0 at 50%, halved the same day),
 			   which fades out as the header turns solid on scroll (--header-fade, set by PhotoHero's
 			   script; unset, i.e. 0, on pages without the floating header, so it shows there). The
 			   purple alone sank into the see-through header over the home photo. The border stays 1px
 			   wide when faded, so the button never changes size. */
 			.support-menu .header-shop {
-				border: 1px solid rgba(201, 179, 224, calc(1 - var(--header-fade, 0)));
+				border: 1px solid rgba(201, 179, 224, calc(0.5 - 0.5 * var(--header-fade, 0)));
 				color: var(--st-white);
 				background: var(--hub-purple);
 				transition: background 0.15s ease, border-color 0.15s ease;
@@ -940,7 +940,7 @@ const structuredData = {
 			   drop shadows (one per side), fading out as the header turns solid. Only on the floating
 			   header, which is every public page. */
 			.site-header-overlay .brand img {
-				--logo-edge: rgba(201, 179, 224, calc(1 - var(--header-fade, 0)));
+				--logo-edge: rgba(201, 179, 224, calc(0.5 - 0.5 * var(--header-fade, 0)));
 				filter: drop-shadow(0.75px 0 0 var(--logo-edge)) drop-shadow(-0.75px 0 0 var(--logo-edge)) drop-shadow(0 0.75px 0 var(--logo-edge)) drop-shadow(0 -0.75px 0 var(--logo-edge));
 			}
 

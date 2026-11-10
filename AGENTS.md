@@ -2901,7 +2901,7 @@ is confidential - keep it out of this repo.
   staging/local and **to the photo on the live site**, so the trial can't go live by accident. Test
   footage is 0:08-0:32 of the Capital International film (public on their YouTube). A first-frame
   poster covers the start. Measured: own file starts <0.1s (1s on 1.6Mbps), YouTube 2.7-7s (13s
-  slow) and pulls 8-21MB. Laptops only; phones keep the photo. Netlify bandwidth is 20 credits/GB,
+  slow) and pulls 8-21MB. Plays on phones too since 10 November (Stephen), with the 720p file (~3.7MB). Netlify bandwidth is 20 credits/GB,
   so ~1 credit per 8 plays. Advice to Shan: a silent 15-20s loop plus Kerry's interview on YouTube.
 - **Newsletter corner card** (`src/components/NewsletterNudge.astro`, in `Layout.astro`): a little
   CSS-drawn newspaper bottom-right that opens into a glass card (55% white - the most see-through

@@ -12,9 +12,9 @@ import { IS_STAGING } from "../lib/env";
  *                   site the default is the photo, so this trial cannot reach it by accident)
  *   ?video=youtube  the same footage from YouTube (muted, controls hidden, looped by script)
  *   ?video=off      the photo only
- *   &phone=1        also play on phones / portrait screens (off by default)
  *
- * Skipped: reduced motion, Save-Data, 2g connections, and phones unless `phone=1`.
+ * Skipped: reduced motion, Save-Data and 2g connections. Plays on phones too since 10 November
+ * (Stephen) - the 720p file there (~3.7MB per visit), since a phone screen never needs 1080p.
  */
 interface Props {
 	/** Our own files: a 1080p and a 720p H.264 MP4, no audio track. */
@@ -125,8 +125,7 @@ const { mp4, mp4Small, youtubeId, start, end, poster } = Astro.props;
 			mode === "off" ||
 			window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
 			conn?.saveData ||
-			/(^|-)2g$/.test(conn?.effectiveType ?? "") ||
-			(portrait && params.get("phone") !== "1")
+			/(^|-)2g$/.test(conn?.effectiveType ?? "")
 		) {
 			return;
 		}
@@ -194,7 +193,7 @@ const { mp4, mp4Small, youtubeId, start, end, poster } = Astro.props;
 		v.setAttribute("playsinline", "");
 		// 1080p only for a big screen on a decent connection: at 1.6Mbps the 2Mbps 1080p file stalled
 		// for ~10s in its first 25s, while the 1.2Mbps 720p one played straight through (measured).
-		const big = window.innerWidth * (window.devicePixelRatio || 1) > 1400 && !(conn?.downlink && conn.downlink < 4);
+		const big = !portrait && window.innerWidth * (window.devicePixelRatio || 1) > 1400 && !(conn?.downlink && conn.downlink < 4);
 		v.src = big ? box.dataset.mp4! : box.dataset.mp4Small!;
 		v.addEventListener("playing", () => playing(big ? "file-1080" : "file-720"), { once: true });
 		box.append(v);

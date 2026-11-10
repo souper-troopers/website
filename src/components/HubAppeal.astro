@@ -6,16 +6,17 @@
    DOUBLE_UP.bannerLive; always shown on staging. See src/lib/double-up.ts. */
 import { doubleUpBannerBuilt } from "../lib/double-up";
 
-/* Faint yellow "2"s scattered behind the words (10 November, Stephen). Fixed positions from a
+/* Faint black "2"s scattered behind the words (10 November, Stephen; yellow at first). At most 10%
+   black, so the black text on the red still holds 4.7:1 where a 2 sits behind it. Fixed positions from a
    seeded generator, so every build draws the same pattern and nothing shifts between pages. */
 let seed = 7;
 const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
-const twos = Array.from({ length: 18 }, (_, i) => ({
-	left: ((i + rnd() * 0.8) / 18) * 100,
+const twos = Array.from({ length: 40 }, (_, i) => ({
+	left: ((i + rnd() * 0.8) / 40) * 100,
 	top: -20 + rnd() * 90,
 	size: 1.1 + rnd() * 2.6,
 	rotate: -25 + rnd() * 50,
-	opacity: 0.16 + rnd() * 0.2,
+	opacity: 0.05 + rnd() * 0.05,
 }));
 ---
 
@@ -61,7 +62,7 @@ const twos = Array.from({ length: 18 }, (_, i) => ({
 
 .hub-appeal-twos span {
 	position: absolute;
-	color: var(--st-yellow);
+	color: #000;
 	font-weight: 800;
 	line-height: 1;
 }

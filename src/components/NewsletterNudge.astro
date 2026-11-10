@@ -12,7 +12,7 @@
  *
  * Shows the Super News itself, because the selling point is Shan's magazine, not "a newsletter".
  * ⚠ The cover is a placeholder drawn in CSS until Shan sends the latest issue's cover; the line about
- * readers ("more than 800") is from the 10 November call - confirm before going live.
+ * readers ("sent to more than 800 people") is from the 10 November call - confirm before going live.
  * Posts to the same Mailchimp form as the footer (src/lib/newsletter.ts), with first name and
  * surname required, as Shan asked on 13 October.
  */
@@ -39,7 +39,7 @@ const show = newsletterVisible();
 				</div>
 				<div>
 					<p class="nudge-title" id="nudge-title">Get the Super News</p>
-					<p class="nudge-text">A monthly magazine from The Humanity Hub, read by more than 800 supporters.</p>
+					<p class="nudge-text">A monthly magazine from The Humanity Hub, sent to more than 800 people.</p>
 				</div>
 			</div>
 			<div class="nudge-reveal">
@@ -247,6 +247,16 @@ const show = newsletterVisible();
 			transition: margin-bottom 0.35s ease;
 		}
 
+		/* Smaller at rest, so the circle has room around the book; full size once open. */
+		.nudge-cover {
+			transform: rotate(-4deg) scale(0.76);
+			transition: transform 0.35s ease;
+		}
+
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-cover {
+			transform: rotate(-4deg);
+		}
+
 		.nudge-head > div:not(.nudge-cover) {
 			opacity: 0;
 			transition: opacity 0.2s ease;
@@ -300,6 +310,7 @@ const show = newsletterVisible();
 	@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
 		.nudge-card,
 		.nudge-head,
+		.nudge-cover,
 		.nudge-reveal {
 			transition: none;
 		}

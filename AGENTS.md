@@ -2878,3 +2878,46 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## The 10 November 2026 review, and what was built the same day
+Minutes are not in the repo (Stephen took notes in the project thread); the transcript is one level
+up as `..._otter_ai_transcript.txt` and **overwrote the 30 September one**. The building's ownership
+is confidential - keep it out of this repo.
+- **Double Up for Humanity** (BackaBuddy campaign, every rand matched up to R1m, 23-27 November;
+  packs to supporters from 16 November). Page `/double-up/` (`src/pages/double-up.astro`), switches in
+  `src/lib/double-up.ts` (`pageLive`, `bannerLive`, `backabuddyUrl`, `raised`). No menu item; reached
+  from the red band (`HubAppeal.astro`, now a yellow x2 sticker, faint falling black 2s, a bouncing
+  highlighted "doubled") on Home, Donate and Get Involved, and from `/doubleup` and
+  `/doubleupforhumanity` (302s in `public/_redirects`). Hidden from Google and the sitemap until
+  `pageLive`; the band shows on staging and locally always, on the live site only with `bannerLive`.
+  Playful layout: yellow hero, two tilted photos already on the site, a R100 x2 = R200 sum. All
+  wording is placeholder until Kerry/Shan confirm (status page `q55`, `q56`).
+  - **BackaBuddy has no embed** (checked 10 November: no widget, no embed route). Their pages send no
+    X-Frame-Options, so an iframe would load, but it's unsupported - don't. Their API is undocumented.
+    The logo in `public/logos/backabuddy.svg` is theirs, from their site - their OK is asked in `q55`.
+- **Homepage video trial** (`src/components/HeroVideo.astro`, slot `bg` of PhotoHero): `?video=file`
+  (our MP4s in `public/video/`, 1080p at 2Mbps and 720p at 1.2Mbps for connections under 4Mbps),
+  `?video=youtube` (the same footage via the IFrame API), `?video=off`. Defaults to the file on
+  staging/local and **to the photo on the live site**, so the trial can't go live by accident. Test
+  footage is 0:08-0:32 of the Capital International film (public on their YouTube). A first-frame
+  poster covers the start. Measured: own file starts <0.1s (1s on 1.6Mbps), YouTube 2.7-7s (13s
+  slow) and pulls 8-21MB. Laptops only; phones keep the photo. Netlify bandwidth is 20 credits/GB,
+  so ~1 credit per 8 plays. Advice to Shan: a silent 15-20s loop plus Kerry's interview on YouTube.
+- **Newsletter corner card** (`src/components/NewsletterNudge.astro`, in `Layout.astro`): a little
+  CSS-drawn newspaper bottom-right that opens into a glass card (55% white - the most see-through
+  that keeps its text at 5:1 over the dark partners band) on hover or focus; a slim bar on phones.
+  Shows at two-thirds of a page or on the second page, never on Donate, shop, Contact, Double Up or
+  internal pages; close = 30 days, subscribe = a year (localStorage). `?nudge=1` forces it. Same
+  Mailchimp form as the footer, which stays. The cover is a placeholder until Shan sends one (`q13`).
+- **Header and cards**: the header Shop button and the logo have a hairline lilac outline (50%)
+  that fades as the header turns solid; on the home hero the header is 60% frosted ink with a white
+  "by Souper Troopers"; cards lost their grey hairline and have a firmer two-layer shadow.
+- **The yellow "Staging" pill is gone** (Stephen); staging still sets noindex and labels forms.
+- **Status page: Important / Parked** (`important`, `parked` on `Question`). Blocks top to bottom:
+  Important now (tinted, badge), the four groups' ordinary open questions, then Parked and Resolved
+  folded. Every block is a `<details>`; a `#ask-` link opens its block. Visible numbers are positional
+  and reshuffled - refer to questions by title. 10 November: q55-q57 added, 9 closed (q2, q4, q26,
+  q28, q34, q43, q46, q48, q53), 13 parked.
+- ⚠ **Publishing**: the status page Kerry reads is the live one, so these status-page changes only
+  reach her when `dev` is published - and `dev` also carries the home banner trial that still needs
+  Kerry's and Adrian's sign-off.

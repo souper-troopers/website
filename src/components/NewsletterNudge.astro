@@ -40,8 +40,10 @@ const show = newsletterVisible();
 				<div>
 					<p class="nudge-title" id="nudge-title">Get the Super News</p>
 					<p class="nudge-text">A monthly magazine from The Humanity Hub, read by more than 800 supporters.</p>
+					<p class="nudge-hint" aria-hidden="true">Sign up <span>&#8964;</span></p>
 				</div>
 			</div>
+			<div class="nudge-reveal">
 			<form class="nudge-form" action={form?.action ?? "#"} method="post" target="_blank" data-nudge-form>
 				<div class="nudge-names">
 					<label class="visually-hidden" for="nudge-first">First name</label>
@@ -60,6 +62,7 @@ const show = newsletterVisible();
 					Subscribe<span class="visually-hidden"> (opens in a new tab)</span>
 				</button>
 			</form>
+			</div>
 			<p class="nudge-thanks" hidden data-nudge-thanks>Thank you! Check your inbox to confirm.</p>
 		</div>
 	</aside>
@@ -197,6 +200,71 @@ const show = newsletterVisible();
 	.nudge-trap {
 		position: absolute;
 		left: -5000px;
+	}
+
+	/* Compact until wanted (10 November, Stephen): on devices with a mouse the fields and button are
+	   folded away until the card is hovered, or focused from the keyboard, and the card's height
+	   animates open. It stays open while anything has been typed. Touch devices skip this - on phones
+	   the bar already does the folding. */
+	.nudge-hint {
+		display: none;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.nudge-hint {
+			display: block;
+			margin: var(--space-2) 0 0;
+			color: var(--hub-purple-dark);
+			font-weight: 700;
+			font-size: 0.9rem;
+			transition: opacity 0.2s ease;
+		}
+
+		.nudge-reveal {
+			display: grid;
+			grid-template-rows: 0fr;
+			transition: grid-template-rows 0.3s ease;
+		}
+
+		.nudge-reveal > .nudge-form {
+			min-height: 0;
+			overflow: hidden;
+		}
+
+		/* Drawn inside the field, so the folding box doesn't clip it. */
+		.nudge-form input:focus-visible {
+			outline-offset: -2px;
+		}
+
+		.nudge-card:hover .nudge-reveal,
+		.nudge-card:focus-within .nudge-reveal,
+		.nudge-card:has(.nudge-form input[placeholder]:not(:placeholder-shown)) .nudge-reveal {
+			grid-template-rows: 1fr;
+		}
+
+		.nudge-card:hover .nudge-hint,
+		.nudge-card:focus-within .nudge-hint,
+		.nudge-card:has(.nudge-form input[placeholder]:not(:placeholder-shown)) .nudge-hint {
+			opacity: 0;
+			height: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+
+		.nudge-card:hover .nudge-head,
+		.nudge-card:focus-within .nudge-head {
+			margin-bottom: var(--space-4);
+		}
+
+		.nudge-head {
+			margin-bottom: var(--space-3);
+		}
+	}
+
+	@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+		.nudge-reveal {
+			transition: none;
+		}
 	}
 
 	.nudge-thanks {

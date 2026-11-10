@@ -936,12 +936,12 @@ const structuredData = {
 			}
 
 			/* 10 November (Stephen): the purple house sank into the dark header like the Shop button,
-			   so it gets the same hairline pale-lilac outline, traced around its shape by four 0.75px
+			   so it gets the same hairline pale-lilac outline, traced around its shape by four 0.4px
 			   drop shadows (one per side), fading out as the header turns solid. Only on the floating
 			   header, which is every public page. */
 			.site-header-overlay .brand img {
 				--logo-edge: rgba(201, 179, 224, calc(0.5 - 0.5 * var(--header-fade, 0)));
-				filter: drop-shadow(0.75px 0 0 var(--logo-edge)) drop-shadow(-0.75px 0 0 var(--logo-edge)) drop-shadow(0 0.75px 0 var(--logo-edge)) drop-shadow(0 -0.75px 0 var(--logo-edge));
+				filter: drop-shadow(0.4px 0 0 var(--logo-edge)) drop-shadow(-0.4px 0 0 var(--logo-edge)) drop-shadow(0 0.4px 0 var(--logo-edge)) drop-shadow(0 -0.4px 0 var(--logo-edge));
 			}
 
 			/* Two lines stacked beside the logo. ⚠ Width is budgeted to the pixel: the title is sized

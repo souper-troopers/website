@@ -34,7 +34,9 @@ const show = newsletterVisible();
 			<div class="nudge-head">
 				{/* Placeholder cover until Shan sends the real one. */}
 				<div class="nudge-cover" aria-hidden="true">
-					<span class="nudge-cover-title">Super<br />News</span>
+					<span class="nudge-cover-title">Super News</span>
+					<span class="nudge-cover-photo"></span>
+					<span class="nudge-cover-cols"></span>
 				</div>
 				<div>
 					<p class="nudge-title" id="nudge-title">Get the Super News</p>
@@ -139,28 +141,51 @@ const show = newsletterVisible();
 		padding-right: var(--space-6);
 	}
 
-	/* The placeholder cover: a tilted little magazine in Hub purple. White on #8156a4 is 5.5:1. */
+	/* The placeholder cover, drawn as a little newspaper (10 November, Stephen): newsprint, a serif
+	   masthead over a double rule, a Hub-purple "photo" and grey column lines, with a second sheet
+	   peeking out behind. Ink on the newsprint is ~14:1. Swap for the real cover when Shan sends it. */
 	.nudge-cover {
 		flex: none;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		gap: 4px;
 		width: 72px;
 		height: 96px;
-		padding: 8px 7px;
-		border-radius: 4px;
-		background: linear-gradient(160deg, var(--hub-purple) 0%, #5f3c80 100%);
-		color: var(--st-white);
+		padding: 6px 6px 7px;
+		box-sizing: border-box;
+		border-radius: 2px;
+		background:
+			linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.04) 100%),
+			#f4f0e6;
+		color: var(--st-ink);
 		transform: rotate(-4deg);
-		box-shadow: 3px 4px 0 var(--st-yellow), 0 6px 14px rgba(0, 0, 0, 0.2);
+		box-shadow: 3px 3px 0 #e2ddd0, 3px 3px 0 1px rgba(0, 0, 0, 0.06), 0 6px 14px rgba(0, 0, 0, 0.22);
 	}
 
-	/* "Super News" fills the cover (10 November, Stephen). */
 	.nudge-cover-title {
-		font-size: 1.32rem;
-		font-weight: 800;
-		line-height: 0.95;
-		letter-spacing: -0.02em;
+		padding-bottom: 3px;
+		border-bottom: 3px double var(--st-ink);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 0.62rem;
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.01em;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	.nudge-cover-photo {
+		height: 26px;
+		border-radius: 1px;
+		background: linear-gradient(160deg, var(--hub-purple) 0%, #5f3c80 100%);
+	}
+
+	/* Two columns of "text": grey lines every 4px. */
+	.nudge-cover-cols {
+		flex: 1;
+		background:
+			repeating-linear-gradient(180deg, rgba(36, 35, 43, 0.35) 0 1.5px, transparent 1.5px 4px) left / 46% 100% no-repeat,
+			repeating-linear-gradient(180deg, rgba(36, 35, 43, 0.35) 0 1.5px, transparent 1.5px 4px) right / 46% 100% no-repeat;
 	}
 
 	.nudge-title {
@@ -347,12 +372,14 @@ const show = newsletterVisible();
 			place-items: center;
 			width: 28px;
 			height: 36px;
-			border-radius: 3px;
-			background: var(--hub-purple);
-			color: var(--st-white);
+			border-radius: 2px;
+			background: #f4f0e6;
+			color: var(--st-ink);
+			font-family: Georgia, "Times New Roman", serif;
 			font-size: 0.7rem;
-			font-weight: 800;
+			font-weight: 700;
 			transform: rotate(-4deg);
+			box-shadow: 2px 2px 0 #e2ddd0, 0 3px 8px rgba(0, 0, 0, 0.2);
 		}
 
 		.nudge-bar-chev {

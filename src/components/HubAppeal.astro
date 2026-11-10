@@ -4,25 +4,16 @@
    Donate and Get Involved. Drafted 30 September for Save our Hub (that page is still built, hidden);
    since 10 November it leads to Double Up for Humanity. Off on the live site until
    DOUBLE_UP.bannerLive; always shown on staging. See src/lib/double-up.ts. */
-import { Image } from "astro:assets";
 import { doubleUpBannerBuilt } from "../lib/double-up";
-import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 ---
 
 {doubleUpBannerBuilt() && (
 	<a class="hub-appeal" href="/double-up/">
 		<span class="wrap hub-appeal-inner">
-			{/* The Hub itself. Decorative - the words carry the meaning. Cropped to a heart by a CSS mask. */}
-			<span class="hub-appeal-heart">
-				<Image
-					class="hub-appeal-photo"
-					src={hubExterior}
-					alt=""
-					widths={[180, 360]}
-					sizes="130px"
-					width={180}
-				/>
-			</span>
+			{/* A "x2" sticker (10 November, Stephen's pick over the old heart-shaped Hub photo, which was
+			    made for Save our Hub): doubling is the message now, and it matches the badge on the
+			    Double Up page. Decorative - the words carry the meaning. */}
+			<span class="hub-appeal-x2" aria-hidden="true">&times;2</span>
 			<span class="hub-appeal-body">
 				<span><strong>Double Up for Humanity.</strong> Every rand you give is doubled, 23&ndash;27 November.</span>
 				<span class="hub-appeal-cta">Find out more <span aria-hidden="true">&rarr;</span></span>
@@ -51,29 +42,31 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	font-size: 1.05rem;
 }
 
-/* The drop shadow sits on the wrapper: a filter on the masked image itself would be cut off by
-   its own mask. The heart path's viewBox is trimmed to the shape, so the box is the heart's own
-   20:18.6 proportion and the mask fills it exactly. */
-/* The heart spills out of the band: negative margins take it out of the band's height, so the
-   band is only as tall as its words and the heart overhangs top and bottom. Positioned so it
-   paints over the next section rather than under it. */
-.hub-appeal-heart {
+/* The sticker spills out of the band, as the heart did: negative margins take it out of the band's
+   height, and it paints over the next section rather than under it. Ink on the brand yellow is
+   ~8:1. */
+.hub-appeal-x2 {
 	flex: none;
-	display: block;
 	position: relative;
 	z-index: 1;
-	margin-block: -18px;
-	filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+	display: grid;
+	place-items: center;
+	width: 76px;
+	height: 76px;
+	margin-block: -16px;
+	border-radius: 50%;
+	background: var(--st-yellow);
+	color: var(--st-ink);
+	font-size: 2rem;
+	font-weight: 800;
+	line-height: 1;
+	transform: rotate(-10deg);
+	box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15), 0 6px 14px rgba(0, 0, 0, 0.3);
+	transition: transform 0.2s ease;
 }
 
-.hub-appeal-photo {
-	display: block;
-	width: 86px;
-	height: 80px;
-	object-fit: cover;
-	object-position: 30% 60%;
-	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
-	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 3 20 18.6'%3E%3Cpath d='M12 21.6 10.5 20.2C5.4 15.6 2 12.5 2 8.6 2 5.5 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.5 22 8.6c0 3.9-3.4 7-8.5 11.6z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+.hub-appeal:hover .hub-appeal-x2 {
+	transform: rotate(-4deg) scale(1.06);
 }
 
 .hub-appeal-body {
@@ -97,6 +90,12 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 	background: #e46673;
 }
 
+@media (prefers-reduced-motion: reduce) {
+	.hub-appeal-x2 {
+		transition: none;
+	}
+}
+
 .hub-appeal:focus-visible {
 	outline: 3px solid var(--st-ink);
 	outline-offset: -3px;
@@ -107,9 +106,10 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 		margin-top: calc(-1 * var(--space-12));
 	}
 
-	.hub-appeal-photo {
-		width: 76px;
-		height: 71px;
+	.hub-appeal-x2 {
+		width: 64px;
+		height: 64px;
+		font-size: 1.7rem;
 	}
 }
 </style>

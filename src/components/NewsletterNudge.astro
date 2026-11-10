@@ -223,12 +223,18 @@ const show = newsletterVisible();
 			width: auto;
 		}
 
+		/* At rest a 124px circle with the book centred in it (padding 14px top and bottom around the
+		   96px cover, 26px either side of its 72px width); open, the 360px rounded rectangle. The
+		   radius is 62px rather than 50%, so it eases into the 20px corners instead of passing
+		   through an ellipse. */
 		.nudge-card {
-			width: 112px;
+			width: 124px;
 			box-sizing: border-box;
 			overflow: hidden;
+			padding: 14px 26px;
+			border-radius: 62px;
 			cursor: pointer;
-			transition: width 0.35s ease;
+			transition: width 0.35s ease, padding 0.35s ease, border-radius 0.35s ease;
 		}
 
 		.nudge-head,
@@ -270,6 +276,8 @@ const show = newsletterVisible();
 
 		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) {
 			width: 360px;
+			padding: var(--space-5);
+			border-radius: 20px;
 			cursor: auto;
 		}
 

@@ -400,30 +400,8 @@ const structuredData = {
 		<!-- End Cloudflare Web Analytics -->
 		{/* The banner photo fades in from its onload handler; with JavaScript off that never runs. !important because Astro places its stylesheets after this tag. */}
 		<noscript><style>.photo-hero .hero-bg.blur-up img { opacity: 1 !important; }</style></noscript>
-		{/* Staging and local only (10 November): the homepage's band toggle (index.astro) remembers its
-		    choice in this browser; applied before paint, and again after each page swap, since the
-		    router replaces <html>'s attributes with the new page's. */}
-		{(IS_STAGING || import.meta.env.DEV) && (
-			<script is:inline>
-				(() => {
-					const apply = () => {
-						let off = false;
-						try { off = localStorage.getItem("campaignBand") === "off"; } catch (e) {}
-						if (off) document.documentElement.dataset.campaignBand = "off";
-						else delete document.documentElement.dataset.campaignBand;
-					};
-					apply();
-					document.addEventListener("astro:after-swap", apply);
-				})();
-			</script>
-		)}
 	</head>
 	<body>
-		{/* Staging only (src/lib/env.ts): a fixed corner label, so the dev branch deploy can't be
-		    mistaken for the live site. Fixed, so it moves no layout. */}
-		{IS_STAGING && (
-			<a class="staging-flag" href="https://soupertroopers.org/">Staging - not the live site</a>
-		)}
 		<header class:list={["site-header", { "site-header-overlay": heroOverlay, "hero-has-donate": heroOverlay && heroDonate }]}>
 			<div class="wrap header-inner">
 				{/* The label names the link once. With the logo's alt text and the visible words both
@@ -1391,21 +1369,6 @@ const structuredData = {
 				.nav-progress.is-done {
 					transition: opacity 0.2s;
 				}
-			}
-
-			.staging-flag {
-				position: fixed;
-				left: 12px;
-				bottom: 12px;
-				z-index: 1000;
-				padding: 6px 12px;
-				border-radius: 999px;
-				background: #fde047;
-				color: #24232b;
-				font-size: 0.8rem;
-				font-weight: 700;
-				text-decoration: none;
-				box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 			}
 
 			.site-footer {

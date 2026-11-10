@@ -1379,9 +1379,9 @@ deploys set to "individual branches: dev"; free, not metered). Use it to show th
 publishing; it reads the live Sanity content. `souper-troopers.netlify.app` itself is the live site
 under another name (and redirects), so it can't be staging.
 - **`src/lib/env.ts` `IS_STAGING`** = Netlify `CONTEXT` set and not "production" (branch deploys and PR
-  previews; false locally and live). It adds `noindex` on every page, a fixed yellow **"Staging - not
-  the live site"** pill (bottom-left, links to the live site), and **`[STAGING - test, please
-  ignore]`** at the start of the contact form's `topic` field. Verified with `CONTEXT=branch-deploy`
+  previews; false locally and live). It adds `noindex` on every page and **`[STAGING - test, please
+  ignore]`** at the start of the contact form's `topic` field. (The fixed yellow "Staging - not the
+  live site" pill was removed on 10 November at Stephen's request.) Verified with `CONTEXT=branch-deploy`
   and `CONTEXT=production` builds: present on the first, absent on the second.
 - Paid orders not on soupertroopers.org get **`[STAGING - test order, sandbox payment, please
   ignore]`** at the start of the order email's `check` line (by request host, in `payfast-itn`).

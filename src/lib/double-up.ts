@@ -12,8 +12,7 @@ import { IS_STAGING } from "./env";
  * Switches, one edit each:
  * - `pageLive`: false keeps /double-up/ `noindex` (and out of the sitemap - astro.config.mjs). The
  *   page is always built, so it can be shared by link before it's announced.
- * - `bannerLive`: shows the red band on the live site. On staging the band is always built and a
- *   staging-only toggle on the homepage shows or hides it.
+ * - `bannerLive`: shows the red band on the live site. On staging and locally it always shows.
  * - `backabuddyUrl`: the campaign's page on BackaBuddy. Until it's set the button says the link is
  *   coming rather than pointing at the wrong campaign.
  * - `target` / `raised` / `raisedOn`: the bar shows once `raised` is set; updated by hand.

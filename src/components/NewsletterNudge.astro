@@ -373,13 +373,6 @@ const show = newsletterVisible();
 		}
 	}
 
-	/* Staging only: keep clear of the yellow "Staging" flag in the bottom-left corner. */
-	@media (max-width: 600px) {
-		:global(body:has(.staging-flag)) .nudge {
-			bottom: 56px;
-		}
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		.nudge {
 			animation: none;

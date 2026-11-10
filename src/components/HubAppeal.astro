@@ -3,8 +3,7 @@
    Black on #dd4b59 is 5.2:1; white would be 4.0:1. Placed directly after the PhotoHero on Home,
    Donate and Get Involved. Drafted 30 September for Save our Hub (that page is still built, hidden);
    since 10 November it leads to Double Up for Humanity. Off on the live site until
-   DOUBLE_UP.bannerLive; on staging a toggle on the homepage hides it (`html[data-campaign-band=off]`,
-   set in Layout.astro). See src/lib/double-up.ts. */
+   DOUBLE_UP.bannerLive; always shown on staging. See src/lib/double-up.ts. */
 import { Image } from "astro:assets";
 import { doubleUpBannerBuilt } from "../lib/double-up";
 import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
@@ -33,10 +32,6 @@ import hubExterior from "../assets/images/humanity-hub-exterior.jpg";
 )}
 
 <style>
-:global(html[data-campaign-band="off"]) .hub-appeal {
-	display: none;
-}
-
 /* Sits flush under the hero: main spaces its children with a gap (--space-16, --space-12 on
    phones), so the band pulls itself up by exactly that much. */
 .hub-appeal {

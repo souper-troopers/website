@@ -1,6 +1,5 @@
 ---
 import HubAppeal from "../components/HubAppeal.astro";
-import { IS_STAGING } from "../lib/env";
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import hubPhoto from "../assets/images/hub-haircut.jpg";
@@ -99,33 +98,6 @@ const pillars = [
 
 	{/* The campaign band (Double Up for Humanity since 10 November) - see src/components/HubAppeal.astro. */}
 	<HubAppeal />
-
-	{/* Staging and local only (10 November, Stephen): show or hide the campaign band, to review the
-	    homepage both ways. Remembered in this browser (applied in Layout.astro's head). */}
-	{(IS_STAGING || import.meta.env.DEV) && (
-		<>
-			<button type="button" class="band-toggle" aria-pressed="true" data-band-toggle>Campaign band: on</button>
-			<script is:inline data-astro-rerun>
-				(() => {
-					const btn = document.querySelector("[data-band-toggle]");
-					if (!btn) return;
-					const sync = () => {
-						const off = document.documentElement.dataset.campaignBand === "off";
-						btn.textContent = `Campaign band: ${off ? "off" : "on"}`;
-						btn.setAttribute("aria-pressed", String(!off));
-					};
-					sync();
-					btn.addEventListener("click", () => {
-						const off = document.documentElement.dataset.campaignBand !== "off";
-						if (off) document.documentElement.dataset.campaignBand = "off";
-						else delete document.documentElement.dataset.campaignBand;
-						try { localStorage.setItem("campaignBand", off ? "off" : "on"); } catch (e) {}
-						sync();
-					});
-				})();
-			</script>
-		</>
-	)}
 
 	{/* The CAST section and the shop band were folded into these cards on 2026-09-24 (the draft for
 	    the 30 September review): each had its own full section, and the page said the same three
@@ -257,28 +229,6 @@ const pillars = [
 </Layout>
 
 <style>
-	/* Staging-only band toggle: the staging flag's yellow, fixed top left just under the header. */
-	.band-toggle {
-		position: fixed;
-		top: calc(var(--header-height) + 12px);
-		left: 12px;
-		z-index: 1000;
-		padding: 6px 12px;
-		border: 0;
-		border-radius: 999px;
-		background: #fde047;
-		color: #24232b;
-		font: inherit;
-		font-size: 0.8rem;
-		font-weight: 700;
-		cursor: pointer;
-		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-	}
-
-	.band-toggle[aria-pressed="false"] {
-		background: #fff;
-	}
-
 	/* Three across on a laptop, one per row on a phone. Two across between would strand the third
 	   card, so the middle band keeps one column but lays each card sideways (photo beside text). */
 	.pillar-grid {

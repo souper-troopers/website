@@ -15,7 +15,7 @@ import { doubleUpBannerBuilt } from "../lib/double-up";
 			    Double Up page. Decorative - the words carry the meaning. */}
 			<span class="hub-appeal-x2" aria-hidden="true">&times;2</span>
 			<span class="hub-appeal-body">
-				<span><strong>Double Up for Humanity.</strong> Every rand you give is doubled, 23&ndash;27 November.</span>
+				<span><strong>Double Up for Humanity.</strong> Every rand you give is <span class="hub-appeal-doubled">doubled</span>, 23&ndash;27 November.</span>
 				<span class="hub-appeal-cta">Find out more <span aria-hidden="true">&rarr;</span></span>
 			</span>
 		</span>
@@ -67,6 +67,48 @@ import { doubleUpBannerBuilt } from "../lib/double-up";
 
 .hub-appeal:hover .hub-appeal-x2 {
 	transform: rotate(-4deg) scale(1.06);
+}
+
+/* "doubled", picked out (10 November, Stephen): a hand-drawn-looking yellow marker stroke behind
+   the word, in bold, that gives a little bounce now and then. Ink on the yellow is ~8:1. */
+.hub-appeal-doubled {
+	display: inline-block;
+	position: relative;
+	z-index: 0;
+	padding: 0 0.2em;
+	font-weight: 800;
+	animation: hub-doubled-bounce 4s ease-in-out 1s infinite;
+}
+
+.hub-appeal-doubled::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	inset: 0.05em -0.05em 0;
+	border-radius: 0.3em 0.5em 0.35em 0.6em;
+	background: var(--st-yellow);
+	transform: rotate(-2deg) skewX(-8deg);
+}
+
+@keyframes hub-doubled-bounce {
+	0%, 82%, 100% {
+		transform: none;
+	}
+	86% {
+		transform: translateY(-3px) scale(1.12) rotate(-3deg);
+	}
+	91% {
+		transform: translateY(0) scale(0.97);
+	}
+	95% {
+		transform: scale(1.04);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hub-appeal-doubled {
+		animation: none;
+	}
 }
 
 .hub-appeal-body {

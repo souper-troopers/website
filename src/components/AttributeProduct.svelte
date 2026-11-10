@@ -97,7 +97,7 @@
 		overflow: hidden;
 		border-radius: var(--radius);
 		background: var(--st-white);
-		box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
+		box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 	}
 
 	@media (max-width: 720px) {

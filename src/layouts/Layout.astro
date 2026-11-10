@@ -1691,9 +1691,9 @@ const structuredData = {
 				flex-direction: column;
 				color: var(--st-ink);
 				text-decoration: none;
-				/* A hairline edge as well as the card shadow: with a tinted foot, the soft shadow alone
-				   left the bottom of the card with no edge against the page. */
-				box-shadow: 0 0 0 1px rgba(36, 35, 43, 0.07), 0 14px 30px rgba(0, 0, 0, 0.05);
+				/* The 1px grey hairline these cards also had was removed on 10 November (Stephen): the
+				   soft shadow alone is the card's edge now. */
+				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
 			}
 
 			.card-cta::after {

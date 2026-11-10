@@ -1,0 +1,170 @@
+---
+/**
+ * A TRIAL (10 November 2026, local only): a silent looping video behind the homepage hero, to compare
+ * two ways of serving it before Shan's edit arrives. Lives inside PhotoHero's `.hero-bg`, so it
+ * shares the photo's crop, parallax and fade. The photo stays underneath and remains what shows
+ * until the video is actually playing - and what shows whenever the video is skipped.
+ *
+ * Choose the source from the address bar:
+ *   ?video=file     our own MP4 from /video/ (the default while trialling)
+ *   ?video=youtube  the same footage from YouTube (muted, controls hidden, looped by script)
+ *   ?video=off      the photo only
+ *   &phone=1        also play on phones / portrait screens (off by default)
+ *
+ * Skipped: reduced motion, Save-Data, 2g connections, and phones unless `phone=1`.
+ */
+interface Props {
+	/** Our own files: a 1080p and a 720p H.264 MP4, no audio track. */
+	mp4: string;
+	mp4Small: string;
+	/** The same footage on YouTube, and the section of it to loop (seconds). */
+	youtubeId: string;
+	start: number;
+	end: number;
+}
+const { mp4, mp4Small, youtubeId, start, end } = Astro.props;
+---
+
+<div class="hero-video" data-mp4={mp4} data-mp4-small={mp4Small} data-youtube={youtubeId} data-start={start} data-end={end} aria-hidden="true"></div>
+
+<style is:global>
+	.hero-video {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		opacity: 0;
+		transition: opacity 0.8s ease;
+		pointer-events: none;
+	}
+	.hero-video.is-playing {
+		opacity: 1;
+	}
+	.hero-video video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	/* An iframe can't object-fit: size a 16:9 box that always covers, centred, and a little larger
+	   so YouTube's title strip and corner logo fall outside the visible area. */
+	.hero-video iframe {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: max(100%, calc(var(--hv-h, 100vh) * 16 / 9));
+		aspect-ratio: 16 / 9;
+		height: auto;
+		min-height: 100%;
+		transform: translate(-50%, -50%) scale(1.15);
+		border: 0;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.hero-video {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	import { onEveryPage } from "../lib/page-load";
+
+	declare global {
+		interface Window {
+			YT?: any;
+			onYouTubeIframeAPIReady?: () => void;
+		}
+	}
+
+	let ytReady: Promise<void> | undefined;
+	function loadYouTubeApi(): Promise<void> {
+		ytReady ??= new Promise((resolve) => {
+			if (window.YT?.Player) return resolve();
+			window.onYouTubeIframeAPIReady = () => resolve();
+			const s = document.createElement("script");
+			s.src = "https://www.youtube.com/iframe_api";
+			document.head.append(s);
+		});
+		return ytReady;
+	}
+
+	onEveryPage((signal) => {
+		const box = document.querySelector<HTMLElement>(".hero-video");
+		if (!box) return;
+		const params = new URLSearchParams(location.search);
+		const mode = params.get("video") ?? "file";
+		const conn = (navigator as any).connection;
+		const portrait = window.matchMedia("(max-width: 760px), (max-aspect-ratio: 1/1)").matches;
+		if (
+			mode === "off" ||
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+			conn?.saveData ||
+			/(^|-)2g$/.test(conn?.effectiveType ?? "") ||
+			(portrait && params.get("phone") !== "1")
+		) {
+			return;
+		}
+
+		// Timing for the trial: logged to the console so the two modes can be compared.
+		const t0 = performance.now();
+		const playing = (label: string) => {
+			if (box.classList.contains("is-playing")) return;
+			box.classList.add("is-playing");
+			console.info(`[hero video] ${label} playing after ${Math.round(performance.now() - t0)}ms`);
+			(window as any).__heroVideo = { mode: label, ms: Math.round(performance.now() - t0) };
+		};
+
+		if (mode === "youtube") {
+			const id = box.dataset.youtube!;
+			const start = Number(box.dataset.start);
+			const end = Number(box.dataset.end);
+			box.style.setProperty("--hv-h", `${box.offsetHeight}px`);
+			const holder = document.createElement("div");
+			box.append(holder);
+			loadYouTubeApi().then(() => {
+				if (signal.aborted) return;
+				const player = new window.YT.Player(holder, {
+					host: "https://www.youtube-nocookie.com",
+					videoId: id,
+					playerVars: { autoplay: 1, mute: 1, controls: 0, playsinline: 1, rel: 0, disablekb: 1, iv_load_policy: 3, fs: 0, start, end },
+					events: {
+						onReady: (e: any) => {
+							e.target.mute();
+							e.target.playVideo();
+						},
+						onStateChange: (e: any) => {
+							if (e.data === window.YT.PlayerState.PLAYING) playing("youtube");
+							// `end` stops the video; seek back to `start` for a loop.
+							if (e.data === window.YT.PlayerState.ENDED) {
+								e.target.seekTo(start, true);
+								e.target.playVideo();
+							}
+						},
+					},
+				});
+				signal.addEventListener("abort", () => player.destroy?.());
+			});
+			return;
+		}
+
+		const v = document.createElement("video");
+		v.muted = true;
+		v.loop = true;
+		v.playsInline = true;
+		v.autoplay = true;
+		v.preload = "auto";
+		v.setAttribute("muted", "");
+		v.setAttribute("playsinline", "");
+		// 1080p only for a big screen on a decent connection: at 1.6Mbps the 2Mbps 1080p file stalled
+		// for ~10s in its first 25s, while the 1.2Mbps 720p one played straight through (measured).
+		const big = window.innerWidth * (window.devicePixelRatio || 1) > 1400 && !(conn?.downlink && conn.downlink < 4);
+		v.src = big ? box.dataset.mp4! : box.dataset.mp4Small!;
+		v.addEventListener("playing", () => playing(big ? "file-1080" : "file-720"), { once: true });
+		box.append(v);
+		v.play().catch(() => {});
+		signal.addEventListener("abort", () => {
+			v.pause();
+			v.removeAttribute("src");
+			v.load();
+		});
+	});
+</script>

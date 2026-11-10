@@ -7,6 +7,7 @@ import castPhoto from "../assets/images/hub-cast-8701.jpg";
 import shopPhoto from "../assets/images/shop-products.jpg";
 import heroPhoto from "../assets/images/hub-group-workshop.jpg";
 import PhotoHero from "../components/PhotoHero.astro";
+import HeroVideo from "../components/HeroVideo.astro";
 import StoryVideo from "../components/StoryVideo.astro";
 import CardCtaLabel from "../components/CardCtaLabel.astro";
 import CountUp from "../components/CountUp.svelte";
@@ -80,6 +81,9 @@ const pillars = [
 	{/* Since 8 October the hero is Shan's workshop photo at the Hub (Content/Home/Group.jpg, 1600px,
 	    unedited - she re-uploaded it after the first, 1448px file), replacing the Mandela mural. */}
 	<PhotoHero image={heroPhoto} size="home" position="center 40%" lightHero alt="A collage workshop around a long table at The Humanity Hub">
+		{/* TRIAL, local only (10 November): see HeroVideo.astro. Test footage = 0:08-0:32 of the
+		    Capital International film, which is public on their YouTube channel. */}
+		<HeroVideo slot="bg" mp4="/video/hero-trial-1080.mp4" mp4Small="/video/hero-trial-720.mp4" youtubeId="SoreEsk_5QY" start={8} end={32} />
 		<h1>We are all <span class="hero-highlight glow-word">human</span>. We all have a story. Together, we are the change</h1>
 		{/* Cut at the dash on 25 September (no rewording): CAST and "meets people halfway" are said by the
 		    pillar cards just below. The "Or see how else you can help" link went the same day - the

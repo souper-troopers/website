@@ -98,6 +98,8 @@ const preview = lqip ?? (await lqipFor(image));
 		    so a second fade half a second later read as the photo arriving twice (18 October). Runs
 		    during parsing on a full load; swapped-in pages are handled on astro:after-swap below. */}
 		<script is:inline>(() => { const img = document.currentScript.previousElementSibling; if (img && img.complete && img.naturalWidth) img.classList.add("is-loaded", "no-fade"); })();</script>
+		{/* Anything drawn over the photo inside the same layer - e.g. HeroVideo.astro (trial). */}
+		<slot name="bg" />
 	</div>
 	<div class="hero-scrim" style={scrim ? `background: ${scrim}` : undefined}></div>
 	<div class="wrap hero-content">

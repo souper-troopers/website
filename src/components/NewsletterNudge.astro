@@ -40,7 +40,6 @@ const show = newsletterVisible();
 				<div>
 					<p class="nudge-title" id="nudge-title">Get the Super News</p>
 					<p class="nudge-text">A monthly magazine from The Humanity Hub, read by more than 800 supporters.</p>
-					<p class="nudge-hint" aria-hidden="true">Sign up <span>&#8964;</span></p>
 				</div>
 			</div>
 			<div class="nudge-reveal">
@@ -94,8 +93,20 @@ const show = newsletterVisible();
 		position: relative;
 		padding: var(--space-5);
 		border-radius: 20px;
-		background: var(--st-white);
+		background: rgba(250, 249, 246, 0.94);
 		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 18px 40px rgba(0, 0, 0, 0.2);
+	}
+
+	/* Frosted glass, like the home page's panel (10 November, Stephen). Measured over every page it
+	   can float on, worst case the ink partners band on Who We Are: at 55% white the text holds
+	   5.0:1 or better; at 50% the small line fell to 4.3:1, at 40% to 3.6:1. The line under
+	   the title is full ink (not 80%) for the same reason. */
+	@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		.nudge-card {
+			background: rgba(250, 249, 246, var(--nudge-glass, 0.55));
+			-webkit-backdrop-filter: blur(16px) saturate(1.2);
+			backdrop-filter: blur(16px) saturate(1.2);
+		}
 	}
 
 	.nudge-bar {
@@ -167,7 +178,6 @@ const show = newsletterVisible();
 	.nudge-text {
 		margin: 0;
 		font-size: 0.9rem;
-		color: rgba(36, 35, 43, 0.8);
 	}
 
 	.nudge-form {

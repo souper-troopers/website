@@ -253,7 +253,13 @@ const show = newsletterVisible();
 			padding: 14px 26px;
 			border-radius: 62px;
 			cursor: pointer;
-			transition: width 0.35s ease, padding 0.35s ease, border-radius 0.35s ease;
+			/* At rest only the newspaper shows - no glass, no shadow; both fade in as it opens. */
+			background: transparent;
+			box-shadow: none;
+			-webkit-backdrop-filter: none;
+			backdrop-filter: none;
+			transition: width 0.35s ease, padding 0.35s ease, border-radius 0.35s ease, background-color 0.3s ease,
+				box-shadow 0.3s ease, backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
 		}
 
 		.nudge-head,
@@ -308,6 +314,16 @@ const show = newsletterVisible();
 			padding: var(--space-5);
 			border-radius: 20px;
 			cursor: auto;
+			background: rgba(250, 249, 246, 0.94);
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 18px 40px rgba(0, 0, 0, 0.2);
+		}
+
+		@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+			.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) {
+				background: rgba(250, 249, 246, var(--nudge-glass, 0.55));
+				-webkit-backdrop-filter: blur(16px) saturate(1.2);
+				backdrop-filter: blur(16px) saturate(1.2);
+			}
 		}
 
 		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-head {

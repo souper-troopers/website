@@ -63,7 +63,7 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 ---
 
 <Layout title="How we help people out of homelessness" description="CAST - Connect, Assess, Support, Transform. The route from a first conversation to steady work, run from The Humanity Hub, our service centre in Cape Town." heroOverlay>
-	<PhotoHero image={supportPhoto} size="page" position="center 25%" fadeMobile>
+	<PhotoHero image={supportPhoto} size="page" position="center 40%" fadeMobile>
 		<h1>Our Work</h1>
 		<p>CAST is our framework for helping someone move from crisis to independence - one step at a time.</p>
 	</PhotoHero>
@@ -260,6 +260,16 @@ const hubServices: { title: string; body: string; more?: string; photo: ImageMet
 </Layout>
 
 <style>
+	/* The banner photo sits at "center 40%" (10 November, Stephen: at 25% the woman on the right was a
+	   head with no shoulders on wide screens). On narrower laptops and tablets the banner is taller for
+	   its width, and 40% pushed the left woman's face up under the header band - so 25% there.
+	   !important beats PhotoHero's inline object-position. Phones (fade layout) keep 40%. */
+	@media (min-width: 761px) and (max-width: 1100px) {
+		:global(.photo-hero .hero-bg img) {
+			object-position: center 25% !important;
+		}
+	}
+
 	/* The banner on laptops and tablets (14 October, Shan's "Tasneem and Denim"): the two women sit at
 	   the photo's far edges with plain wall between them, so the photo runs the full width (no
 	   inset fade, which hid Tasneem) and the words are centred over the wall. Only that middle band

@@ -2645,6 +2645,15 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
   one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
   passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
+### Our Work banner crop (10 November 2026)
+Stephen: on wide screens the woman on the right was a head with no shoulders, "floating". The photo
+now sits at `center 40%` (was 25%), so her shoulders and arm show; both faces stay whole and clear
+of the words at 1101-1920 and on phones. **761-1100px keeps 25%** (scoped CSS in `our-work.astro`,
+`!important` over PhotoHero's inline object-position): there the banner is taller for its width and
+40% pushed the left woman's face under the header band. Contrast unchanged (heading and text 10:1
+or better). ⚠ **Not part of the home hero trial** - it goes live on the next publish whatever
+happens to `lightHero`.
+
 ### Trial on staging: a lighter home hero (22 October 2026)
 ⚠ **On `dev` (staging) only, NOT to be published until Kerry / Adrian sign off.** Anyone publishing
 `dev` -> `main` must either have that sign-off or first revert the trial - drop `lightHero` from the

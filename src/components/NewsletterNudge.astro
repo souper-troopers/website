@@ -34,7 +34,6 @@ const show = newsletterVisible();
 			<div class="nudge-head">
 				{/* Placeholder cover until Shan sends the real one. */}
 				<div class="nudge-cover" aria-hidden="true">
-					<span class="nudge-cover-kicker">The Humanity Hub</span>
 					<span class="nudge-cover-title">Super<br />News</span>
 				</div>
 				<div>
@@ -145,7 +144,7 @@ const show = newsletterVisible();
 		flex: none;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		justify-content: center;
 		width: 72px;
 		height: 96px;
 		padding: 8px 7px;
@@ -156,17 +155,12 @@ const show = newsletterVisible();
 		box-shadow: 3px 4px 0 var(--st-yellow), 0 6px 14px rgba(0, 0, 0, 0.2);
 	}
 
-	.nudge-cover-kicker {
-		font-size: 0.5rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-	}
-
+	/* "Super News" fills the cover (10 November, Stephen). */
 	.nudge-cover-title {
-		font-size: 1.05rem;
+		font-size: 1.32rem;
 		font-weight: 800;
-		line-height: 1;
+		line-height: 0.95;
+		letter-spacing: -0.02em;
 	}
 
 	.nudge-title {

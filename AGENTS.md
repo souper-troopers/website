@@ -2652,27 +2652,33 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
 `Layout.astro`). Name it whenever unpublished commits are reported.
 - **Why**: Adrian at the 21 October review - the home page felt dark. The 100deg ink sweep darkened
   ~70% of the photo's width, faces included.
-- **Now (frosted glass, 10 November - Stephen's pick)**: no tint over the photo. The words sit in a
-  **frosted-glass panel** at the bottom-left: the site's card radius and shadow, a 12px backdrop blur
-  under a 52% off-white tint (94% without backdrop-filter), a light hairline, ink words, "human" in
-  the darker Hub purple (`--hub-purple-dark`; the brand purple was 2.9:1 at 1024). **The header is the
-  same frosted glass** with dark text (52% at rest, turning opaque off-white as the hero scrolls
-  away; 90% without backdrop-filter); "by Souper Troopers" is a deeper teal (#0f6674). On laptops the
-  words sit lower (padding-top 46vh) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`, 30ch; p 60ch).
-  Portrait screens: no panel - the photo fades into the off-white with the words beneath it in ink.
-  No wording changed (q37). **Every other page is unchanged from live** (dark banner, transparent
-  header fading to ink); the page swap between them was checked - no flash or stuck colour.
+- **Now (10 November, Stephen's picks)**: no tint over the photo. The words sit in a **frosted-glass
+  panel** at the bottom-left: the site's card radius and shadow, an 8px backdrop blur under a 45%
+  off-white tint (94% without backdrop-filter), a light hairline, ink words, "human" in the darker
+  Hub purple (`--hub-purple-dark`; the brand purple was 2.9:1 at 1024). **The header is the other
+  pages' header without the band under it**: white text on a plain 75% ink bar at rest (no blur),
+  fading to solid ink on scroll. On laptops the words sit lower (padding-top 46vh) and smaller (h1
+  `clamp(1.9rem, 3.3vw, 2.5rem)`, 30ch; p 60ch). Portrait screens: no panel - the photo fades into the
+  off-white with the words beneath it in ink. **Every other page is unchanged from live** (dark
+  banner, transparent header fading to ink); the page swap between them was checked.
+- ⚠ **The headline's final full stop was removed** ("...Together, we are the change", Stephen, 10
+  November). That is in `index.astro`, **not** behind `lightHero`, so it goes live on the next
+  publish even if the trial is reverted. The headline's wording is otherwise Kerry's (q37).
 - **Works for the planned video**: the panel sits over whatever plays behind it.
 - Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920, header at rest:
-  headline 7.5:1 or better, paragraph 6.8:1, "human" 3.8:1 (large text, 3:1 needed); header name and
-  nav 10:1 or better, **"by Souper Troopers" 4.69:1 at worst (360)** - the earlier 30%-white
-  header's shortfall (3.1-4.3:1) is resolved. Every other page's hero and header unchanged and passing.
-  Script: `.playwright-mcp/glass-final/ring-check-site.js` (local, not committed).
+  headline 6.5:1 or better, paragraph 5.6:1, "human" 3.4:1 (large text, 3:1 needed); **"by Souper
+  Troopers" 4.69:1 at worst (360)**, name and nav 7.5:1, icons 7.4:1. The header's 75% is the
+  minimum: 70% gave "by Souper Troopers" 4.1:1, and a blur doesn't help over the even white wall.
+  The panel at 42% / 6px passed only just ("human" 3.05:1). Every other page's hero and header
+  unchanged and passing. Script: `.playwright-mcp/glass-final/ring-check-site.js` (local, not
+  committed).
 - **Tried and dropped on 10 November**: the glow behind the words (below) - Stephen found it out of
   keeping with the rest of the site; words below the photo; a light fading banner beside the words;
   a soft-focus patch; a white card overlapping the photo's foot; and the frosted header on **every**
   page, both light (with glass panels on Our Work and a product page) and dark - live's header was
-  kept for the inner pages.
+  kept for the inner pages. On the home page itself: a light frosted header (52% off-white, 12px
+  blur - on staging as `14c7343`), a dark frosted one, and the inner pages' dark band under a
+  transparent header (0.82, held lower) before the plain 75% bar.
 - **The 22 October version (replaced)**: a 30% white header, and the words made readable by a wide,
   soft text-shadow plus a blurred ink copy of the words underneath (`data-shadow`, ::before/::after);
   its code is gone (in git history before 10 November).

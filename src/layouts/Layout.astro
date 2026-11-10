@@ -2853,15 +2853,24 @@ const structuredData = {
 			   only; needs Kerry's / Adrian's sign-off before it reaches main. Dropping `lightHero` in
 			   index.astro reverts all of it (these rules, the frosted header and the glass panel near
 			   the end of this sheet are all scoped to `.photo-hero--light`).
-			   - No tint over the photo. The words sit in a frosted-glass panel; the header is the same
-			     frosted glass (10 November, Stephen's pick - it replaced a soft dark glow behind the
-			     letters, which looked out of keeping with the rest of the site).
+			   - No tint over the photo. The words sit in a frosted-glass panel (10 November, Stephen's
+			     pick - it replaced a soft dark glow behind the letters, which looked out of keeping with
+			     the rest of the site).
+			   - The header is the other pages' header, minus the band under it: white text on a 75% ink
+			     bar at rest (no blur - over the even white wall a blur doesn't let the tint drop), fading
+			     to solid ink on scroll. Measured per glyph at 360-1920: "by Souper Troopers" 4.69:1 or
+			     better (70% gave 4.1:1), name and links 7.5:1, icons 7.4:1. A light frosted header (in
+			     14c7343) and the inner pages' dark band (0.82, held lower) were tried the same day.
 			   - Landscape screens: the words sit lower and smaller than the other heroes'. Portrait
 			     screens: the photo on top fading into the off-white, the words beneath it in ink.
 			   - Every other page keeps its dark banner and transparent header (tried and dropped on 10
 			     November: the frosted header on every page, light and dark). */
 			.photo-hero--home.photo-hero--light .hero-scrim {
 				background: none;
+			}
+
+			body:has(.photo-hero--light) .site-header-overlay {
+				background: rgba(36, 35, 43, calc(0.75 + 0.25 * var(--header-fade, 0)));
 			}
 
 			@media (min-aspect-ratio: 1001/1000) {
@@ -3181,74 +3190,12 @@ const structuredData = {
 
 			}
 
-			/* Part of the light home hero trial (`lightHero`; staging only, needs Kerry's / Adrian's
-			   sign-off) - see the TRIAL note at the hero styles. The home page's header is frosted glass
-			   with dark text: a 12px backdrop blur under a 52% off-white tint and a light hairline at
-			   rest, turning opaque off-white as the hero scrolls away (--header-fade, set by PhotoHero's
-			   script). Without backdrop-filter, a 90% tint. "by Souper Troopers" is a deeper teal
-			   (#0f6674). Measured per glyph at 360-1920 (10 November): "by Souper Troopers" 4.69:1 or
-			   better, the rest of the header 10:1 or better. */
-			body:has(.photo-hero--light) .site-header {
-				background: rgba(250, 249, 246, calc(0.52 + 0.48 * var(--header-fade, 0)));
-				-webkit-backdrop-filter: blur(12px) saturate(1.1);
-				backdrop-filter: blur(12px) saturate(1.1);
-				border-bottom-color: rgba(255, 255, 255, calc(0.6 - 0.6 * var(--header-fade, 0)));
-			}
-
-			@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-				body:has(.photo-hero--light) .site-header {
-					background: rgba(250, 249, 246, calc(0.9 + 0.1 * var(--header-fade, 0)));
-				}
-			}
-
-			body:has(.photo-hero--light) .brand,
-			body:has(.photo-hero--light) .brand-title {
-				color: var(--st-ink);
-			}
-
-			body:has(.photo-hero--light) .brand-by {
-				color: #0f6674;
-			}
-
-			body:has(.photo-hero--light) nav[aria-label="Primary"] a {
-				color: rgba(36, 35, 43, 0.85);
-			}
-
-			body:has(.photo-hero--light) nav[aria-label="Primary"] a:hover {
-				color: var(--st-teal-dark);
-			}
-
-			body:has(.photo-hero--light) nav[aria-label="Primary"] a[aria-current="page"],
-			body:has(.photo-hero--light) .site-header-overlay nav[aria-label="Primary"] a[aria-current="page"] {
-				color: var(--st-ink);
-			}
-
-			body:has(.photo-hero--light) nav[aria-label="Primary"] .current-marker {
-				background: var(--st-teal-dark);
-			}
-
-			body:has(.photo-hero--light) .nav-toggle-bar {
-				background: var(--st-ink);
-			}
-
-			body:has(.photo-hero--light) .cart-toggle {
-				color: var(--st-ink) !important;
-			}
-
-			@media (max-width: 760px) {
-				body:has(.photo-hero--light) nav[aria-label="Primary"] {
-					background: var(--st-white);
-				}
-
-				body:has(.photo-hero--light) nav[aria-label="Primary"] a {
-					border-bottom-color: rgba(36, 35, 43, 0.1);
-				}
-			}
-
-			/* The glass panel: the site's card radius and shadow, a 12px backdrop blur under a 52%
-			   off-white tint (94% without backdrop-filter), ink words, "human" in the darker Hub purple
-			   (the brand purple dipped to 2.9:1 at 1024). Measured per glyph at 360-1920 (10 November):
-			   headline 7.5:1 or better, paragraph 6.8:1, "human" 3.8:1 (large text, 3:1 needed). */
+			/* Part of the home hero trial (see the TRIAL note at the hero styles). The glass panel: the
+			   site's card radius and shadow, an 8px backdrop blur under a 45% off-white tint (94% without
+			   backdrop-filter), ink words, "human" in the darker Hub purple (the brand purple dipped to
+			   2.9:1 at 1024). Measured per glyph at 360-1920 (10 November): headline 6.5:1 or better,
+			   paragraph 5.6:1, "human" 3.4:1 (large text, 3:1 needed). 42% / 6px passed only just
+			   ("human" 3.05:1). */
 			.photo-hero--light .hero-content {
 				width: fit-content;
 				max-width: min(48rem, calc(100% - 2 * var(--space-5)));
@@ -3263,9 +3210,9 @@ const structuredData = {
 
 			@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
 				.photo-hero--light .hero-content {
-					background: rgba(250, 249, 246, 0.52);
-					-webkit-backdrop-filter: blur(12px) saturate(1.1);
-					backdrop-filter: blur(12px) saturate(1.1);
+					background: rgba(250, 249, 246, 0.45);
+					-webkit-backdrop-filter: blur(8px) saturate(1.1);
+					backdrop-filter: blur(8px) saturate(1.1);
 				}
 			}
 

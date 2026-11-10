@@ -28,9 +28,10 @@ export default defineConfig({
       // them being *advertised* — the internal ones also pass `noindex` to `Layout.astro`, which is
       // what actually keeps them out once the pre-launch blanket noindex comes off.
       // '/save-our-hub/' is a draft awaiting Kerry's approval - remove it from this list when
-      // CAMPAIGN.live goes true (src/lib/campaign.ts).
+      // CAMPAIGN.live goes true (src/lib/campaign.ts). Likewise '/double-up/' when DOUBLE_UP.pageLive
+      // goes true (src/lib/double-up.ts).
       filter: (page) =>
-        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/', '/shmiley-decision/', '/video-brief/', '/internal/', '/changelog/', '/editing-guide/', '/contact/thanks/', '/save-our-hub/'].some(
+        !['/shop/order-confirmed/', '/shop/order-cancelled/', '/request-for-comment/', '/google-listing/', '/shmiley-decision/', '/video-brief/', '/internal/', '/changelog/', '/editing-guide/', '/contact/thanks/', '/save-our-hub/', '/double-up/'].some(
           (path) => page.endsWith(path)
         ),
     }),

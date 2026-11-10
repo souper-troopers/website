@@ -399,6 +399,23 @@ const structuredData = {
 		<!-- End Cloudflare Web Analytics -->
 		{/* The banner photo fades in from its onload handler; with JavaScript off that never runs. !important because Astro places its stylesheets after this tag. */}
 		<noscript><style>.photo-hero .hero-bg.blur-up img { opacity: 1 !important; }</style></noscript>
+		{/* Staging and local only (10 November): the homepage's band toggle (index.astro) remembers its
+		    choice in this browser; applied before paint, and again after each page swap, since the
+		    router replaces <html>'s attributes with the new page's. */}
+		{(IS_STAGING || import.meta.env.DEV) && (
+			<script is:inline>
+				(() => {
+					const apply = () => {
+						let off = false;
+						try { off = localStorage.getItem("campaignBand") === "off"; } catch (e) {}
+						if (off) document.documentElement.dataset.campaignBand = "off";
+						else delete document.documentElement.dataset.campaignBand;
+					};
+					apply();
+					document.addEventListener("astro:after-swap", apply);
+				})();
+			</script>
+		)}
 	</head>
 	<body>
 		{/* Staging only (src/lib/env.ts): a fixed corner label, so the dev branch deploy can't be

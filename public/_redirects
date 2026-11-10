@@ -81,3 +81,7 @@ https://souper-troopers.netlify.app/*  https://soupertroopers.org/:splat  301!
 /friendship-the-essence-of-life-2                                           /our-work/#stories 301
 /lighting-the-way-home-2                                                    /our-work/#stories 301
 /helping-homeless-clients-find-employment-through-collaboration-2           /our-work/#stories 301
+
+# Double Up for Humanity (10 November 2026): short addresses for radio and print.
+/doubleup              /double-up/                              302
+/doubleupforhumanity   /double-up/                              302

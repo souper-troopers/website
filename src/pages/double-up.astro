@@ -1,0 +1,144 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PhotoHero from "../components/PhotoHero.astro";
+import hubCirclePhoto from "../assets/images/hub-circle.jpg";
+import { DOUBLE_UP, rand, randWords } from "../lib/double-up";
+
+/**
+ * Double Up for Humanity (built 10 November 2026) - see src/lib/double-up.ts for the switches.
+ * No menu item: reached from the red band or by address. Giving happens on BackaBuddy (they offer no
+ * embed - checked 10 November), so the page tells the story and hands over with one clear button.
+ *
+ * ⚠ All wording is a placeholder built from what Kerry and Shan said on the 10 November call and
+ * from lines the site already uses. Replace it with theirs before `pageLive` goes true.
+ */
+const progress = DOUBLE_UP.raised !== null ? Math.min(100, Math.round((DOUBLE_UP.raised / DOUBLE_UP.target) * 100)) : null;
+const giveUrl = DOUBLE_UP.backabuddyUrl;
+---
+
+<Layout
+	heroOverlay
+	noindex={!DOUBLE_UP.pageLive}
+	title="Double Up for Humanity, every rand doubled"
+	description="From 23 to 27 November, every rand given to The Humanity Hub in Woodstock, Cape Town, is matched. Help Souper Troopers raise R1 million."
+>
+	<PhotoHero image={hubCirclePhoto} size="page" position="center 4%" fadeMobile>
+		<h1>Double Up for Humanity</h1>
+		<p>From 23 to 27 November, every rand you give to The Humanity Hub is doubled.</p>
+		<div class="actions">
+			{giveUrl ? (
+				<a class="btn btn-primary" href={giveUrl} target="_blank" rel="noopener">Give on BackaBuddy</a>
+			) : (
+				<span class="du-pending">The BackaBuddy link is coming soon</span>
+			)}
+		</div>
+	</PhotoHero>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<h2>Every rand, doubled</h2>
+			<p>
+				A match funder has pledged to match every gift, rand for rand, up to {randWords(DOUBLE_UP.target)}.
+				Give R100 and the Hub receives R200. Together, we're aiming to raise {randWords(DOUBLE_UP.target)} in
+				one week.
+			</p>
+		</div>
+
+		{progress !== null && DOUBLE_UP.raised !== null && (
+			<div class="du-progress">
+				<p class="du-progress-figures"><strong>{rand(DOUBLE_UP.raised)}</strong> raised of {rand(DOUBLE_UP.target)}</p>
+				<div class="du-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress} aria-label="Raised so far">
+					<span style={`width: ${progress}%`}></span>
+				</div>
+				{DOUBLE_UP.raisedOn && <p class="du-progress-note">Updated {DOUBLE_UP.raisedOn}</p>}
+			</div>
+		)}
+	</section>
+
+	<section class="section wrap">
+		<div class="section-intro">
+			<h2>What happens inside the Hub</h2>
+			<p>
+				The Humanity Hub in Woodstock, Cape Town, is where Souper Troopers helps people move from
+				crisis to independence and confidence. Through our CAST programme, people are supported step
+				by step, from a first conversation to a first pay cheque.
+			</p>
+			<p>Your gift helps secure this work for the next three years.</p>
+		</div>
+	</section>
+
+	<section class="section wrap">
+		<div class="du-give card">
+			<h2>Give through BackaBuddy</h2>
+			<p>
+				Gifts go through BackaBuddy, South Africa's fundraising platform, so every donation is recorded.
+				You can give anonymously if you prefer.
+			</p>
+			{giveUrl ? (
+				<a class="btn btn-primary" href={giveUrl} target="_blank" rel="noopener">Give on BackaBuddy</a>
+			) : (
+				<p class="du-pending-dark">The BackaBuddy link is coming soon.</p>
+			)}
+		</div>
+		<p class="du-other">Other ways to give, such as EFT and SnapScan, are on our <a href="/donate/">Donate page</a>.</p>
+	</section>
+</Layout>
+
+<style>
+	/* White on the hero's tint, like the other heroes' secondary lines. */
+	.du-pending {
+		display: inline-block;
+		color: var(--st-white);
+		font-weight: 700;
+	}
+
+	.du-pending-dark {
+		font-weight: 700;
+		margin: 0;
+	}
+
+	.du-progress {
+		max-width: 46rem;
+	}
+
+	.du-progress-figures {
+		margin: 0 0 var(--space-2);
+		font-size: 1.1rem;
+	}
+
+	.du-progress-bar {
+		height: 14px;
+		border-radius: 999px;
+		background: rgba(36, 35, 43, 0.1);
+		overflow: hidden;
+	}
+
+	.du-progress-bar span {
+		display: block;
+		height: 100%;
+		background: var(--st-red);
+	}
+
+	.du-progress-note {
+		margin: var(--space-2) 0 0;
+		font-size: 0.85rem;
+		color: rgba(36, 35, 43, 0.7);
+	}
+
+	.du-give {
+		max-width: 46rem;
+		gap: var(--space-4);
+	}
+
+	.du-give h2 {
+		margin: 0;
+	}
+
+	.du-give p {
+		margin: 0;
+	}
+
+	.du-other {
+		margin-top: var(--space-5);
+	}
+</style>

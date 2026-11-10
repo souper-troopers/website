@@ -21,11 +21,14 @@ interface Props {
 	youtubeId: string;
 	start: number;
 	end: number;
+	/** The clip's first frame, shown over the photo as soon as it loads (`&poster=0` to compare
+	 *  without), so the video's start is a still beginning to move rather than a photo changing. */
+	poster?: string;
 }
-const { mp4, mp4Small, youtubeId, start, end } = Astro.props;
+const { mp4, mp4Small, youtubeId, start, end, poster } = Astro.props;
 ---
 
-<div class="hero-video" data-mp4={mp4} data-mp4-small={mp4Small} data-youtube={youtubeId} data-start={start} data-end={end} aria-hidden="true"></div>
+<div class="hero-video" data-mp4={mp4} data-mp4-small={mp4Small} data-youtube={youtubeId} data-start={start} data-end={end} data-poster={poster} aria-hidden="true"></div>
 
 <style is:global>
 	.hero-video {
@@ -36,8 +39,29 @@ const { mp4, mp4Small, youtubeId, start, end } = Astro.props;
 		transition: opacity 0.8s ease;
 		pointer-events: none;
 	}
+	.hero-video.has-poster,
 	.hero-video.is-playing {
 		opacity: 1;
+	}
+	.hero-video video,
+	.hero-video iframe {
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+	.hero-video.is-playing video,
+	.hero-video.is-playing iframe {
+		opacity: 1;
+	}
+	.hero-video .hero-video-poster {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	/* Matches the YouTube iframe's enlargement below, so the still and the video line up. */
+	.hero-video.is-youtube .hero-video-poster {
+		transform: scale(1.15);
 	}
 	.hero-video video {
 		width: 100%;
@@ -104,6 +128,16 @@ const { mp4, mp4Small, youtubeId, start, end } = Astro.props;
 			return;
 		}
 
+		if (box.dataset.poster && params.get("poster") !== "0") {
+			const img = new Image();
+			img.className = "hero-video-poster";
+			img.alt = "";
+			img.decoding = "async";
+			img.onload = () => box.classList.add("has-poster");
+			img.src = box.dataset.poster;
+			box.append(img);
+		}
+
 		// Timing for the trial: logged to the console so the two modes can be compared.
 		const t0 = performance.now();
 		const playing = (label: string) => {
@@ -117,6 +151,7 @@ const { mp4, mp4Small, youtubeId, start, end } = Astro.props;
 			const id = box.dataset.youtube!;
 			const start = Number(box.dataset.start);
 			const end = Number(box.dataset.end);
+			box.classList.add("is-youtube");
 			box.style.setProperty("--hv-h", `${box.offsetHeight}px`);
 			const holder = document.createElement("div");
 			box.append(holder);

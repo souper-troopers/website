@@ -2873,6 +2873,23 @@ const structuredData = {
 				background: rgba(36, 35, 43, calc(0.75 + 0.25 * var(--header-fade, 0)));
 			}
 
+			/* TRIAL (10 November, Stephen asked for twice as see-through, i.e. 50%): 60% ink with a
+			   frosted blur, fading to solid ink on scroll as before. Measured per glyph over the photo
+			   and every 3s of the trial video at 1024-1920: at 50% the white words fell to ~3.9:1 over
+			   the bright wall; at 60% they hold 4.9:1+. The teal "by Souper Troopers" can't pass on a
+			   see-through bar (3.0:1 at 60%), so on this header it is white. Local branch only. */
+			@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+				body:has(.photo-hero--light) .site-header-overlay .brand-name span {
+					color: #fff;
+				}
+
+				body:has(.photo-hero--light) .site-header-overlay {
+					background: rgba(36, 35, 43, calc(0.6 + 0.4 * var(--header-fade, 0)));
+					-webkit-backdrop-filter: blur(14px) saturate(1.2);
+					backdrop-filter: blur(14px) saturate(1.2);
+				}
+			}
+
 			@media (min-aspect-ratio: 1001/1000) {
 				.hero-photo.photo-hero--home.photo-hero--light {
 					padding-top: max(46vh, calc(var(--hero-clearance) + var(--space-8)));

@@ -5,10 +5,27 @@
    since 10 November it leads to Double Up for Humanity. Off on the live site until
    DOUBLE_UP.bannerLive; always shown on staging. See src/lib/double-up.ts. */
 import { doubleUpBannerBuilt } from "../lib/double-up";
+
+/* Faint yellow "2"s scattered behind the words (10 November, Stephen). Fixed positions from a
+   seeded generator, so every build draws the same pattern and nothing shifts between pages. */
+let seed = 7;
+const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+const twos = Array.from({ length: 18 }, (_, i) => ({
+	left: ((i + rnd() * 0.8) / 18) * 100,
+	top: -20 + rnd() * 90,
+	size: 1.1 + rnd() * 2.6,
+	rotate: -25 + rnd() * 50,
+	opacity: 0.16 + rnd() * 0.2,
+}));
 ---
 
 {doubleUpBannerBuilt() && (
 	<a class="hub-appeal" href="/double-up/">
+		<span class="hub-appeal-twos" aria-hidden="true">
+			{twos.map((t) => (
+				<span style={`left:${t.left.toFixed(1)}%;top:${t.top.toFixed(0)}%;font-size:${t.size.toFixed(2)}rem;transform:rotate(${t.rotate.toFixed(0)}deg);opacity:${t.opacity.toFixed(2)}`}>2</span>
+			))}
+		</span>
 		<span class="wrap hub-appeal-inner">
 			{/* A "x2" sticker (10 November, Stephen's pick over the old heart-shaped Hub photo, which was
 			    made for Save our Hub): doubling is the message now, and it matches the badge on the
@@ -27,13 +44,30 @@ import { doubleUpBannerBuilt } from "../lib/double-up";
    phones), so the band pulls itself up by exactly that much. */
 .hub-appeal {
 	display: block;
+	position: relative;
 	margin-top: calc(-1 * var(--space-16));
 	background: var(--st-red);
 	color: #000;
 	text-decoration: none;
 }
 
+/* Clipped to the band in its own layer, so the x2 sticker can still spill over the edges. */
+.hub-appeal-twos {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.hub-appeal-twos span {
+	position: absolute;
+	color: var(--st-yellow);
+	font-weight: 800;
+	line-height: 1;
+}
+
 .hub-appeal-inner {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: var(--space-4);

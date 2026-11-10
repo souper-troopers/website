@@ -212,28 +212,50 @@ const show = newsletterVisible();
 		left: -5000px;
 	}
 
-	/* Compact until wanted (10 November, Stephen): on devices with a mouse the fields and button are
-	   folded away until the card is hovered, or focused from the keyboard, and the card's height
-	   animates open. It stays open while anything has been typed. Touch devices skip this - on phones
-	   the bar already does the folding. */
-	.nudge-hint {
-		display: none;
-	}
-
+	/* Compact until wanted (10 November, Stephen): on devices with a mouse the card rests as just the
+	   little Super News cover in a glass square. Hovered, or focused from the keyboard, it grows
+	   left (it is anchored to the right edge) and down to show the heading, the fields and the
+	   button. It stays open while anything has been typed. Touch devices skip this - on phones the
+	   bar already does the folding. The contents keep a fixed 320px width while the card's width
+	   animates, so nothing re-wraps mid-animation; the card clips them while it is small. */
 	@media (hover: hover) and (pointer: fine) {
-		.nudge-hint {
-			display: block;
-			margin: var(--space-2) 0 0;
-			color: var(--hub-purple-dark);
-			font-weight: 700;
-			font-size: 0.9rem;
+		.nudge {
+			width: auto;
+		}
+
+		.nudge-card {
+			width: 112px;
+			box-sizing: border-box;
+			overflow: hidden;
+			cursor: pointer;
+			transition: width 0.35s ease;
+		}
+
+		.nudge-head,
+		.nudge-reveal {
+			width: 320px;
+		}
+
+		.nudge-head {
+			margin-bottom: 0;
+			transition: margin-bottom 0.35s ease;
+		}
+
+		.nudge-head > div:not(.nudge-cover) {
+			opacity: 0;
+			transition: opacity 0.2s ease;
+		}
+
+		.nudge-close {
+			opacity: 0;
+			pointer-events: none;
 			transition: opacity 0.2s ease;
 		}
 
 		.nudge-reveal {
 			display: grid;
 			grid-template-rows: 0fr;
-			transition: grid-template-rows 0.3s ease;
+			transition: grid-template-rows 0.35s ease;
 		}
 
 		.nudge-reveal > .nudge-form {
@@ -246,32 +268,30 @@ const show = newsletterVisible();
 			outline-offset: -2px;
 		}
 
-		.nudge-card:hover .nudge-reveal,
-		.nudge-card:focus-within .nudge-reveal,
-		.nudge-card:has(.nudge-form input[placeholder]:not(:placeholder-shown)) .nudge-reveal {
-			grid-template-rows: 1fr;
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) {
+			width: 360px;
+			cursor: auto;
 		}
 
-		.nudge-card:hover .nudge-hint,
-		.nudge-card:focus-within .nudge-hint,
-		.nudge-card:has(.nudge-form input[placeholder]:not(:placeholder-shown)) .nudge-hint {
-			opacity: 0;
-			height: 0;
-			margin: 0;
-			overflow: hidden;
-		}
-
-		.nudge-card:hover .nudge-head,
-		.nudge-card:focus-within .nudge-head {
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-head {
 			margin-bottom: var(--space-4);
 		}
 
-		.nudge-head {
-			margin-bottom: var(--space-3);
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-head > div:not(.nudge-cover),
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-close {
+			opacity: 1;
+			pointer-events: auto;
+			transition-delay: 0.12s;
+		}
+
+		.nudge-card:is(:hover, :focus-within, :has(.nudge-form input[placeholder]:not(:placeholder-shown))) .nudge-reveal {
+			grid-template-rows: 1fr;
 		}
 	}
 
 	@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+		.nudge-card,
+		.nudge-head,
 		.nudge-reveal {
 			transition: none;
 		}

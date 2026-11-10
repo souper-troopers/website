@@ -34,7 +34,7 @@ const show = newsletterVisible();
 			<div class="nudge-head">
 				{/* Placeholder cover until Shan sends the real one. */}
 				<div class="nudge-cover" aria-hidden="true">
-					<span class="nudge-cover-title">Super News</span>
+					<span class="nudge-cover-title">Super<br />News</span>
 					<span class="nudge-cover-photo"></span>
 					<span class="nudge-cover-cols"></span>
 				</div>
@@ -166,16 +166,16 @@ const show = newsletterVisible();
 		padding-bottom: 3px;
 		border-bottom: 3px double var(--st-ink);
 		font-family: Georgia, "Times New Roman", serif;
-		font-size: 0.62rem;
+		font-size: 1.02rem;
 		font-weight: 700;
-		line-height: 1;
-		letter-spacing: -0.01em;
+		line-height: 0.92;
+		letter-spacing: -0.02em;
 		text-align: center;
 		white-space: nowrap;
 	}
 
 	.nudge-cover-photo {
-		height: 26px;
+		height: 16px;
 		border-radius: 1px;
 		background: linear-gradient(160deg, var(--hub-purple) 0%, #5f3c80 100%);
 	}
@@ -268,7 +268,7 @@ const show = newsletterVisible();
 
 		/* Smaller at rest, so the circle has room around the book; full size once open. */
 		.nudge-cover {
-			transform: rotate(-4deg) scale(0.76);
+			transform: rotate(-4deg) scale(0.86);
 			transition: transform 0.35s ease;
 		}
 

@@ -2848,43 +2848,25 @@ const structuredData = {
 				}
 			}
 
-			/* TRIAL, 22 October - a lighter home hero (`<PhotoHero lightHero>`), for Adrian's "too dark"
-			   point at the 21 October review: the 100deg ink sweep darkened ~70% of the photo, faces
-			   included. On staging only; needs Kerry's / Adrian's sign-off before it reaches main -
-			   revert by dropping `lightHero` in index.astro.
-			   - No wash over the photo. The header is white with dark text (see the block near the end
-			     of this sheet), so the dark band rules below are overridden on this page; they follow the
-			     header's real height (--header-actual, set by PhotoHero's script).
-			   - Landscape screens: the words sit lower, wider and smaller, and are made readable by
-			     darkness that follows the letters - no block, nothing beyond the words: a wide, soft
-			     text-shadow (each layer listed twice, i.e. the text's shadow drawn twice), plus a
-			     blurred ink copy of the same words underneath (::before wide, ::after tight, with a
-			     thick ink -webkit-text-stroke so the silhouette is fatter than the letters). The copy's
-			     text is `data-shadow`, filled from the element's own text by PhotoHero's script.
-			     Tried and dropped: shadow alone (paragraph ~2:1 over the white wall - a text-shadow
-			     spreads thin strokes too much to darken right beside them); a soft strip or ellipse
-			     behind the words (it read as a dark block, and sized to the element's max-width it ran
-			     far past the shorter lines). The Donate button has a matching soft shadow.
-			   - The copies are ::before/::after with z-index -1 and no stacking context on h1 / p, so
-			     they sit under all the words.
-			   - Portrait screens keep their layout (photo on top fading into ink, words beneath) with
-			     the smaller headline.
-			   Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: headline
-			   3.83:1 or better, "human" 3.85:1 (brand yellow), paragraph 4.51:1. The line-box check
-			   (scripts/check-hero-contrast.playwright.js) flags empty space inside the headline's line
-			   boxes on laptops - an accepted exception, see AGENTS.md. */
+			/* TRIAL - a lighter home hero (`<PhotoHero lightHero>`), for Adrian's "too dark" point at the
+			   21 October review: the ink sweep darkened ~70% of the photo, faces included. On staging
+			   only; needs Kerry's / Adrian's sign-off before it reaches main. Dropping `lightHero` in
+			   index.astro reverts all of it (these rules, the frosted header and the glass panel near
+			   the end of this sheet are all scoped to `.photo-hero--light`).
+			   - No tint over the photo. The words sit in a frosted-glass panel; the header is the same
+			     frosted glass (10 November, Stephen's pick - it replaced a soft dark glow behind the
+			     letters, which looked out of keeping with the rest of the site).
+			   - Landscape screens: the words sit lower and smaller than the other heroes'. Portrait
+			     screens: the photo on top fading into the off-white, the words beneath it in ink.
+			   - Every other page keeps its dark banner and transparent header (tried and dropped on 10
+			     November: the frosted header on every page, light and dark). */
 			.photo-hero--home.photo-hero--light .hero-scrim {
-				background: linear-gradient(180deg, rgba(24, 23, 31, 0.85) 0, rgba(24, 23, 31, 0.85) calc(var(--header-actual, var(--hero-clearance)) - 10px), rgba(24, 23, 31, 0.66) calc(var(--header-actual, var(--hero-clearance)) + 22px), rgba(24, 23, 31, 0.44) calc(var(--header-actual, var(--hero-clearance)) + 60px), rgba(24, 23, 31, 0.24) calc(var(--header-actual, var(--hero-clearance)) + 104px), rgba(24, 23, 31, 0.09) calc(var(--header-actual, var(--hero-clearance)) + 150px), rgba(24, 23, 31, 0) calc(var(--header-actual, var(--hero-clearance)) + 190px));
+				background: none;
 			}
 
 			@media (min-aspect-ratio: 1001/1000) {
 				.hero-photo.photo-hero--home.photo-hero--light {
 					padding-top: max(46vh, calc(var(--hero-clearance) + var(--space-8)));
-				}
-
-				.photo-hero--light h1,
-				.photo-hero--light .hero-content > p {
-					position: relative;
 				}
 
 				.photo-hero--light h1 {
@@ -2894,94 +2876,10 @@ const structuredData = {
 
 				.photo-hero--light .hero-content > p {
 					max-width: 60ch;
-					opacity: 1;
-				}
-
-				.photo-hero--light h1,
-				.photo-hero--light h1 .hero-highlight {
-					animation: none;
-					text-shadow:
-						0 0 2px rgba(24, 23, 31, 1),
-						0 0 5px rgba(24, 23, 31, 1),
-						0 0 12px rgba(24, 23, 31, 0.95),
-						0 0 24px rgba(24, 23, 31, 0.9),
-						0 0 42px rgba(24, 23, 31, 0.78),
-						0 0 76px rgba(24, 23, 31, 0.62),
-						0 0 140px rgba(24, 23, 31, 0.48),
-						0 0 2px rgba(24, 23, 31, 1),
-						0 0 5px rgba(24, 23, 31, 1),
-						0 0 12px rgba(24, 23, 31, 0.95),
-						0 0 24px rgba(24, 23, 31, 0.9),
-						0 0 42px rgba(24, 23, 31, 0.78),
-						0 0 76px rgba(24, 23, 31, 0.62),
-						0 0 140px rgba(24, 23, 31, 0.48);
-				}
-
-				.photo-hero--light .hero-content > p {
-					text-shadow:
-						0 0 1px rgba(24, 23, 31, 1),
-						0 0 4px rgba(24, 23, 31, 1),
-						0 0 9px rgba(24, 23, 31, 0.95),
-						0 0 18px rgba(24, 23, 31, 0.9),
-						0 0 32px rgba(24, 23, 31, 0.78),
-						0 0 60px rgba(24, 23, 31, 0.62),
-						0 0 110px rgba(24, 23, 31, 0.48),
-						0 0 1px rgba(24, 23, 31, 1),
-						0 0 4px rgba(24, 23, 31, 1),
-						0 0 9px rgba(24, 23, 31, 0.95),
-						0 0 18px rgba(24, 23, 31, 0.9),
-						0 0 32px rgba(24, 23, 31, 0.78),
-						0 0 60px rgba(24, 23, 31, 0.62),
-						0 0 110px rgba(24, 23, 31, 0.48);
-				}
-
-				/* A fattened, blurred ink silhouette of the same words underneath (wide and tight),
-				   darker right beside the strokes than a text-shadow can get. */
-				.photo-hero--light h1::before,
-				.photo-hero--light h1::after,
-				.photo-hero--light .hero-content > p::before,
-				.photo-hero--light .hero-content > p::after {
-					content: attr(data-shadow);
-					position: absolute;
-					inset: 0;
-					z-index: -1;
-					color: var(--st-ink);
-					text-shadow: none;
-					pointer-events: none;
-				}
-
-				.photo-hero--light h1::before {
-					-webkit-text-stroke: 0.18em var(--st-ink);
-					filter: blur(22px);
-				}
-
-				.photo-hero--light h1::after {
-					-webkit-text-stroke: 0.14em var(--st-ink);
-					filter: blur(8px);
-				}
-
-				.photo-hero--light .hero-content > p::before {
-					-webkit-text-stroke: 16px var(--st-ink);
-					filter: blur(14px);
-				}
-
-				.photo-hero--light .hero-content > p::after {
-					-webkit-text-stroke: 12px var(--st-ink);
-					filter: blur(4px);
-				}
-
-				.photo-hero--light .actions .btn {
-					box-shadow: 0 0 40px 10px rgba(24, 23, 31, 0.5);
 				}
 			}
 
 			@media (max-aspect-ratio: 1/1) {
-				.photo-hero--home.photo-hero--light .hero-scrim {
-					background:
-						linear-gradient(180deg, rgba(24, 23, 31, 0.85) 0, rgba(24, 23, 31, 0.85) calc(var(--header-actual, var(--hero-clearance)) - 10px), rgba(24, 23, 31, 0.66) calc(var(--header-actual, var(--hero-clearance)) + 22px), rgba(24, 23, 31, 0.44) calc(var(--header-actual, var(--hero-clearance)) + 60px), rgba(24, 23, 31, 0.24) calc(var(--header-actual, var(--hero-clearance)) + 104px), rgba(24, 23, 31, 0.09) calc(var(--header-actual, var(--hero-clearance)) + 150px), rgba(24, 23, 31, 0) calc(var(--header-actual, var(--hero-clearance)) + 190px)),
-						linear-gradient(180deg, rgba(24, 23, 31, 0.2) 0%, rgba(24, 23, 31, 0.35) 50%, rgba(24, 23, 31, 0.6) 64%);
-				}
-
 				.photo-hero--light h1 {
 					font-size: clamp(1.8rem, 7.4vw, 2.6rem);
 				}
@@ -3283,16 +3181,24 @@ const structuredData = {
 
 			}
 
-			/* Part of the light home hero trial (22 October, `lightHero`; staging only, needs sign-off):
-			   a white header with dark text - 30% white at rest over the photo (no band beneath it),
-			   fading to solid white as the hero scrolls away. Scoped with :has() to the page that has
-			   `.photo-hero--light`, so dropping `lightHero` reverts it too; widening it to every page
-			   is a matter of dropping that scope (an open question for the client). "by Souper
-			   Troopers" is a deeper teal (#0f6674) here; at 30% it still measures 3.1-4.3:1 over the
-			   photo on small phones and at 1920 - accepted by the user (22 October). */
+			/* Part of the light home hero trial (`lightHero`; staging only, needs Kerry's / Adrian's
+			   sign-off) - see the TRIAL note at the hero styles. The home page's header is frosted glass
+			   with dark text: a 12px backdrop blur under a 52% off-white tint and a light hairline at
+			   rest, turning opaque off-white as the hero scrolls away (--header-fade, set by PhotoHero's
+			   script). Without backdrop-filter, a 90% tint. "by Souper Troopers" is a deeper teal
+			   (#0f6674). Measured per glyph at 360-1920 (10 November): "by Souper Troopers" 4.69:1 or
+			   better, the rest of the header 10:1 or better. */
 			body:has(.photo-hero--light) .site-header {
-				background: rgba(255, 255, 255, calc(0.3 + 0.7 * var(--header-fade, 0)));
-				border-bottom-color: rgba(36, 35, 43, calc(0.1 * var(--header-fade, 0)));
+				background: rgba(250, 249, 246, calc(0.52 + 0.48 * var(--header-fade, 0)));
+				-webkit-backdrop-filter: blur(12px) saturate(1.1);
+				backdrop-filter: blur(12px) saturate(1.1);
+				border-bottom-color: rgba(255, 255, 255, calc(0.6 - 0.6 * var(--header-fade, 0)));
+			}
+
+			@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+				body:has(.photo-hero--light) .site-header {
+					background: rgba(250, 249, 246, calc(0.9 + 0.1 * var(--header-fade, 0)));
+				}
 			}
 
 			body:has(.photo-hero--light) .brand,
@@ -3339,16 +3245,75 @@ const structuredData = {
 				}
 			}
 
-			/* No band behind the header (the header carries 30% white itself). */
-			body:has(.photo-hero--light) .photo-hero--home.photo-hero--light .hero-scrim {
-				background: none;
+			/* The glass panel: the site's card radius and shadow, a 12px backdrop blur under a 52%
+			   off-white tint (94% without backdrop-filter), ink words, "human" in the darker Hub purple
+			   (the brand purple dipped to 2.9:1 at 1024). Measured per glyph at 360-1920 (10 November):
+			   headline 7.5:1 or better, paragraph 6.8:1, "human" 3.8:1 (large text, 3:1 needed). */
+			.photo-hero--light .hero-content {
+				width: fit-content;
+				max-width: min(48rem, calc(100% - 2 * var(--space-5)));
+				margin-left: max(var(--space-5), calc((100% - 1100px) / 2 + var(--space-5)));
+				margin-right: auto;
+				padding: var(--space-8) var(--space-10) var(--space-8) var(--space-8);
+				border-radius: var(--radius);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+				background: rgba(250, 249, 246, 0.94);
 			}
 
-			@media (max-aspect-ratio: 1/1) {
-				body:has(.photo-hero--light) .photo-hero--home.photo-hero--light .hero-scrim {
-					background: linear-gradient(180deg, rgba(24, 23, 31, 0) 0%, rgba(24, 23, 31, 0.35) 50%, rgba(24, 23, 31, 0.6) 64%);
+			@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+				.photo-hero--light .hero-content {
+					background: rgba(250, 249, 246, 0.52);
+					-webkit-backdrop-filter: blur(12px) saturate(1.1);
+					backdrop-filter: blur(12px) saturate(1.1);
 				}
 			}
+
+			@media (max-width: 900px) {
+				.photo-hero--light .hero-content {
+					width: auto;
+					max-width: none;
+					margin-left: var(--space-5);
+					margin-right: var(--space-5);
+					padding: var(--space-5) var(--space-6);
+				}
+			}
+
+			.photo-hero--light .hero-content > :last-child {
+				margin-bottom: 0;
+			}
+
+			/* Portrait screens: no panel - the words sit below the photo, on the off-white. */
+			@media (max-aspect-ratio: 1/1) {
+				.hero-photo.photo-hero--home.photo-hero--light {
+					background: var(--st-bg);
+				}
+
+				.photo-hero--light .hero-content {
+					width: auto;
+					max-width: 1100px;
+					margin: 0 auto;
+					padding: 0 var(--space-5);
+					border: 0;
+					border-radius: 0;
+					box-shadow: none;
+					background: none;
+					-webkit-backdrop-filter: none;
+					backdrop-filter: none;
+				}
+			}
+
+			.photo-hero--light h1,
+			.photo-hero--light .hero-content > p {
+				color: var(--st-ink);
+				opacity: 1;
+			}
+
+			.photo-hero--light h1 .hero-highlight {
+				color: var(--hub-purple-dark);
+				animation: none;
+			}
+
 		</style>
 
 		<script>

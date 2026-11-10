@@ -2648,35 +2648,34 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
 ### Trial on staging: a lighter home hero (22 October 2026)
 ⚠ **On `dev` (staging) only, NOT to be published until Kerry / Adrian sign off.** Anyone publishing
 `dev` -> `main` must either have that sign-off or first revert the trial - drop `lightHero` from the
-`PhotoHero` in `index.astro` (one change; every rule is `.photo-hero--light` in `Layout.astro`, and
-PhotoHero's script only acts on it). Name it whenever unpublished commits are reported.
+`PhotoHero` in `index.astro` (one change; every rule is scoped to `.photo-hero--light` in
+`Layout.astro`). Name it whenever unpublished commits are reported.
 - **Why**: Adrian at the 21 October review - the home page felt dark. The 100deg ink sweep darkened
   ~70% of the photo's width, faces included.
-- **Now**: no wash over the photo. **The header is white with dark text** on this page only: 30%
-  white at rest over the photo (no band beneath it), fading to solid white as the hero scrolls away;
-  "by Souper Troopers" is a deeper teal (#0f6674). Other pages keep the dark header - whether they
-  get the same treatment is a question for the team. On laptops the
-  words sit lower, wider (h1 30ch, p 60ch) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`), and the
-  darkness follows the letters with no block anywhere: a wide, soft text-shadow (each layer listed
-  twice - the text's shadow drawn twice, the user's idea), plus a blurred ink copy of the same words
-  underneath (::before wide, ::after tight, with a thick ink text-stroke). The copy's text is
-  `data-shadow`, filled by PhotoHero's script from the element's own text, so it can't drift from
-  the wording (without JS only the text-shadow remains). The Donate button has a matching soft
-  shadow. Portrait screens keep their layout (words on the ink below the photo). No wording changed
-  (q37); "human" stays brand yellow.
-- **Works for the planned video**: the darkness follows the words, not the footage.
-- Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920: headline 3.83:1
-  or better, "human" 3.85:1, paragraph 4.51:1. ⚠ **A known, accepted exception to the line-box
-  check** (`scripts/check-hero-contrast.playwright.js`): with no block behind the words, a few pixels
-  of empty space inside the line boxes (between letters, above the lowercase "human") still show the
-  wall - "human" 1.9-2.1:1 at 1024-1680, the headline's second line 2.2-3.0:1. Accepted by the user
-  (22 October) as the letters themselves pass; a fatter silhouette barely moved it, and a faint
-  background under the headline (the alternative) brings back the block. Every other line and page
-  passes that check.
-- ⚠ **The white header's "by Souper Troopers" line is under 4.5:1 at some widths** at the 30% rest
-  state: 3.1:1 at 360, 3.9:1 at 390, 4.3:1 at 1920 (4.5-4.8 elsewhere; every other header item
-  passes). Accepted by the user for the trial; **fix it before it goes live** - dark grey for that
-  line, or ~40% white.
+- **Now (frosted glass, 10 November - Stephen's pick)**: no tint over the photo. The words sit in a
+  **frosted-glass panel** at the bottom-left: the site's card radius and shadow, a 12px backdrop blur
+  under a 52% off-white tint (94% without backdrop-filter), a light hairline, ink words, "human" in
+  the darker Hub purple (`--hub-purple-dark`; the brand purple was 2.9:1 at 1024). **The header is the
+  same frosted glass** with dark text (52% at rest, turning opaque off-white as the hero scrolls
+  away; 90% without backdrop-filter); "by Souper Troopers" is a deeper teal (#0f6674). On laptops the
+  words sit lower (padding-top 46vh) and smaller (h1 `clamp(1.9rem, 3.3vw, 2.5rem)`, 30ch; p 60ch).
+  Portrait screens: no panel - the photo fades into the off-white with the words beneath it in ink.
+  No wording changed (q37). **Every other page is unchanged from live** (dark banner, transparent
+  header fading to ink); the page swap between them was checked - no flash or stuck colour.
+- **Works for the planned video**: the panel sits over whatever plays behind it.
+- Measured per glyph (each letter against the pixels 3-5px around it) at 360-1920, header at rest:
+  headline 7.5:1 or better, paragraph 6.8:1, "human" 3.8:1 (large text, 3:1 needed); header name and
+  nav 10:1 or better, **"by Souper Troopers" 4.69:1 at worst (360)** - the earlier 30%-white
+  header's shortfall (3.1-4.3:1) is resolved. Every other page's hero and header unchanged and passing.
+  Script: `.playwright-mcp/glass-final/ring-check-site.js` (local, not committed).
+- **Tried and dropped on 10 November**: the glow behind the words (below) - Stephen found it out of
+  keeping with the rest of the site; words below the photo; a light fading banner beside the words;
+  a soft-focus patch; a white card overlapping the photo's foot; and the frosted header on **every**
+  page, both light (with glass panels on Our Work and a product page) and dark - live's header was
+  kept for the inner pages.
+- **The 22 October version (replaced)**: a 30% white header, and the words made readable by a wide,
+  soft text-shadow plus a blurred ink copy of the words underneath (`data-shadow`, ::before/::after);
+  its code is gone (in git history before 10 November).
 - **Tried and dropped the same day**: a hand-painted brush stroke behind the words (light, then ink
   with a teal outline; on the unmerged `home-brush-banner` branch); white text with an ink outline;
   a fade rising from the foot (briefly on staging); no header band (nav 1.0-1.7:1 on the white wall);

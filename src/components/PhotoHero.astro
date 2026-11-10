@@ -60,10 +60,10 @@ interface Props {
 	 */
 	fadeMobile?: boolean;
 	/**
-	 * Homepage only - a trial (22 October, for Adrian's "too dark" point on the 21 October review;
-	 * needs Kerry's / Adrian's sign-off before it is published): no wash over the photo, a short band
-	 * behind the header, and the words made readable by a soft shadow that follows the letters. Styles are `.photo-hero--light` in Layout.astro; dropping the prop in index.astro
-	 * reverts the hero.
+	 * Homepage only - a trial (for Adrian's "too dark" point on the 21 October review; needs
+	 * Kerry's / Adrian's sign-off before it is published): no tint over the photo, the words in a
+	 * frosted-glass panel and a frosted-glass header with dark text. Styles are `.photo-hero--light`
+	 * in Layout.astro; dropping the prop in index.astro reverts all of it.
 	 */
 	lightHero?: boolean;
 }
@@ -104,7 +104,6 @@ const preview = lqip ?? (await lqipFor(image));
 		<slot />
 	</div>
 </section>
-
 <script>
 	import { onEveryPage } from "../lib/page-load";
 
@@ -152,18 +151,6 @@ const preview = lqip ?? (await lqipFor(image));
 			ticking = false;
 		}
 
-		// The header's real height (one row or two), for the light home hero's band (`lightHero`).
-		const setHeaderHeight = () => { if (hero && header) hero.style.setProperty("--header-actual", `${header.offsetHeight}px`); };
-		setHeaderHeight();
-		window.addEventListener("resize", setHeaderHeight, { signal });
-		// The light home hero draws a blurred ink copy of its headline and paragraph underneath them
-		// (Layout.astro, `content: attr(data-shadow)`); the copy is taken from the words themselves,
-		// so it can't drift from the wording. Without JavaScript only the text-shadow remains.
-		if (hero?.classList.contains("photo-hero--light")) {
-			for (const el of hero.querySelectorAll<HTMLElement>(".hero-content > h1, .hero-content > p")) {
-				el.dataset.shadow = el.textContent ?? "";
-			}
-		}
 		update();
 		window.addEventListener(
 			"scroll",

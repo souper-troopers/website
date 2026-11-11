@@ -2973,6 +2973,37 @@ const structuredData = {
 					mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
 				}
 
+				/* TRIAL (11 November, Stephen's option 2): the page below rises over the banner's foot
+				   as a cream sheet with rounded top corners, so the banner reads as something the page
+				   continues from rather than a black block that stops at the fold. */
+				.photo-hero--fade-mobile::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: -1px;
+					height: 28px;
+					z-index: 2;
+					background: var(--st-bg);
+					border-radius: 28px 28px 0 0;
+					box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.18);
+					pointer-events: none;
+				}
+
+				.hero-photo.photo-hero--page.photo-hero--fade-mobile {
+					padding-bottom: calc(var(--space-10) + 28px);
+				}
+
+				/* Where the campaign band sits flush under the banner (Get Involved, Donate), the band
+				   is the edge already - a cream lip above it read as a stray sliver. */
+				.photo-hero--fade-mobile:has(~ .hub-appeal)::after {
+					content: none;
+				}
+
+				.hero-photo.photo-hero--page.photo-hero--fade-mobile:has(~ .hub-appeal) {
+					padding-bottom: var(--space-10);
+				}
+
 				.photo-hero--fade-mobile .hero-scrim {
 					background:
 						linear-gradient(180deg, rgba(24, 23, 31, 0.82) 0, rgba(24, 23, 31, 0.82) calc(var(--hero-clearance) - 24px), rgba(24, 23, 31, 0) calc(var(--hero-clearance) + 48px)),

@@ -73,7 +73,9 @@ const show = newsletterVisible();
 		position: fixed;
 		right: 20px;
 		bottom: 20px;
-		z-index: 900;
+		/* Under the header (100), so the open cart drawer and phone menu cover it, but above
+		   anything in the page itself (the highest there is 60). */
+		z-index: 90;
 		width: min(360px, calc(100vw - 40px));
 		color: var(--st-ink);
 		animation: nudge-in 0.35s ease-out;

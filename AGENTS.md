@@ -2645,6 +2645,14 @@ as faded. Where no text needs a photo behind it, the photo-top card is the answe
   one flag) exists only on a **local, unpushed `light-tint` branch** (`643e60d`) - ink hero text
   passed there too; only the amber "Internal" link failed. Nothing depends on it.
 
+### The cart drawer was trapped in the header (fixed 11 November 2026)
+On staging's homepage only, the cart opened as a 68px strip: the trial's frosted header had
+`backdrop-filter` on `.site-header` itself, and a `backdrop-filter` (like `filter` or `transform`)
+on an ancestor becomes the containing block for `position: fixed` children - the drawer lives inside
+the header. The frost is now drawn by `.site-header-overlay::before`. ⚠ Never put `backdrop-filter`,
+`filter` or `transform` on the header. Same day: the newsletter corner card's z-index went 900 -> 90
+(under the header's 100), since it sat on top of the open cart drawer and the phone menu.
+
 ### Our Work banner crop (10 November 2026)
 Stephen: on wide screens the woman on the right was a head with no shoulders, "floating". The photo
 now sits at `center 40%` (was 25%), so her shoulders and arm show; both faces stay whole and clear

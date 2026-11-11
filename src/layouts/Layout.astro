@@ -2877,7 +2877,19 @@ const structuredData = {
 					color: #fff;
 				}
 
+				/* The frost is drawn by a ::before, never by the header itself: a backdrop-filter on
+				   the header makes it the containing block for its position: fixed descendants, which
+				   shrank the cart drawer to the 68px header bar (found 11 November). */
 				body:has(.photo-hero--light) .site-header-overlay {
+					background: transparent;
+				}
+
+				body:has(.photo-hero--light) .site-header-overlay::before {
+					content: "";
+					position: absolute;
+					inset: 0;
+					z-index: -1;
+					pointer-events: none;
 					background: rgba(36, 35, 43, calc(0.6 + 0.4 * var(--header-fade, 0)));
 					-webkit-backdrop-filter: blur(14px) saturate(1.2);
 					backdrop-filter: blur(14px) saturate(1.2);

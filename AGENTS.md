@@ -2896,7 +2896,8 @@ is confidential - keep it out of this repo.
   `src/lib/double-up.ts` (`pageLive`, `bannerLive`, `backabuddyUrl`, `raised`). No menu item; reached
   from the red band (`HubAppeal.astro`, now a yellow x2 sticker, faint falling black 2s, a bouncing
   highlighted "doubled") on Home, Donate and Get Involved, and from `/doubleup` and
-  `/doubleupforhumanity` (302s in `public/_redirects`). Hidden from Google and the sitemap until
+  `/doubleupforhumanity` (302s in `public/_redirects`). **Taken off Get Involved on 11 November**
+  (Stephen), so it is on Home and Donate only. Hidden from Google and the sitemap until
   `pageLive`; the band shows on staging and locally always, on the live site only with `bannerLive`.
   Playful layout: yellow hero, two tilted photos already on the site, a R100 x2 = R200 sum. All
   wording is placeholder until Kerry/Shan confirm (status page `q55`, `q56`).

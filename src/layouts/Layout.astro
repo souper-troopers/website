@@ -3283,6 +3283,30 @@ const structuredData = {
 				animation: none;
 			}
 
+			/* TRIAL (11 November, Stephen): Donate beside the description rather than under it, on
+			   laptops only - on portrait screens the words are stacked below the photo and a button
+			   beside a two-line paragraph would squeeze it. Drop this block to put it back under. */
+			@media (min-aspect-ratio: 1001/1000) and (min-width: 901px) {
+				.photo-hero--light .hero-content {
+					display: grid;
+					grid-template-columns: minmax(0, 1fr) auto;
+					column-gap: var(--space-8);
+					align-items: center;
+				}
+
+				.photo-hero--light .hero-content > :not(p, .actions) {
+					grid-column: 1 / -1;
+				}
+
+				.photo-hero--light .hero-content > p {
+					margin-bottom: 0;
+				}
+
+				.photo-hero--light .hero-content > .actions {
+					margin-top: 0;
+				}
+			}
+
 		</style>
 
 		<script>
